@@ -9,7 +9,7 @@ All documentation, comments, and communication — in Russian. Technical terms a
 ## Project Overview
 
 Tales of Pirate — MMORPG with two codebases:
-- **C++23** (VS 2022, `/std:c++latest`, Win32): client (DirectX 9 engine MindPower3D), 4 servers (Account/Gate/Group/Game)
+- **C++23** (VS 2026 Preview, toolset v145, `/std:c++latest`, **x64-only** since 2026-04-22): client (DirectX 9 engine MindPower3D) + GameServer. Account/Gate/Group servers were migrated out of C++ and now live only in .NET.
 - **Modern .NET 10** (F# + C#): replacement server infrastructure (Corsairs.*), Blazor admin panel
 
 **C++ standard: C++23.** Prefer modern C++ constructs: `std::string`/`std::string_view` over `char*`, `std::format` over `sprintf`, `std::filesystem` over Win32 file API, structured bindings, `auto`, range-based for, `std::optional`, `std::span`, smart pointers. Avoid raw `new`/`delete` where possible.
@@ -43,7 +43,7 @@ Tales of Pirate — MMORPG with two codebases:
 - **Никаких `using namespace ...` в глобальной области** `.h`-файлов. В `.cpp` — допустимо, но лучше квалификация по месту или локальный `using` внутри функции.
 
 Исключения (не оборачивать):
-- Сторонние библиотеки (`LuaJIT`, `LuaBridge`, `SDL3`, `FreeType`, `Crypto++`, `ICUHelper`, `fontstash`, `discord-rpc`, `InfoNet`) — их заголовки и реализации остаются как есть, namespace не навязываем.
+- Сторонние библиотеки (`LuaJIT`, `LuaBridge`, `SDL3`, `SDL3_mixer`, `FreeType`, `Crypto++`, `fontstash`, `discord-rpc`, `stb_image`, `sqlite3`) — их заголовки и реализации остаются как есть, namespace не навязываем.
 - Чистые C API (WinAPI, DirectX, ODBC, OpenSSL) — без обёртки.
 - Legacy-код, не затронутый текущим рефакторингом, — не переносить массово в namespace; только при касании соседнего кода, согласованно с правилом про поля `_` и фиксированные типы.
 
@@ -101,12 +101,20 @@ Main solution: `sources/TalesOfPirates.sln` — contains both C++ and .NET proje
 ## Build Commands
 
 ### C++ (entire solution)
+
+Main solution: `sources/talesofpirates.sln`. Platform is **x64-only** (no Win32 configuration). Default to Debug; build Release only when explicitly asked.
+
 ```bash
-msbuild sources/TalesOfPirates.sln /p:Configuration=Release /p:Platform=Win32
-msbuild sources/TalesOfPirates.sln /p:Configuration=Debug /p:Platform=Win32
+# MSBuild lives in VS 2026 Preview:
+#   /c/Program\ Files/Microsoft\ Visual\ Studio/18/<edition>/MSBuild/Current/Bin/MSBuild.exe
+msbuild sources/talesofpirates.sln /p:Configuration=Debug   /p:Platform=x64
+msbuild sources/talesofpirates.sln /p:Configuration=Release /p:Platform=x64
 ```
 
-Individual C++ servers have batch scripts: `sources/Server/{GameServer,GateServer,GroupServer,AccountServer}/*.bat`
+Individual project `.vcxproj` files:
+- Client: `sources/Client/kop.vcxproj`
+- Engine: `sources/Engine/MindPower3D.vcxproj`
+- GameServer: `sources/Server/GameServer/GameServer.vcxproj`
 
 ### .NET projects
 ```bash
@@ -149,12 +157,16 @@ Test framework: xUnit. No C++ test projects.
 - Network: `NetProtocol.cpp`, `PacketCmd*.cpp`, `Connection.cpp`
 - State machine: `STAttack.cpp`, `STMove.cpp` (attack/movement states)
 - Character system: `Character.cpp` → `CharacterModel.cpp` → `CharacterAction.cpp`
-- All C++ projects use PCH via `stdafx.h` with `/FI` forced include
+- Input: `Corsairs::Engine::Input::InputSystem` поверх `WM_KEY*` / `WM_MOUSE*` / `WM_CHAR` (DirectInput 8 снят 2026-04-24)
+- Textures: `TextureLoader` + `TextureCache` (stb_image для BMP/TGA/PNG, ручной `DdsLoader` для DDS)
+- Entity pooling: `GamePool` + `lwSlotMap<T, Capacity>` со стабильными handle'ами `(gen:12|slot:20)` / `(tag:8|serial:24)` — заменили raw-указатели после x86→x64
+- PCH: все C++ проекты используют `stdafx.h` с `/FI` (ForcedIncludeFiles). **Не добавляйте `#include "stdafx.h"` вручную в `.cpp`.**
 
-### C++ Servers (legacy)
-- `sources/Server/{GameServer,GateServer,GroupServer,AccountServer}/`
-- GameServer is the largest (~80 source files): combat, quests, trading, guilds, NPCs
-- DB: ODBC via `cfl_db` library (`LIBDBC`). GameServer uses hardcoded connection string; Account/Group use DSN from config files
+### C++ Server (GameServer — единственный C++ сервер)
+- `sources/Server/GameServer/` — combat, quests, trading, guilds, NPCs (~130 source files)
+- DB: ODBC, hardcoded connection string `DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=gamedb;Trusted_Connection=Yes;` в `GameDB.cpp` / `TradeLogDB.cpp`
+- Кодировка: MSSQL и сервер переведены на UTF-8 (миграция закрыта 2026-04-19, утилиты — `Libraries/Util/EncodingUtil.h`)
+- Static data: читает общий `server/GameServer/gamedata.sqlite` через `AssetDatabase::Instance()` (см. ниже)
 
 ### .NET Server Infrastructure (Corsairs.*)
 - **Platform.Network** (F#): SAEA IOCP networking, WPacket/RPacket binary protocol, AES/RSA encryption, TcpListener/Connector
@@ -184,156 +196,97 @@ Server → Client: CMD_MC_NOTIACTION (skill rep) or CMD_MC_FAILEDACTION
 Client: NetActorSkillRep → state->ServerEnd(sState) / NetFailedAction → FailedAction
 ```
 
+## Static Data Store
+
+**`server/GameServer/gamedata.sqlite`** — общая БД статических данных (клиент + сервер, dev-окружение). Точка доступа: `AssetDatabase::Instance()`. Сюда постепенно переезжают все `.txt` / `.bin` из `server/GameServer/resource/` (миграция Lua→stores закрыта 2026-04-22; 53 корневых таблицы перенесены в `old.table/`). Для новых «таблиц» — создавать store (пример: `NpcRecordStore`, `ChaNameFilterStore`) с чтением через `AssetDatabase::Instance().GetDb()`. При миграции легаси-таблицы — **всегда в 2 этапа**: (1) стор + подключение к легаси-парсеру для переноса данных; (2) удаление легаси-пути после фактического импорта.
+
+Клиентский `render.sqlite` (SQLAR + метаданные 3D/текстур) — в проработке, план в `memory/render-assets-plan.md`.
+
 ## Key Libraries (C++)
-- `Common` — shared utilities (all projects depend on this)
-- `LuaJIT` (`lua51.lib`) — Lua 5.1 JIT compiler, used by client and GameServer
-- `LuaBridge` (header-only) — C++17 Lua binding, auto-marshaling for typed C++ functions
-- `EncLib` — encryption utilities
-- `Cryptopp` — Crypto++ library (AES-GCM for UI textures, BLAKE2s for password hashing)
-- `InfoNet` — network transport layer
-- `AudioSDL` — SDL-based audio (client only)
-- `ICUHelper` — Unicode support
-- `LIBDBC` — database connectivity (servers only)
+
+Все живут в `sources/Libraries/`:
+
+- `common` — shared utilities (все проекты зависят; Windows SDK, PCH, базовые типы)
+- `Util` — общие утилиты (`EncodingUtil.h` UTF-8, и т.п.)
+- `CorsairsNet` — сетевой транспорт клиента и GameServer (заменил legacy `InfoNet`)
+- `LuaJIT` (`lua51.lib`) — Lua 5.1 JIT, клиент + GameServer
+- `LuaBridge` (header-only) — C++ Lua binding, auto-marshaling
+- `Cryptopp` — Crypto++ (AES-GCM для UI-текстур, BLAKE2s для хешей паролей)
+- `AudioSDL` — аудио-обёртка клиента поверх **SDL3 3.4.4 + SDL3_mixer 3.2.0** (миграция 2026-04-23, track-модель API). OGG Vorbis — через встроенный stb_vorbis, `libogg` не нужен.
+- `SDL3` — заголовки/импортные либы SDL3
+- `FreeType` + `fontstash` — multi-page glyph-атлас для UI-шрифтов (DX9-backend; план в `memory/font-render-freetype-plan.md`)
+- `sqlite3` — SQLite (для `AssetDatabase`, future `render.sqlite`)
+- `Discord` — discord-rpc DLL
+- `DirectX` — заголовки/либы DirectX 9. **Не включать `sources/Libraries/DirectX/include` на x64** — даёт C2733 из-за конфликта `winnt.h` со свежим Windows SDK (см. `memory/x64_migration_plan.md`)
 
 ## Important Caveats
 
-- **RC files**: Edit tool corrupts GBK encoding in `.rc` files — use `sed -i` for resource file edits
-- **PCH**: All 5 main C++ projects use `stdafx.h` with forced include (`/FI`). Don't add `#include "stdafx.h"` manually to source files
-- **Platform**: Win32 only for C++ (no x64 configuration). .NET targets `net10.0`
-- **Client launch**: `Game.exe pKcfT0PcaX` (password argument required)
-- **F# compilation order**: File order matters in .fsproj — new files must be added in dependency order
-- **Лицензии сторонних компонентов**: при добавлении новой библиотеки, шрифта или иного стороннего ресурса в клиент — обязательно положить текст лицензии в `Client/licenses/` (шрифты — в `Client/licenses/fonts/`) и добавить запись в `Client/licenses/README.md`. Аналогично — при удалении компонента убрать соответствующий файл и строку из README.
+- **Platform**: C++ сборки — **x64 only** (Win32-конфиги удалены из солюшена 2026-04-22). .NET таргетит `net10.0`.
+- **RC files**: Edit tool ломает GBK-кодировку в `.rc` файлах — актуальный из C++ проектов `GameServer.rc`. Для правок ресурсников использовать `sed -i`.
+- **PCH**: все три C++ проекта (`kop`, `MindPower3D`, `GameServer`) используют `stdafx.h` через `ForcedIncludeFiles` (`/FI`). **Не добавляйте `#include "stdafx.h"` в `.cpp` вручную.**
+- **Client launch**: `Game.exe pKcfT0PcaX` (password argument required). Артефакты: `Client/system/Game.exe` (Debug) и `sources/Client/bin/system/Game.exe` (Release). SDL3 DLL (`SDL3.dll`, `SDL3_mixer.dll`) должны лежать рядом.
+- **F# compilation order**: порядок файлов в `.fsproj` значим — новые файлы добавлять в порядке зависимостей.
+- **sqlcmd из git-bash**: вызывать через `bash -c "unset SQLCMDUSER SQLCMDPASSWORD; ..."` + `cygpath -w` для `-i`; SSPI — флагом `-E`. См. `memory/feedback_mssql_sqlcmd.md`.
+- **Лицензии сторонних компонентов**: при добавлении новой библиотеки/шрифта/ресурса в клиент — положить текст лицензии в `Client/licenses/` (шрифты — в `Client/licenses/fonts/`), добавить запись в `Client/licenses/README.md`. При удалении — убрать файл и строку из README. Тексты лицензий **только скачивать** (curl/cp), не генерировать.
 
 <!-- rtk-instructions v2 -->
-# RTK (Rust Token Killer) - Token-Optimized Commands
+# RTK (Rust Token Killer) — Token-Optimized Commands
 
-## Golden Rule
+**Golden rule**: префиксуй `rtk` к командам, у которых есть фильтр. Если фильтра нет — `rtk` просто проксирует, так что вызов остаётся безопасным. Префиксовать нужно **каждое** звено в цепочках `&&`:
 
-**Always prefix commands with `rtk`**. If RTK has a dedicated filter, it uses it. If not, it passes through unchanged. This means RTK is always safe to use.
-
-**Important**: Even in command chains with `&&`, use `rtk`:
 ```bash
-# ❌ Wrong
+# ❌
 git add . && git commit -m "msg" && git push
-
-# ✅ Correct
+# ✅
 rtk git add . && rtk git commit -m "msg" && rtk git push
 ```
 
-## RTK Commands by Workflow
+Стек этого проекта — C++ (MSBuild) + .NET (F#/C#) + SQLite + Lua. Значимые RTK-фильтры для него:
 
-### Build & Compile (80-90% savings)
+### Git (59–80% savings)
 ```bash
-rtk cargo build         # Cargo build output
-rtk cargo check         # Cargo check output
-rtk cargo clippy        # Clippy warnings grouped by file (80%)
-rtk tsc                 # TypeScript errors grouped by file/code (83%)
-rtk lint                # ESLint/Biome violations grouped (84%)
-rtk prettier --check    # Files needing format only (70%)
-rtk next build          # Next.js build with route metrics (87%)
+rtk git status | log | diff | show | add | commit | push | pull | branch | fetch | stash | worktree
+```
+Passthrough работает для **всех** git-subcommand'ов, даже не перечисленных.
+
+### GitHub (26–87% savings)
+```bash
+rtk gh pr view <num>    # Compact PR view
+rtk gh pr checks
+rtk gh run list
+rtk gh issue list
+rtk gh api
 ```
 
-### Test (90-99% savings)
+### Files & Search (60–75% savings)
 ```bash
-rtk cargo test          # Cargo test failures only (90%)
-rtk vitest run          # Vitest failures only (99.5%)
-rtk playwright test     # Playwright failures only (94%)
-rtk test <cmd>          # Generic test wrapper - failures only
+rtk ls <path>      # Tree format, compact
+rtk read <file>
+rtk grep <pattern>
+rtk find <pattern>
 ```
 
-### Git (59-80% savings)
+### Analysis & Debug (70–90% savings)
 ```bash
-rtk git status          # Compact status
-rtk git log             # Compact log (works with all git flags)
-rtk git diff            # Compact diff (80%)
-rtk git show            # Compact show (80%)
-rtk git add             # Ultra-compact confirmations (59%)
-rtk git commit          # Ultra-compact confirmations (59%)
-rtk git push            # Ultra-compact confirmations
-rtk git pull            # Ultra-compact confirmations
-rtk git branch          # Compact branch list
-rtk git fetch           # Compact fetch
-rtk git stash           # Compact stash
-rtk git worktree        # Compact worktree
+rtk err <cmd>          # Только ошибки из stdout/stderr
+rtk log <file>         # Дедуп логов с счётчиками
+rtk json <file>        # Структура JSON без значений
+rtk summary <cmd>      # Умный summary вывода
+rtk diff               # Ultra-compact diff
 ```
 
-Note: Git passthrough works for ALL subcommands, even those not explicitly listed.
-
-### GitHub (26-87% savings)
+### Network (65–70% savings)
 ```bash
-rtk gh pr view <num>    # Compact PR view (87%)
-rtk gh pr checks        # Compact PR checks (79%)
-rtk gh run list         # Compact workflow runs (82%)
-rtk gh issue list       # Compact issue list (80%)
-rtk gh api              # Compact API responses (26%)
+rtk curl <url>
+rtk wget <url>
 ```
 
-### JavaScript/TypeScript Tooling (70-90% savings)
+### Meta
 ```bash
-rtk pnpm list           # Compact dependency tree (70%)
-rtk pnpm outdated       # Compact outdated packages (80%)
-rtk pnpm install        # Compact install output (90%)
-rtk npm run <script>    # Compact npm script output
-rtk npx <cmd>           # Compact npx command output
-rtk prisma              # Prisma without ASCII art (88%)
+rtk gain [--history]   # Статистика экономии токенов
+rtk discover           # Поиск упущенных мест применения RTK в сессии
+rtk proxy <cmd>        # Прогнать без фильтра (для дебага)
 ```
 
-### Files & Search (60-75% savings)
-```bash
-rtk ls <path>           # Tree format, compact (65%)
-rtk read <file>         # Code reading with filtering (60%)
-rtk grep <pattern>      # Search grouped by file (75%)
-rtk find <pattern>      # Find grouped by directory (70%)
-```
-
-### Analysis & Debug (70-90% savings)
-```bash
-rtk err <cmd>           # Filter errors only from any command
-rtk log <file>          # Deduplicated logs with counts
-rtk json <file>         # JSON structure without values
-rtk deps                # Dependency overview
-rtk env                 # Environment variables compact
-rtk summary <cmd>       # Smart summary of command output
-rtk diff                # Ultra-compact diffs
-```
-
-### Infrastructure (85% savings)
-```bash
-rtk docker ps           # Compact container list
-rtk docker images       # Compact image list
-rtk docker logs <c>     # Deduplicated logs
-rtk kubectl get         # Compact resource list
-rtk kubectl logs        # Deduplicated pod logs
-```
-
-### Network (65-70% savings)
-```bash
-rtk curl <url>          # Compact HTTP responses (70%)
-rtk wget <url>          # Compact download output (65%)
-```
-
-### Meta Commands
-```bash
-rtk gain                # View token savings statistics
-rtk gain --history      # View command history with savings
-rtk discover            # Analyze Claude Code sessions for missed RTK usage
-rtk proxy <cmd>         # Run command without filtering (for debugging)
-rtk init                # Add RTK instructions to CLAUDE.md
-rtk init --global       # Add RTK to ~/.claude/CLAUDE.md
-```
-
-## Token Savings Overview
-
-| Category | Commands | Typical Savings |
-|----------|----------|-----------------|
-| Tests | vitest, playwright, cargo test | 90-99% |
-| Build | next, tsc, lint, prettier | 70-87% |
-| Git | status, log, diff, add, commit | 59-80% |
-| GitHub | gh pr, gh run, gh issue | 26-87% |
-| Package Managers | pnpm, npm, npx | 70-90% |
-| Files | ls, read, grep, find | 60-75% |
-| Infrastructure | docker, kubectl | 85% |
-| Network | curl, wget | 65-70% |
-
-Overall average: **60-90% token reduction** on common development operations.
+**Неприменимо к этому проекту** (и поэтому не используется): `rtk cargo`, `rtk tsc`, `rtk lint`, `rtk prettier`, `rtk next`, `rtk vitest`, `rtk playwright`, `rtk pnpm`, `rtk npm`, `rtk npx`, `rtk prisma`, `rtk docker`, `rtk kubectl`. Для сборки здесь — MSBuild (C++) и `dotnet build`/`dotnet test` (F#/C#); у них RTK-фильтров нет, пишем команды напрямую.
 <!-- /rtk-instructions -->

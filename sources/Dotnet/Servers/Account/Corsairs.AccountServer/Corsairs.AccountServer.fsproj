@@ -21,7 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+        <!-- Microsoft.Extensions.Hosting уже входит в Microsoft.AspNetCore.App
+             (FrameworkReference выше), поэтому явный PackageReference на него
+             не нужен (.NET 10 warning NU1510). -->
         <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.*" />
         <PackageReference Include="Grpc.AspNetCore.Server" Version="2.*" />
     </ItemGroup>

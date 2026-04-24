@@ -107,6 +107,11 @@
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'" Label="X64 Configuration">
     <ClCompile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <!-- Глушим STL4043 (C4996): Crypto++ internally использует stdext::checked_array_iterator,
+           который помечен deprecated в новых STL. Crypto++ — сторонняя библиотека
+           (см. CLAUDE.md), её исходники мы не модифицируем, поэтому гасим предупреждение
+           на уровне проекта — ровно тем макросом, который MSVC сам рекомендует в тексте warning'а. -->
+      <PreprocessorDefinitions>_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>

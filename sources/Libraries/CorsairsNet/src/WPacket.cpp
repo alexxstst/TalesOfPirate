@@ -192,7 +192,7 @@ void WPacket::WriteString(const std::string& str) {
         EnsureCapacity(6);
         mpack_write_str(&_writer, "\0", 1); // 1  = null-terminator
     } else {
-        int len = str.size() + 1; // +1 = null
+        const auto len = str.size() + 1; // +1 = null
         EnsureCapacity(5 + len);
         mpack_write_str(&_writer, str.c_str(), len);
     }
