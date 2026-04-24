@@ -154,3 +154,6 @@ sources/Engine/lib/MindPower3D_D8R.idb
 *.sqlite-shm
 
 *.sqlite-wal
+
+# Claude Code worktrees (auto-created branches, не должны попадать в git)
+.claude/worktrees/

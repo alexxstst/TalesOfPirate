@@ -1,7 +1,13 @@
 name: Claude Code Review
 
+# Использует pull_request_target (а не pull_request), чтобы работать для PR из форков.
+# На pull_request GitHub принудительно урезает GITHUB_TOKEN до read-only и не выдаёт
+# id-token: write, из-за чего claude-code-action падает на OIDC-аутентификации.
+# pull_request_target выполняется в контексте базовой ветки с полными permissions.
+# Безопасно, поскольку action только читает код и отправляет его на ревью в Anthropic,
+# PR-код не исполняется.
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, ready_for_review, reopened]
     # Optional: Only run on specific file changes
     # paths:
@@ -21,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write  # для публикации inline-комментариев ревью
       issues: read
       id-token: write
 
@@ -29,6 +35,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          # pull_request_target по умолчанию чекаутит базовую ветку —
+          # явно берём head PR-а, чтобы ревьюить именно изменения.
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
 
       - name: Run Claude Code Review
