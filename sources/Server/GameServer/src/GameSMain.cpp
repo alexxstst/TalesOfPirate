@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	g_logManager.InitLogger("log\\game_server");
 	g_logManager.EnableGlobalConsole(true);
 
-	AssetDatabase::Instance()->Open("D:/Projects/MMORPG/TalesOfPirate/server/GameServer/gamedata.sqlite");
+	AssetDatabase::Instance()->Open("gamedata.sqlite");
 	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), "english", LanguageTarget::Server);
 
 	DisableCloseButton();

@@ -79,6 +79,8 @@ Client/bin/scripts/lua/*
 !sources/Libraries/LuaJIT/lib/
 !sources/Libraries/LuaJIT/luajit.exe
 !sources/Libraries/MaxSDK/lib/
+!sources/Libraries/SDL3/lib/
+!sources/Libraries/FreeType/lib/
 *.copied
 
 Libraries/Server/sdk/build/Release Client/microsoft/STL/std.compat.ixx.ifc.dt.d.json

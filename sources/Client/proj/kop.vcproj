@@ -257,7 +257,7 @@
 				OutputFile="$(OutDir)/Game_Publish.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../status/lib;../../util/lib;../../enclib/lib;../../mindpower/sdk/lib;&quot;$(ProjectDir)..\..\Server\SDK\Lib&quot;;&quot;$(ProjectDir)..\..\Common\lib&quot;;&quot;$(ProjectDir)..\..\Util\LIB&quot;;&quot;$(ProjectDir)../../status/lib&quot;;D:\project\work\sdk\ipss\lib;&quot;D:\project\work\sdk\SDL-1.2.7\LIB&quot;"
+				AdditionalLibraryDirectories="../../status/lib;../../util/lib;../../enclib/lib;../../mindpower/sdk/lib;&quot;$(ProjectDir)..\..\Server\SDK\Lib&quot;;&quot;$(ProjectDir)..\..\Common\lib&quot;;&quot;$(ProjectDir)..\..\Util\LIB&quot;;&quot;$(ProjectDir)../../status/lib&quot;;$(ProjectDir)\Libraries\Ipss\lib;&quot;$(ProjectDir)\Libraries\SDL-1.2.7\LIB&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames="libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;LIBCI.LIB"
 				DelayLoadDLLs="d3d8.dll;dinput8.dll"

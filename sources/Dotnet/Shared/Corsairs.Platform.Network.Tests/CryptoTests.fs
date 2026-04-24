@@ -577,7 +577,7 @@ module CppInteropTests =
     let private findExe () =
         let candidates = [|
             IO.Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "Tests", "CryptoInterop", "bin", "Release", "CryptoInterop.exe")
-            @"D:\Projects\MMORPG\TalesOfPirate\sources\Dotnet\Tests\CryptoInterop\bin\Release\CryptoInterop.exe"
+            IO.Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "Tests", "CryptoInterop", "bin", "Debug", "CryptoInterop.exe")
         |]
         candidates |> Array.tryFind IO.File.Exists
 
