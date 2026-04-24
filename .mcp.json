@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "stdio",
+      "command": "./tools/mcp/github-mcp-server/github-mcp-server.exe",
+      "args": ["stdio"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
+        "GITHUB_TOOLSETS": "all"
+      }
+    }
+  }
+}
