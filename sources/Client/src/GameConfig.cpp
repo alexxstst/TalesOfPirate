@@ -89,6 +89,7 @@ void CGameConfig::SetDefault()   //
 	m_IsShowConsole = false; //
 	m_bConsoleEnabled = FALSE;
 	m_bConsoleRequireSuperKey = TRUE;
+	m_bTextureLogEnabled = FALSE;
 	m_IsMoveClient = true;
 	m_IsBill = false; //  
 
@@ -229,6 +230,12 @@ void CGameConfig::Load()
 		auto& sec = g_SystemIni["Console"];
 		m_bConsoleEnabled         = static_cast<int>(sec.GetInt64("enabled", 0));
 		m_bConsoleRequireSuperKey = static_cast<int>(sec.GetInt64("requireSuperKey", 1));
+	}
+
+	// [TextureLog] — диагностический лог загрузок текстур, канал "textures".
+	{
+		auto& sec = g_SystemIni["TextureLog"];
+		m_bTextureLogEnabled = static_cast<int>(sec.GetInt64("enabled", 0));
 	}
 
 	// [Console Debug] — визуальные настройки читаются из Lua

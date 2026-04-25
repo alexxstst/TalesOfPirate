@@ -12,7 +12,6 @@ LW_BEGIN
 //
 
 // =================================
-#if(defined LW_USE_DX9)
 
 LW_STD_IMPLEMENTATION(lwShaderMgr9)
 
@@ -341,7 +340,6 @@ __ret:
 
 }
 
-#endif
 
 
 LW_END

@@ -99,12 +99,7 @@ public:
 public:
 	bool					LoadTotalVShader(lwISysGraphics* sys_graphics);
 
-#ifdef USE_RENDER
 	bool					InitRes(MPRender*		pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatviewproj);
-#else
-	bool					InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatviewproj);
-
-#endif
 
 	bool					InitRes2();
 	bool					InitRes3();
@@ -213,11 +208,7 @@ public:
 	void					SendResMessage(const s_string& strPartName, D3DXVECTOR3 vPos, MPMap* pMap);
 public:
 	//!3D
-#ifdef		USE_RENDER
 	MPRender*					m_pDev;
-#else
-	LPDIRECT3DDEVICE8			m_pDev;
-#endif
 
 	D3DCAPSX					m_caps;
 	D3DSURFACE_DESC				m_d3dBackBuffer;

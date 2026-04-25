@@ -45,7 +45,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 	}
 
     // sample stage
-#if(defined LW_USE_DX9)
     for(j = 0; j < LW_MAX_SAMPLESTAGE_NUM; j++)
     {
         for(i = 0; i < LW_MAX_SAMPLESTATE_NUM; i++)
@@ -53,7 +52,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
             _ss_value[j][i] = LW_INVALID_SS_VALUE;
         }
     }
-#endif
 
 	SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
 	SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -121,17 +119,14 @@ LW_RESULT lwDeviceObject::InitStateCache()
 	SetRenderState(D3DRS_MULTISAMPLEANTIALIAS , FALSE); // default value is TRUE
 	SetRenderState(D3DRS_MULTISAMPLEMASK, 0xffffffff);
 
-#if(defined LW_USE_DX9)
     SetRenderState(D3DRS_PATCHEDGESTYLE,D3DPATCHEDGE_DISCRETE);
     SetRenderState(D3DRS_DEBUGMONITORTOKEN, D3DDMT_ENABLE);
     SetRenderState(D3DRS_POINTSIZE_MAX, FTODW(64.0f));
-#endif
 	SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
 	SetRenderState(D3DRS_COLORWRITEENABLE, 0x0000000F);
 	SetRenderState(D3DRS_TWEENFACTOR, 0);
 	SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 
-#if(defined LW_USE_DX9)
     SetRenderState(D3DRS_POSITIONDEGREE, D3DDEGREE_CUBIC);
     SetRenderState(D3DRS_NORMALDEGREE, D3DDEGREE_LINEAR);
     SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
@@ -167,7 +162,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
     SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
     SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
     SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-#endif
 
 	for(i = 0; i < LW_MAX_TEXTURESTAGE_NUM; ++i)
     {
@@ -194,7 +188,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
         SetTextureStageState(i, D3DTSS_TEXCOORDINDEX, i);
     }
 
-#ifdef LW_USE_DX9
 	for(i = 0; i < LW_MAX_SAMPLESTAGE_NUM; ++i)
     {
 		SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
@@ -204,7 +197,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 		SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 	}
-#endif // USE_DX9
 
     return LW_RET_OK;
 }
@@ -356,7 +348,6 @@ LW_RESULT lwDeviceObject::ResetDeviceStateCache()
 	}
 
     // sampler state
-#if(defined LW_USE_DX9)
 	for(j = 0; j < LW_MAX_SAMPLESTAGE_NUM; ++j)
     {
         for(i = 0; i < LW_MAX_SAMPLESTATE_NUM; i++)
@@ -366,7 +357,6 @@ LW_RESULT lwDeviceObject::ResetDeviceStateCache()
             SetSamplerStateForced(j, (D3DSAMPLERSTATETYPE)i, v);
         }
     }
-#endif
 
     return LW_RET_OK;
 }
@@ -392,9 +382,7 @@ LW_RESULT lwDeviceObject::ResetDeviceTransformMatrix()
 // lwDeviceObject
 lwDeviceObject::lwDeviceObject(lwSysGraphics* sys_graphics)
 : _sys_graphics(sys_graphics), _d3d(0), _dev(0), 
-#if (defined LW_USE_DX9)
   _fvf_value(D3DFMT_UNKNOWN), _shader_value(0)
-#endif
 {
 
     _svb_head = 0;
@@ -546,10 +534,8 @@ LW_RESULT lwDeviceObject::CreateVertexBuffer(UINT length, DWORD usage, DWORD fvf
     if(FAILED(ret = _dev->CreateVertexBufferX(length, usage, fvf, pool, vb, handle)))
         goto __ret;
 
-#if(defined WATCH_VM_FLAG)
     _watch_vm_info.alloc_vb_size += length;
     _watch_vm_info.alloc_vb_cnt += 1;
-#endif
 
 __ret:
     return ret;
@@ -561,10 +547,8 @@ LW_RESULT lwDeviceObject::CreateIndexBuffer(UINT length, DWORD usage, D3DFORMAT 
     if(FAILED(ret = _dev->CreateIndexBufferX(length, usage, fmt, pool, ib, handle)))
         goto __ret;
 
-#if(defined WATCH_VM_FLAG)
     _watch_vm_info.alloc_ib_size += length;
     _watch_vm_info.alloc_ib_cnt += 1;
-#endif
 
 __ret:
     return ret;
@@ -573,70 +557,67 @@ __ret:
 LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, const lwTexDataInfo* info, DWORD level, DWORD usage, DWORD format, D3DPOOL pool)
 {
     LW_RESULT ret = LW_RET_FAILED;
-    
-#ifdef CREATETEXTURE_SYSMEM_UPDATE_FLAG
 
     IDirect3DTextureX* t;
-	D3DLOCKED_RECT lock_rc;
-	IDirect3DSurfaceX* surface;
-    IDirect3DTextureX* mem_tex;
+    D3DLOCKED_RECT lock_rc;
+    IDirect3DSurfaceX* surface;
 
-    if(FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, D3DPOOL_DEFAULT, &t, 0)))
-        goto __ret;
+    if (pool == D3DPOOL_DEFAULT) {
+        // D3DPOOL_DEFAULT без D3DUSAGE_DYNAMIC нельзя лочить напрямую — заливаем через
+        // временную SYSTEMMEM-текстуру и UpdateTexture (DMA в VRAM).
+        IDirect3DTextureX* mem_tex;
 
-    if(FAILED(_dev->CreateTextureX(info->width, info->height, level, 0, (D3DFORMAT)format, D3DPOOL_SYSTEMMEM, &mem_tex, 0)))
-        goto __ret;
+        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, D3DPOOL_DEFAULT, &t, 0))) {
+            goto __ret;
+        }
 
+        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, 0, (D3DFORMAT)format, D3DPOOL_SYSTEMMEM, &mem_tex, 0))) {
+            goto __ret;
+        }
 
-    if(FAILED(mem_tex->GetSurfaceLevel(0, &surface))) 
-		goto __ret;
+        if (FAILED(mem_tex->GetSurfaceLevel(0, &surface))) {
+            goto __ret;
+        }
 
-    if(FAILED(surface->LockRect(&lock_rc, 0, 0))) 
-		goto __ret;
-    
+        if (FAILED(surface->LockRect(&lock_rc, 0, 0))) {
+            goto __ret;
+        }
 
-    memcpy(lock_rc.pBits, info->data, info->size);
+        memcpy(lock_rc.pBits, info->data, info->size);
 
-    surface->UnlockRect();
-    surface->Release();
+        surface->UnlockRect();
+        surface->Release();
 
-    if(FAILED(_dev->UpdateTexture(mem_tex, t)))
-        goto __ret;
+        if (FAILED(_dev->UpdateTexture(mem_tex, t))) {
+            goto __ret;
+        }
 
-    mem_tex->Release();
+        mem_tex->Release();
+    }
+    else {
+        // MANAGED / SYSTEMMEM / SCRATCH lockable напрямую — пишем в LockRect без staging.
+        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, pool, &t, 0))) {
+            goto __ret;
+        }
+
+        if (FAILED(t->GetSurfaceLevel(0, &surface))) {
+            goto __ret;
+        }
+
+        if (FAILED(surface->LockRect(&lock_rc, 0, 0))) {
+            goto __ret;
+        }
+
+        memcpy(lock_rc.pBits, info->data, info->size);
+
+        surface->UnlockRect();
+        surface->Release();
+    }
 
     *out_tex = t;
 
-#else
-
-    HRESULT ret;
-    IDirect3DTextureX* t;
-	D3DLOCKED_RECT lock_rc;
-	IDirect3DSurfaceX* surface;
-
-    if(FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, pool, &t, 0)))
-        goto __ret;
-
-
-    if(FAILED(t->GetSurfaceLevel(0, &surface))) 
-		goto __ret;
-
-    if(FAILED(surface->LockRect(&lock_rc, 0, 0))) 
-		goto __ret;
-    
-
-    memcpy(lock_rc.pBits, info->data, info->size);
-
-    surface->UnlockRect();
-    surface->Release();
-
-    *out_tex = t;
-#endif
-
-#if(defined WATCH_VM_FLAG)
     _watch_vm_info.alloc_tex_size += info->size;
     _watch_vm_info.alloc_tex_cnt += 1;
-#endif
 
     ret = LW_RET_OK;
 
@@ -645,7 +626,6 @@ __ret:
 }
 LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, UINT width, UINT height, UINT level, DWORD usage, D3DFORMAT format, D3DPOOL pool)
 {
-#if(defined WATCH_VM_FLAG)
     LW_RESULT ret = LW_RET_FAILED;
 
     if(LW_FAILED(_dev->CreateTextureX(width, height, level, usage, format, pool, out_tex, NULL)))
@@ -656,19 +636,11 @@ LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, UINT width,
         goto __ret;
 
     _watch_vm_info.alloc_tex_size += lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-//#if(defined LW_USE_DX8)
-    //_watch_vm_info.alloc_tex_size += desc.Size;
-//#endif
     _watch_vm_info.alloc_tex_cnt += 1;
 
     ret = LW_RET_OK;
 __ret:
     return ret;
-#else
-
-    return _dev->CreateTextureX(width, height, level, usage, format, pool, out_tex, NULL);
-
-#endif
 }
 
 LW_RESULT lwDeviceObject::CreateTextureFromFileInMemory(IDirect3DTextureX** out_tex, void* data, UINT data_size, UINT width, UINT height, UINT mip_level, DWORD usage, D3DFORMAT format, D3DPOOL pool, DWORD filter, DWORD mip_filter, D3DCOLOR colorkey, D3DXIMAGE_INFO* src_info, PALETTEENTRY* palette)
@@ -773,21 +745,17 @@ LW_RESULT lwDeviceObject::CreateCubeTexture(IDirect3DCubeTextureX** o_tex, UINT 
 }
 LW_RESULT lwDeviceObject::CreateOffscreenPlainSurface(IDirect3DSurfaceX** surface, UINT width, UINT height, D3DFORMAT format, DWORD pool, HANDLE* handle)
 {
-#if(defined LW_USE_DX9)
     return _dev->CreateOffscreenPlainSurface(width, height, format, (D3DPOOL)pool, surface, handle);
-#endif
 }
 
 LW_RESULT lwDeviceObject::ReleaseVertexBuffer(IDirect3DVertexBufferX* vb)
 {
     if(!vb) return LW_RET_OK;
-#if (defined WATCH_VM_FLAG)
     D3DVERTEXBUFFER_DESC desc;
     if (SUCCEEDED(vb->GetDesc(&desc))) {
         _watch_vm_info.alloc_vb_size -= desc.Size;
         if (_watch_vm_info.alloc_vb_size < 0) _watch_vm_info.alloc_vb_size = 0;
     }
-#endif
     vb->Release();
     return LW_RET_OK;
 }
@@ -838,32 +806,26 @@ void lwDeviceObject::_ClearStreamBuffer()
 LW_RESULT lwDeviceObject::ReleaseIndexBuffer(IDirect3DIndexBufferX* ib)
 {
     if(!ib) return LW_RET_OK;
-#if (defined WATCH_VM_FLAG)
     D3DINDEXBUFFER_DESC desc;
     if (SUCCEEDED(ib->GetDesc(&desc))) {
         _watch_vm_info.alloc_ib_size -= desc.Size;
         if (_watch_vm_info.alloc_ib_size < 0) _watch_vm_info.alloc_ib_size = 0;
     }
-#endif
     ib->Release();
     return LW_RET_OK;
 }
 
 LW_RESULT lwDeviceObject::ReleaseTex(IDirect3DTextureX* tex)
 {
-#if(defined WATCH_VM_FLAG)
     D3DSURFACE_DESC desc;
     tex->GetLevelDesc(0, &desc);
     _watch_vm_info.alloc_tex_size -= lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-    //_watch_vm_info.alloc_tex_size -= desc.Size;
-#endif
 
     tex->Release();
     return LW_RET_OK;
 }
 
 
-#if (defined LW_USE_DX9)
 
 LW_RESULT lwDeviceObject::SetFVF(DWORD fvf)
 {
@@ -910,7 +872,6 @@ LW_RESULT lwDeviceObject::SetVertexShaderConstantF(UINT reg_id, const float* dat
     return _dev->SetVertexShaderConstantF(reg_id, data, v_num);
 }
 
-#endif
 
 
 LW_RESULT lwDeviceObject::SetStreamSource(UINT stream_num, IDirect3DVertexBufferX* stream_data, UINT offset_byte, UINT stride)
@@ -1013,7 +974,6 @@ LW_RESULT lwDeviceObject::SetTextureStageState(DWORD stage, D3DTEXTURESTAGESTATE
     return ret;
 }
 
-#ifdef LW_USE_DX9
 LW_RESULT lwDeviceObject::SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value)
 {
     LW_RESULT ret = LW_RET_OK;
@@ -1027,7 +987,6 @@ LW_RESULT lwDeviceObject::SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE typ
 
     return ret;
 }
-#endif
 
 LW_RESULT lwDeviceObject::SetTexture(DWORD stage, IDirect3DBaseTextureX* tex)
 {
@@ -1055,13 +1014,11 @@ LW_RESULT lwDeviceObject::SetTextureStageStateForced(DWORD stage, D3DTEXTURESTAG
     return _dev->SetTextureStageState(stage, type, value);
 }
 
-#ifdef LW_USE_DX9
 LW_RESULT lwDeviceObject::SetSamplerStateForced(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value)
 {
     _ss_value[sampler][type] = value;
     return _dev->SetSamplerState(sampler, type, value);
 }
-#endif
 
 LW_RESULT lwDeviceObject::SetTextureForced(DWORD stage, IDirect3DTextureX* tex)
 {
@@ -1079,13 +1036,11 @@ LW_RESULT lwDeviceObject::GetTextureStageState(DWORD stage, DWORD state, DWORD* 
     *value = _tss_value[stage][state];
     return LW_RET_OK;
 }
-#if(defined LW_USE_DX9)
 LW_RESULT lwDeviceObject::GetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE state, DWORD* value)
 {
     *value = _ss_value[sampler][state];
     return LW_RET_OK;
 }
-#endif
 LW_RESULT lwDeviceObject::GetTexture(DWORD stage, IDirect3DBaseTextureX** tex)
 {
     *tex = _tex_seq[stage];

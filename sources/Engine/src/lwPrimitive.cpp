@@ -650,12 +650,10 @@ LW_RESULT lwPrimitive::Render()
     if(_state_ctrl.GetState(STATE_VISIBLE) == 0)
         goto __addr_ret_ok;
 
-//#if(defined MULTITHREAD_LOADING_MESH)
     if(_mesh_agent->GetMesh()->IsLoadingOK() == 0)
     {
         goto __addr_ret_ok;
     }
-//#endif
 
     _render_agent->BindAnimCtrlAgent(_anim_agent);
     _render_agent->BindMeshAgent( _mesh_agent );
@@ -669,10 +667,6 @@ LW_RESULT lwPrimitive::Render()
             if (_mtltex_agent_seq[i] == NULL)
                 break;
 
-            //#if(defined MULTITHREAD_LOADING_TEXTURE)
-                    //if(_mtltex_agent_seq[i]->IsTextureLoadingOK() == 0)
-                    //    continue;
-            //#endif
             if (!_mtltex_agent_seq[i]->GetRenderFlag())
                 continue;
 

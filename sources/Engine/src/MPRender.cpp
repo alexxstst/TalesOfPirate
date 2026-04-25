@@ -5,7 +5,6 @@
 #include "lwIFunc.h"
 #include "ShaderLoad.h"
 #include "lwD3DSettings.h"
-#include "lwPredefinition.h"
 #include "d3dutil.h"
 #include "MPGameApp.h"
 
@@ -213,11 +212,7 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
 //-----------------------------------------------------------------------------
 BOOL MPRender::InitResource()
 {
-#ifdef USE_RENDER
 	if(!ResMgr.InitRes(this,(D3DXMATRIX*)_IMgr.dev_obj->GetMatView(),(D3DXMATRIX*)_IMgr.dev_obj->GetMatViewProj()))
-#else
-	if(!ResMgr.InitRes(_pD3DDevice,&GetWorldViewMatrix(),&GetViewProjMatrix()))
-#endif
 	{
 		ToLogService("errors", LogLevel::Error, "ResMgr,!");
 		return FALSE;

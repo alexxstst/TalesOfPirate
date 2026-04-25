@@ -152,6 +152,26 @@ enum lwTexInfoTypeEnum
     TEX_TYPE_INVALID =      LW_INVALID_INDEX,
 };
 
+//  Стратегия загрузки текстуры в видеопамять (см. lwTex::LoadVideoMemory).
+//  Поле lwTex::_loadMode хранит выбранный режим. Сейчас переключатель
+//  не активирован ни одним колсайтом (SetLoadMode не вызывается),
+//  но сам выбор путей в LoadVideoMemory сохранён ради читаемости.
+enum class TextureLoadMode : std::uint32_t
+{
+    //  Дефолт. DDS-ориентированный путь: ищет .dds-вариант файла рядом с
+    //  .bmp/.tga (если есть, использует его) и идёт через D3DX — DXT-сжатие
+    //  и mip-цепочка из DDS доезжают до VRAM как есть. Обычные форматы
+    //  тоже подхватываются D3DX, но смысл этой ветки — именно DDS
+    //  (компрессированные текстуры).
+    LOAD_TEXTURE_DDS = 0,
+
+    //  Пользовательские raster-изображения. Декодит BMP/TGA/PNG через
+    //  ImageLoader (stb_image), приводит к нужному D3DFORMAT
+    //  (R5G6B5/A1R5G5B5/A4R4G4B4/X8R8G8B8/A8R8G8B8) и заливает в текстуру
+    //  через dev->CreateTexture. DDS этот путь не поддерживает.
+    LOAD_TEXTURE_USER_IMAGE = 1,
+};
+
 struct lwTexFileInfo
 {
 };
@@ -545,10 +565,7 @@ struct lwSysMemTexInfo
     DWORD mip_filter;
     DWORD colorkey;
     char file_name[LW_MAX_PATH];
-    IDirect3DTextureX* sys_mem_tex;
     lwIBuffer* buf;
-    //BYTE* data;
-    //DWORD data_size;
 };
 
 

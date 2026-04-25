@@ -68,7 +68,7 @@
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\Cryptopp;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0601;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0601;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -113,7 +113,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\Cryptopp;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0601;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0601;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Async</ExceptionHandling>

@@ -2502,21 +2502,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 
-		///*
-#if(defined LW_USE_DX9)
-		/* if(mesh.fvf & D3DFVF_LASTBETA_UBYTE4)
-		{
-			if(mesh.fvf & D3DFVF_XYZB2)
-			{
-				mesh.fvf &= ~D3DFVF_XYZB2;
-			}
-			else if(mesh.fvf & D3DFVF_XYZB3)
-			{
-				mesh.fvf &= ~D3DFVF_XYZB3;
-			}
-
-			mesh.fvf |= D3DFVF_XYZB4;
-		} */
 		if ((rcci.vs_id == VST_PU4NT0_LD)
 			|| (rcci.vs_id == VST_PB1U4NT0_LD)
 			|| (rcci.vs_id == VST_PB2U4NT0_LD)
@@ -2525,9 +2510,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			//rcci.vs_id = VST_PB4U4NT0_LD_DX9;
 			//rcci.decl_id = VDT_PB4U4NT0_DX9;
 		}
-
-#endif
-		//*/
 
 		return LW_RET_OK;
 	}

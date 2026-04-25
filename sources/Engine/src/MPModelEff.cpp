@@ -3,7 +3,6 @@
 //#include <mindpower.h>
 
 #include "GlobalInc.h"
-#include "lwPredefinition.h"
 
 #include "mpmodeleff.h"
 #include "MPRender.h"
@@ -399,11 +398,7 @@ void CMPModelEff::RenderAccel(float &fTime)
 		if(m_pCEffect->IsChangeably())
 		{
 			m_pCEffectFile->End();
-#ifdef USE_MGR
 			m_pCEffect->Begin();
-#else
-			m_pCEffect->m_pDev->SetVertexShader(EFFECT_VER_FVF);
-#endif
 
 			m_pCEffectFile->SetTechnique(3);
 			m_pCEffectFile->Begin(D3DXFX_DONOTSAVESTATE);
@@ -420,24 +415,16 @@ void CMPModelEff::RenderAccel(float &fTime)
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
 
-#ifdef USE_RENDER
 			m_pCEffect->m_pDev->SetTransformWorld( &m_pCurCortrol->m_SMatResult);
-#else
-			m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 
 			m_pCEffect->Render();
-#ifdef USE_MGR
 			m_pCEffect->End();
-#endif
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 			continue;
 		}
 		m_pCEffect->SetTexture();
-#ifdef USE_MGR
 		m_pCEffect->Begin();
-#endif
 		m_pCEffect->SetVertexShader();
 
 		if(m_pCEffect->IsBillBoard())
@@ -485,9 +472,7 @@ void CMPModelEff::RenderAccel(float &fTime)
 
 
 		m_pCEffect->Render();
-#ifdef USE_MGR
 		m_pCEffect->End();
-#endif
 		m_pCEffect->m_pDev->SetRenderState(D3DRS_ZENABLE, TRUE);
 	}
 	m_pCEffectFile->End();
@@ -627,7 +612,6 @@ void CMPModelEff::RenderVS()
 			continue;
 
 		m_pCEffect  = m_vecEffect[n];
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
 
 		if(m_pCEffect->getType() == EFFECT_FRAMETEX)
 		{
@@ -639,15 +623,6 @@ void CMPModelEff::RenderVS()
 			if(!m_pCEffect->m_CTextruelist.m_pTex || !m_pCEffect->m_CTextruelist.m_pTex->IsLoadingOK())
 				continue;
 		}
-//#else
-//		if(m_pCEffect->getType() == EFFECT_FRAMETEX)
-//		{
-//			if(!m_pCEffect->m_CTexFrame.m_lpCurTex)
-//				continue;
-//		}else if(!m_pCEffect->m_CTextruelist.m_pTex)
-//					continue;
-//
-//#endif
 		if(m_pCEffect->IsRotaLoop())
 		{
 			D3DXMATRIX sMat;
@@ -740,11 +715,7 @@ void CMPModelEff::RenderVS()
 		}
 		if(m_pCEffect->IsChangeably())
 		{
-#ifdef USE_MGR
 			m_pCEffect->Begin();
-#else
-			m_pCEffect->m_pDev->SetVertexShader(EFFECT_VER_FVF);
-#endif
 
 			m_pCEffectFile->SetTechnique(3);
 			m_pCEffectFile->Begin(D3DXFX_DONOTSAVESTATE);
@@ -768,20 +739,12 @@ void CMPModelEff::RenderVS()
 			if(m_bBindbone)
 			{
 				D3DXMatrixMultiply(&m_pCurCortrol->m_SMatResult, &m_SMatResult, &m_SpmatBone);
-#ifdef USE_RENDER
 				D3DXMatrixTranspose(&vertexShaderMat, &m_pCurCortrol->m_SMatResult);
 				m_pCEffect->m_pDev->SetTransformWorld( &m_pCurCortrol->m_SMatResult);
-#else
-				m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_pCurCortrol->m_SMatResult);
-#endif
 			}else
 			{
-#ifdef USE_RENDER
 				D3DXMatrixTranspose(&vertexShaderMat, &m_SMatResult);
 				m_pCEffect->m_pDev->SetTransformWorld( &m_SMatResult);
-#else
-				m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 			}
 			m_pCEffect->m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_pCurCortrol->m_dwCurColor);
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
@@ -789,18 +752,14 @@ void CMPModelEff::RenderVS()
 			m_pCEffect->m_pDev->SetVertexShaderConstantF(0, vertexShaderMat, 4);
 
 			m_pCEffect->Render();
-#ifdef USE_MGR
 			m_pCEffect->End();
-#endif
 			m_pCEffectFile->End();
 			m_pCEffect->m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 			continue;
 		}
-#ifdef USE_MGR
 		m_pCEffect->Begin();
-#endif
 		m_pCEffectFile->SetTechnique(m_iIdxTech);
 		m_pCEffectFile->Begin(D3DXFX_DONOTSAVESTATE);
 		m_pCEffectFile->Pass(0);
@@ -879,9 +838,7 @@ void CMPModelEff::RenderVS()
 			m_pCEffect->m_pDev->SetVertexShaderConstantF(4, *m_pMatViewProj, 4);
 
 		m_pCEffect->Render();
-#ifdef USE_MGR
 		m_pCEffect->End();
-#endif
 		//m_pCEffect->m_pDev->SetRenderStateForced(D3DRS_ALPHABLENDENABLE, FALSE);
 		m_pCEffectFile->End();
 	}
@@ -940,10 +897,8 @@ void CMPModelEff::RenderSoft()
 
 		m_pCEffect  = m_vecEffect[n];
 
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
 		if(!m_pCEffect->m_CTextruelist.m_pTex->IsLoadingOK())
 			return;
-//#endif
 
 		m_pCurCortrol->GetTransformMatrix(&m_SMatResult);
 		D3DXMatrixMultiply(&m_SMatResult, &m_SMatResult, &t_STemp);		
@@ -977,11 +932,7 @@ void CMPModelEff::RenderSoft()
 		if(m_pCEffect->IsChangeably())
 		{
 			m_pCEffectFile->End();
-#ifdef USE_MGR
 			m_pCEffect->Begin();
-#else
-			m_pCEffect->m_pDev->SetVertexShader(EFFECT_VER_FVF);
-#endif
 
 			m_pCEffectFile->SetTechnique(3);
 			m_pCEffectFile->Begin(D3DXFX_DONOTSAVESTATE);
@@ -997,24 +948,16 @@ void CMPModelEff::RenderSoft()
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
-#ifdef USE_RENDER
 			m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
-#else
-			m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 
 			m_pCEffect->Render();
-#ifdef USE_MGR
 			m_pCEffect->End();
-#endif
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 			continue;
 		}
 		m_pCEffect->SetTexture();
-#ifdef USE_MGR
 		m_pCEffect->Begin();
-#endif
 		m_pCEffect->m_pDev->SetVertexShader(NULL);
 		m_pCEffect->m_pDev->SetFVF(EFFECT_VER_FVF);
 
@@ -1068,16 +1011,10 @@ void CMPModelEff::RenderSoft()
 		m_pCEffect->m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_pCurCortrol->m_dwCurColor);
 		m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 		m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-#ifdef USE_RENDER
 		m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
-#else
-		m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 
 		m_pCEffect->Render();
-#ifdef USE_MGR
 		m_pCEffect->End();
-#endif
 		m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 		m_pCEffect->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 
@@ -1140,23 +1077,15 @@ void	CMPModelEff::ShowCurFrame(int iCurSubEff, int iCurFrame)
 	//	m_pCEffect->m_pCModel->GetVertexBuffer()->Unlock();
 	//!
 		m_pCEffect->SetTexture();
-#ifdef USE_RENDER
 		m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
-#else
-		m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 
-#ifdef USE_MGR
 	m_pCEffect->Begin();
-#endif
 
 	m_pCEffect->m_pDev->SetVertexShader(NULL);
 	m_pCEffect->m_pDev->SetFVF(EFFECT_VER_FVF);
 
 	m_pCEffect->Render();
-#ifdef USE_MGR
 	m_pCEffect->End();
-#endif
 
 	}
 }
@@ -1193,23 +1122,15 @@ void	CMPModelEff::ShowTempFrame(int iCurSubEff,
 	//	m_pCEffect->m_pCModel->GetVertexBuffer()->Unlock();
 	//!
 	m_pCEffect->SetTexture();
-#ifdef USE_RENDER
 	m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
-#else
-	m_pCEffect->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &m_SMatResult);
-#endif
 
 	m_pCEffect->m_pDev->SetVertexShader(NULL);
 	m_pCEffect->m_pDev->SetFVF(EFFECT_VER_FVF);
 
-#ifdef USE_MGR
 	m_pCEffect->Begin();
-#endif
 
 	m_pCEffect->Render();
-#ifdef USE_MGR
 	m_pCEffect->End();
-#endif
 }
 
 
@@ -1322,11 +1243,9 @@ void	CMPStrip::Render()
 	D3DXMATRIX mat;
 	D3DXMatrixIdentity(&mat);
 
-#ifdef		USE_RENDER
 	m_pDev->SetVertexShader(NULL);
 	m_pDev->SetFVF(STRIP_FVF);
 
-#ifdef	MULTITHREAD_LOADING_TEXTURE
 	if(_pTex && _pTex->IsLoadingOK())
 		m_pDev->SetTexture(0, _pTex->GetTex());
 	else
@@ -1334,19 +1253,8 @@ void	CMPStrip::Render()
 		_pCEffFile->End();
 		return;
 	}
-#else
-	if(_pTex)
-		m_pDev->SetTexture(0,_pTex->GetTex());
-	else
-		m_pDev->SetTexture(0,NULL);
-#endif
 
 	m_pDev->SetTransformWorld(&mat);
-#else
-	m_pDev->SetVertexShader(STRIP_FVF);
-	m_pDev->SetTexture(0,_pTex);
-	m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), &mat);
-#endif
 
 	track* ptrack;
 	D3DXCOLOR color = _dwColor;
@@ -1362,11 +1270,7 @@ void	CMPStrip::Render()
 		}
 	}
 	if(_vecCtrl.size()>1)
-#ifdef		USE_RENDER
 		m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, _vecPath.size()-2, _vecPath.front(), sizeof(Strip_Vertex));
-#else
-		m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, _vecPath.size()-2, _vecPath.front(), sizeof(Strip_Vertex));
-#endif
 	_pCEffFile->End();
 }
 

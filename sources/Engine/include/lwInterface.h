@@ -731,7 +731,7 @@ public:
     virtual void GetTexInfo(lwTexInfo* info) PURE_METHOD;
     virtual BOOL IsLoadingOK() const PURE_METHOD;
     virtual DWORD SetLOD(DWORD level) PURE_METHOD;
-    virtual void SetLoadFlag(DWORD flag) PURE_METHOD;
+    virtual void SetLoadMode(TextureLoadMode mode) PURE_METHOD;
     virtual void SetMTFlag(DWORD flag) PURE_METHOD;
     virtual DWORD GetMTFlag() PURE_METHOD;
 

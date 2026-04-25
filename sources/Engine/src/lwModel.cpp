@@ -8,7 +8,6 @@
 #include "lwAnimCtrl.h"
 #include "lwRenderImp.h"
 #include "lwPathInfo.h"
-#include "lwPreDefinition.h"
 #include <fstream>
 #include <iostream>
 LW_BEGIN
@@ -122,16 +121,9 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), file);
 
 
-#ifdef USE_MODEL_INFO_LOAD
-
-        lwModelObjInfo model_info;
         lwModelObjInfo* model_info_ptr;
 
-#if(defined USE_RES_BUF_MGR)
-
         lwIResBufMgr* res_buf_mgr = _res_mgr->GetResBufMgr();
-
-#if(defined LOAD_RES_BUF_RUNTIME)
 
         // use path query
         if(model_id == LW_INVALID_INDEX)
@@ -157,39 +149,7 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
 
                 res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, model_id);
             }
-            else
-            {
-                int x = 0;
-            }
         }
-
-        goto __load_model;
-
-#else // LOAD_RES_BUF_RUNTIME
-        if(model_id == LW_INVALID_INDEX)
-        {
-            if(LW_SUCCEEDED(res_buf_mgr->QueryModelObjInfo((lwIModelObjInfo**)&model_info_ptr, path)))
-                goto __load_model;
-        }
-        else
-        {
-            if(LW_FAILED(res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, model_id)))
-                return LW_RET_FAILED;
-        }
-#endif
-
-#endif
-
-
-        if(LW_FAILED(model_info.Load(path)))
-        {
-            LG_MSGBOX("invalid file name: %s when called lwModel::Load", path);
-            return LW_RET_FAILED;
-        }
-
-        model_info_ptr = &model_info;
-
-__load_model:
 
         for(DWORD i = 0; i < model_info_ptr->geom_obj_num; i++)
         {
@@ -208,7 +168,7 @@ __load_model:
         }
 
         if(model_info_ptr->helper_data.type != HELPER_TYPE_INVALID)
-        {                
+        {
             if(_helper_object == 0)
             {
                 _helper_object = LW_NEW(lwHelperObject((lwResourceMgr*)_res_mgr));
@@ -219,12 +179,6 @@ __load_model:
                 }
             }
         }
-
-#else
-
-#error not support!!!
-
-#endif
 
         SetFileName(file);
 

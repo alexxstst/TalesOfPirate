@@ -427,16 +427,12 @@ void UIRender::Reset()
 
 HRESULT  UI_OnLostDevice()
 {
-#ifdef USE_RENDER
     GetRender().OnLostDevice();
-#endif
     return TRUE; 
 }
 HRESULT  UI_OnResetDevice()
 {
-#ifdef USE_RENDER
     GetRender().OnResetDevice();
-#endif
     return TRUE; 
 }
 

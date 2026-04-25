@@ -470,11 +470,7 @@ class CMPStrip
 public:
 	CMPStrip();
 	~CMPStrip();
-#ifdef		USE_RENDER
 	void	CreateStrip(MPRender*	pDev, const s_string& strTexName,CMPResManger* pResMagr)
-#else
-	void	CreateStrip(LPDIRECT3DDEVICE8	pDev,const s_string& strTexName,CMPResManger* pResMagr)
-#endif
 	{
 		m_pDev = pDev;
 		_strTexName = strTexName;
@@ -490,12 +486,8 @@ public:
 			_pTex = NULL;
 		}else
 		{
-#ifdef USE_RENDER
 			//pResMagr->GetTextureByID(id);
 			_pTex = pResMagr->GetTextureByIDlw(id);
-#else
-			_pTex = pResMagr->GetTextureByID(id);
-#endif
 		}
 		_pfDailTime = pResMagr->GetDailTime();
 
@@ -658,12 +650,8 @@ public:
 			_pTex = NULL;
 		else
 		{
-#ifdef USE_RENDER
 			//pResMagr->GetTextureByID(id);
 			_pTex = pResMagr->GetTextureByIDlw(id);
-#else
-			_pTex = pResMagr->GetTextureByID(id);
-#endif
 		}
 	}
 
@@ -683,11 +671,7 @@ public:
 	void		SetLoop(bool	bloop)					{ m_bLoop = bloop; }
 protected:
 
-#ifdef		USE_RENDER
 	MPRender*					m_pDev;
-#else
-	LPDIRECT3DDEVICE8	m_pDev;
-#endif
 
 	bool				m_bLoop;
 
@@ -704,11 +688,7 @@ protected:
 	S_BVECTOR<Strip_Vertex>	_vecPath;
 	S_BVECTOR<track>	_vecCtrl;
 
-#ifdef USE_RENDER
 	lwITex*				_pTex;
-#else
-	LPDIRECT3DTEXTURE8	_pTex;
-#endif
 	s_string			_strTexName;
 
 	CMPEffectFile*		_pCEffFile;

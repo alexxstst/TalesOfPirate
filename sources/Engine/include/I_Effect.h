@@ -1,16 +1,4 @@
 ﻿#pragma once
-#define		USE_MGR
-#define		USE_RENDER
-
-//#define		USE_GAME
-
-
-//#define		USE_DDS_FILE USE_DDS_FILE_EFFECT
-
-//#ifdef USE_DDS_FILE
-//#undef USE_DDS_FILE 
-
-//#endif
 
 #include <Util.h>
 //stl
@@ -373,21 +361,13 @@ public:
 
 	bool Copy(const CEffectModel& rhs);
 
-#ifdef		USE_RENDER
 	CEffectModel(MPRender* pDev, lwIResourceMgr* pRes = NULL);
-#else
-	CEffectModel(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes = NULL);
-#endif
 	virtual ~CEffectModel();
 
 public:
 	void ReleaseModel();
 
-#ifdef USE_RENDER
 	void InitDevice(MPRender* pDev, lwIResourceMgr* pRes = NULL);
-#else
-	void InitDevice(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes = NULL);
-#endif
 
 	bool CreateTriangle();
 	bool CreatePlaneTriangle();
@@ -421,11 +401,7 @@ public:
 	}
 
 	bool IsItem() {
-#ifdef USE_MGR
 		return _lwMesh ? false : true;
-#else
-		return _lpVB ? false : true;
-#endif
 	}
 
 	bool LoadModel(const char* pszName);
@@ -448,25 +424,13 @@ public:
 	}
 
 
-#ifdef USE_MGR
 	lwILockableStreamIB* GetIndexBuffer() {
 		return _lpSIB;
 	}
-#else
-	LPDIRECT3DINDEXBUFFER8 GetIndexBuffer() {
-		return _lpIB;
-	}
-#endif
 
-#ifdef USE_MGR
 	lwILockableStreamVB* GetVertexBuffer() {
 		return _lpSVB;
 	}
-#else
-	LPDIRECT3DVERTEXBUFFER8 GetVertexBuffer() {
-		return _lpVB;
-	}
-#endif
 
 	void Lock(BYTE** pvEffVer);
 	void Unlock();
@@ -475,19 +439,11 @@ public:
 
 	void SetRenderNum(WORD wVer, WORD wFace);
 
-#ifdef USE_RENDER
 	MPRender* GetDev();
-#else
-	LPDIRECT3DDEVICE8 GetDev();
-#endif
 
 public:
 	//!3D
-#ifdef USE_RENDER
 	MPRender* m_pDev;
-#else
-	LPDIRECT3DDEVICE8 m_pDev;
-#endif
 
 	lwIResourceMgr* m_pRes;
 
@@ -512,15 +468,10 @@ public:
 	bool m_bUsing;
 
 protected:
-#ifdef USE_MGR
 	lwIMesh* _lwMesh;
 	lwILockableStreamVB* _lpSVB;
 	lwILockableStreamIB* _lpSIB;
 
-#else
-	LPDIRECT3DINDEXBUFFER8 _lpIB;
-	LPDIRECT3DVERTEXBUFFER8 _lpVB;
-#endif
 
 	DWORD _dwVerCount;
 	DWORD _dwFaceCount;
@@ -658,15 +609,9 @@ public:
 	~CEffectFont();
 
 public:
-#ifdef USE_RENDER
 	bool CreateEffectFont(MPRender* pDev,
 						  CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack = false,
 						  bool bmain = false);
-#else
-	bool CreateEffectFont(LPDIRECT3DDEVICE8 pDev,
-						  CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack = false,
-						  bool bmain = false);
-#endif
 
 	void SetRenderText(char* pszText);
 
@@ -682,17 +627,8 @@ protected:
 	//
 	bool _bUseBack;
 	s_string _strBackBmp;
-#ifdef USE_RENDER
 	lwITex* _lpBackTex;
-#else
-	LPDIRECT3DTEXTURE8 _lpBackTex;
-#endif
 
-	//#ifdef USE_MGR
-	//	lwIMesh*					_lwBackMesh;
-	//#else
-	//	LPDIRECT3DVERTEXBUFFER8	_lpBackVB;
-	//#endif
 	SEFFECT_VERTEX t_SEffVer[4];
 
 
@@ -725,13 +661,8 @@ public:
 	//!
 	virtual void Reset();
 	//
-#ifdef USE_RENDER
 	virtual void Init(MPRender* pDev, EFFECT_TYPE eType,
 					  WPARAM wParam, LPARAM lParam);
-#else
-	virtual void Init(LPDIRECT3DDEVICE8 pDev, EFFECT_TYPE eType,
-					  WPARAM wParam, LPARAM lParam);
-#endif
 
 	void SetTexture();
 	//{
@@ -1086,11 +1017,7 @@ public:
 	//
 public:
 	//!3D
-#ifdef		USE_RENDER
 	MPRender* m_pDev;
-#else
-	LPDIRECT3DDEVICE8 m_pDev;
-#endif
 	//!
 	CTexCoordList m_CTexCoordlist;
 	//!

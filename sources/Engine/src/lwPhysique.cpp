@@ -12,7 +12,6 @@
 #include "lwD3D.h"
 #include "lwShaderMgr.h"
 #include "lwItem.h"
-#include "lwPredefinition.h"
 #include "lwExpObj.h"
 
 using namespace std;

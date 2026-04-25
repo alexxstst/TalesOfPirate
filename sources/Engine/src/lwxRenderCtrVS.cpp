@@ -9,19 +9,15 @@ lwIRenderCtrlVS* __RenderCtrlVSProcVSVertexBlend_dx8()
 {
     return LW_NEW(lwxRenderCtrlVSVertexBlend_dx8);
 }
-#if(defined LW_USE_DX9)
 lwIRenderCtrlVS* __RenderCtrlVSProcVSVertexBlend_dx9()
 {
     return LW_NEW(lwxRenderCtrlVSVertexBlend);
 }
-#endif
 
 LW_RESULT lwInitUserRenderCtrlVSProc(lwIResourceMgr* mgr)
 {
     mgr->RegisterRenderCtrlProc(RENDERCTRL_VS_VERTEXBLEND, __RenderCtrlVSProcVSVertexBlend_dx8);
-#if(defined LW_USE_DX9)
     mgr->RegisterRenderCtrlProc(RENDERCTRL_VS_VERTEXBLEND_DX9, __RenderCtrlVSProcVSVertexBlend_dx9);
-#endif
     return LW_RET_OK;
 }
 
@@ -70,10 +66,8 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
     lwAnimCtrlObjTypeInfo        type_info;
 
     // DX9: deixar declaradas antes dos gotos
-#if defined(LW_USE_DX9)
     IDirect3DVertexShaderX*      vs   = 0;
     IDirect3DVertexDeclarationX* decl = 0;
-#endif
 
     // ===== validaes bsicas =====
     if (!agent)
@@ -258,9 +252,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::EndSet(lwIRenderCtrlAgent* agent)
 
 	dev_obj->GetDevice()->SetPixelShader(0);
 
-#if(defined LW_USE_DX9)
     dev_obj->SetVertexShader(NULL);
-#endif
     return LW_RET_OK;
 }
 LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSetSubset(DWORD subset, lwIRenderCtrlAgent* agent)
@@ -351,7 +343,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::EndSetSubset(DWORD subset, lwIRenderCt
 }
 
 
-#if(defined LW_USE_DX9)
 
 // lwxRenderCtrlVSVertexBlend
 LW_STD_IMPLEMENTATION(lwxRenderCtrlVSVertexBlend);
@@ -713,7 +704,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::EndSetSubset(DWORD subset, lwIRenderCtrlAg
 }
 
 
-#endif
 
 
 LW_END

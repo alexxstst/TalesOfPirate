@@ -263,20 +263,12 @@ bool CMPResManger::InitRes3()
 	return true;
 }
 
-#ifdef USE_RENDER
 bool	CMPResManger::InitRes(MPRender*		pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatviewproj)
-#else
-bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatviewproj)
-#endif
 {
 	m_pDev = pDev;
 
 	IDirect3DSurfaceX* pBackBuffer;
-#ifdef USE_RENDER
 	m_pDev->GetDevice()->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#else
-	m_pDev->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#endif
     pBackBuffer->GetDesc( &m_d3dBackBuffer );
     pBackBuffer->Release();
 
@@ -301,11 +293,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 		m_bUseSoftOrg = false;
 
 
-#ifdef USE_RENDER
 	m_pDev->GetDevice()->GetDeviceCaps(&m_caps);
-#else
-	m_pDev->GetDeviceCaps(&m_caps);       // initialize m_pd3dDevice before using
-#endif
 	if(  m_caps.VertexShaderVersion < D3DVS_VERSION(1,1) || m_caps.PixelShaderVersion < D3DPS_VERSION(1,4))
 	{	
 		m_bUseSoft = true;
@@ -320,11 +308,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 
 
 	_CEffectFile.InitDev(pDev);
-	#if (defined LW_USE_DX9)
 	const char* effectName = "shader\\dx9\\eff.fx";
-#else
-	const char* effectName = "shader\\dx8\\eff.fx";
-#endif
 	if(!_CEffectFile.LoadEffectFromFile(effectName))
 	{
 		MessageBox(NULL,"shader\\eff.fx","ERROR",0);
@@ -335,11 +319,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 		if(!LoadTotalVShader())
 			return false;
 
-//#ifdef USE_DDS_FILE
 	lstrcpy(_pszTexPath,"texture\\effect");
-//#else
-//	lstrcpy(_pszTexPath,"texture_src\\effect");
-//#endif
 
 	lstrcpy(_pszMeshPath,"model");
 	lstrcpy(_pszEFFectPath,"effect");
@@ -1324,36 +1304,22 @@ bool	CMPResManger::LoadTotalVShader()
 		//		D3DVSD_END()
 		//};
 
-#if (defined LW_USE_DX9)
 		sprintf(t_Path, "shader\\dx9\\eff1.vsh");
-#else
-		sprintf(t_Path,"shader\\eff1.vsh");
-#endif
 		while(SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL )))
 		{
 			_iVShaderNum++;
 			_vecVShader.resize(_iVShaderNum);
 			//_vecVShader[_iVShaderNum - 1] = new DWORD;
 		//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
-#ifdef USE_RENDER
 			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
 				(DWORD*)pCode->GetBufferPointer(),
 				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ) ) )
-#else
-			if( FAILED(m_pDev->CreateVertexShader( dwEffVerDecl, 
-				(DWORD*)pCode->GetBufferPointer(),
-				&_vecVShader[_iVShaderNum - 1] , FALSE ) ) )
-#endif
 			 {
 				MessageBox(NULL,t_Path,"ERROR",0);
 				return false;
 			 }
 
-#if (defined LW_USE_DX9)
 			sprintf(t_Path, "shader\\dx9\\eff%d.vsh", _iVShaderNum + 1);
-#else
-			sprintf(t_Path,"shader\\eff%d.vsh",_iVShaderNum + 1);
-#endif
 			pCode->Release();
 			pCode = NULL;
 		}
@@ -1370,24 +1336,14 @@ bool	CMPResManger::LoadTotalVShader()
 		//		D3DVSD_REG( D3DVSDE_TEXCOORD1,		D3DVSDT_FLOAT2 ), // Tex coords
 		//		D3DVSD_END()
 		//};
-#if (defined LW_USE_DX9)
 		sprintf(t_Path, "shader\\dx9\\shadeeff.vsh");
-#else
-		sprintf(t_Path,"shader\\shadeeff.vsh");
-#endif
 		//_dwShadeMapVS = new DWORD;
 		if(SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL )))
 		{
 
-#ifdef USE_RENDER
 			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
 				(DWORD*)pCode->GetBufferPointer(),
 				(IDirect3DVertexShaderX**)&_dwShadeMapVS ) ) )
-#else
-			if( FAILED(m_pDev->CreateVertexShader( dwEffShadeDecl, 
-				(DWORD*)pCode->GetBufferPointer(),
-				&_dwShadeMapVS , FALSE ) ) )
-#endif
 		 {
 			 MessageBox(NULL,"shader\\shadeeff.vsh","ERROR",0);
 			 return false;
@@ -1414,18 +1370,13 @@ bool	CMPResManger::LoadTotalVShader()
 		//		D3DVSD_END()
 		//};
 
-#if (defined LW_USE_DX9)
 		sprintf(t_Path, "shader\\dx9\\eff2.vsh");
-#else
-		sprintf(t_Path,"shader\\eff2.vsh");
-#endif
 		if(SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL )))
 		{
 			_iVShaderNum++;
 			_vecVShader.resize(_iVShaderNum);
 			//_vecVShader[_iVShaderNum - 1] = new DWORD;
 			//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
-#ifdef USE_RENDER
 			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
 				(DWORD*)pCode->GetBufferPointer(),
 				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ) ) )
@@ -1434,16 +1385,6 @@ bool	CMPResManger::LoadTotalVShader()
 				//return false;
 				_vecVShader[0] = 0L;
 			}
-#else
-			if( FAILED(m_pDev->CreateVertexShader( dwEffVerDecl, 
-				(DWORD*)pCode->GetBufferPointer(),
-				&_vecVShader[_iVShaderNum - 1] , FALSE ) ) )
-			{
-				//MessageBox(NULL,"shader\\eff2.vsh","ERROR",0);
-				//return false;
-				_vecVShader[0] = 0L;
-			}
-#endif
 
 			pCode->Release();
 			pCode = NULL;
@@ -1481,7 +1422,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 	};
 
 
-#if(defined LW_USE_DX9)
 
 	// decl
 	D3DVERTEXELEMENT9 ve_dec_effect1[] =
@@ -1598,7 +1538,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		}
     }
 
-#endif
 
 	_bMagr = true;
 	return true;
@@ -1923,7 +1862,6 @@ bool CMPResManger::DeleteTobMesh(CEffectModel& rEffectModel)
 
 BOOL CMPResManger::OnResetDevice()
 {
-#ifdef USE_RENDER
 
 	if(!_CEffectFile.OnResetDevice())
 		return FALSE;
@@ -1978,11 +1916,7 @@ BOOL CMPResManger::OnResetDevice()
 	}
 
 	IDirect3DSurfaceX* pBackBuffer;
-#ifdef USE_RENDER
 	m_pDev->GetDevice()->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#else
-	m_pDev->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
-#endif
 	pBackBuffer->GetDesc( &m_d3dBackBuffer );
 	pBackBuffer->Release();
 
@@ -2006,37 +1940,28 @@ BOOL CMPResManger::OnResetDevice()
 	_vecMeshList[6]->CreateCylinder(8, 3, 1, 3);
 
 
-#endif
 	return TRUE;
 }
 BOOL CMPResManger::OnLostDevice()
 {
-#ifdef USE_RENDER
 	if(!_CEffectFile.OnLostDevice())
 		return FALSE;
 	
-#endif
 	return TRUE;
 }
 
 LW_RESULT	g_OnLostDevice()
 {
-//#ifdef USE_RENDER
 	return ResMgr.OnLostDevice();
-//#endif
-
 }
 LW_RESULT	g_OnResetDevice()
 {
-//#ifdef USE_RENDER
 	return ResMgr.OnResetDevice();
-//#endif
 }
 
 
 void CMPResManger::RestoreEffect()
 {
-#ifdef USE_RENDER
 	m_pDev->SetRenderStateForced(D3DRS_ZENABLE, TRUE);
 	m_pDev->SetRenderStateForced(D3DRS_ZWRITEENABLE, TRUE);
 	m_pDev->SetRenderStateForced(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
@@ -2070,7 +1995,6 @@ void CMPResManger::RestoreEffect()
     m_pDev->SetTextureStageStateForced(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
     m_pDev->SetTextureStageStateForced(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
-#endif
 }
 //-----------------------------------------------------------------------------
 void CMPResManger::FrameMove(DWORD dwTime)

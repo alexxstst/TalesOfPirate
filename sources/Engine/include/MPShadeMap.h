@@ -72,9 +72,6 @@ public:
 protected:
 	bool						_bShow;
 	CEffectModel*				_pModel;
-#ifndef USE_MGR
-	LPDIRECT3DINDEXBUFFER8		_lpIB;
-#endif
 
 	D3DXVECTOR3			_SVerPos;
 	int					_iVerNum;
@@ -83,19 +80,13 @@ protected:
 
 	D3DXVECTOR3			_SShadePos[MAX_SHADER_VERNUM];
 	D3DXVECTOR2			_SShadeUV[MAX_SHADER_VERNUM];
-#ifdef USE_MGR
 	WORD				_wIndex[MAX_SHADER_IDXNUM];
-#endif
 
 	D3DXCOLOR			_dwColor;
 
 
 	s_string				_strTexName;
-#ifdef USE_MGR
 	lwITex*					_lpCurTex;
-#else
-	LPDIRECT3DTEXTURE8		_lpCurTex;
-#endif
 
 	float				_fRadius;
 	float				_fGridRadius;

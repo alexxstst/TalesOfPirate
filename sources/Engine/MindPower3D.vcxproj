@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\Libraries\CryptoPP\;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;$(ProjectDir)..\Libraries\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -81,7 +81,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\Libraries\CryptoPP\;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;$(ProjectDir)..\Libraries\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -162,6 +162,7 @@
     <ClInclude Include="include\MPStringVector.h" />
     <ClInclude Include="include\MPTerrainSet.h" />
     <ClInclude Include="include\MPTextureSet.h" />
+    <ClInclude Include="include\TextureLog.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\MPTile.h" />
     <ClInclude Include="include\mygraph.h" />
@@ -199,7 +200,6 @@
     <ClInclude Include="src\lwPathInfo.h" />
     <ClInclude Include="src\lwPhysique.h" />
     <ClInclude Include="src\lwPoseCtrl.h" />
-    <ClInclude Include="src\lwPreDefinition.h" />
     <ClInclude Include="src\lwPrimitive.h" />
     <ClInclude Include="src\lwPrimitiveHelper.h" />
     <ClInclude Include="src\lwRenderCtrlEmb.h" />
@@ -301,6 +301,7 @@
     <ClCompile Include="src\UIClip.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\MPGameApp.cpp" />
+    <ClCompile Include="src\TextureLog.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\MPMap.cpp" />
     <ClCompile Include="src\MPMapData.cpp" />

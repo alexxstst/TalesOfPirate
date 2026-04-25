@@ -72,7 +72,6 @@ public:
 
 };
 
-#if(defined LW_USE_DX9)
 
 class lwxRenderCtrlVSVertexBlend : public lwIRenderCtrlVS
 {
@@ -98,6 +97,5 @@ public:
     LW_RESULT EndSetSubset(DWORD subset, lwIRenderCtrlAgent* agent);
 };
 
-#endif
 
 LW_END

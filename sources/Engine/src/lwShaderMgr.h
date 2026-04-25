@@ -13,7 +13,6 @@ LW_BEGIN
 
 // ===============================================
 // directX9 shader manager
-#if(defined LW_USE_DX9)
 
 class lwShaderMgr9 : public lwIShaderMgr
 {
@@ -52,6 +51,5 @@ public:
 
 typedef lwShaderMgr9 lwShaderMgr;
 
-#endif
 
 LW_END

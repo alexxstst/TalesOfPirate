@@ -172,6 +172,7 @@ namespace TalesOfPirate::Utils::Logs {
 		AddLogger("store");
 		AddLogger("ui");
 		AddLogger("terrain");
+		AddLogger("textures");
 
 		//  :       
 		_logThread = std::thread([this]() {

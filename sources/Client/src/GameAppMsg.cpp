@@ -441,13 +441,6 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 	//d3dpp.FullScreen_RefreshRateInHz = d3ddm.RefreshRate;
 	//d3dpp.Flags = 2;
 
-	//#ifdef LW_USE_DX8
-	//d3dpp.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-	//#endif
-	//#ifdef LW_USE_DX9
-	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-	//#endif
-
 
 	//lwWndInfo wnd_info;
 	//wnd_info.hwnd = hwnd;

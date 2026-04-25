@@ -60,8 +60,6 @@ LW_RESULT lwSceneMgr::EndRender()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    _frame_info._tex_cpf = 0;
-
     return ret;
 }
 

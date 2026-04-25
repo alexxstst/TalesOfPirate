@@ -114,6 +114,10 @@ public:
 	BOOL	m_bConsoleEnabled;
 	BOOL	m_bConsoleRequireSuperKey;
 
+	// [TextureLog] — runtime-тогл диагностического лога загрузок текстур
+	// (канал "textures" через ToLogService). По умолчанию выключен.
+	BOOL	m_bTextureLogEnabled;
+
 	bool	m_IsMoveClient;		//
 
 	char	m_szVerErrorHTTP[256];	// 

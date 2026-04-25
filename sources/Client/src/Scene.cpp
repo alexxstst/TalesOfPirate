@@ -216,18 +216,14 @@ void CGameScene::SetupVertexFog(MPIDeviceObject* dev_obj, float Start, float End
 
 
 HRESULT scene_OnLostDevice() {
-	//#ifdef USE_RENDER
 	g_pGameApp->GetCurScene()->OnLostDevice();
 	g_pGameApp->OnLostDevice();
 	return TRUE;
-	//#endif
 }
 
 HRESULT scene_OnResetDevice() {
-	//#ifdef USE_RENDER
 	g_pGameApp->GetCurScene()->OnResetDevice();
 	g_pGameApp->OnResetDevice();
-	//#endif
 	return TRUE;
 }
 

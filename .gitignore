@@ -2,6 +2,7 @@
 **/bin/*
 **/.idea/
 **/.vs/
+**/.ai/
 **/logs/
 **/log/
 **/build/

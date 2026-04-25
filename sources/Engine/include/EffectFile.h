@@ -16,25 +16,13 @@ class   MPRender;
 class CMPEffectFile  
 {
 public:
-#ifdef USE_RENDER
 	CMPEffectFile(MPRender*	 pDev);
-#else
-	CMPEffectFile(LPDIRECT3DDEVICE8 pDev);
-#endif
 	CMPEffectFile();
 	virtual ~CMPEffectFile();
 
-#ifdef USE_RENDER
 	void InitDev(MPRender* pDev);
-#else
-	void InitDev(LPDIRECT3DDEVICE8 pDev);
-#endif
 
-#ifdef USE_RENDER
 	MPRender*	GetDev();
-#else
-	LPDIRECT3DDEVICE8	CMPEffectFile::GetDev();
-#endif
 	BOOL OnResetDevice();
 	BOOL OnLostDevice();
 
@@ -58,11 +46,7 @@ public:
 	void free();
 
 public:
-#ifdef USE_RENDER
 	MPRender*			 m_pDev;
-#else
-	LPDIRECT3DDEVICE8    m_pDev;
-#endif
 
 	LPD3DXEFFECT         m_pEffect;
 	UINT                 m_passes;

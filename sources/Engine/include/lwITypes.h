@@ -618,7 +618,6 @@ LW_BEGIN
 	struct lwSceneFrameInfo {
 		DWORD _update_count;
 		DWORD _render_count;
-		DWORD _tex_cpf;
 	};
 
 	enum {
@@ -756,7 +755,6 @@ LW_BEGIN
 #define LW_ARGB_G(v) ((((v) & 0x0000ff00) >> 8) / 255.0f)
 #define LW_ARGB_B(v) (((v) & 0x000000ff) / 255.0f)
 
-#if(defined LW_USE_DX9)
 	struct lwVertexShaderInfo9 {
 		BYTE* data;
 		DWORD size;
@@ -772,7 +770,6 @@ LW_BEGIN
 
 	typedef lwVertDeclInfo9 lwVertDeclInfo;
 
-#endif
 
 
 	enum {

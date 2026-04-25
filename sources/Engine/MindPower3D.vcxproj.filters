@@ -169,9 +169,6 @@
     <ClInclude Include="src\lwPoseCtrl.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\lwPreDefinition.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\lwPrimitive.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>

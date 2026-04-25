@@ -8,7 +8,6 @@
 #include "lwMath.h"
 #include "lwClassDecl.h"
 #include "lwInterfaceExt.h"
-#include "lwPreDefinition.h"
 
 LW_BEGIN
 
@@ -29,11 +28,9 @@ private:
     IDirect3DBaseTextureX* _tex_seq[ LW_MAX_TEXTURESTAGE_NUM ];
 
 
-#if ( defined LW_USE_DX9 )
     DWORD _fvf_value;
     IDirect3DVertexShaderX* _shader_value;
     IDirect3DVertexDeclarationX* _decl_value;
-#endif
 
     IDirect3DVertexBufferX* _vb_value[LW_MAX_STREAM_NUM];
     IDirect3DIndexBufferX* _ib_value;
@@ -111,14 +108,12 @@ public:
     LW_RESULT ReleaseVertexBuffer(IDirect3DVertexBufferX* vb);
     LW_RESULT ReleaseIndexBuffer(IDirect3DIndexBufferX* ib);    
 
-#if ( defined LW_USE_DX9 )
     LW_RESULT SetFVF( DWORD fvf );
     LW_RESULT SetVertexShader( IDirect3DVertexShaderX* shader );
     LW_RESULT SetVertexShaderForced( IDirect3DVertexShaderX* shader );
     LW_RESULT SetVertexDeclaration( IDirect3DVertexDeclarationX* decl );
     LW_RESULT SetVertexDeclarationForced( IDirect3DVertexDeclarationX* decl );
     LW_RESULT SetVertexShaderConstantF( UINT reg_id, const float* data, UINT v_num );
-#endif
 
     LW_RESULT SetStreamSource(UINT stream_num, IDirect3DVertexBufferX* stream_data, UINT offset_byte, UINT stride);
     LW_RESULT SetIndices(IDirect3DIndexBufferX* index_data, UINT base_vert_index);
@@ -168,17 +163,13 @@ public:
     LW_RESULT SetTextureForced(DWORD stage, IDirect3DTextureX* tex);
     LW_RESULT SetRenderStateForced(D3DRENDERSTATETYPE state, DWORD value);
     LW_RESULT SetTextureStageStateForced(DWORD stage, D3DTEXTURESTAGESTATETYPE type, DWORD value);
-#if(defined LW_USE_DX9)
     LW_RESULT SetSamplerState( DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value );
     LW_RESULT SetSamplerStateForced( DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value );
-#endif
 
     LW_RESULT GetViewPort(D3DVIEWPORTX* vp);
     LW_RESULT GetRenderState(DWORD state, DWORD* value);
     LW_RESULT GetTextureStageState(DWORD stage, DWORD state, DWORD* value);
-#if(defined LW_USE_DX9)
     LW_RESULT GetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE state, DWORD* value);
-#endif
     LW_RESULT GetTexture(DWORD stage, IDirect3DBaseTextureX** tex);
 
     LW_RESULT SetLight(DWORD id, const D3DLIGHTX* light);

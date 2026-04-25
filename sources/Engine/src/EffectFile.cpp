@@ -22,11 +22,7 @@ CMPEffectFile::CMPEffectFile()
 	_iTechNum = 0;
 	_dwVShader = 0;
 }
-#ifdef USE_RENDER
 CMPEffectFile::CMPEffectFile(MPRender*	 pDev)
-#else
-CMPEffectFile::CMPEffectFile(LPDIRECT3DDEVICE8 pDev)
-#endif
 {
     m_pDev = pDev;
     m_pEffect   = NULL;
@@ -39,11 +35,7 @@ CMPEffectFile::~CMPEffectFile()
 {
 	free();
 }
-#ifdef USE_RENDER
 void CMPEffectFile::InitDev(MPRender* pDev)
-#else
-void CMPEffectFile::InitDev(LPDIRECT3DDEVICE8 pDev)
-#endif
 {
     m_pDev = pDev;
 }
@@ -51,11 +43,7 @@ void CMPEffectFile::InitDev(LPDIRECT3DDEVICE8 pDev)
 BOOL CMPEffectFile::LoadEffectFromFile( LPCSTR pszfile)
 {
 	HRESULT hr;
-#ifdef USE_RENDER
 	if(FAILED( hr = D3DXCreateEffectFromFile(m_pDev->GetDevice(),pszfile,NULL,NULL,0,NULL,&m_pEffect,NULL)))
-#else
-	if(FAILED( hr = D3DXCreateEffectFromFile(m_pDev,pszfile,&m_pEffect,NULL)))
-#endif
 	{
 		return FALSE;
 	}
@@ -170,11 +158,7 @@ BOOL CMPEffectFile::OnResetDevice()
 	}
 	return TRUE;
 }
-#ifdef USE_RENDER
 MPRender*	CMPEffectFile::GetDev()
-#else
-LPDIRECT3DDEVICE8	CMPEffectFile::GetDev()
-#endif
 {
 	return m_pDev;
 }

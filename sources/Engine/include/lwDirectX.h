@@ -1,10 +1,6 @@
 //
 #pragma once
 
-#if !defined(USE_DX_VERSION) || !defined(LW_USE_DX9)
-#error "Proj configuration must define USE_DX_VERSION and LW_USE_DX9. DX8 and other DX versions are no longer supported."
-#endif
-
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <d3d9types.h>

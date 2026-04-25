@@ -12,7 +12,6 @@
 #include "lwGraphicsUtil.h"
 #include "lwInterfaceExt.h"
 #include "lwShaderMgr.h"
-#include "lwPreDefinition.h"
 #include "lwMisc.h"
 #include "lwPathInfo.h"
 #include "lwSyncObj.h"
@@ -29,119 +28,6 @@ LW_BEGIN
 		RES_STATE_LOADTEST_0 = 0x0020,
 		RES_STATE_LOADING_VM = 0x1000,
 	};
-
-	struct lwTexLogFilterInfo {
-		char filter_str[LW_MAX_PATH];
-		DWORD size;
-		DWORD num;
-
-		BOOL Filter(DWORD op_type, const char* file, DWORD file_size) {
-			if (_tcsstr(file, filter_str) == 0)
-				return 0;
-
-			if (op_type == 1) {
-				size += file_size;
-				num += 1;
-			}
-			else {
-				size -= file_size;
-				num -= 1;
-			}
-
-			return 1;
-		}
-	};
-
-	class lwTexLogMgr {
-		typedef std::vector<lwTexLogFilterInfo> lwTexLogFilterInfoSeq;
-
-	private:
-		FILE* _fp;
-		DWORD _total_size;
-		DWORD _total_num;
-		lwTexLogFilterInfoSeq _v_filter_entity;
-
-	public:
-		lwTexLogMgr() {
-			_fp = 0;
-			_total_size = 0;
-			_total_num = 0;
-			_v_filter_entity.reserve(20);
-		};
-
-		~lwTexLogMgr() {
-			if (_fp) {
-				char buf[256];
-				lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
-				for (; it != _v_filter_entity.end(); ++it) {
-					sprintf(buf, "type: %s, num: %d, size: %d\n", (*it).filter_str, (*it).num, (*it).size);
-					fwrite(buf, strlen(buf), 1, _fp);
-				}
-
-				sprintf(buf, "Total num: %d, Total size: %d\n", _total_num, _total_size);
-				fwrite(buf, strlen(buf), 1, _fp);
-
-
-				fclose(_fp);
-			}
-		}
-
-		LW_RESULT OpenLogFile(const char* file) {
-			return (_fp = fopen(file, "wt")) ? LW_RET_OK : LW_RET_FAILED;
-		}
-
-		LW_RESULT AddTexType(const char* name) {
-			lwTexLogFilterInfo info;
-			info.num = 0;
-			info.size = 0;
-			_tcscpy(info.filter_str, name);
-
-			_v_filter_entity.push_back(info);
-			return LW_RET_OK;
-		}
-
-		LW_RESULT Log(DWORD op_type, const char* file, DWORD width, DWORD height, D3DFORMAT fmt, DWORD devmem_size) {
-			if (_fp == 0)
-				return LW_RET_FAILED;
-
-			char op[2][64] =
-			{
-				"Load",
-				"Release"
-			};
-			char* p;
-
-			if (op_type == 1) {
-				_total_size += devmem_size;
-				_total_num += 1;
-				p = op[0];
-			}
-			else {
-				_total_size -= devmem_size;
-				_total_num -= 1;
-				p = op[1];
-			}
-
-			char buf[512];
-			sprintf(buf, "%s file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n",
-					p, file, width, height, fmt, devmem_size);
-
-			fwrite(buf, strlen(buf), 1, _fp);
-
-
-			lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
-			for (; it != _v_filter_entity.end(); ++it) {
-				if ((*it).Filter(op_type, file, devmem_size)) {
-					//break;
-				}
-				sprintf(buf, "[%s]: num: %d, size: %d\t[%d]\n", (*it).filter_str, (*it).num, (*it).size, _total_size);
-				fwrite(buf, strlen(buf), 1, _fp);
-			}
-
-			return LW_RET_OK;
-		}
-	};
-
 
 	class lwTex : public lwITex {
 		LW_STD_DECLARATION()
@@ -177,7 +63,7 @@ LW_BEGIN
 
 		DWORD _load_type;
 		DWORD _load_mask;
-		DWORD _load_flag;
+		TextureLoadMode _loadMode;
 		DWORD _mt_flag;
 
 	public:
@@ -271,8 +157,8 @@ LW_BEGIN
 
 		DWORD SetLOD(DWORD level);
 
-		void SetLoadFlag(DWORD flag) {
-			_load_flag = flag;
+		void SetLoadMode(TextureLoadMode mode) {
+			_loadMode = mode;
 		}
 
 		void SetMTFlag(DWORD flag) {
@@ -445,11 +331,7 @@ LW_BEGIN
 
 		lwRenderStateAtomSet _rsa_0;
 
-
-#ifdef MTLTEXAGENT_OPACITY_RSA_FLAG
 		lwRenderStateAtomSet _rsa_opacity;
-		//lwRenderStateAtom _opacity_rsa_seq[5];
-#endif
 
 		lwITex* _tex_seq[LW_MAX_MTL_TEX_NUM]; // multi-texture blending
 		lwMatrix44* _uvmat[LW_MAX_MTL_TEX_NUM];
@@ -696,9 +578,6 @@ LW_BEGIN
 		LW_DWORD _mesh_size_vm;
 		LW_DWORD _tex_size_sm;
 		LW_DWORD _tex_size_vm;
-
-	public:
-		lwTexLogMgr _texlog_mgr;
 		// end
 
 	public:

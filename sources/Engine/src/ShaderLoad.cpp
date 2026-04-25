@@ -37,7 +37,6 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
     if (!shader_mgr)
         goto __ret;
 
-#if defined(LW_USE_DX9)
 
     // ======== DX9: Vertex Decls ========
     // torne os arrays static para evitar o warning com goto
@@ -109,10 +108,8 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
         }
     }
 
-#endif // DX9
 
 
-#if defined(LW_USE_DX9)
 
     // ======== DX9: Vertex Shaders ========
     //
@@ -164,7 +161,6 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
         }
     }
 
-#endif // DX9
 
     // ======== ShaderDeclMgr ========
     decl_mgr = shader_mgr->GetShaderDeclMgr();  // <- sem inicializador na declara??o
@@ -235,7 +231,6 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
 
     int shader_num = sizeof(shader_type) / sizeof(shader_type[0]);
 
-#if (defined LW_USE_DX9)
 
     // dx9
     //const char* shader_file[] = 
@@ -275,7 +270,6 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
             goto __ret;
     }
 
-#endif
 
 
     ret = LW_RET_OK;

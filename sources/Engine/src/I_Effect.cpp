@@ -8,7 +8,6 @@
 
 #include "i_effect.h"
 #include "MPRender.h"
-#include "lwPredefinition.h"
 #include "CharacterActionStore.h"
 //#include "mpresmanger.h"
 
@@ -55,11 +54,7 @@ void I_Effect::DestroyTobMesh(CMPResManger* resMgr) {
 
 
 //
-#ifdef USE_RENDER
 void I_Effect::Init(MPRender* pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam)
-#else
-void I_Effect::Init(LPDIRECT3DDEVICE8 pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam)
-#endif
 {
 	m_pDev = pDev;
 	_eEffectType = eType;
@@ -786,7 +781,6 @@ void I_Effect::SetTexture() {
 		lwITex* tex = NULL;
 		lwITex* tex2 = NULL;
 
-		//#ifdef	MULTITHREAD_LOADING_TEXTURE
 		if (_eEffectType == EFFECT_FRAMETEX) {
 			if (m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK()) {
 				m_pCModel->ResetItemTexture(0, m_CTexFrame.m_lpCurTex, &tex);
@@ -801,23 +795,8 @@ void I_Effect::SetTexture() {
 			else
 				return;
 		}
-		//#else
-		//		if(_eEffectType == EFFECT_FRAMETEX)
-		//		{
-		//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-		//				m_pCModel->ResetItemTexture(m_CTexFrame.m_lpCurTex,&tex);
-		//
-		//		}else
-		//		{
-		//			if(m_CTextruelist.m_pTex)
-		//				m_pCModel->ResetItemTexture(m_CTextruelist.m_pTex,&tex);
-		//			else
-		//				m_pCModel->ResetItemTexture(NULL,&tex);
-		//		}
-		//#endif
 	}
 	else {
-		//#ifdef	MULTITHREAD_LOADING_TEXTURE
 		if (_eEffectType == EFFECT_FRAMETEX) {
 			if (m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
 				m_pDev->SetTexture(0, m_CTexFrame.m_lpCurTex->GetTex());
@@ -828,19 +807,6 @@ void I_Effect::SetTexture() {
 			else
 				return;
 		}
-		//#else
-		//		if(_eEffectType == EFFECT_FRAMETEX)
-		//		{
-		//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-		//				m_pDev->SetTexture(0,m_CTexFrame.m_lpCurTex->GetTex());
-		//		}else
-		//		{
-		//			if(m_CTextruelist.m_pTex)
-		//				m_pDev->SetTexture(0, m_CTextruelist.m_pTex->GetTex());
-		//			else
-		//				m_pDev->SetTexture(0, NULL);
-		//		}
-		//#endif
 	}
 }
 
@@ -868,12 +834,7 @@ CEffectModel::CEffectModel() {
 	m_pDev = NULL;
 	m_strName = "";
 
-#ifdef USE_MGR
 	_lwMesh = NULL;
-#else
-	_lpIB = NULL;
-	_lpVB = NULL;
-#endif
 	m_pRes = NULL;
 	m_vEffVer = 0;
 
@@ -899,21 +860,12 @@ bool CEffectModel::Copy(const CEffectModel& rhs) {
 	return true;
 }
 
-#ifdef USE_RENDER
 CEffectModel::CEffectModel(MPRender* pDev, lwIResourceMgr* pRes)
-#else
-CEffectModel::CEffectModel(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes)
-#endif
 {
 	m_pDev = pDev;
 	m_strName = "";
 
-#ifdef USE_MGR
 	_lwMesh = NULL;
-#else
-	_lpIB = NULL;
-	_lpVB = NULL;
-#endif
 
 	m_pRes = pRes;
 	m_vEffVer = 0;
@@ -932,26 +884,17 @@ CEffectModel::CEffectModel(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes)
 CEffectModel::~CEffectModel() {
 	ReleaseModel();
 }
-#ifdef USE_RENDER
 void CEffectModel::InitDevice(MPRender* pDev, lwIResourceMgr* pRes)
-#else
-void CEffectModel::InitDevice(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes)
-#endif
 {
 	m_pDev = pDev;
 	m_pRes = pRes;
 }
-#ifdef USE_RENDER
 MPRender* CEffectModel::GetDev()
-#else
-LPDIRECT3DDEVICE8 CEffectModel::GetDev()
-#endif
 {
 	return m_pDev;
 }
 
 void CEffectModel::ReleaseModel() {
-#ifdef USE_MGR
 	if (!_lwMesh) {
 		if (m_bItem) {
 			lwITex* oldtex;
@@ -963,18 +906,6 @@ void CEffectModel::ReleaseModel() {
 		}
 	}
 	SAFE_RELEASE(_lwMesh);
-#else
-	if (!_lpVB)
-		if (m_bItem) {
-			lwITex* oldtex;
-			this->ResetItemTexture(0, m_oldtex, &oldtex);
-			this->ResetItemTexture(1, m_oldtex2, &oldtex);
-
-			Destroy();
-		}
-	SAFE_RELEASE(_lpIB);
-	SAFE_RELEASE(_lpVB);
-#endif
 
 	SAFE_DELETE_ARRAY(m_vEffVer);
 	m_bItem = false;
@@ -1001,7 +932,6 @@ bool CEffectModel::CreateTriangle() {
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
-#ifdef USE_MGR
 
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
@@ -1039,53 +969,6 @@ bool CEffectModel::CreateTriangle() {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-
-	SEFFECT_VERTEX t_SEffVer[3];
-	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0, 0);
-	t_SEffVer[0].m_fIdx = 0;
-	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
-
-	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, 0, 0.5f);
-	t_SEffVer[1].m_fIdx = 1;
-	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.5f, 0);
-
-	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0, 0);
-	t_SEffVer[2].m_fIdx = 2;
-	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
-
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
-	_lpVB->Unlock();
-
-	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * _dwVerCount,
-								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-								   &_lpIB);
-	if (FAILED(hr))
-		return false;
-
-	WORD t_wIndex[3] =
-	{
-		0, 1, 2,
-	};
-	WORD* t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * _dwVerCount);
-	_lpIB->Unlock();
-
-#endif
 
 	m_strName = MESH_TRI;
 
@@ -1100,7 +983,6 @@ bool CEffectModel::CreatePlaneTriangle() {
 
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1138,52 +1020,6 @@ bool CEffectModel::CreatePlaneTriangle() {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-
-	SEFFECT_VERTEX t_SEffVer[3];
-	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0.5f, 0);
-	t_SEffVer[0].m_fIdx = 0;
-	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
-
-	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, -0.5f, 0);
-	t_SEffVer[1].m_fIdx = 1;
-	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.5f, 0);
-
-	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0.5f, 0);
-	t_SEffVer[2].m_fIdx = 2;
-	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
-
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
-	_lpVB->Unlock();
-
-	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * _dwVerCount,
-								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-								   &_lpIB);
-	if (FAILED(hr))
-		return false;
-
-	WORD t_wIndex[3] =
-	{
-		0, 1, 2,
-	};
-	WORD* t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * _dwVerCount);
-	_lpIB->Unlock();
-#endif
 	m_strName = MESH_PLANETRI;
 	return true;
 }
@@ -1197,7 +1033,6 @@ bool CEffectModel::CreateRect() {
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1238,58 +1073,6 @@ bool CEffectModel::CreateRect() {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-
-	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0, 0);
-	t_SEffVer[0].m_fIdx = 0;
-	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
-
-	t_SEffVer[1].m_SPos = D3DXVECTOR3(-0.5f, 0, 1.0f);
-	t_SEffVer[1].m_fIdx = 1;
-	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[1].m_SUV = D3DXVECTOR2(0, 0);
-
-	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0, 1.0f);
-	t_SEffVer[2].m_fIdx = 2;
-	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
-
-	t_SEffVer[3].m_SPos = D3DXVECTOR3(0.5f, 0, 0);
-	t_SEffVer[3].m_fIdx = 3;
-	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
-
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
-	_lpVB->Unlock();
-
-	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
-								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-								   &_lpIB);
-	if (FAILED(hr))
-		return false;
-
-	WORD t_wIndex[4] =
-	{
-		0, 1, 2, 3,
-	};
-	WORD* t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
-	_lpIB->Unlock();
-
-#endif
 	m_strName = MESH_RECT;
 
 	return true;
@@ -1304,7 +1087,6 @@ bool CEffectModel::CreateRectZ() {
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1345,58 +1127,6 @@ bool CEffectModel::CreateRectZ() {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-
-	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos = D3DXVECTOR3(0, 0, 0);
-	t_SEffVer[0].m_fIdx = 0;
-	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
-
-	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, 0, 1);
-	t_SEffVer[1].m_fIdx = 1;
-	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[1].m_SUV = D3DXVECTOR2(0, 0);
-
-	t_SEffVer[2].m_SPos = D3DXVECTOR3(0, 1, 1);
-	t_SEffVer[2].m_fIdx = 2;
-	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
-
-	t_SEffVer[3].m_SPos = D3DXVECTOR3(0, 1, 0);
-	t_SEffVer[3].m_fIdx = 3;
-	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
-
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
-	_lpVB->Unlock();
-
-	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
-								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-								   &_lpIB);
-	if (FAILED(hr))
-		return false;
-
-	WORD t_wIndex[4] =
-	{
-		0, 1, 2, 3,
-	};
-	WORD* t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
-	_lpIB->Unlock();
-
-#endif
 	m_strName = MESH_RECTZ;
 
 	return true;
@@ -1410,7 +1140,6 @@ bool CEffectModel::CreatePlaneRect() {
 
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1451,57 +1180,6 @@ bool CEffectModel::CreatePlaneRect() {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-
-	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, -0.5f, 0);
-	t_SEffVer[0].m_fIdx = 0;
-	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[0].m_SUV = D3DXVECTOR2(0.0f, 1.0f);
-
-	t_SEffVer[1].m_SPos = D3DXVECTOR3(-0.5f, 0.5f, 0);
-	t_SEffVer[1].m_fIdx = 1;
-	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.0f, 0);
-
-	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0.5f, 0);
-	t_SEffVer[2].m_fIdx = 2;
-	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
-
-	t_SEffVer[3].m_SPos = D3DXVECTOR3(0.5f, -0.5f, 0);
-	t_SEffVer[3].m_fIdx = 3;
-	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
-	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
-
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
-	_lpVB->Unlock();
-
-	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
-								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-								   &_lpIB);
-	if (FAILED(hr))
-		return false;
-
-	WORD t_wIndex[4] =
-	{
-		0, 1, 2, 3,
-	};
-	WORD* t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
-	_lpIB->Unlock();
-#endif
 	m_strName = MESH_PLANERECT;
 
 	return true;
@@ -1522,7 +1200,6 @@ bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1578,124 +1255,6 @@ bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	//_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	//hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*_dwVerCount,
-	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-	//	&_lpIB);
-	//if( FAILED(hr) )
-	//	return false;
-
-
-	SEFFECT_VERTEX* pVertex;
-	//WORD* pIndices;
-	//WORD wVertexIndex = 0;
-	int nCurrentSegment;
-
-
-	//Lock the vertex buffer
-	if (FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0))) {
-		return false;
-	}
-
-	////Lock the index buffer
-	//if(FAILED(_lpIB->Lock(0, 0, (BYTE**)&pIndices, 0)))
-	//{
-	//	return false;
-	//}
-
-	float rDeltaSegAngle = (2.0f * D3DX_PI / m_nSegments);
-	float rSegmentLength = 1.0f / (float)m_nSegments;
-	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rBotRadius))) / 90.0f;
-
-	//For each segment, add a triangle to the sides triangle list
-	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
-		float x0 = m_rBotRadius * sinf(nCurrentSegment * rDeltaSegAngle);
-		float z0 = m_rBotRadius * cosf(nCurrentSegment * rDeltaSegAngle);
-
-		pVertex->m_SPos.x = 0.0f;
-		pVertex->m_SPos.z = m_rHeight;
-		pVertex->m_SPos.y = 0.0f;
-		pVertex->m_SUV.x = 1.0f - (rSegmentLength * (float)nCurrentSegment);
-		pVertex->m_SUV.y = 0.0f;
-		pVertex->m_dwDiffuse = 0xffffffff;
-		pVertex++;
-
-		pVertex->m_SPos.x = x0;
-		pVertex->m_SPos.z = 0.0f;
-		pVertex->m_SPos.y = z0;
-		pVertex->m_SUV.x = 1.0f - (rSegmentLength * (float)nCurrentSegment);
-		pVertex->m_SUV.y = 1.5f;
-		pVertex->m_dwDiffuse = 0xffffffff;
-		pVertex++;
-
-		////Set three indices (1 triangle) per segment
-		//*pIndices = wVertexIndex;
-		//pIndices++;
-		//wVertexIndex++;
-
-		//*pIndices = wVertexIndex;
-		//pIndices++;
-		//wVertexIndex += 2;
-
-		//if(nCurrentSegment == m_nSegments - 1)
-		//{
-		//	*pIndices = 1;
-		//	pIndices++;
-		//	wVertexIndex--;
-		//}
-		//else
-		//{
-		//	*pIndices = wVertexIndex;
-		//	pIndices++;
-		//	wVertexIndex--;
-		//}
-	}
-	//Create the bottom triangle fan: Center vertex
-	//pVertex->m_SPos.x = 0.0f;
-	//pVertex->m_SPos.z = 0.0f;
-	//pVertex->m_SPos.y = 0.0f;
-	//pVertex->m_dwDiffuse = 0xffffffff;
-
-	//pVertex->m_SUV.x = 0.5f;
-	//pVertex->m_SUV.y = 0.5f;
-	//pVertex++;
-
-	////Create the bottom triangle fan: Edge vertices
-	//for(nCurrentSegment = m_nSegments; nCurrentSegment >= 0; nCurrentSegment--)
-	//{
-	//	float x0 = m_rRadius * sinf(nCurrentSegment * rDeltaSegAngle);
-	//	float z0 = m_rRadius * cosf(nCurrentSegment * rDeltaSegAngle);
-
-	//	pVertex->m_SPos.x = x0;
-	//	pVertex->m_SPos.z = 0.0f;
-	//	pVertex->m_SPos.y = z0;
-	//	pVertex->m_dwDiffuse = 0xffffffff;
-
-	//	float tu0 = (0.5f * sinf(nCurrentSegment * rDeltaSegAngle)) + 0.5f;
-	//	float tv0 = (0.5f * cosf(nCurrentSegment * rDeltaSegAngle)) + 0.5f;
-
-	//	pVertex->m_SUV.x = tu0;
-	//	pVertex->m_SUV.y = tv0;
-	//	pVertex++;
-	//}
-
-	if (FAILED(_lpVB->Unlock())) {
-		return false;
-	}
-
-	//if(FAILED(_lpIB->Unlock()))
-	//{
-	//	return false;
-	//}
-#endif
 	m_strName = MESH_CONE;
 	m_bChangeably = true;
 	return true;
@@ -1719,7 +1278,6 @@ bool CEffectModel::CreateCylinder(int nSeg, float fHei, float fTopRadius, float 
 		SAFE_DELETE_ARRAY(m_vEffVer);
 
 	m_vEffVer = new SEFFECT_VERTEX[_dwVerCount];
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1792,57 +1350,6 @@ bool CEffectModel::CreateCylinder(int nSeg, float fHei, float fTopRadius, float 
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	//_lpSIB = _lwMesh->GetLockableStreamIB();
 
-#else
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_VER_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-
-	SEFFECT_VERTEX* pVertex;
-	int nCurrentSegment;
-
-
-	//Lock the vertex buffer
-	if (FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0))) {
-		return false;
-	}
-
-	float rDeltaSegAngle = (2.0f * D3DX_PI / m_nSegments);
-	float rSegmentLength = 1.0f / (float)m_nSegments;
-	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rRadius))) / 90.0f;
-
-	//For each segment, add a triangle to the sides triangle list
-	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
-		float x0 = m_rRadius * sinf(nCurrentSegment * rDeltaSegAngle);
-		float z0 = m_rRadius * cosf(nCurrentSegment * rDeltaSegAngle);
-
-		pVertex->m_SPos.x = x0;
-		pVertex->m_SPos.z = m_rHeight;
-		pVertex->m_SPos.y = z0;
-		pVertex->m_SUV.x = 1.0f - (rSegmentLength * (float)nCurrentSegment);
-		pVertex->m_SUV.y = 0.0f;
-		pVertex->m_dwDiffuse = 0xffffffff;
-		pVertex++;
-
-		x0 = m_rBotRadius * sinf(nCurrentSegment * rDeltaSegAngle);
-		z0 = m_rBotRadius * cosf(nCurrentSegment * rDeltaSegAngle);
-		pVertex->m_SPos.x = x0;
-		pVertex->m_SPos.z = 0.0f;
-		pVertex->m_SPos.y = z0;
-		pVertex->m_SUV.x = 1.0f - (rSegmentLength * (float)nCurrentSegment);
-		pVertex->m_SUV.y = 1.0f;
-		pVertex->m_dwDiffuse = 0xffffffff;
-		pVertex++;
-	}
-
-	if (FAILED(_lpVB->Unlock())) {
-		return false;
-	}
-#endif
 	m_strName = MESH_CYLINDER;
 	m_bChangeably = true;
 	return true;
@@ -1853,7 +1360,6 @@ bool CEffectModel::CreateShadeModel(WORD wVerNum, WORD wFaceNum, int iGridCrossN
 	_dwVerCount = wVerNum;
 	_dwFaceCount = wFaceNum;
 
-#ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	//if(usesoft)
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
@@ -1925,53 +1431,6 @@ bool CEffectModel::CreateShadeModel(WORD wVerNum, WORD wFaceNum, int iGridCrossN
 		_lpSVB = NULL;
 		_lpSIB = NULL;
 	}
-#else
-	HRESULT hr;
-	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_SHADE_VERTEX) * MAX_SHADER_VERNUM,
-									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
-									EFFECT_SHADE_FVF,
-									D3DPOOL_DEFAULT, &_lpVB);
-	if (FAILED(hr))
-		return false;
-
-	SEFFECT_SHADE_VERTEX* pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
-
-
-	int nIndex = 9; //!VS9
-	for (int n = 0; n < MAX_SHADER_VERNUM; n++) {
-		pVertex[n].m_dwDiffuse = 0xffffffff;
-		pVertex[n].m_SPos = D3DXVECTOR3(0, 0, 0); //!
-		pVertex[n].m_SUV = D3DXVECTOR2(0, 0);
-		pVertex[n].m_SUV2.x = (float)nIndex;
-		nIndex++;
-		pVertex[n].m_SUV2.y = (float)nIndex;
-		nIndex++;
-	}
-
-	_lpVB->Unlock();
-
-	//m_pDev->CreateIndexBuffer(sizeof(WORD)*600,
-	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
-	//	&_lpIB);
-	//WORD*  t_pwIndex;
-	//_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	//nIndex = 0;
-	//for( int nY = 0; nY < 10; nY++ )
-	//{
-	//	for( int nX = 0; nX < 10; nX++ )
-	//	{
-	//		t_pwIndex[nIndex++] = nX + nY * (10 + 1);
-	//		t_pwIndex[nIndex++] = (nX+1) + nY * (10 + 1);
-	//		t_pwIndex[nIndex++] = nX + (nY+1) * (10 + 1);
-
-	//		t_pwIndex[nIndex++] = nX + (nY+1) * (10 + 1);
-	//		t_pwIndex[nIndex++] = (nX+1) + nY * (10 + 1);
-	//		t_pwIndex[nIndex++] = (nX+1) + (nY+1) * (10 + 1);
-	//	}
-	//}
-	//_lpIB->Unlock();
-#endif
 	return true;
 }
 
@@ -2005,33 +1464,23 @@ bool CEffectModel::LoadModel(const char* pszName) {
 
 
 void CEffectModel::FrameMove(DWORD dwDailTime) {
-#ifdef USE_MGR
 	if (!_lwMesh)
 		MPSceneItem::FrameMove();
-#else
-	if (!_lpVB)
-		MPSceneItem::FrameMove();
-#endif
 }
 
 void CEffectModel::Begin() {
 	//vs
 	//m_pDev->SetVertexShader(EFFECT_VER_FVF);
-#ifdef USE_MGR
 	if (_lwMesh)
 		_lwMesh->BeginSet();
-#endif
 }
 
 void CEffectModel::SetRenderNum(WORD wVer, WORD wFace) {
-#ifdef USE_MGR
 	lwMeshInfo* mi = _lwMesh->GetMeshInfo();
 	lwSubsetInfo_Construct(&mi->subset_seq[0], wFace, 0, wVer, 0);
-#endif
 }
 
 void CEffectModel::RenderModel() {
-#ifdef USE_MGR
 	if (!_lwMesh) {
 		this->GetPrimitive()->RenderSubset(0);
 		if (this->GetPrimitive()->GetMtlTexAgent(1)) {
@@ -2040,12 +1489,7 @@ void CEffectModel::RenderModel() {
 		}
 		//MPSceneItem::Render();
 	}
-#else
-	if (!_lpVB)
-		MPSceneItem::Render();
-#endif
 	else {
-#ifdef USE_MGR
 		//g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
 		//g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(2, D3DTSS_TEXCOORDINDEX, 2);
 
@@ -2053,24 +1497,6 @@ void CEffectModel::RenderModel() {
 
 		if (LW_FAILED(_lwMesh->DrawSubset(0)))
 			g_logManager.LogError("errors", "CEffectModel {}", (TCHAR*)m_strName.c_str());
-#else
-
-		m_pDev->SetStreamSource(0, _lpVB, sizeof(SEFFECT_VERTEX));
-
-		if (m_strName == MESH_CONE) {
-			//m_pDev->SetIndices(_lpIB,0);
-			//m_pDev->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, _dwVerCount, 0,  _dwFaceCount);
-			//m_pDev->DrawPrimitive( D3DPT_TRIANGLEFAN, m_nSegments * 2,  _dwFaceCount);
-			m_pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, _dwFaceCount);
-			return;
-		}
-		if (m_strName == MESH_CYLINDER) {
-			m_pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, _dwFaceCount);
-			return;
-		}
-		m_pDev->SetIndices(_lpIB, 0);
-		m_pDev->DrawIndexedPrimitive(D3DPT_TRIANGLEFAN, 0, _dwVerCount, 0, _dwFaceCount);
-#endif
 	}
 }
 
@@ -2080,10 +1506,8 @@ void CEffectModel::End() {
 	m_pDev->SetVertexShader(nullptr);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
 	//end
-#ifdef USE_MGR
 	if (_lwMesh)
 		_lwMesh->EndSet();
-#endif
 	//same as commit before
 	m_pDev->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -2471,29 +1895,16 @@ CEffectFont::CEffectFont() {
 	_bUseBack = FALSE;
 	_iTextureID = -1;
 
-#ifdef USE_MGR
 	//_lwBackMesh = NULL;
-#else
-	//_lpBackVB = NULL;
-#endif
 }
 
 CEffectFont::~CEffectFont() {
 	//ReleaseModel();
-#ifdef USE_MGR
 	//SAFE_RELEASE(_lwBackMesh);
-#else
-	//SAFE_RELEASE(_lpBackVB);
-#endif
 }
 
-#ifdef USE_RENDER
 bool CEffectFont::CreateEffectFont(MPRender* pDev,
 								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain)
-#else
-bool CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8 pDev,
-								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain)
-#endif
 {
 	//if(!pDev)
 	//	return false;
@@ -2569,12 +1980,8 @@ bool CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8 pDev,
 		_lpBackTex = NULL;
 	}
 	else {
-#ifdef USE_RENDER
 		//pCResMagr->GetTextureByID(id);
 		_lpBackTex = pCResMagr->GetTextureByIDlw(id);
-#else
-		_lpBackTex = pCResMagr->GetTextureByID(id);
-#endif
 	}
 
 	float fx = 0.5f;
@@ -2709,23 +2116,12 @@ void CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat) {
 	//	0xffffffff );
 	m_pDev->SetVertexShader(NULL);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
-#ifdef USE_RENDER
 
-	//#ifdef	MULTITHREAD_LOADING_TEXTURE
 	if (_lpBackTex && _lpBackTex->IsLoadingOK())
 		m_pDev->SetTexture(0, _lpBackTex->GetTex());
 	else
 		return;
-	//#else
-	//	if(_lpBackTex)
-	//		m_pDev->SetTexture(0,_lpBackTex->GetTex());
-	//	else
-	//		m_pDev->SetTexture(0,NULL);
-	//#endif
 
-#else
-	m_pDev->SetTexture(0, _lpBackTex);
-#endif
 
 	//m_pDev->SetStreamSource(0,_lpBackVB,sizeof(SEFFECT_VERTEX));
 	//D3DXMATRIX	mat;
@@ -2734,16 +2130,10 @@ void CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat) {
 	//D3DXMatrixTranslation(&matt,0,0,0 );
 	//D3DXMatrixMultiply(&mat,&mat,&matt);
 	//D3DXMatrixMultiply(&mat,&mat,pmat);
-#ifdef USE_RENDER
 	m_pDev->SetTransformWorld(pmat);
 
 	if (FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX))))
 		g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw failed");
-#else
-	m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), pmat);
-
-	m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &t_SEffVer, sizeof(SEFFECT_VERTEX));
-#endif
 }
 
 void CEffectFont::RenderEffectFont(D3DXMATRIX* pmat) {
@@ -2751,35 +2141,20 @@ void CEffectFont::RenderEffectFont(D3DXMATRIX* pmat) {
 		RenderEffectFontBack(pmat);
 	}
 	//m_pDev->SetRenderState( D3DRS_TEXTUREFACTOR,_dwColor );
-#ifdef USE_RENDER
 	m_pDev->SetTransformWorld(pmat);
-#else
-	m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), pmat);
-#endif
 
 
-	//#ifdef	MULTITHREAD_LOADING_TEXTURE
 	if (m_pTex && m_pTex->IsLoadingOK())
 		m_pDev->SetTexture(0, m_pTex->GetTex());
 	else
 		return;
-	//#else
-	//	if(m_pTex)
-	//		m_pDev->SetTexture(0,m_pTex->GetTex());
-	//	else
-	//		m_pDev->SetTexture(0,NULL);
-	//#endif
 
 
 	//m_pDev->SetStreamSource(0,_lpVB,sizeof(SEFFECT_VERTEX));
 	for (int n = 0; n < (WORD)_vecCurText.size(); n++) {
 		//m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, n * 4, 2);
-#ifdef USE_RENDER
 		if (FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX))))
 			g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw2 failed");
-#else
-		m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &m_vEffVer[n * 4], sizeof(SEFFECT_VERTEX));
-#endif
 	}
 }
 
@@ -2984,7 +2359,6 @@ void CTexFrame::Copy(CTexFrame* pList) {
 }
 
 void CEffectModel::Lock(BYTE** pvEffVer) {
-#ifdef USE_MGR
 	if (_lpSVB == 0) {
 		*pvEffVer = 0;
 		return;
@@ -2995,36 +2369,21 @@ void CEffectModel::Lock(BYTE** pvEffVer) {
 		*pvEffVer = 0;
 		assert(false);
 	}
-#else
-	_lpVB->Lock(0, 0, pvEffVer, 0);
-#endif
 }
 
 void CEffectModel::Unlock() {
-#ifdef USE_MGR
 	_lpSVB->Unlock();
-#else
-	_lpVB->Unlock();
-#endif
 }
 
 void CEffectModel::LockIB(BYTE** pIdx) {
-#ifdef USE_MGR
 	if (LW_FAILED(_lpSIB->Lock(0, 0, (void**)pIdx, 0))) {
 		MessageBox(NULL, "lock error msglock error", "error", 0);
 		assert(false);
 	}
-#else
-	_lpIB->Lock(0, 0, pIdx, 0);
-#endif
 }
 
 void CEffectModel::UnlockIB() {
-#ifdef USE_MGR
 	_lpSIB->Unlock();
-#else
-	_lpIB->Unlock();
-#endif
 }
 
 void I_Effect::SetTobParam(int nFrame, int nSegments, float rHeight, float rRadius, float rBotRadius) {

@@ -2,7 +2,6 @@
 //#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
-#include "lwPredefinition.h"
 
 #include "MPMap.h"
 
@@ -20,9 +19,6 @@ extern CMPResManger        ResMgr;
 CMPShadeMap::CMPShadeMap(void)
 {
 	m_iType = SHADE_SINGLE;
-#ifndef USE_MGR
-	_lpIB = NULL;
-#endif
 
 	//_fSin = sinf(3.141592654f / 2); 
 	//_fCos = cosf(3.141592654f / 2);
@@ -48,9 +44,6 @@ CMPShadeMap::CMPShadeMap(void)
 
 CMPShadeMap::~CMPShadeMap(void)
 {
-#ifndef USE_MGR
-	SAFE_RELEASE(_lpIB);
-#endif
 
 	SAFE_DELETE(_pModel);
 }
@@ -78,12 +71,8 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 	}
 	else
 	{
-#ifdef USE_MGR
 		//m_CResMagr->GetTextureByID(t_iID);
 		_lpCurTex = m_CResMagr->GetTextureByIDlw(t_iID);
-#else
-		_lpCurTex = m_CResMagr->GetTextureByID(t_iID);
-#endif
 
 	}
 
@@ -190,53 +179,6 @@ bool	CMPShadeMap::SetGridNum(int iNum)
 	//_lpVB->Unlock();
 	//!IB
 
-#ifndef USE_MGR
-	SAFE_RELEASE(_lpIB);
-
-	if(FAILED(_pModel->m_pDev->CreateIndexBuffer(sizeof(WORD) * _iIndexNum, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &_lpIB)))
-		return false;
-
-	//WORD  t_wIndex[6] = 
-	//{
-	//	0,1,2,0,2,3,
-	//};
-	WORD*  t_pwIndex;
-	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0); 
-	int nIndex = 0;
-	for( int nY = 0; nY < _iGridCrossNum; nY++ )
-	{
-		for( int nX = 0; nX < _iGridCrossNum; nX++ )
-		{
-			//t_pwIndex[nIndex++] = nX + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-
-			//t_pwIndex[nIndex++] = nX + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = (nX+1) + (nY+1) * (_iGridCrossNum + 1);
-
-			t_pwIndex[nIndex++] = nX + nY * (_iGridCrossNum + 1);
-			t_pwIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-
-			t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-			t_pwIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			t_pwIndex[nIndex++] = (nX+1) + (nY+1) * (_iGridCrossNum + 1);
-
-			//t_pwIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = nX + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = (nX+1) + (nY+1) * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = (nX+1) + (nY+1) * (_iGridCrossNum + 1);
-			//t_pwIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-		}
-	}
-
-	//memcpy(t_pwIndex, t_wIndex, sizeof(WORD)*6);
-	_lpIB->Unlock();
-#else
 
 	_pModel->CreateShadeModel(_iVerNum,_iFaceCount,_iGridCrossNum,m_bUseSoft);
 
@@ -260,7 +202,6 @@ bool	CMPShadeMap::SetGridNum(int iNum)
 	memcpy(wIdx,_wIndex,sizeof(WORD)*_iIndexNum);
 	_pModel->UnlockIB();*/
 
-#endif
 
 	return true;
 }
@@ -278,12 +219,8 @@ void	CMPShadeMap::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
 	}
 	else
 	{
-#ifdef USE_MGR
 		//LPDIRECT3DTEXTURE8 tex=  pCResMagr->GetTextureByID(t_iID);
 		_lpCurTex = pCResMagr->GetTextureByIDlw(t_iID);
-#else
-		_lpCurTex = pCResMagr->GetTextureByID(t_iID);
-#endif
 	}
 
 	//assert(_lpCurTex);

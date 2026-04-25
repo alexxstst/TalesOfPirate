@@ -276,11 +276,7 @@ public:
 		SetMatrix((lwMatrix44*)&_matResult);
 	}
 public:
-#ifdef		USE_RENDER
 	MPRender*					m_pDev;
-#else
-	LPDIRECT3DDEVICE8			m_pDev;
-#endif
 
 protected:
 	bool	LoadChaModel(MPChaLoadInfo& info);

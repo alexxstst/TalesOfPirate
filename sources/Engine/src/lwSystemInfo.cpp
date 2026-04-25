@@ -4,16 +4,13 @@
 #include "lwSystemInfo.h"
 
 
-#if(defined LW_USE_DX9)
 #define INITGUID
 #include <dxdiag.h>
 #include <windows.h>
-#endif
 
 LW_BEGIN
 
 
-#if(defined LW_USE_DX9)
 //-----------------------------------------------------------------------------
 // this routine was copyed from GetDxVer example
 // Name: GetDirectXVersionViaDxDiag()
@@ -130,7 +127,6 @@ HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor,
         return E_FAIL;
 }
 
-#endif
 
 //-----------------------------------------------------------------------------
 // Name: GetFileVersion()
@@ -470,11 +466,9 @@ LW_RESULT lwSystemInfo::CheckDirectXVersion()
     DWORD ver_minor = 0;
     char ver_letter = ' ';
 
-#if(defined LW_USE_DX9)
     //this will only work on DX9 or later.
     if(SUCCEEDED(GetDirectXVersionViaDxDiag(&ver_major, &ver_minor, &ver_letter)))
         goto __check_ver;
-#endif
 
     // Getting the DirectX version info from DxDiag failed, 
     // so most likely we are on DX8.x or earlier

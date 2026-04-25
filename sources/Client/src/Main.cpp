@@ -17,6 +17,7 @@
 #include "Main.h"
 #include "GameApp.h"
 #include "SceneObjFile.h"
+#include "TextureLog.h"
 #include "UIImeinput.h"
 #include "GameConfig.h"
 #include "PacketCmd.h"
@@ -126,6 +127,22 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	g_SystemIni = dbc::IniFile("./user/system.ini");
 	g_Config.Load();
+
+	//  TextureLog (диагностический канал "textures") — runtime-тогл из
+	//  [TextureLog] enabled. По умолчанию выключен; при включении регистрируем
+	//  стандартные категории (substring-фильтры по пути файла), чтобы пер-
+	//  категорийные счётчики накапливались с самого первого Load.
+	if (g_Config.m_bTextureLogEnabled) {
+		auto& texLog = Corsairs::Engine::Render::TextureLog::Instance();
+		texLog.SetEnabled(true);
+		texLog.RegisterCategory("scene");
+		texLog.RegisterCategory("character");
+		texLog.RegisterCategory("item");
+		texLog.RegisterCategory("ui");
+		texLog.RegisterCategory("terrain");
+		texLog.RegisterCategory("effect");
+		texLog.RegisterCategory("minimap");
+	}
 
 	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "../databases/gamedata.sqlite");
 	const auto renderDbPath = g_SystemIni["Assets"].GetString("RenderAssetPack", "../databases/render.sqlite");

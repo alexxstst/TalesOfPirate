@@ -7,7 +7,6 @@
 #include "lwShaderMgr.h"
 #include "lwGraphicsUtil.h"
 #include "lwShaderTypes.h"
-#include "lwPreDefinition.h"
 #include "lwxRenderCtrlVS.h"
 
 
@@ -213,9 +212,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         path_info->SetPath(PATH_TYPE_TEXTURE_ITEM, ".\\texture\\item\\");
 
         path_info->SetPath(PATH_TYPE_ANIMATION, ".\\animation\\");
-#if(defined LW_USE_DX9)
         path_info->SetPath(PATH_TYPE_SHADER, ".\\shader\\dx9\\");
-#endif
 
         // end
 
@@ -303,9 +300,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         path_info->SetPath(PATH_TYPE_TEXTURE_ITEM, ".\\texture\\item\\");
 
         path_info->SetPath(PATH_TYPE_ANIMATION, ".\\animation\\");
-#if(defined LW_USE_DX9)
         path_info->SetPath(PATH_TYPE_SHADER, ".\\shader\\dx9\\");
-#endif
         // end
 
         if (LW_FAILED(sys->CreateGraphicsSystem(&sys_graphics)))
@@ -341,9 +336,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
 
         lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
         opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, 1);
-#if(defined OPT_CULLPRIMITIVE)
         opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 1);
-#endif
 
         //
         lwInitUserRenderCtrlVSProc(res_mgr);
@@ -425,9 +418,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         path_info->SetPath(PATH_TYPE_TEXTURE_ITEM, ".\\texture\\item\\");
 
         path_info->SetPath(PATH_TYPE_ANIMATION, ".\\animation\\");
-#if(defined LW_USE_DX9)
         path_info->SetPath(PATH_TYPE_SHADER, ".\\shader\\dx9\\");
-#endif
         // end
 
 
@@ -498,9 +489,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
 
         lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
         opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, 1);
-#if(defined OPT_CULLPRIMITIVE)
         opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 1);
-#endif
 
         g_system = sys;
         g_sys_graphics = sys_graphics;

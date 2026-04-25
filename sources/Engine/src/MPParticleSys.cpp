@@ -5,7 +5,6 @@
 #include "MPModelEff.h"
 
 #include ".\mpparticlesys.h"
-#include "lwPredefinition.h"
 
 #include "MPMap.h"
 
@@ -1235,9 +1234,7 @@ void CMPPartSys::RenderSoft() {
 		return;
 	}
 	if (_pCModel) {
-#ifdef USE_MGR
 		_pCModel->Begin();
-#endif
 
 		_pCEffectFile->SetTechnique(_iRenderIdx);
 		if (!_bUseZ) {
@@ -1252,19 +1249,12 @@ void CMPPartSys::RenderSoft() {
 		_pCEffectFile->GetDev()->SetVertexShader(NULL);
 		_pCEffectFile->GetDev()->SetFVF(EFFECT_VER_FVF);
 
-		//#ifdef	MULTITHREAD_LOADING_TEXTURE
 		if (_pTex && _pTex->IsLoadingOK())
 			_pCModel->m_pDev->SetTexture(0, _pTex->GetTex());
 		else {
 			_pCEffectFile->End();
 			return;
 		}
-		//#else
-		//		if(_pTex)
-		//			_pCModel->GetDev()->SetTexture(0, _pTex->GetTex());
-		//		else
-		//			_pCModel->GetDev()->SetTexture(0, NULL);
-		//#endif
 
 		//_pCModel->GetDev()->SetVertexShader(EFFECT_VER_FVF);
 
@@ -1298,14 +1288,9 @@ void CMPPartSys::RenderSoft() {
 						_pCModel->FrameMove(0);
 					}
 					else
-#ifdef USE_RENDER
 						_pCModel->GetDev()->SetTransformWorld(
 							&_vecParticle[n]->m_SCurMat);
 
-#else
-					_pCModel->GetDev()->SetTransform(D3DTS_WORLDMATRIX(0),
-													 &_vecParticle[n]->m_SCurMat);
-#endif
 
 
 					_pCModel->RenderModel();
@@ -1315,9 +1300,7 @@ void CMPPartSys::RenderSoft() {
 				}
 			}
 		}
-#ifdef USE_MGR
 		_pCModel->End();
-#endif
 
 		_pCEffectFile->End();
 	}

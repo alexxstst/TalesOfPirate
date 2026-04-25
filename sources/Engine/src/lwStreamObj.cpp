@@ -657,17 +657,9 @@ LW_RESULT lwStaticStreamMgr::BindVertexBuffer(LW_HANDLE handle, UINT channel)
 
 
 
-#if(defined LW_USE_DX9)
-
-#if(defined LW_USE_DX9_STREAMOFFSET)
-        // To find out if the device supports stream offsets, 
-        // see the D3DDEVCAPS2_STREAMOFFSET constant in D3DDEVCAPS2.
-        _dev_obj->SetStreamSource(channel, s->_buf, e->offset, e->stride);
-#else
+        //  Бьёмся offset'ом не на vertex-стороне, а через BaseVertexIndex
+        //  в DrawIndexedPrimitive — см. lwMesh::DrawSubset.
         _dev_obj->SetStreamSource(channel, s->_buf, 0, e->stride);
-#endif
-
-#endif
 
         _vertex_entry_offset = e->offset / e->stride;
     }
@@ -918,13 +910,9 @@ LW_RESULT lwDynamicStreamVB::Bind(DWORD channel, const void* data, DWORD size, D
 
     _buf->Unlock();
 
-#if(defined LW_USE_DX9_STREAMOFFSET)
-    // To find out if the device supports stream offsets, 
-    // see the D3DDEVCAPS2_STREAMOFFSET constant in D3DDEVCAPS2.
-    _dev_obj->SetStreamSource(channel, _buf, offset, stride);
-#else
+    //  offset на vertex-стороне не используем — bind с нуля,
+    //  смещение применяет DrawIndexedPrimitive через BaseVertexIndex.
     _dev_obj->SetStreamSource(channel, _buf, 0, stride);
-#endif
 
     _base_index = offset / stride;
 

@@ -935,29 +935,11 @@ void CChaModel::Begin() {
 	m_pDev->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pDev->GetDevice()->SetRenderState(D3DRS_SRCBLEND, _eSrcBlend);
 	m_pDev->GetDevice()->SetRenderState(D3DRS_DESTBLEND, _eDestBlend);
-#ifdef USE_RENDER
 	D3DMATERIALX mtl;
 	mtl.Ambient = (D3DCOLORVALUE)_dwCurColor;
 	mtl.Diffuse = (D3DCOLORVALUE)_dwCurColor;
 	SetMaterial(&mtl);
 	SetOpacity(_dwCurColor.a);
-#else
-	m_pDev->SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	m_pDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); //
-
-	m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, _dwCurColor);
-
-	m_pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	m_pDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-	m_pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-
-	m_pDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	m_pDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
-	m_pDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-
-	m_pDev->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTEXF_POINT);
-	m_pDev->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTEXF_POINT);
-#endif
 }
 
 void CChaModel::End() {

@@ -9,8 +9,6 @@
 
 LW_BEGIN
 
-//#define LW_USE_DX9_STREAMOFFSET
-
 #define LW_INVALID_STREAM_ID        0xffff
 #define LW_INVALID_STREAMENTRY_ID   0xffff
 
