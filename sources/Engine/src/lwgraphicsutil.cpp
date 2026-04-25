@@ -2,8 +2,7 @@
 #include "stdafx.h"
 #include "lwgraphicsutil.h"
 
-#include "tgacore.h"
-#include "lwbitmap.h"
+#include "ImageLoader.h"
 #include "lwfileutil.h"
 #include "lwErrorCode.h"
 #include "lwD3D.h"
@@ -65,87 +64,67 @@ float lwGetFPS()
 	return __fps;
 }
 
-void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data, const CGraphicsFileData* tga, DWORD colorkey_type, lwColorValue4b* colorkey)
-{
-	int size = tga->m_FileHeader.Width * tga->m_FileHeader.Height;
-
-    lwColorValue4b* dst;
-    lwColorValue4b* dst_0;
-    CGraphicsFileData::stFileData* src;
-
-    dst_0 = &dst_data[0];
-
-	for(int i=0; i<size; i++) 
-    {
-        dst = &dst_data[i];
-        src = &tga->m_pstFileData[i];
-
-        dst->r = src->R;
-		dst->g = src->G;
-		dst->b = src->B;
-        dst->a = src->A;
-
-        if(colorkey_type == COLORKEY_TYPE_COLOR)
-        {
-            if(dst->r == colorkey->r && dst->g == colorkey->g && dst->b == colorkey->b)
-            {
-                dst->color = 0x00000000;
-            }
-        }
-        else if(colorkey_type == COLORKEY_TYPE_PIXEL)
-        {
-            if(dst->r == dst_0->r && dst->g == dst_0->g && dst->b == dst_0->b) 
-            {
-                dst->color = 0x00000000;
-            }
-        }
-	}
-}
-
 int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type, lwColorValue4b* colorkey)
 {
-	int img_height, img_width;
+    using namespace Corsairs::Engine::Render;
 
-	lwColorValue4b* img_data;
+    char ext[8];
+    lwGetPathFileNameExt(ext, file);
 
-	char ext[8];
-	lwGetPathFileNameExt(ext, file);
+    // ext → lowercase для ImageLoader::CanHandle.
+    char extLower[8];
+    std::size_t extLen = 0;
+    for (; extLen < sizeof(extLower) - 1 && ext[extLen] != '\0'; ++extLen) {
+        const char c = ext[extLen];
+        extLower[extLen] = (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
+    }
+    extLower[extLen] = '\0';
+    const std::string_view extView(extLower, extLen);
 
-	if(_tcsicmp(ext, "tga") == 0) {
-		// tga file
-		CGraphicsFileData tga;
-		
-        if(tga.LoadTGAFile2(file) == 0)
-            return 0;
-
-		img_height = tga.m_FileHeader.Height;
-		img_width = tga.m_FileHeader.Width;
-
-		img_data = LW_NEW(lwColorValue4b[img_height * img_width]);
-
-		lwConvertTgaDataToColorValue(img_data, &tga, colorkey_type, colorkey);
-	}
-	else if(_tcsicmp(ext, "bmp") == 0) {
-		// bmp file
-		lwBitmap bm;
-		
-        if(bm.Load(file, colorkey_type, colorkey) == 0)
-            return 0;
-
-		img_height = bm._bmih.biHeight;
-		img_width = bm._bmih.biWidth;
-
-		img_data = bm.Detach();
-
-	}
-    else {
+    if (!ImageLoader::CanHandle(extView)) {
+        ToLogService("errors", LogLevel::Error,
+            "lwLoadColorValue: unsupported extension '{}' for file '{}'",
+            extView, file);
         return 0;
     }
 
-    *buf = img_data;
-    *width = img_width;
-    *height = img_height;
+    // Маппинг COLORKEY_TYPE → 32-битный ключ для ImageLoader::LoadImage.
+    // ImageLoader сравнивает только RGB-часть (младшие 24 бита), поэтому alpha
+    // в ключе роли не играет — кладём R/G/B в ту же позицию байтов,
+    // в которой они лежат в lwColorValue4b (B=байт0, G=байт1, R=байт2).
+    //   NONE  → 0 (ключ не применяется)
+    //   COLOR → R/G/B из переданного lwColorValue4b*
+    //   PIXEL → 0 + post-process по первому декодированному пикселю
+    std::uint32_t colorKey = 0;
+    if (colorkey_type == COLORKEY_TYPE_COLOR && colorkey != nullptr) {
+        colorKey = static_cast<std::uint32_t>(colorkey->b)
+                 | (static_cast<std::uint32_t>(colorkey->g) << 8)
+                 | (static_cast<std::uint32_t>(colorkey->r) << 16);
+    }
 
+    // Ошибки декодирования — ImageDecodeError — пробрасываются наружу.
+    // lwLoadColorValue возвращает 0 только для «формат не поддерживается».
+    DecodedImage decoded;
+    ImageLoader::LoadImage(file, colorKey, "lwLoadColorValue", decoded);
+
+    // COLORKEY_TYPE_PIXEL: ключ — цвет первого пикселя полученного буфера.
+    if (colorkey_type == COLORKEY_TYPE_PIXEL && decoded.ImageData != nullptr
+        && decoded.Width > 0 && decoded.Height > 0)
+    {
+        const lwColorValue4b ref = decoded.ImageData[0];
+        const std::size_t total =
+            static_cast<std::size_t>(decoded.Width) * static_cast<std::size_t>(decoded.Height);
+        for (std::size_t i = 0; i < total; ++i) {
+            lwColorValue4b* px = &decoded.ImageData[i];
+            if (px->r == ref.r && px->g == ref.g && px->b == ref.b) {
+                px->color = 0x00000000;
+            }
+        }
+    }
+
+    *buf    = decoded.ImageData;
+    *width  = static_cast<int>(decoded.Width);
+    *height = static_cast<int>(decoded.Height);
     return 1;
 }
 

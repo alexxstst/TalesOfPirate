@@ -105,8 +105,13 @@ void MPTile::RenderTerrain(int nX, int nY, MPTile *TileList[4])
     // begin by lsh
     // render state ambient 
     // renderdevice
+    // GetRenderState требует DWORD* (WinAPI), а lwColorValue4b::color — std::uint32_t.
+    // На Windows x64 оба 32-битные, но MSVC считает типы несвязанными —
+    // читаем во временный DWORD и перекладываем в union.
     lwColorValue4b amb, vert_amb, c, t, x;
-    g_Render.GetDevice()->GetRenderState(D3DRS_AMBIENT, &amb.color);
+    DWORD ambRaw = 0;
+    g_Render.GetDevice()->GetRenderState(D3DRS_AMBIENT, &ambRaw);
+    amb.color = ambRaw;
     // end by lsh
 
 	float fOff = 0.0f;

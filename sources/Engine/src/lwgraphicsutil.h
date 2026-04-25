@@ -5,9 +5,6 @@
 #include "lwExpObj.h"
 #include "lwITypes.h"
 
-class CGraphicsFileData;
-
-
 #ifdef USE_MINDPOWER
 #include "GlobalInc.h"
 #endif
@@ -102,8 +99,7 @@ inline void __cdecl LGX(const char* format, ...)
 
 float lwGetFPS();
 
-void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data,const CGraphicsFileData* tga, DWORD colorkey_type, lwColorValue4b* colorkey );
-int lwLoadColorValue( lwColorValue4b** buf, int* width, int* height, const char* file );
+int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type, lwColorValue4b* colorkey);
 void lwFreeColorValue( lwColorValue4b* buf );
 
 LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size);

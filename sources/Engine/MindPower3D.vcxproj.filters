@@ -76,9 +76,6 @@
     <ClInclude Include="include\MPGameApp.h">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Blk.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\lwAnimCtrl.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
@@ -86,9 +83,6 @@
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\lwAnimKeySetPRS.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lwBitmap.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\lwCamera.h">
@@ -235,9 +229,6 @@
     <ClInclude Include="src\lwxRenderCtrlVS.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\TgaCore.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="include\EffectFile.h">
       <Filter>Source Files\Mesh\include</Filter>
     </ClInclude>
@@ -313,6 +304,12 @@
     <ClInclude Include="include\I_Effect.h">
       <Filter>effect</Filter>
     </ClInclude>
+    <ClInclude Include="include\ImageLoader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClCompile Include="src\ImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClInclude Include="include\MPColorValue.h">
       <Filter>effect</Filter>
     </ClInclude>
@@ -428,9 +425,6 @@
     <ClCompile Include="src\MPGameApp.cpp">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClCompile>
-    <ClCompile Include="src\Blk.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\lwAnimCtrl.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
@@ -438,9 +432,6 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\lwAnimKeySetPRS.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lwBitmap.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\lwCamera.cpp">
@@ -594,9 +585,6 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\ShaderLoad.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TgaCore.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\MPMath.cpp">
