@@ -257,28 +257,32 @@ bool CChat::Init() {
 	_pSessionNode->SetUnitSize(nWidth, nHeight);
 	_pSessionNode->SetColMaxNum(1);
 
-	_pFrndNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(466).c_str()));
+	_pFrndNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(
+		GetLanguageString(466).c_str()));
 	_pFrndNode->GetItem()->SetColor(COLOR_BLACK);
 	_pFrndNode->GetUpImage()->UnLoadImage();
 	_pFrndNode->GetDownImage()->UnLoadImage();
 	_pFrndNode->SetUnitSize(nWidth, nHeight);
 	_pFrndNode->SetColMaxNum(1);
 
-	_pGroupNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(467).c_str()));
+	_pGroupNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(
+		GetLanguageString(467).c_str()));
 	_pGroupNode->GetItem()->SetColor(COLOR_BLACK);
 	_pGroupNode->GetUpImage()->UnLoadImage();
 	_pGroupNode->GetDownImage()->UnLoadImage();
 	_pGroupNode->SetUnitSize(nWidth, nHeight);
 	_pGroupNode->SetColMaxNum(1);
 
-	_pGuildNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(468).c_str()));
+	_pGuildNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(
+		GetLanguageString(468).c_str()));
 	_pGuildNode->GetItem()->SetColor(COLOR_BLACK);
 	_pGuildNode->GetUpImage()->UnLoadImage();
 	_pGuildNode->GetDownImage()->UnLoadImage();
 	_pGuildNode->SetUnitSize(nWidth, nHeight);
 	_pGuildNode->SetColMaxNum(1);
 
-	_pMasterNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(850).c_str()));
+	_pMasterNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(
+		GetLanguageString(850).c_str()));
 	_pMasterNode->GetItem()->SetColor(COLOR_BLACK);
 	_pMasterNode->GetUpImage()->UnLoadImage();
 	_pMasterNode->GetDownImage()->UnLoadImage();
@@ -728,7 +732,8 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 
 		CCharacter* pCha = pScene->SearchByHumanName(labMenberName[pSender->nTag]->GetCaption());
 		if (!pCha) {
-			g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(474), labMenberName[pSender->nTag]->GetCaption()).c_str());
+			g_pGameApp->SysInfo(
+				"%s", SafeVFormat(GetLanguageString(474), labMenberName[pSender->nTag]->GetCaption()).c_str());
 			return;
 		}
 
@@ -758,7 +763,8 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 				return;
 			}
 		}
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(476), labMenberName[pSender->nTag]->GetCaption()).c_str());
+		g_pGameApp->SysInfo(
+			"%s", SafeVFormat(GetLanguageString(476), labMenberName[pSender->nTag]->GetCaption()).c_str());
 	}
 }
 
@@ -1144,7 +1150,8 @@ void CChat::_OnMouseStudentMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		if (pMain && pMain->getGameAttr()) {
 			long nLevel = pMain->getGameAttr()->get(ATTR_LV);
 
-			auto _str = SafeVFormat(GetLanguageString(856), _curSelectMember->GetName(), nLevel * 5); //  %s \n:%d  :%d\n
+			auto _str = SafeVFormat(GetLanguageString(856), _curSelectMember->GetName(), nLevel * 5);
+			//  %s \n:%d  :%d\n
 
 			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentDeleteConfirm, _str.c_str(), true);
 			pSelectBox->dwTag = _curSelectMember->GetID();

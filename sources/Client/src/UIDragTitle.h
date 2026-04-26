@@ -6,37 +6,40 @@
 #pragma once
 #include "uicompent.h"
 
-namespace GUI
-{
-// ,
-class CDragTitle : public CCompent
-{
-public:
-    CDragTitle(CForm& frmOwn);
-    CDragTitle(const CDragTitle& rhs);
-    CDragTitle& operator=( const CDragTitle& rhs );
-    virtual ~CDragTitle(void);
-    GUI_CLONE(CDragTitle)
+namespace GUI {
+	// ,
+	class CDragTitle : public CCompent {
+	public:
+		CDragTitle(CForm& frmOwn);
+		CDragTitle(const CDragTitle& rhs);
+		CDragTitle& operator=(const CDragTitle& rhs);
+		virtual ~CDragTitle(void);
+		GUI_CLONE(CDragTitle)
 
-    virtual bool	IsHandleMouse() { return true; }
-    virtual bool	MouseRun( int x, int y, DWORD key );
-    virtual void	Render();
-    virtual void	Refresh();	
+		virtual bool IsHandleMouse() {
+			return true;
+		}
 
-    void			DragRender();
+		virtual bool MouseRun(int x, int y, DWORD key);
+		virtual void Render();
+		virtual void Refresh();
 
-    void            SetIsShowDrag( bool v ) { _IsShowDrag = v;  }
+		void DragRender();
 
-public:
-    CGuiPic*		GetImage()              { return _pImage;   }
+		void SetIsShowDrag(bool v) {
+			_IsShowDrag = v;
+		}
 
-private:
-    void			_SetSelf( const CDragTitle& rhs );
+	public:
+		CGuiPic* GetImage() {
+			return _pImage;
+		}
 
-protected:
-    CGuiPic*		_pImage;
-    bool            _IsShowDrag;
+	private:
+		void _SetSelf(const CDragTitle& rhs);
 
-};
-
+	protected:
+		CGuiPic* _pImage;
+		bool _IsShowDrag;
+	};
 }

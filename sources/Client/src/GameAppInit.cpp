@@ -229,7 +229,8 @@ BOOL CGameApp::_Init() {
 	//  (все колсайты защищены проверкой IsMusicSystemValid()).
 	if (GlobalAppConfig.IsMusicEnabled()) {
 		_IsMusicSystemValid = Corsairs::Client::Audio::AudioSDL::Instance().Init();
-	} else {
+	}
+	else {
 		_IsMusicSystemValid = false;
 		g_logManager.InternalLog(LogLevel::Info, "common", "Audio disabled by config ([audio] musicEnabled=0)");
 	}

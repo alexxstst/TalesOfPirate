@@ -1,5 +1,4 @@
-﻿
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "UIPurifyForm.h"
 #include "GameApp.h"
 #include "UIEquipForm.h"
@@ -13,85 +12,71 @@
 using namespace std;
 
 
-namespace GUI
-{
-
-	CPurifyMgr::CPurifyMgr(void)
-	{
+namespace GUI {
+	CPurifyMgr::CPurifyMgr(void) {
 	}
 
-	CPurifyMgr::~CPurifyMgr(void)
-	{
+	CPurifyMgr::~CPurifyMgr(void) {
 	}
 
 
-	bool CPurifyMgr::Init()
-	{
+	bool CPurifyMgr::Init() {
 		frmEquipPurify = CFormMgr::s_Mgr.Find("frmEquipPurify");
-		if(! frmEquipPurify)
-		{
+		if (!frmEquipPurify) {
 			ToLogService("common", "main.clu   frmEquipPurify not found.");
 			return false;
 		}
 
 		labMoneyShow = dynamic_cast<CLabelEx*>(frmEquipPurify->Find("labMoneyShow"));
-		if(! labMoneyShow)
-		{
+		if (!labMoneyShow) {
 			ToLogService("common", "main.clu   frmEquipPurify:labMoneyShow not found.");
 			return false;
 		}
 
 		btnForgeYes = dynamic_cast<CTextButton*>(frmEquipPurify->Find("btnForgeYes"));
-		if(! btnForgeYes)
-		{
+		if (!btnForgeYes) {
 			ToLogService("common", "main.clu   frmEquipPurify:btnForgeYes not found.");
 			return false;
 		}
 
 		// Command
 		char szName[32] = {0};
-		for(int i = 0; i < TYPE_COUNT; ++i)
-		{
+		for (int i = 0; i < TYPE_COUNT; ++i) {
 			sprintf(szName, "labHintleft%d", i + 1);
 			labHintleft[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
-			if(! labHintleft[i])
-			{
+			if (!labHintleft[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
 			sprintf(szName, "labHintright%d", i + 1);
 			labHintright[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
-			if(! labHintright[i])
-			{
+			if (!labHintright[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
 			sprintf(szName, "labTitle%d", i + 1);
 			labTitle[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
-			if(! labTitle[i])
-			{
+			if (!labTitle[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 		}
 
 		cmdEquipPurify[PURIFY_ONE] = dynamic_cast<COneCommand*>(frmEquipPurify->Find("cmdEquipOne"));
-		if(! cmdEquipPurify[PURIFY_ONE])
-		{
+		if (!cmdEquipPurify[PURIFY_ONE]) {
 			ToLogService("common", "main.clu   frmEquipPurify:cmdEquipOne not found.");
 			return false;
 		}
 
 		cmdEquipPurify[PURIFY_TWO] = dynamic_cast<COneCommand*>(frmEquipPurify->Find("cmdEquipTwo"));
-		if(! cmdEquipPurify[PURIFY_TWO])
-		{
+		if (!cmdEquipPurify[PURIFY_TWO]) {
 			ToLogService("common", "main.clu   frmEquipPurify:cmdEquipTwo not found.");
 			return false;
 		}
 
-		frmEquipPurify->evtClose             = _evtClosePurifyForm;
+		frmEquipPurify->evtClose = _evtClosePurifyForm;
 		frmEquipPurify->evtEntrustMouseEvent = _evtMainMouseButton;
 
 		cmdEquipPurify[PURIFY_ONE]->evtBeforeAccept = _evtDragPurifyOne;
@@ -101,27 +86,22 @@ namespace GUI
 	}
 
 
-	void CPurifyMgr::CloseForm()
-	{
+	void CPurifyMgr::CloseForm() {
 		// 
 	}
 
 
-	void CPurifyMgr::ShowForm(int nType)
-	{
-		if(frmEquipPurify)
-		{
+	void CPurifyMgr::ShowForm(int nType) {
+		if (frmEquipPurify) {
 			ClearAllCommand();
 
-			if(PURIFY_TYPE <= nType && nType < PURIFY_TYPE + TYPE_COUNT)
-			{
-				m_nType = nType;  // 
+			if (PURIFY_TYPE <= nType && nType < PURIFY_TYPE + TYPE_COUNT) {
+				m_nType = nType; // 
 
-				for(int i = 0; i < TYPE_COUNT; ++i)
-				{
-					labHintleft[i]->SetIsShow (i + PURIFY_TYPE == m_nType);
+				for (int i = 0; i < TYPE_COUNT; ++i) {
+					labHintleft[i]->SetIsShow(i + PURIFY_TYPE == m_nType);
 					labHintright[i]->SetIsShow(i + PURIFY_TYPE == m_nType);
-					labTitle[i]->SetIsShow    (i + PURIFY_TYPE == m_nType);
+					labTitle[i]->SetIsShow(i + PURIFY_TYPE == m_nType);
 				}
 
 				SetPurifyUI();
@@ -132,41 +112,35 @@ namespace GUI
 
 				int nLeft, nTop;
 				nLeft = frmEquipPurify->GetX2();
-				nTop  = frmEquipPurify->GetY();
+				nTop = frmEquipPurify->GetY();
 
 				g_stUIEquip.GetItemForm()->SetPos(nLeft, nTop);
 				g_stUIEquip.GetItemForm()->Refresh();
 				g_stUIEquip.GetItemForm()->Show();
 			}
-			else
-			{
+			else {
 				frmEquipPurify->SetIsShow(false);
 			}
 		}
 	}
 
 
-	void CPurifyMgr::CloseAllForm()
-	{
-		if(frmEquipPurify)
-		{
+	void CPurifyMgr::CloseAllForm() {
+		if (frmEquipPurify) {
 			frmEquipPurify->SetIsShow(false);
 		}
 	}
 
 
-	void CPurifyMgr::ClearAllCommand()
-	{
+	void CPurifyMgr::ClearAllCommand() {
 		PopItem(PURIFY_ONE);
 		PopItem(PURIFY_TWO);
 	}
 
 
-	int CPurifyMgr::GetItemComIndex(COneCommand* pCom)
-	{
-		for(int i = 0; i < PURIFY_CELL_COUNT; ++i)
-		{
-			if(cmdEquipPurify[i] == pCom)
+	int CPurifyMgr::GetItemComIndex(COneCommand* pCom) {
+		for (int i = 0; i < PURIFY_CELL_COUNT; ++i) {
+			if (cmdEquipPurify[i] == pCom)
 				return i;
 		}
 
@@ -174,14 +148,11 @@ namespace GUI
 	}
 
 
-	void CPurifyMgr::DragItemToEquipGrid(int nIndex)
-	{
-		if(PURIFY_ONE == nIndex)
-		{
+	void CPurifyMgr::DragItemToEquipGrid(int nIndex) {
+		if (PURIFY_ONE == nIndex) {
 			ClearAllCommand();
 		}
-		else if(PURIFY_TWO == nIndex)
-		{
+		else if (PURIFY_TWO == nIndex) {
 			PopItem(PURIFY_TWO);
 		}
 
@@ -190,32 +161,29 @@ namespace GUI
 
 
 	// 
-	bool CPurifyMgr::IsEquipItem(CItemCommand& rItem)
-	{
+	bool CPurifyMgr::IsEquipItem(CItemCommand& rItem) {
 		CItemRecord* pItemRecord = rItem.GetItemInfo();
-		if(pItemRecord)
-		{
+		if (pItemRecord) {
 			short sType = pItemRecord->sType;
 
-			switch(sType)
-			{
-			case 1:		//
-			case 2:		//
-			case 3:		//
-			case 4:		//
-			case 7:		//
-			case 9:		//
-			case 11:	//
-			case 20:	//
-			case 22:	//
-			case 23:	//
-			case 24:	//
-			case 25:	//rings
-			case 26:	//necks
-			case 27:	//
-			case 81:	//brac
-			case 82:	//brac
-			case 83:	//brac
+			switch (sType) {
+			case 1: //
+			case 2: //
+			case 3: //
+			case 4: //
+			case 7: //
+			case 9: //
+			case 11: //
+			case 20: //
+			case 22: //
+			case 23: //
+			case 24: //
+			case 25: //rings
+			case 26: //necks
+			case 27: //
+			case 81: //brac
+			case 82: //brac
+			case 83: //brac
 				return true;
 
 			default:
@@ -227,19 +195,16 @@ namespace GUI
 	}
 
 
-	bool CPurifyMgr::IsMainLifeItem(CItemCommand& rItem)
-	{
+	bool CPurifyMgr::IsMainLifeItem(CItemCommand& rItem) {
 		CItemRecord* pItemRecord = rItem.GetItemInfo();
-		if(pItemRecord)
-		{
+		if (pItemRecord) {
 			long nType = pItemRecord->lID;
 
-			switch(nType)
-			{
-			case 1067://		
-			case 1068://		
-			case 1069://		
-			case 1070://	
+			switch (nType) {
+			case 1067: //		
+			case 1068: //		
+			case 1069: //		
+			case 1070: //	
 				return true;
 
 			default:
@@ -251,16 +216,13 @@ namespace GUI
 	}
 
 
-	bool CPurifyMgr::IsRepairLifeItem(CItemCommand& rItem)
-	{
+	bool CPurifyMgr::IsRepairLifeItem(CItemCommand& rItem) {
 		CItemRecord* pItemRecord = rItem.GetItemInfo();
-		if(pItemRecord)
-		{
+		if (pItemRecord) {
 			long nType = pItemRecord->lID;
 
-			switch(nType)
-			{
-			case 2236://	
+			switch (nType) {
+			case 2236: //	
 				return true;
 
 			default:
@@ -272,19 +234,16 @@ namespace GUI
 	}
 
 
-	void CPurifyMgr::PushItem(int iIndex, CItemCommand& rItem)
-	{
+	void CPurifyMgr::PushItem(int iIndex, CItemCommand& rItem) {
 		// 
-		if(! rItem.GetIsValid())
-		{
+		if (!rItem.GetIsValid()) {
 			return;
 		}
 
 		// CmdItem
-		CItemCommand* pItemCommand =  
+		CItemCommand* pItemCommand =
 			dynamic_cast<CItemCommand*>(cmdEquipPurify[iIndex]->GetCommand());
-		if (pItemCommand)
-		{
+		if (pItemCommand) {
 			PopItem(iIndex);
 		}
 
@@ -302,20 +261,18 @@ namespace GUI
 	}
 
 
-	void CPurifyMgr::PopItem(int iIndex)
-	{
+	void CPurifyMgr::PopItem(int iIndex) {
 		// CmdItemItemPushItem()new
-		CItemCommand* pItemCommand =  
+		CItemCommand* pItemCommand =
 			dynamic_cast<CItemCommand*>(cmdEquipPurify[iIndex]->GetCommand());
-		if (! pItemCommand) return;
+		if (!pItemCommand) return;
 
-		cmdEquipPurify[iIndex]->DelCommand();	// delete Item
+		cmdEquipPurify[iIndex]->DelCommand(); // delete Item
 
 		// Item
-		CCommandObj* pItem = 
-					g_stUIEquip.GetGoodsGrid()->GetItem(m_iPurifyItemPos[iIndex]);
-		if (pItem)
-		{
+		CCommandObj* pItem =
+			g_stUIEquip.GetGoodsGrid()->GetItem(m_iPurifyItemPos[iIndex]);
+		if (pItem) {
 			pItem->SetIsValid(true);
 		}
 
@@ -325,13 +282,11 @@ namespace GUI
 
 
 	// 
-	void CPurifyMgr::SetPurifyUI()
-	{
+	void CPurifyMgr::SetPurifyUI() {
 		CItemCommand* pItem1 = dynamic_cast<CItemCommand*>(cmdEquipPurify[PURIFY_ONE]->GetCommand());
 		CItemCommand* pItem2 = dynamic_cast<CItemCommand*>(cmdEquipPurify[PURIFY_TWO]->GetCommand());
 
-		if (NULL == pItem1 || NULL == pItem2)
-		{
+		if (NULL == pItem1 || NULL == pItem2) {
 			btnForgeYes->SetIsEnabled(false);
 			labMoneyShow->SetCaption("");
 			return;
@@ -340,8 +295,7 @@ namespace GUI
 		pItem1 = dynamic_cast<CItemCommand*>(g_stUIEquip.GetGoodsGrid()->GetItem(m_iPurifyItemPos[PURIFY_ONE]));
 		pItem2 = dynamic_cast<CItemCommand*>(g_stUIEquip.GetGoodsGrid()->GetItem(m_iPurifyItemPos[PURIFY_TWO]));
 
-		if (NULL == pItem1 || NULL == pItem2)
-		{
+		if (NULL == pItem1 || NULL == pItem2) {
 			btnForgeYes->SetIsEnabled(false);
 			labMoneyShow->SetCaption("");
 			return;
@@ -353,37 +307,31 @@ namespace GUI
 		int nMoney = 0;
 
 		// 
-		if(GetType() == CPurifyMgr::PURIFY_TYPE)
-		{
+		if (GetType() == CPurifyMgr::PURIFY_TYPE) {
 			//int nMainLevel = pItem1->GetItemInfo()->sNeedLv;
 			//nMoney = nMainLevel * nMainLevel * 1000;
 
 			nMoney = 1000000;
 		}
 		// 
-		else if(GetType() == CPurifyMgr::ENERGY_TYPE)
-		{
+		else if (GetType() == CPurifyMgr::ENERGY_TYPE) {
 			int nBatteryID = pItem2->GetItemInfo()->lID;
-			if(nBatteryID == 1022)
-			{
+			if (nBatteryID == 1022) {
 				nMoney = 300;
 			}
-			else if(nBatteryID == 1024)
-			{
+			else if (nBatteryID == 1024) {
 				nMoney = 1000;
 			}
 		}
 		// 
-		else if(GetType() == CPurifyMgr::GETSTONE_TYPE)
-		{
-			int nStoneLevel = pItem1->GetForgeInfo().nStoneLevel[0] + 
-							  pItem1->GetForgeInfo().nStoneLevel[1] + 
-							  pItem1->GetForgeInfo().nStoneLevel[2];
+		else if (GetType() == CPurifyMgr::GETSTONE_TYPE) {
+			int nStoneLevel = pItem1->GetForgeInfo().nStoneLevel[0] +
+				pItem1->GetForgeInfo().nStoneLevel[1] +
+				pItem1->GetForgeInfo().nStoneLevel[2];
 			nMoney = nStoneLevel * 10000;
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
-		{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE) {
 			//int nOvenLevel = 0;
 			//for(int i = 0; i < 5; ++i)
 			//{
@@ -406,29 +354,26 @@ namespace GUI
 
 
 	// 
-	void CPurifyMgr::SendNetProtocol()
-	{
+	void CPurifyMgr::SendNetProtocol() {
 		CS_ItemForgeAsk(true, GetType(), m_iPurifyItemPos, PURIFY_CELL_COUNT);
 	}
 
 
-///////////////////////////////////////////////////////////////////////////
-//
-//	
-//
+	///////////////////////////////////////////////////////////////////////////
+	//
+	//	
+	//
 
 	// 
-	void CPurifyMgr::_evtDragPurifyOne(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
-	{
-		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
-		if( !pItemCommand || !pItemCommand->GetIsValid()) return;
+	void CPurifyMgr::_evtDragPurifyOne(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
+		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
+		if (!pItemCommand || !pItemCommand->GetIsValid()) return;
 
 		CGoodsGrid* pGood = dynamic_cast<CGoodsGrid*>(CDrag::GetParent());
-		if( pGood != g_stUIEquip.GetGoodsGrid() ) return;
+		if (pGood != g_stUIEquip.GetGoodsGrid()) return;
 
 		// 
-		if(g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE)
-		{
+		if (g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE) {
 			//if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			//{
 			//	g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
@@ -436,33 +381,27 @@ namespace GUI
 			//}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE)
-		{
-			if(pItemCommand->GetItemInfo()->sType != 29)
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE) {
+			if (pItemCommand->GetItemInfo()->sType != 29) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(852).c_str()); // 
 				return;
 			}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE)
-		{
-			if(! g_stUIPurify.IsEquipItem(*pItemCommand))
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE) {
+			if (!g_stUIPurify.IsEquipItem(*pItemCommand)) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
 				return;
 			}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
-		{
-			if(! g_stUIPurify.IsMainLifeItem(*pItemCommand))
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE) {
+			if (!g_stUIPurify.IsMainLifeItem(*pItemCommand)) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(891).c_str()); // 
 				return;
 			}
 		}
-		else	// 
+		else // 
 		{
 			return;
 		}
@@ -472,21 +411,18 @@ namespace GUI
 
 
 	// 
-	void CPurifyMgr::_evtDragPurifyTwo(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
-	{
-		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
-		if( !pItemCommand || !pItemCommand->GetIsValid()) return;
+	void CPurifyMgr::_evtDragPurifyTwo(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
+		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
+		if (!pItemCommand || !pItemCommand->GetIsValid()) return;
 
 		CGoodsGrid* pGood = dynamic_cast<CGoodsGrid*>(CDrag::GetParent());
-		if( pGood != g_stUIEquip.GetGoodsGrid() ) return;
+		if (pGood != g_stUIEquip.GetGoodsGrid()) return;
 
 		CItemCommand* pMainItem = dynamic_cast<CItemCommand*>(g_stUIPurify.cmdEquipPurify[PURIFY_ONE]->GetCommand());
 
 		// 
-		if(g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE)
-		{
-			if(NULL == pMainItem)
-			{
+		if (g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE) {
+			if (NULL == pMainItem) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
 				return;
 			}
@@ -504,41 +440,33 @@ namespace GUI
 			//}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE)
-		{
-			if(NULL == pMainItem)
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE) {
+			if (NULL == pMainItem) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(853).c_str()); // 
 				return;
 			}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE)
-		{
-			if(NULL == pMainItem)
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE) {
+			if (NULL == pMainItem) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
 				return;
 			}
 		}
 		// 
-		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
-		{
-			if(NULL == pMainItem)
-			{
+		else if (g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE) {
+			if (NULL == pMainItem) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(892).c_str()); // 
 				return;
 			}
 
-			if(! g_stUIPurify.IsRepairLifeItem(*pItemCommand))
-			{
+			if (!g_stUIPurify.IsRepairLifeItem(*pItemCommand)) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(893).c_str()); // 
 				return;
 			}
 		}
 		// 
-		else
-		{
+		else {
 			return;
 		}
 
@@ -547,12 +475,10 @@ namespace GUI
 
 
 	// 
-	void CPurifyMgr::_evtMainMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-	{
+	void CPurifyMgr::_evtMainMouseButton(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 		string strName = pSender->GetName();
 
-		if(strName == "btnForgeYes")
-		{
+		if (strName == "btnForgeYes") {
 			g_stUIPurify.SendNetProtocol();
 			g_stUIPurify.CloseAllForm();
 		}
@@ -560,11 +486,8 @@ namespace GUI
 
 
 	// 
-	void CPurifyMgr::_evtClosePurifyForm(CForm* pForm, bool& IsClose)
-	{
+	void CPurifyMgr::_evtClosePurifyForm(CForm* pForm, bool& IsClose) {
 		g_stUIPurify.ClearAllCommand();
 		CS_ItemForgeAsk(false);
 	}
-
 }
-

@@ -1,33 +1,29 @@
 ﻿#pragma once
 #include "STStateObj.h"
 
-namespace GUI
-{
+namespace GUI {
 	struct stSelectBox;
 }
 
-class CReadingState : public CActionState
-{
+class CReadingState : public CActionState {
 public:
 	CReadingState(CActor* p);
 
-    virtual const char* GetExplain()
-	{
+	virtual const char* GetExplain() {
 		return "CReadingState";
 	}
 
 	virtual void FrameMove();
-	virtual void BeforeNewState()
-	{
+
+	virtual void BeforeNewState() {
 		PopState();
 	}
 
 protected:
 	virtual bool _Start();
 	virtual void _End();
-    virtual bool _IsAllowCancel()
-	{
+
+	virtual bool _IsAllowCancel() {
 		return false;
 	}
-
 };

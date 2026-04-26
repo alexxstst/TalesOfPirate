@@ -9,13 +9,11 @@ CPackFile::CPackFile(void) //
 	_pPackFile = NULL;
 }
 
-CPackFile::~CPackFile(void) 
-{
+CPackFile::~CPackFile(void) {
 	Clear();
 }
 
-bool	CPackFile::SaveToPack(const char* pszDirName, const char* pszOutFile, const char* pszFilter)
-{
+bool CPackFile::SaveToPack(const char* pszDirName, const char* pszOutFile, const char* pszFilter) {
 	FILE* ptempfile;
 	fopen_s(&ptempfile, "temp.tmp", "wb");
 	if (!ptempfile)
@@ -72,21 +70,20 @@ __ret:
 	return true;
 }
 
-bool	CPackFile::LoadPackFile(char* pszFile)
-{
+bool CPackFile::LoadPackFile(char* pszFile) {
 	Clear();
 	_pPackFile = fopen(pszFile, "rb");
-	if(!_pPackFile)
+	if (!_pPackFile)
 		return false;
 
-	if(!LoadDirData(NULL))
+	if (!LoadDirData(NULL))
 		return false;
 	return true;
 }
 
-void	CPackFile::Clear() // 
+void CPackFile::Clear() // 
 {
-	if(_pPackFile)
+	if (_pPackFile)
 		fclose(_pPackFile);
 
 	_RootDir.vecFile.clear();
@@ -96,14 +93,12 @@ void	CPackFile::Clear() //
 	_RootDir.strDirName = "";
 }
 
-bool	CPackFile::PackDirectory(FILE* ptf,DirectoryData* pParentDir, const char* pszDir)
-{
+bool CPackFile::PackDirectory(FILE* ptf, DirectoryData* pParentDir, const char* pszDir) {
 	DirectoryData* ptDir;
-	if(!pParentDir)
-	{
+	if (!pParentDir) {
 		ptDir = &_RootDir;
 	}
-	else 
+	else
 		ptDir = pParentDir;
 
 	ptDir->dwDirNum = 0;
@@ -114,61 +109,59 @@ bool	CPackFile::PackDirectory(FILE* ptf,DirectoryData* pParentDir, const char* p
 	char t_FilePath[MAX_PATH];
 
 	WIN32_FIND_DATA t_sfd;
-	HANDLE  t_hFind = NULL;
+	HANDLE t_hFind = NULL;
 
-	DirectoryData  tDirData;
-	FileData		tFileData;
+	DirectoryData tDirData;
+	FileData tFileData;
 	tFileData.offset = 0;
 	tFileData.length = 0;
 
-	sprintf(t_Path,"%s\\%s",pszDir,strFilter.c_str());
+	sprintf(t_Path, "%s\\%s", pszDir, strFilter.c_str());
 
-	if((t_hFind=FindFirstFile(t_Path,&t_sfd))==INVALID_HANDLE_VALUE)
+	if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
 		return false;
-	do{
-		if(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-		{
-			if(strcmp(t_sfd.cFileName,".") == 0)
+	do {
+		if (t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			if (strcmp(t_sfd.cFileName, ".") == 0)
 				continue;
-			if(strcmp(t_sfd.cFileName,"..") == 0)
+			if (strcmp(t_sfd.cFileName, "..") == 0)
 				continue;
 
-			sprintf(t_FilePath,"%s\\%s",pszDir,t_sfd.cFileName);
+			sprintf(t_FilePath, "%s\\%s", pszDir, t_sfd.cFileName);
 
 			ptDir->vecSubDir.push_back(tDirData);
-			PackDirectory( ptf, &ptDir->vecSubDir[ptDir->dwDirNum], t_FilePath);
+			PackDirectory(ptf, &ptDir->vecSubDir[ptDir->dwDirNum], t_FilePath);
 			ptDir->dwDirNum++;
-		}else
-		{
+		}
+		else {
 			tFileData.strFileName = t_sfd.cFileName;
 			tFileData.offset = ftell(ptf);
 
-			sprintf(t_FilePath,"%s\\%s",pszDir,t_sfd.cFileName);
+			sprintf(t_FilePath, "%s\\%s", pszDir, t_sfd.cFileName);
 
-			tFileData.length = AddFileToTempPack(ptf,t_FilePath);
+			tFileData.length = AddFileToTempPack(ptf, t_FilePath);
 
 			ptDir->vecFile.push_back(tFileData);
 			ptDir->dwFileNum++;
 		}
-
-	}while(FindNextFile(t_hFind,&t_sfd));
+	}
+	while (FindNextFile(t_hFind, &t_sfd));
 	FindClose(t_hFind);
 
 	return true;
 }
 
-long	CPackFile::AddFileToTempPack(FILE* pf, const char* pszFileName)
-{
+long CPackFile::AddFileToTempPack(FILE* pf, const char* pszFileName) {
 	FILE* pfile = fopen(pszFileName, "rb");
-	if(!pfile)
+	if (!pfile)
 		return 0;
-	fseek( pfile, 0, SEEK_END );
-	long size = ftell( pfile );
+	fseek(pfile, 0, SEEK_END);
+	long size = ftell(pfile);
 
-	fseek( pfile, 0, SEEK_SET );
+	fseek(pfile, 0, SEEK_SET);
 
 	BYTE* pData = new BYTE[size];
-	fread(pData,  size, 1, pfile);
+	fread(pData, size, 1, pfile);
 
 	fwrite(pData, size, 1, pf);
 
@@ -177,79 +170,71 @@ long	CPackFile::AddFileToTempPack(FILE* pf, const char* pszFileName)
 	return size;
 }
 
-long	CPackFile::GetFileDataSize(FileData* pFileData)
-{
-	long size = sizeof(DWORD) * 2 +  pFileData->strFileName.length() + 1;
+long CPackFile::GetFileDataSize(FileData* pFileData) {
+	long size = sizeof(DWORD) * 2 + pFileData->strFileName.length() + 1;
 
 	return size;
 }
-void	CPackFile::SaveFileData(FILE* pf, FileData* pFileData, long offset)
-{
+
+void CPackFile::SaveFileData(FILE* pf, FileData* pFileData, long offset) {
 	BYTE bylen = (BYTE)pFileData->strFileName.length();
-	fwrite(&bylen,sizeof(BYTE),1,pf);
-	fwrite(pFileData->strFileName.c_str(),sizeof(char),bylen,pf);
+	fwrite(&bylen, sizeof(BYTE), 1, pf);
+	fwrite(pFileData->strFileName.c_str(), sizeof(char), bylen, pf);
 
 	pFileData->offset += offset;
 	fwrite(&pFileData->offset, sizeof(DWORD), 1, pf);
 	fwrite(&pFileData->length, sizeof(DWORD), 1, pf);
 }
-long	CPackFile::GetDirectorySize(DirectoryData* pDir)
-{
+
+long CPackFile::GetDirectorySize(DirectoryData* pDir) {
 	DirectoryData* ptDir;
-	if(!pDir)
-	{
+	if (!pDir) {
 		ptDir = &_RootDir;
 	}
-	else 
+	else
 		ptDir = pDir;
 
-	long size = sizeof(DWORD) * 2  +  ptDir->strDirName.length() + 1;
+	long size = sizeof(DWORD) * 2 + ptDir->strDirName.length() + 1;
 
 	WORD n = 0;
-	for (; n < ptDir->dwFileNum; ++n)
-	{
+	for (; n < ptDir->dwFileNum; ++n) {
 		size += GetFileDataSize(&ptDir->vecFile[n]);
 	}
-	for (n = 0; n < ptDir->dwDirNum; ++n)
-	{
+	for (n = 0; n < ptDir->dwDirNum; ++n) {
 		size += GetDirectorySize(&ptDir->vecSubDir[n]);
 	}
 	return size;
 }
-void	CPackFile::SaveDirData(FILE* pf, DirectoryData* pDir, long offset)
-{
+
+void CPackFile::SaveDirData(FILE* pf, DirectoryData* pDir, long offset) {
 	DirectoryData* ptDir;
-	if(!pDir)
-	{
+	if (!pDir) {
 		ptDir = &_RootDir;
 	}
-	else 
+	else
 		ptDir = pDir;
 
 	BYTE bylen = (BYTE)ptDir->strDirName.length();
-	fwrite(&bylen,sizeof(BYTE),1,pf);
-	fwrite(ptDir->strDirName.c_str(),sizeof(char),bylen,pf);
+	fwrite(&bylen, sizeof(BYTE), 1, pf);
+	fwrite(ptDir->strDirName.c_str(), sizeof(char), bylen, pf);
 
 	fwrite(&ptDir->dwFileNum, sizeof(DWORD), 1, pf);
 	fwrite(&ptDir->dwDirNum, sizeof(DWORD), 1, pf);
 
 	WORD n = 0;
-	for (; n < ptDir->dwFileNum; ++n)
-	{
+	for (; n < ptDir->dwFileNum; ++n) {
 		SaveFileData(pf, &ptDir->vecFile[n], offset);
 	}
-	for (n = 0; n < ptDir->dwDirNum; ++n)
-	{
+	for (n = 0; n < ptDir->dwDirNum; ++n) {
 		SaveDirData(pf, &ptDir->vecSubDir[n], offset);
 	}
 }
 
-bool	CPackFile::LoadFileData(FileData* pFileData)
-{
+bool CPackFile::LoadFileData(FileData* pFileData) {
 	BYTE bylen;
-	fread(&bylen,sizeof(BYTE),1,_pPackFile);
+	fread(&bylen, sizeof(BYTE), 1, _pPackFile);
 	char* pszName = new char[bylen + 1];
-	fread(pszName,sizeof(char),bylen,_pPackFile);
+	fread(pszName, sizeof(char), bylen, _pPackFile);
 	pszName[bylen] = 0;
 	pFileData->strFileName = pszName;
 	delete []pszName;
@@ -259,19 +244,19 @@ bool	CPackFile::LoadFileData(FileData* pFileData)
 
 	return true;
 }
-bool	CPackFile::LoadDirData(DirectoryData* pDir)
-{
+
+bool CPackFile::LoadDirData(DirectoryData* pDir) {
 	DirectoryData* ptDir;
-	if(!pDir)
+	if (!pDir)
 		ptDir = &_RootDir;
-	else 
+	else
 		ptDir = pDir;
 
 
 	BYTE bylen;
-	fread(&bylen,sizeof(BYTE),1,_pPackFile);
+	fread(&bylen, sizeof(BYTE), 1, _pPackFile);
 	char* pszName = new char[bylen + 1];
-	fread(pszName,sizeof(char),bylen,_pPackFile);
+	fread(pszName, sizeof(char), bylen, _pPackFile);
 	pszName[bylen] = 0;
 	ptDir->strDirName = pszName;
 	delete []pszName;
@@ -283,12 +268,10 @@ bool	CPackFile::LoadDirData(DirectoryData* pDir)
 	ptDir->vecSubDir.resize(ptDir->dwDirNum);
 
 	WORD n = 0;
-	for (; n < ptDir->dwFileNum; ++n)
-	{
+	for (; n < ptDir->dwFileNum; ++n) {
 		LoadFileData(&ptDir->vecFile[n]);
 	}
-	for (n = 0; n < ptDir->dwDirNum; ++n)
-	{
+	for (n = 0; n < ptDir->dwDirNum; ++n) {
 		LoadDirData(&ptDir->vecSubDir[n]);
 	}
 
@@ -299,8 +282,7 @@ bool	CPackFile::LoadDirData(DirectoryData* pDir)
 //---------------------------------------------------------------------------
 // class CMiniPack
 //---------------------------------------------------------------------------
-CMiniPack::CMiniPack()
-{
+CMiniPack::CMiniPack() {
 	texInfo.type = TEX_TYPE_DATA;
 	texInfo.usage = 0;
 	texInfo.level = 1;
@@ -308,45 +290,41 @@ CMiniPack::CMiniPack()
 	texInfo.pool = D3DPOOL_MANAGED;
 }
 
-CMiniPack::~CMiniPack() {}
+CMiniPack::~CMiniPack() {
+}
 
-bool 	CMiniPack::Init(char* pszMapName)
-{
+bool CMiniPack::Init(char* pszMapName) {
 	char pszPath[MAX_PATH];
-	sprintf(pszPath,"texture\\minimap\\%s\\%s.pk",pszMapName,pszMapName);
-	if(!LoadPackFile(pszPath))
+	sprintf(pszPath, "texture\\minimap\\%s\\%s.pk", pszMapName, pszMapName);
+	if (!LoadPackFile(pszPath))
 		return false;
 
-	std::vector<sXY>	vecIdx;
+	std::vector<sXY> vecIdx;
 	vecIdx.resize(_RootDir.dwFileNum);
 	DWORD n;
 	_imaxX = 0;
 	_imaxY = 0;
-	for(n = 0; n < _RootDir.dwFileNum; n++)
-	{
-		GetXY((char*)_RootDir.vecFile[n].strFileName.c_str(), vecIdx[n].x,vecIdx[n].y);
+	for (n = 0; n < _RootDir.dwFileNum; n++) {
+		GetXY((char*)_RootDir.vecFile[n].strFileName.c_str(), vecIdx[n].x, vecIdx[n].y);
 		_imaxX = vecIdx[n].x > _imaxX ? vecIdx[n].x : _imaxX;
 		_imaxY = vecIdx[n].y > _imaxY ? vecIdx[n].y : _imaxY;
 	}
 
 	++_imaxX;
 	++_imaxY;
-	_pIdx = std::make_unique<FileData* []>(_imaxX * _imaxY);
-	for(n = 0; n < _RootDir.dwFileNum; n++)
-	{
+	_pIdx = std::make_unique<FileData*[]>(_imaxX * _imaxY);
+	for (n = 0; n < _RootDir.dwFileNum; n++) {
 		_pIdx[vecIdx[n].x + vecIdx[n].y * _imaxX] = &_RootDir.vecFile[n];
 	}
 	return true;
 }
 
-void	CMiniPack::GetXY( char*pszName, int& x,int& y)
-{
-	static char pnum[257] = { 0 };
+void CMiniPack::GetXY(char* pszName, int& x, int& y) {
+	static char pnum[257] = {0};
 	unsigned char idx = 0;
 	char* p = pszName;
 	p += 3;
-	while (*p!='_')
-	{
+	while (*p != '_') {
 		pnum[idx] = *p;
 		p++;
 		idx++;
@@ -355,8 +333,7 @@ void	CMiniPack::GetXY( char*pszName, int& x,int& y)
 	x = atoi(pnum);
 	idx = 0;
 	p++;
-	while (*p!='.')
-	{
+	while (*p != '.') {
 		pnum[idx] = *p;
 		p++;
 		idx++;

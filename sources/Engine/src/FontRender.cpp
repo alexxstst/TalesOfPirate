@@ -21,8 +21,8 @@ namespace {
 		const DWORD argb = static_cast<DWORD>(c);
 		const unsigned a = (argb >> 24) & 0xFFu;
 		const unsigned r = (argb >> 16) & 0xFFu;
-		const unsigned g = (argb >>  8) & 0xFFu;
-		const unsigned b = (argb      ) & 0xFFu;
+		const unsigned g = (argb >> 8) & 0xFFu;
+		const unsigned b = (argb) & 0xFFu;
 		// fontstash передаёт цвет как uint32 в FontVertex.Diffuse. DX9 ожидает
 		// ARGB little-endian. Оставляем ARGB — цвет корректно интерпретируется
 		// D3DFVF_DIFFUSE сразу, без swap'а каналов.
@@ -31,7 +31,7 @@ namespace {
 } // namespace
 
 bool FontRender::s_textDumpEnabled = false;
-bool FontRender::s_shadowEnabled   = true;
+bool FontRender::s_shadowEnabled = true;
 
 FontRender::FontRender() = default;
 
@@ -78,11 +78,11 @@ bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
 		return false;
 	}
 
-	_dev         = pd3dDevice;
-	_textSize    = nSize;
-	_fons        = fons;
-	_fonsFontId  = fonsFontId;
-	_sizeScale   = sizeScale > 0.0f ? sizeScale : 1.0f;
+	_dev = pd3dDevice;
+	_textSize = nSize;
+	_fons = fons;
+	_fonsFontId = fonsFontId;
+	_sizeScale = sizeScale > 0.0f ? sizeScale : 1.0f;
 	_fontName.assign(szFontName);
 
 	// Метрики строки через fontstash. Передаём size с учётом _sizeScale.
@@ -97,7 +97,7 @@ bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
 	// descender у fontstash возвращается отрицательный (от baseline вниз).
 	// std::max конфликтует с макросом `max` из <windows.h>, поэтому условные выражения.
 	_lineHeight = static_cast<int>(lineH > 1.0f ? lineH : 1.0f);
-	_baseline   = static_cast<int>(ascender > 0.0f ? ascender : 0.0f);
+	_baseline = static_cast<int>(ascender > 0.0f ? ascender : 0.0f);
 
 	// Advance для пробела и "M". end=nullptr → fontstash сам вычислит через
 	// strlen(str) (см. fontstash.h:1520-1521). Передавать `" " + 1` НЕЛЬЗЯ:
@@ -126,14 +126,14 @@ bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
 
 void FontRender::ReleaseFont() {
 	// FONScontext владеет FontManager — не удаляем здесь, только забываем.
-	_fons        = nullptr;
-	_fonsFontId  = -1;
-	_sizeScale   = 1.0f;
-	_dev         = nullptr;
-	_textSize    = 0;
-	_lineHeight  = 0;
-	_baseline    = 0;
-	_avgCharW    = 0;
+	_fons = nullptr;
+	_fonsFontId = -1;
+	_sizeScale = 1.0f;
+	_dev = nullptr;
+	_textSize = 0;
+	_lineHeight = 0;
+	_baseline = 0;
+	_avgCharW = 0;
 	_spaceAdvance = 0;
 	_dumpedTexts.clear();
 }
@@ -188,9 +188,9 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 	fonsSetBlur(_fons, 0.0f);
 
 	// Поддержка '\n': fontstash не ломает строки сам. Разбиваем вручную.
-	const char* p    = utf8.c_str();
+	const char* p = utf8.c_str();
 	const char* pend = utf8.c_str() + utf8.size();
-	float       penY = static_cast<float>(y);
+	float penY = static_cast<float>(y);
 	const float lineH = static_cast<float>(_lineHeight) * fScale;
 
 	while (p < pend) {
@@ -202,7 +202,7 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 		// видимые строки рисуются целиком; для UI-контейнеров приемлемо.
 		if (!clipRect ||
 			(penY + lineH >= static_cast<float>(clipRect->top) &&
-			 penY <= static_cast<float>(clipRect->bottom))) {
+				penY <= static_cast<float>(clipRect->bottom))) {
 			fonsDrawText(_fons, static_cast<float>(x), penY, p, nl);
 		}
 		penY += lineH;
@@ -264,7 +264,8 @@ SIZE* FontRender::GetTextSize(const std::string& szText, SIZE* pSize, float fSca
 	std::string utf8;
 	if (_codepage == CP_UTF8) {
 		utf8 = szText;
-	} else {
+	}
+	else {
 		utf8 = _ToUtf8(_ToWide(szText.c_str()));
 	}
 	if (utf8.empty()) {
@@ -278,8 +279,8 @@ SIZE* FontRender::GetTextSize(const std::string& szText, SIZE* pSize, float fSca
 	fonsSetBlur(_fons, 0.0f);
 
 	long maxWidth = 0;
-	long lines    = 1;
-	const char* p    = utf8.c_str();
+	long lines = 1;
+	const char* p = utf8.c_str();
 	const char* pend = utf8.c_str() + utf8.size();
 	while (p < pend) {
 		const char* nl = p;
@@ -327,9 +328,9 @@ bool FontRender::DumpAtlas(const std::string& path) {
 		const unsigned char* src = data + y * w;
 		BYTE* dst = pixels.data() + static_cast<size_t>(y) * rowBytes;
 		for (int x = 0; x < w; ++x) {
-			const BYTE a  = src[x];
+			const BYTE a = src[x];
 			const BYTE bg = ((x / 8 + y / 8) & 1) ? 200 : 230;
-			const BYTE v  = static_cast<BYTE>((bg * (255 - a)) / 255);
+			const BYTE v = static_cast<BYTE>((bg * (255 - a)) / 255);
 			dst[x * 4 + 0] = v; // B
 			dst[x * 4 + 1] = v; // G
 			dst[x * 4 + 2] = v; // R
@@ -342,17 +343,17 @@ bool FontRender::DumpAtlas(const std::string& path) {
 	if (fopen_s(&f, path.c_str(), "wb") == 0 && f) {
 		BITMAPFILEHEADER fh{};
 		BITMAPINFOHEADER ih{};
-		fh.bfType    = 0x4D42;
+		fh.bfType = 0x4D42;
 		fh.bfOffBits = sizeof(fh) + sizeof(ih);
-		fh.bfSize    = fh.bfOffBits + rowBytes * h;
+		fh.bfSize = fh.bfOffBits + rowBytes * h;
 
-		ih.biSize        = sizeof(ih);
-		ih.biWidth       = w;
-		ih.biHeight      = -h; // top-down
-		ih.biPlanes      = 1;
-		ih.biBitCount    = 32;
+		ih.biSize = sizeof(ih);
+		ih.biWidth = w;
+		ih.biHeight = -h; // top-down
+		ih.biPlanes = 1;
+		ih.biBitCount = 32;
 		ih.biCompression = BI_RGB;
-		ih.biSizeImage   = rowBytes * h;
+		ih.biSizeImage = rowBytes * h;
 
 		std::fwrite(&fh, sizeof(fh), 1, f);
 		std::fwrite(&ih, sizeof(ih), 1, f);

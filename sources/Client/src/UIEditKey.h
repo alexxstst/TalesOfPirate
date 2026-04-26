@@ -5,51 +5,50 @@
 //----------------------------------------------------------------------
 #pragma once
 
-namespace GUI
-{
+namespace GUI {
+	class CEditParse;
+	class CEditObj;
 
-class CEditParse;
-class CEditObj;
-class CEditKey
-{
-public:		
-	CEditKey();
-	~CEditKey();
+	class CEditKey {
+	public:
+		CEditKey();
+		~CEditKey();
 
-	void	Init();
-	bool	SetFont( DWORD dwFont );
-	void	SetColor( DWORD dwColor )		{ _dwFontColor=dwColor;		}
+		void Init();
+		bool SetFont(DWORD dwFont);
 
-public:		// 
-	bool	OnChar( char c );
-	bool	OnKeyDown( int key );
+		void SetColor(DWORD dwColor) {
+			_dwFontColor = dwColor;
+		}
 
-	void	Render();	
+	public: // 
+		bool OnChar(char c);
+		bool OnKeyDown(int key);
 
-private:
-	void	AddChar( CEditObj* pObj );
+		void Render();
 
-private:
-	CEditParse*		_pParse;
+	private:
+		void AddChar(CEditObj* pObj);
 
-	char			_szEnter[16];				// buf
-	int				_nEnterPos;
+	private:
+		CEditParse* _pParse;
 
-	bool			_IsReadyOnly;				// 
+		char _szEnter[16]; // buf
+		int _nEnterPos;
 
-	DWORD			_dwFontColor;				// 
-	int				_dwFontIndex;				// 
+		bool _IsReadyOnly; // 
 
-private:
-	DWORD			_dwCurosrIndex;				// 
+		DWORD _dwFontColor; // 
+		int _dwFontIndex; // 
 
-	DWORD			_dwCursorHeight;			// 
-	DWORD			_dwCursorColor;				//  
-	int				_nCursorX, _nCursorY;		// 
-	bool			_IsShowCursor;
-	DWORD			_dwCursorTime;
-	DWORD			_dwCursorSpace;
+	private:
+		DWORD _dwCurosrIndex; // 
 
-};
-
+		DWORD _dwCursorHeight; // 
+		DWORD _dwCursorColor; //  
+		int _nCursorX, _nCursorY; // 
+		bool _IsShowCursor;
+		DWORD _dwCursorTime;
+		DWORD _dwCursorSpace;
+	};
 }

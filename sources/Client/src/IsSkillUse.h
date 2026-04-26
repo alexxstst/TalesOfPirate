@@ -10,26 +10,24 @@ class CSkillRecord;
 class CCharacter;
 
 // ,
-class CIsSkillUse
-{
+class CIsSkillUse {
 public:
 	CIsSkillUse();
 
 	// 
-	bool		IsValid( CSkillRecord* pSkill, CCharacter* pSelf );
+	bool IsValid(CSkillRecord* pSkill, CCharacter* pSelf);
 
 	// 
-	bool		IsUse( CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* pTarget );
+	bool IsUse(CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* pTarget);
 
 	// 
-	bool		IsAttack( CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* pTarget );		
+	bool IsAttack(CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* pTarget);
 
 	// ,
-	const char*	GetError();	
+	const char* GetError();
 
 private:
-	enum eError
-	{
+	enum eError {
 		enumNone,
 
 		enumSelf,
@@ -54,11 +52,10 @@ private:
 		enumNotUse,
 		enumNotMP,
 		enumNotTarget,
-
 	};
-	eError			_eError;
-	CSkillRecord*	_pSkill;
 
+	eError _eError;
+	CSkillRecord* _pSkill;
 };
 
-extern CIsSkillUse	g_SkillUse;
+extern CIsSkillUse g_SkillUse;

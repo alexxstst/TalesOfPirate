@@ -27,33 +27,33 @@ last modified: 2004-10-26, Jack li
 #include "lwDirectX.h"
 
 LW_BEGIN
+	enum lwViewFrustumPlaneEnum {
+		VIEWFRUSTUM_TOP = 0,
+		VIEWFRUSTUM_BOTTOM = 1,
+		VIEWFRUSTUM_LEFT = 2,
+		VIEWFRUSTUM_RIGHT = 3,
+		VIEWFRUSTUM_FRONT = 4,
+		VIEWFRUSTUM_BACK = 5,
+	};
 
+	class lwViewFrustum : public lwIViewFrustum {
+		LW_STD_DECLARATION()
 
-enum lwViewFrustumPlaneEnum
-{
-    VIEWFRUSTUM_TOP =         0,
-    VIEWFRUSTUM_BOTTOM =      1,
-    VIEWFRUSTUM_LEFT =        2,
-    VIEWFRUSTUM_RIGHT =       3,
-    VIEWFRUSTUM_FRONT =       4,
-    VIEWFRUSTUM_BACK =        5,
-};
+	public:
+		lwPlane _plane_seq[6];
 
-class lwViewFrustum : public lwIViewFrustum
-{
-LW_STD_DECLARATION()
+	public:
+		void Update(const lwMatrix44* mat_viewproj);
 
-public:
-    lwPlane _plane_seq[6];
+		lwPlane* GetPlane(DWORD type) {
+			return &_plane_seq[type];
+		}
 
-public:
-    void Update(const lwMatrix44* mat_viewproj);
-    lwPlane* GetPlane(DWORD type) { return &_plane_seq[type]; }
-    BOOL IsPointInFrustum(const lwVector3* v);
-    BOOL IsSphereInFrustum(const lwSphere* s);
-    BOOL IsSphereInFrustum(const lwSphere* s, DWORD* last_check_plane);
-    BOOL IsBoxInFrustum(const lwBox* b, const lwMatrix44* b_mat, DWORD* last_check_plane);
-    float GetDistanceFromNearPlane(const lwVector3* v);
-};
+		BOOL IsPointInFrustum(const lwVector3* v);
+		BOOL IsSphereInFrustum(const lwSphere* s);
+		BOOL IsSphereInFrustum(const lwSphere* s, DWORD* last_check_plane);
+		BOOL IsBoxInFrustum(const lwBox* b, const lwMatrix44* b_mat, DWORD* last_check_plane);
+		float GetDistanceFromNearPlane(const lwVector3* v);
+	};
 
 LW_END

@@ -6,40 +6,36 @@
 #include "uicompent.h"
 #include "uieditdata.h"
 
-namespace GUI
-{
+namespace GUI {
+	class CEditKey;
 
-class CEditKey;
-class CRichEdit : public CCompent
-{
-public:
-	CRichEdit(CForm& frmOwn);
-	CRichEdit( const CRichEdit& rhs );
-	CRichEdit& operator=(const CRichEdit& rhs);
-	virtual ~CRichEdit(void);
-	GUI_CLONE(CRichEdit)	
-	
-	virtual void	Init();
-	virtual void	Refresh();
-	virtual void	Render();
-	virtual void	OnActive();
-	virtual void	OnLost();
+	class CRichEdit : public CCompent {
+	public:
+		CRichEdit(CForm& frmOwn);
+		CRichEdit(const CRichEdit& rhs);
+		CRichEdit& operator=(const CRichEdit& rhs);
+		virtual ~CRichEdit(void);
+		GUI_CLONE(CRichEdit)
 
-	bool	OnKeyDown( int key );		
-	bool	OnChar( char c );
+		virtual void Init();
+		virtual void Refresh();
+		virtual void Render();
+		virtual void OnActive();
+		virtual void OnLost();
 
-private:
-	void	_SetSelf();
-	void	_Copy( const CRichEdit& rhs );
-	
-private:
-	char		_szEnter[16];	// buf
-	int			_nEnterPos;
+		bool OnKeyDown(int key);
+		bool OnChar(char c);
 
-	CEditArticle	_cArticle;
-	bool			_IsReadyOnly;			// 
-	CEditKey*		_pEditKey;
+	private:
+		void _SetSelf();
+		void _Copy(const CRichEdit& rhs);
 
-};
+	private:
+		char _szEnter[16]; // buf
+		int _nEnterPos;
 
+		CEditArticle _cArticle;
+		bool _IsReadyOnly; // 
+		CEditKey* _pEditKey;
+	};
 }

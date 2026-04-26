@@ -18,9 +18,9 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-std::string			StringToLower(const std::string& theString);
-std::string			GetDirectSoundString( HRESULT theResult );
-std::string			GetFileDir(const std::string& thePath, bool withSlash = false);
-void			MkDir(const std::string& theDir);
+std::string StringToLower(const std::string& theString);
+std::string GetDirectSoundString(HRESULT theResult);
+std::string GetFileDir(const std::string& thePath, bool withSlash = false);
+void MkDir(const std::string& theDir);
 
 #endif

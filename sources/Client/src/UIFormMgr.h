@@ -9,173 +9,195 @@
 #include "uicompent.h"
 #include "uiform.h"
 
-namespace GUI
-{
-class CFormMgr;
-typedef bool (*FormMgrEvent) ( CFormMgr* pSender );
+namespace GUI {
+	class CFormMgr;
+	typedef bool (*FormMgrEvent)(CFormMgr* pSender);
 
-typedef bool (*KeyDownEvent) (int& key);
-typedef bool (*KeyCharEvent) (char& key);
-typedef bool (*MouseEvent) (int& x, int& y, DWORD& mouse);
-typedef bool (*MouseScrollEvent) (int& nScroll);
-typedef bool (*HotKeyEvent) ( char& key, int& control );	// true
+	typedef bool (*KeyDownEvent)(int& key);
+	typedef bool (*KeyCharEvent)(char& key);
+	typedef bool (*MouseEvent)(int& x, int& y, DWORD& mouse);
+	typedef bool (*MouseScrollEvent)(int& nScroll);
+	typedef bool (*HotKeyEvent)(char& key, int& control); // true
 
 
-class CFormMgr
-{
-	friend class CForm;
-public:	
-	CFormMgr();
-	~CFormMgr();
+	class CFormMgr {
+		friend class CForm;
 
-	static void		SetDebugMode(bool v) { _IsDebugMode=v;}		//-added by Arcol
-	void			ShowDebugInfo();							// -added by Arcol
-	static void		SetDrawFrameInDebugMode(bool v)	{_IsDrawFrameInDebugMode=v;}	// -added by Arcol
-	static void		SetDrawBackGroundInDebugMode(bool v) {_IsDrawBackgroundInDebugMode=v;}	// -added by Arcol
+	public:
+		CFormMgr();
+		~CFormMgr();
 
-	bool			AddForm( CForm* form, int templete=0 );
+		static void SetDebugMode(bool v) {
+			_IsDebugMode = v;
+		} //-added by Arcol
+		void ShowDebugInfo(); // -added by Arcol
+		static void SetDrawFrameInDebugMode(bool v) {
+			_IsDrawFrameInDebugMode = v;
+		} // -added by Arcol
+		static void SetDrawBackGroundInDebugMode(bool v) {
+			_IsDrawBackgroundInDebugMode = v;
+		} // -added by Arcol
 
-	bool			SetFormTempleteMax(int n);	
-	unsigned int	GetFormTempleteMax()			{ return (unsigned int)_showforms.size();	}
-	int				GetFormTempletetNum()			{ return _nTempleteNo;						}
+		bool AddForm(CForm* form, int templete = 0);
 
-	bool			SwitchTemplete( int n );		// ,-1,
+		bool SetFormTempleteMax(int n);
 
-public:
-	bool			Init(HWND hWnd);
-	void			Clear();
+		unsigned int GetFormTempleteMax() {
+			return (unsigned int)_showforms.size();
+		}
 
-    void            FrameMove( int x, int y, DWORD dwMouseKey, DWORD dwTime );
-	void			Render();
-	void            RenderHint( int x, int y );
-	bool			HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2);
+		int GetFormTempletetNum() {
+			return _nTempleteNo;
+		}
 
-	bool			OnKeyDown(int key);
-	bool			OnKeyChar(char key);
-	bool			OnHotKey( char key, int control );
+		bool SwitchTemplete(int n); // ,-1,
 
-	bool			MouseScroll( int nScroll );
-	void			Refresh();
+	public:
+		bool Init(HWND hWnd);
+		void Clear();
 
-    void            MouseReset();
+		void FrameMove(int x, int y, DWORD dwMouseKey, DWORD dwTime);
+		void Render();
+		void RenderHint(int x, int y);
+		bool HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2);
 
-	CForm*			GetHitForm( int x, int y );
+		bool OnKeyDown(int key);
+		bool OnKeyChar(char key);
+		bool OnHotKey(char key, int control);
 
-	CForm*			Find( const char * );			// Form
-	CForm*			Find( const char *str, int no );// noForm
-	CForm*			FindAll( const char* );			// Form
+		bool MouseScroll(int nScroll);
+		void Refresh();
 
-	CForm*			FindESCForm();					// ESCForm
-	int				ModalFormNum()					{ return (int)_modal.size();		}
+		void MouseReset();
 
-	typedef void (*FormFun)(CForm* pSender);
-	void			ForEach( FormFun pFun );		// FormpFun
+		CForm* GetHitForm(int x, int y);
 
-public:
-	void			SetEnabled( bool v )			{ _bEnabled = v;	}
-	bool			GetEnabled()					{ return _bEnabled; }
-    void            ResetAllForm();
-    void            SetScreen();
+		CForm* Find(const char*); // Form
+		CForm* Find(const char* str, int no); // noForm
+		CForm* FindAll(const char*); // Form
 
-	void			SetEnableHotKey(int flag, bool v);		// 
-	bool			GetEnableHotKey()				{ return _nEnableHotKey == 0xFFFFFFFF; }// 
+		CForm* FindESCForm(); // ESCForm
+		int ModalFormNum() {
+			return (int)_modal.size();
+		}
 
-	static bool		IsMouseInGui()					{ return _eMouseAction==enumMA_Gui;	}
-	static eMouseAction	GetMouseAction()			{ return _eMouseAction;	}
+		typedef void (*FormFun)(CForm* pSender);
+		void ForEach(FormFun pFun); // FormpFun
 
-public:	// 
-	bool			AddFormInit( FormMgrEvent pInitFun );	// ,
+	public:
+		void SetEnabled(bool v) {
+			_bEnabled = v;
+		}
 
-	bool			AddKeyDownEvent( KeyDownEvent event );
-	bool			DelKeyDownEvent( KeyDownEvent event );
+		bool GetEnabled() {
+			return _bEnabled;
+		}
 
-	bool			AddKeyCharEvent( KeyCharEvent event );
-	bool			DelKeyCharEvent( KeyCharEvent event );
+		void ResetAllForm();
+		void SetScreen();
 
-	bool			AddMouseEvent( MouseEvent event );
-	bool			DelMouseEvent( MouseEvent event );
+		void SetEnableHotKey(int flag, bool v); // 
+		bool GetEnableHotKey() {
+			return _nEnableHotKey == 0xFFFFFFFF;
+		} // 
 
-	bool			AddMouseScrollEvent( MouseScrollEvent event );
-	bool			DelMouseScrollEvent( MouseScrollEvent event );
+		static bool IsMouseInGui() {
+			return _eMouseAction == enumMA_Gui;
+		}
 
-	bool			AddHotKeyEvent( HotKeyEvent event );
-	bool			DelHotKeyEvent( HotKeyEvent event );
+		static eMouseAction GetMouseAction() {
+			return _eMouseAction;
+		}
 
-public:
-	static CFormMgr	s_Mgr;
+	public: // 
+		bool AddFormInit(FormMgrEvent pInitFun); // ,
 
-private:
-	bool			_AddMemory( CForm* form );
-	bool			_DelMemory( CForm* form );
+		bool AddKeyDownEvent(KeyDownEvent event);
+		bool DelKeyDownEvent(KeyDownEvent event);
 
-	bool			_MouseRun( int x, int y, DWORD mouse );
+		bool AddKeyCharEvent(KeyCharEvent event);
+		bool DelKeyCharEvent(KeyCharEvent event);
 
-	void			_ShowModal( CForm* form );
-    void            _ModalClose( CForm* form );
+		bool AddMouseEvent(MouseEvent event);
+		bool DelMouseEvent(MouseEvent event);
 
-	void			_SetNewActiveForm();		// formform
+		bool AddMouseScrollEvent(MouseScrollEvent event);
+		bool DelMouseScrollEvent(MouseScrollEvent event);
 
-	void			_InitFormID();
+		bool AddHotKeyEvent(HotKeyEvent event);
+		bool DelHotKeyEvent(HotKeyEvent event);
 
-    void            _DelShowForm( CForm* frm );
-    void            _AddShowForm( CForm* frm );
-    void            _UpdataShowForm( CForm* frm );
+	public:
+		static CFormMgr s_Mgr;
 
-    void            _ActiveCompent();
+	private:
+		bool _AddMemory(CForm* form);
+		bool _DelMemory(CForm* form);
 
-private:
-	typedef std::list<CForm*> vfrm;
-	vfrm			_allForms;
-	vfrm*			_forms;						// ,
-	vfrm			_modal;						// 
-    vfrm            _show;                      // 
+		bool _MouseRun(int x, int y, DWORD mouse);
 
-	typedef std::vector<vfrm*> frmtemplete;
-	frmtemplete		_showforms;
-	vfrm			_defaulttemplete;
+		void _ShowModal(CForm* form);
+		void _ModalClose(CForm* form);
 
-	bool			_bEnabled;		
-	bool			_bInit;
-	int				_nEnableHotKey;		// 
+		void _SetNewActiveForm(); // formform
 
-	typedef std::vector<KeyDownEvent>	vkeydowns;
-	vkeydowns		_OnKeyDown;
+		void _InitFormID();
 
-	typedef std::vector<KeyCharEvent>	vkeychars;
-	vkeychars		_OnKeyChar;
+		void _DelShowForm(CForm* frm);
+		void _AddShowForm(CForm* frm);
+		void _UpdataShowForm(CForm* frm);
 
-	typedef std::vector<MouseEvent>		vmouses;
-	vmouses			_OnMouseRun;
-	
-	typedef std::vector<MouseScrollEvent> vscrolls;
-	vscrolls		_OnMouseScroll;
+		void _ActiveCompent();
 
-	typedef std::vector<FormMgrEvent>	vinits;
-	vinits			_vinits;
+	private:
+		typedef std::list<CForm*> vfrm;
+		vfrm _allForms;
+		vfrm* _forms; // ,
+		vfrm _modal; // 
+		vfrm _show; // 
 
-	typedef std::vector<HotKeyEvent>		vhotkey;
-	vhotkey			_vhotkey;
+		typedef std::vector<vfrm*> frmtemplete;
+		frmtemplete _showforms;
+		vfrm _defaulttemplete;
 
-	int				_nTempleteNo;				// 
+		bool _bEnabled;
+		bool _bInit;
+		int _nEnableHotKey; // 
 
-    int             _nMouseHover;               // 
-    
-    CGuiData*       _pHintGui;
+		typedef std::vector<KeyDownEvent> vkeydowns;
+		vkeydowns _OnKeyDown;
 
-	static eMouseAction		_eMouseAction;
-	static bool		_IsDebugMode;				//  -added by Arcol
-	static bool		_IsDrawFrameInDebugMode;	//  -added by Arcol
-	static bool		_IsDrawBackgroundInDebugMode;	//  -added by Arcol
+		typedef std::vector<KeyCharEvent> vkeychars;
+		vkeychars _OnKeyChar;
 
-private:
-	void			_DelForm( vfrm& list, CForm* frm );
+		typedef std::vector<MouseEvent> vmouses;
+		vmouses _OnMouseRun;
 
-};
+		typedef std::vector<MouseScrollEvent> vscrolls;
+		vscrolls _OnMouseScroll;
 
-inline void CFormMgr::MouseReset()                    
-{ 
-    _nMouseHover=0;     
+		typedef std::vector<FormMgrEvent> vinits;
+		vinits _vinits;
+
+		typedef std::vector<HotKeyEvent> vhotkey;
+		vhotkey _vhotkey;
+
+		int _nTempleteNo; // 
+
+		int _nMouseHover; // 
+
+		CGuiData* _pHintGui;
+
+		static eMouseAction _eMouseAction;
+		static bool _IsDebugMode; //  -added by Arcol
+		static bool _IsDrawFrameInDebugMode; //  -added by Arcol
+		static bool _IsDrawBackgroundInDebugMode; //  -added by Arcol
+
+	private:
+		void _DelForm(vfrm& list, CForm* frm);
+	};
+
+	inline void CFormMgr::MouseReset() {
+		_nMouseHover = 0;
+	}
 }
-
-}
-

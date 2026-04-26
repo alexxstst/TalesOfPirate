@@ -11,77 +11,96 @@ class CEventRecord;
 class CCharacter;
 class CGameScene;
 
-class CEvent
-{
+class CEvent {
 public:
-	CEvent( CGameScene* pScene );
+	CEvent(CGameScene* pScene);
 	~CEvent();
 
-	void	Init();
+	void Init();
 
-	void	SetIsValid( bool v )	{ _IsValid = v;		}
-	bool	GetIsValid()			{ return _IsValid;	}
+	void SetIsValid(bool v) {
+		_IsValid = v;
+	}
 
-	void	SetIsEnabled( bool v )	{ _IsEnabled = v;	}
-	bool	GetIsEnabled()			{ return _IsEnabled;}
+	bool GetIsValid() {
+		return _IsValid;
+	}
 
-	void	SetName( const char* str )	{ _strName = str;				}
+	void SetIsEnabled(bool v) {
+		_IsEnabled = v;
+	}
 
-	bool	IsNormal()				{ return _IsValid && _IsEnabled;	}
+	bool GetIsEnabled() {
+		return _IsEnabled;
+	}
 
-	void			SetInfo( CEventRecord* pInfo )	{ _pEvent=pInfo;	}
-	void			SetNode( CSceneNode* pNode )	{ _pNode=pNode;		}
+	void SetName(const char* str) {
+		_strName = str;
+	}
 
-	CEventRecord*	GetInfo()		{ return _pEvent;	}
-	CSceneNode*		GetNode()		{ return _pNode;	}
+	bool IsNormal() {
+		return _IsValid && _IsEnabled;
+	}
 
-	bool			DistanceTrigger( int x, int y );
-	void			ExecEvent(CCharacter* pCha);
+	void SetInfo(CEventRecord* pInfo) {
+		_pEvent = pInfo;
+	}
 
-	void			Render();
+	void SetNode(CSceneNode* pNode) {
+		_pNode = pNode;
+	}
+
+	CEventRecord* GetInfo() {
+		return _pEvent;
+	}
+
+	CSceneNode* GetNode() {
+		return _pNode;
+	}
+
+	bool DistanceTrigger(int x, int y);
+	void ExecEvent(CCharacter* pCha);
+
+	void Render();
 
 private:
-	CGameScene*		_pScene;
-	std::string			_strName;			// 
+	CGameScene* _pScene;
+	std::string _strName; // 
 
-	bool			_IsValid;
-	bool			_IsEnabled;			
+	bool _IsValid;
+	bool _IsEnabled;
 
-	CEventRecord*   _pEvent;
-    CSceneNode*     _pNode;              // Node
+	CEventRecord* _pEvent;
+	CSceneNode* _pNode; // Node
 
 private: // run time
-    bool            _IsActive;           // 
-	DWORD			_dwLastTime;		 // 
-
+	bool _IsActive; // 
+	DWORD _dwLastTime; // 
 };
 
-class CEventMgr
-{
+class CEventMgr {
 public:
-	CEventMgr( CGameScene* pScene );
+	CEventMgr(CGameScene* pScene);
 	~CEventMgr();
 
-	void		Clear();
+	void Clear();
 
-	void		DistanceTrigger( CCharacter* pCha );
-	CEvent*		CreateEvent( DWORD dwEventID );
-	void		Render();
+	void DistanceTrigger(CCharacter* pCha);
+	CEvent* CreateEvent(DWORD dwEventID);
+	void Render();
 
-	CEvent*		Search(long	lEntityID);
+	CEvent* Search(long lEntityID);
 
 private:
 
 private:
 	CGameScene* _pScene;
 
-	typedef std::vector<CEvent*>	events;
-	events		_events;
-
+	typedef std::vector<CEvent*> events;
+	events _events;
 };
 
-inline void	CEvent::Init()
-{
+inline void CEvent::Init() {
 	_IsValid = false;
 	_pEvent = NULL;
 	_pNode = NULL;

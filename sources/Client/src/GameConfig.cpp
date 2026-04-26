@@ -12,69 +12,67 @@ static float IniGetFloat(dbc::IniSection& sec, std::string_view key, float def =
 	return s.empty() ? def : Str2Float(s);
 }
 
-GameConfig::GameConfig()
-{
+GameConfig::GameConfig() {
 	g_bBinaryTable = TRUE;
 	SetDefault();
 }
 
-void GameConfig::SetDefault()
-{
+void GameConfig::SetDefault() {
 	memset(_chaList, 0, sizeof(SPlaceCha) * 20);
 
-	_autoLogin    = false;
-	_fullScreen   = false;
+	_autoLogin = false;
+	_fullScreen = false;
 	_musicEnabled = true;
 
 	_chaCnt = 0;
 
-	_lightColor = { 1.0f, 1.0f, 1.0f };
-	_lightDir   = { 1.0f, 1.0f, -1.0f };
+	_lightColor = {1.0f, 1.0f, 1.0f};
+	_lightDir = {1.0f, 1.0f, -1.0f};
 
-	_noObj       = false;
-	_editor      = false;
-	_screenMode  = 0;
+	_noObj = false;
+	_editor = false;
+	_screenMode = 0;
 
-	_maxChaType      = 350;
+	_maxChaType = 350;
 	_maxSceneObjType = 3000;
-	_maxEffectType   = 14000;
-	_maxItemType     = 32768;
-	_maxResourceNum  = 3000;
+	_maxEffectType = 14000;
+	_maxItemType = 32768;
+	_maxResourceNum = 3000;
 
-	_cameraVel  = 0;
+	_cameraVel = 0;
 	_cameraAccl = 0;
 
 	_createScene = 1;
 
-	_leftHand  = 0;
+	_leftHand = 0;
 	_rightHand = 0;
 
-	_checkOvermax  = true;
+	_checkOvermax = true;
 	_sendHeartbeat = 30;
 	_connectTimeOut = 0;
 
 	_enableLgMsg = true;
-	_enableLg    = true;
+	_enableLg = true;
 
 	_renderSceneObj = true;
-	_renderCha      = true;
-	_renderEffect   = true;
-	_renderTerrain  = true;
-	_renderUi       = true;
-	_renderMinimap  = true;
-	_render         = true;
+	_renderCha = true;
+	_renderEffect = true;
+	_renderTerrain = true;
+	_renderUi = true;
+	_renderMinimap = true;
+	_render = true;
 
 	_mThreadRes = true;
 
 	_fullScreenAntialias = 0;
 
-	_lgtFactor   = 0.0f;
-	_lgtBkColor  = 0xffc0c0c0;
+	_lgtFactor = 0.0f;
+	_lgtBkColor = 0xffc0c0c0;
 
-	_maxCha  = 300;
-	_maxEff  = 500;
+	_maxCha = 300;
+	_maxEff = 500;
 	_maxItem = 400;
-	_maxObj  = 800;
+	_maxObj = 800;
 
 	_resourcePreload = true;
 
@@ -83,11 +81,11 @@ void GameConfig::SetDefault()
 	_md5Pass.clear();
 	_verErrorHttp.clear();
 
-	_showConsole            = false;
-	_consoleEnabled         = false;
+	_showConsole = false;
+	_consoleEnabled = false;
 	_consoleRequireSuperKey = true;
-	_textureLogEnabled      = false;
-	_moveClient             = true;
+	_textureLogEnabled = false;
+	_moveClient = true;
 
 	_fontName1.clear();
 	_fontName2.clear();
@@ -98,8 +96,7 @@ void GameConfig::SetDefault()
 	_movieH = -1;
 }
 
-void GameConfig::Load()
-{
+void GameConfig::Load() {
 	ToLogService("common", "Load Game Config from g_SystemIni");
 
 	{
@@ -110,12 +107,12 @@ void GameConfig::Load()
 			string strCha[3];
 			if (Util_ResolveTextLine(chaStr.c_str(), strCha, 3, ',') == 3 && _chaCnt < 20) {
 				_chaList[_chaCnt].nTypeID = Str2Int(strCha[0]);
-				_chaList[_chaCnt].nX      = Str2Int(strCha[1]);
-				_chaList[_chaCnt].nY      = Str2Int(strCha[2]);
+				_chaList[_chaCnt].nX = Str2Int(strCha[1]);
+				_chaList[_chaCnt].nY = Str2Int(strCha[2]);
 				_chaCnt++;
 			}
 		}
-		_leftHand  = static_cast<int>(sec.GetInt64("left_hand", 0));
+		_leftHand = static_cast<int>(sec.GetInt64("left_hand", 0));
 		_rightHand = static_cast<int>(sec.GetInt64("right_hand", 0));
 	}
 
@@ -123,7 +120,7 @@ void GameConfig::Load()
 		auto& sec = g_SystemIni["Menu"];
 		_fullScreen = sec.GetInt64("fullscreen", 0) != 0;
 		_screenMode = static_cast<std::uint8_t>(sec.GetInt64("screenmode", 0));
-		_noObj      = sec.GetInt64("noobj", 0) != 0;
+		_noObj = sec.GetInt64("noobj", 0) != 0;
 		_fogR = static_cast<int>(sec.GetInt64("fogcolorR", 0));
 		_fogG = static_cast<int>(sec.GetInt64("fogcolorG", 0));
 		_fogB = static_cast<int>(sec.GetInt64("fogcolorB", 0));
@@ -167,16 +164,16 @@ void GameConfig::Load()
 
 	{
 		auto& sec = g_SystemIni["Login Camera Angle"];
-		_eyeX    = IniGetFloat(sec, "eyeX",   104.362f);
-		_eyeY    = IniGetFloat(sec, "eyeY",   99.325f);
-		_eyeZ    = IniGetFloat(sec, "eyeZ",   293.851f);
-		_refX    = IniGetFloat(sec, "refX",   -348.953f);
-		_refY    = IniGetFloat(sec, "refY",   -1714.419f);
-		_refZ    = IniGetFloat(sec, "refZ",   -1070.085f);
-		_fov     = IniGetFloat(sec, "fov",    90.0f);
-		_aspect  = IniGetFloat(sec, "Aspect", 1.0f);
-		_nearClip = IniGetFloat(sec, "near",   20.0f);
-		_farClip  = IniGetFloat(sec, "far",    2000.0f);
+		_eyeX = IniGetFloat(sec, "eyeX", 104.362f);
+		_eyeY = IniGetFloat(sec, "eyeY", 99.325f);
+		_eyeZ = IniGetFloat(sec, "eyeZ", 293.851f);
+		_refX = IniGetFloat(sec, "refX", -348.953f);
+		_refY = IniGetFloat(sec, "refY", -1714.419f);
+		_refZ = IniGetFloat(sec, "refZ", -1070.085f);
+		_fov = IniGetFloat(sec, "fov", 90.0f);
+		_aspect = IniGetFloat(sec, "Aspect", 1.0f);
+		_nearClip = IniGetFloat(sec, "near", 20.0f);
+		_farClip = IniGetFloat(sec, "far", 2000.0f);
 	}
 
 	_createScene = static_cast<int>(g_SystemIni["Activate Scene"].GetInt64("CreateScene", 1));
@@ -185,7 +182,7 @@ void GameConfig::Load()
 
 	{
 		auto& sec = g_SystemIni["Camera Speed"];
-		_cameraVel  = IniGetFloat(sec, "cameraVel",  8.7f);
+		_cameraVel = IniGetFloat(sec, "cameraVel", 8.7f);
 		_cameraAccl = IniGetFloat(sec, "cameraAccl", 0.05f);
 	}
 
@@ -193,20 +190,20 @@ void GameConfig::Load()
 
 	{
 		auto& sec = g_SystemIni["Internet"];
-		_sendHeartbeat  = static_cast<int>(sec.GetInt64("send_heartbeat", 600));
+		_sendHeartbeat = static_cast<int>(sec.GetInt64("send_heartbeat", 600));
 		_connectTimeOut = 1000 * static_cast<std::uint32_t>(sec.GetInt64("connect_time_out", 40));
 	}
 
 	{
 		auto& sec = g_SystemIni["Log"];
-		_enableLg    = sec.GetInt64("enable_lg", 1) != 0;
+		_enableLg = sec.GetInt64("enable_lg", 1) != 0;
 		_enableLgMsg = sec.GetInt64("enable_lg_msg", 0) != 0;
 		_showConsole = sec.GetInt64("console", 0) != 0;
 	}
 
 	{
 		auto& sec = g_SystemIni["Console"];
-		_consoleEnabled         = sec.GetInt64("enabled", 0) != 0;
+		_consoleEnabled = sec.GetInt64("enabled", 0) != 0;
 		_consoleRequireSuperKey = sec.GetInt64("requireSuperKey", 1) != 0;
 	}
 
@@ -217,23 +214,23 @@ void GameConfig::Load()
 
 	{
 		auto& sec = g_SystemIni["Romance Setting"];
-		_render         = sec.GetInt64("render", 1) != 0;
+		_render = sec.GetInt64("render", 1) != 0;
 		_renderSceneObj = sec.GetInt64("sceneobj_render", 1) != 0;
-		_renderCha      = sec.GetInt64("cha_render", 1) != 0;
-		_renderEffect   = sec.GetInt64("effect_render", 1) != 0;
-		_renderTerrain  = sec.GetInt64("terrain_render", 1) != 0;
-		_renderMinimap  = sec.GetInt64("minimap_render", 1) != 0;
-		_renderUi       = sec.GetInt64("ui_render", 1) != 0;
+		_renderCha = sec.GetInt64("cha_render", 1) != 0;
+		_renderEffect = sec.GetInt64("effect_render", 1) != 0;
+		_renderTerrain = sec.GetInt64("terrain_render", 1) != 0;
+		_renderMinimap = sec.GetInt64("minimap_render", 1) != 0;
+		_renderUi = sec.GetInt64("ui_render", 1) != 0;
 	}
 
 	_mThreadRes = g_SystemIni["Read Resource"].GetInt64("multithreadres", 1) != 0;
 
 	{
 		auto& sec = g_SystemIni["Resources"];
-		_maxCha  = static_cast<std::uint32_t>(sec.GetInt64("MaxChaNum", 300));
-		_maxEff  = static_cast<std::uint32_t>(sec.GetInt64("MaxEffNum", 500));
+		_maxCha = static_cast<std::uint32_t>(sec.GetInt64("MaxChaNum", 300));
+		_maxEff = static_cast<std::uint32_t>(sec.GetInt64("MaxEffNum", 500));
 		_maxItem = static_cast<std::uint32_t>(sec.GetInt64("MaxItemNum", 400));
-		_maxObj  = static_cast<std::uint32_t>(sec.GetInt64("MaxObjNum", 800));
+		_maxObj = static_cast<std::uint32_t>(sec.GetInt64("MaxObjNum", 800));
 		_resourcePreload = sec.GetInt64("preload_at_start", 1) != 0;
 		auto locale = sec.GetString("locale");
 		if (!locale.empty()) _locale = locale;
@@ -258,7 +255,6 @@ void GameConfig::Load()
 	}
 }
 
-void GameConfig::SetMoveClient(bool v)
-{
+void GameConfig::SetMoveClient(bool v) {
 	_moveClient = v;
 }

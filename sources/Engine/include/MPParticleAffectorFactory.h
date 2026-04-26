@@ -3,12 +3,13 @@
 
 #include "MPEffPrerequisites.h"
 
-class MPParticleAffectorFactory
-{
+class MPParticleAffectorFactory {
 protected:
 	std::vector<MPParticleAffector*> m_Affectors;
+
 public:
-	MPParticleAffectorFactory() {};
+	MPParticleAffectorFactory() {
+	};
 	virtual ~MPParticleAffectorFactory();
 	/** ,  */
 	virtual string getName() const = 0;

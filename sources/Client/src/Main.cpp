@@ -368,7 +368,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		}
 	}
 
-	if (!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth, FALSE /*GlobalAppConfig.IsFullScreen()*/)) {
+	if (!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth,
+						  FALSE /*GlobalAppConfig.IsFullScreen()*/)) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(191));
 		g_pGameApp->End();
 		return 0;

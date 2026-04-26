@@ -32,7 +32,7 @@
 #include <functional>
 #include <fstream>
 
-namespace GUI  //
+namespace GUI //
 {
 };
 
@@ -49,14 +49,13 @@ using namespace GUI;
 
 #include "LanguageRecordStore.h"
 
-inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
-                           FLOAT a )
-{
-    ZeroMemory( &mtrl, sizeof(D3DMATERIALX) );
-    mtrl.Diffuse.r = mtrl.Ambient.r = r;
-    mtrl.Diffuse.g = mtrl.Ambient.g = g;
-    mtrl.Diffuse.b = mtrl.Ambient.b = b;
-    mtrl.Diffuse.a = mtrl.Ambient.a = a;
+inline VOID D3DUtil_InitMaterialI(D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
+								  FLOAT a) {
+	ZeroMemory(&mtrl, sizeof(D3DMATERIALX));
+	mtrl.Diffuse.r = mtrl.Ambient.r = r;
+	mtrl.Diffuse.g = mtrl.Ambient.g = g;
+	mtrl.Diffuse.b = mtrl.Ambient.b = b;
+	mtrl.Diffuse.a = mtrl.Ambient.a = a;
 }
 
 #define WM_MUSICEND WM_USER + 0x1000

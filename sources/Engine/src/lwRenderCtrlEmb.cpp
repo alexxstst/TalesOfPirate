@@ -5,129 +5,117 @@
 #include "lwRenderCtrlEmb.h"
 
 LW_BEGIN
+	lwIRenderCtrlVS* __RenderCtrlVSProcFixedFuntion() {
+		return LW_NEW(lwRenderCtrlVSFixedFunction);
+	}
 
-lwIRenderCtrlVS* __RenderCtrlVSProcFixedFuntion()
-{
-    return LW_NEW(lwRenderCtrlVSFixedFunction);
-}
+	LW_RESULT lwInitInternalRenderCtrlVSProc(lwIResourceMgr* mgr) {
+		mgr->RegisterRenderCtrlProc(RENDERCTRL_VS_FIXEDFUNCTION, __RenderCtrlVSProcFixedFuntion);
 
-LW_RESULT lwInitInternalRenderCtrlVSProc(lwIResourceMgr* mgr)
-{
-    mgr->RegisterRenderCtrlProc(RENDERCTRL_VS_FIXEDFUNCTION, __RenderCtrlVSProcFixedFuntion);
+		return LW_RET_OK;
+	}
 
-    return LW_RET_OK;
-}
+	// lwRenderCtrlVSFixedFunction
+	LW_STD_IMPLEMENTATION(lwRenderCtrlVSFixedFunction);
 
-// lwRenderCtrlVSFixedFunction
-LW_STD_IMPLEMENTATION(lwRenderCtrlVSFixedFunction);
+	LW_RESULT lwRenderCtrlVSFixedFunction::Clone(lwIRenderCtrlVS** obj) {
+		this_type* o = LW_NEW(this_type);
+		*o = *this;
 
-LW_RESULT lwRenderCtrlVSFixedFunction::Clone(lwIRenderCtrlVS** obj)
-{
-    this_type* o = LW_NEW(this_type);
-    *o = *this;
+		*obj = o;
 
-    *obj = o;
+		return LW_RET_OK;
+	}
 
-    return LW_RET_OK;
-}
-LW_RESULT lwRenderCtrlVSFixedFunction::Initialize(lwIRenderCtrlAgent* agent)
-{
-    return LW_RET_OK;
-}
+	LW_RESULT lwRenderCtrlVSFixedFunction::Initialize(lwIRenderCtrlAgent* agent) {
+		return LW_RET_OK;
+	}
 
-LW_RESULT lwRenderCtrlVSFixedFunction::BeginSet(lwIRenderCtrlAgent* agent)
-{
-    lwIResourceMgr* res_mgr = agent->GetResourceMgr();
-    lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
-    dev_obj->SetTransformWorld(agent->GetGlobalMatrix());
-    
-    return LW_RET_OK;
-}
-LW_RESULT lwRenderCtrlVSFixedFunction::EndSet(lwIRenderCtrlAgent* agent)
-{
-    return LW_RET_OK;
-}
-LW_RESULT lwRenderCtrlVSFixedFunction::BeginSetSubset(DWORD subset, lwIRenderCtrlAgent* agent)
-{
-    lwIResourceMgr* res_mgr = agent->GetResourceMgr();
-    lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
+	LW_RESULT lwRenderCtrlVSFixedFunction::BeginSet(lwIRenderCtrlAgent* agent) {
+		lwIResourceMgr* res_mgr = agent->GetResourceMgr();
+		lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
+		dev_obj->SetTransformWorld(agent->GetGlobalMatrix());
 
-    lwIAnimCtrlAgent* anim_agent = agent->GetAnimCtrlAgent();
+		return LW_RET_OK;
+	}
 
-    if(anim_agent == 0)
-        goto __ret;
+	LW_RESULT lwRenderCtrlVSFixedFunction::EndSet(lwIRenderCtrlAgent* agent) {
+		return LW_RET_OK;
+	}
 
-    {
-        DWORD animobj_num = anim_agent->GetAnimCtrlObjNum();
-        lwIAnimCtrlObj* animctrl_obj;
-        lwAnimCtrlObjTypeInfo type_info;
+	LW_RESULT lwRenderCtrlVSFixedFunction::BeginSetSubset(DWORD subset, lwIRenderCtrlAgent* agent) {
+		lwIResourceMgr* res_mgr = agent->GetResourceMgr();
+		lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
 
-        for (DWORD i = 0; i < animobj_num; i++)
-        {
-            animctrl_obj = anim_agent->GetAnimCtrlObj(i);
-            animctrl_obj->GetTypeInfo(&type_info);
+		lwIAnimCtrlAgent* anim_agent = agent->GetAnimCtrlAgent();
 
-            BOOL play_type = animctrl_obj->IsPlaying();
+		if (anim_agent == 0)
+			goto __ret;
 
-            if ((type_info.data[0] == subset) && play_type)
-            {
-                DWORD anim_type = type_info.type;
-                DWORD stage_id = type_info.data[1];
+		{
+			DWORD animobj_num = anim_agent->GetAnimCtrlObjNum();
+			lwIAnimCtrlObj* animctrl_obj;
+			lwAnimCtrlObjTypeInfo type_info;
 
-                if (anim_type == ANIM_CTRL_TYPE_TEXUV)
-                {
-                    lwIAnimCtrlObjTexUV* this_ctrl = (lwIAnimCtrlObjTexUV*)animctrl_obj;
+			for (DWORD i = 0; i < animobj_num; i++) {
+				animctrl_obj = anim_agent->GetAnimCtrlObj(i);
+				animctrl_obj->GetTypeInfo(&type_info);
 
-                    lwMatrix44 mat;
-                    this_ctrl->GetRTM(&mat);
+				BOOL play_type = animctrl_obj->IsPlaying();
 
-                    dev_obj->SetTransform((D3DTRANSFORMSTATETYPE)(D3DTS_TEXTURE0 + stage_id), &mat);
-                    dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-                }
-                // moved into Primitive.Update procedure
+				if ((type_info.data[0] == subset) && play_type) {
+					DWORD anim_type = type_info.type;
+					DWORD stage_id = type_info.data[1];
 
-            }
-        }
-    }
-__ret:
-    return LW_RET_OK;
-}
-LW_RESULT lwRenderCtrlVSFixedFunction::EndSetSubset(DWORD subset, lwIRenderCtrlAgent* agent)
-{
-    lwIResourceMgr* res_mgr = agent->GetResourceMgr();
-    lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
+					if (anim_type == ANIM_CTRL_TYPE_TEXUV) {
+						lwIAnimCtrlObjTexUV* this_ctrl = (lwIAnimCtrlObjTexUV*)animctrl_obj;
 
-    lwIAnimCtrlAgent* anim_agent = agent->GetAnimCtrlAgent();
+						lwMatrix44 mat;
+						this_ctrl->GetRTM(&mat);
 
-    if (anim_agent == 0)
-        goto __ret;
-    {
-        DWORD animobj_num = anim_agent->GetAnimCtrlObjNum();
-        lwIAnimCtrlObj* animctrl_obj;
-        lwAnimCtrlObjTypeInfo type_info;
+						dev_obj->SetTransform((D3DTRANSFORMSTATETYPE)(D3DTS_TEXTURE0 + stage_id), &mat);
+						dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+					}
+					// moved into Primitive.Update procedure
+				}
+			}
+		}
+	__ret:
+		return LW_RET_OK;
+	}
 
-        for (DWORD i = 0; i < animobj_num; i++)
-        {
-            animctrl_obj = anim_agent->GetAnimCtrlObj(i);
-            animctrl_obj->GetTypeInfo(&type_info);
+	LW_RESULT lwRenderCtrlVSFixedFunction::EndSetSubset(DWORD subset, lwIRenderCtrlAgent* agent) {
+		lwIResourceMgr* res_mgr = agent->GetResourceMgr();
+		lwIDeviceObject* dev_obj = res_mgr->GetDeviceObject();
 
-            BOOL play_type = animctrl_obj->IsPlaying();
+		lwIAnimCtrlAgent* anim_agent = agent->GetAnimCtrlAgent();
 
-            if ((type_info.data[0] == subset) && (play_type != PLAY_INVALID))
-            {
-                DWORD anim_type = type_info.type;
-                DWORD stage_id = type_info.data[1];
+		if (anim_agent == 0)
+			goto __ret;
+		{
+			DWORD animobj_num = anim_agent->GetAnimCtrlObjNum();
+			lwIAnimCtrlObj* animctrl_obj;
+			lwAnimCtrlObjTypeInfo type_info;
 
-                if (anim_type == ANIM_CTRL_TYPE_TEXUV)
-                {
-                    dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
-                }
-            }
-        }
-    }
-__ret:
-    return LW_RET_OK;
-}
+			for (DWORD i = 0; i < animobj_num; i++) {
+				animctrl_obj = anim_agent->GetAnimCtrlObj(i);
+				animctrl_obj->GetTypeInfo(&type_info);
+
+				BOOL play_type = animctrl_obj->IsPlaying();
+
+				if ((type_info.data[0] == subset) && (play_type != PLAY_INVALID)) {
+					DWORD anim_type = type_info.type;
+					DWORD stage_id = type_info.data[1];
+
+					if (anim_type == ANIM_CTRL_TYPE_TEXUV) {
+						dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+					}
+				}
+			}
+		}
+	__ret:
+		return LW_RET_OK;
+	}
 
 
 LW_END

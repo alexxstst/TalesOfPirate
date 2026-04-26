@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 
 #include "UIFormMgr.h"
@@ -15,17 +14,14 @@
 #include "SelectChaScene.h"
 
 
-namespace GUI
-{
+namespace GUI {
 	class CForm;
 	class CEdit;
 	class CTextButton;
 
 	// 
-	class CDoublePwdMgr : public CUIInterface	
-	{
+	class CDoublePwdMgr : public CUIInterface {
 	public:
-
 		CDoublePwdMgr();
 
 		// 
@@ -41,26 +37,40 @@ namespace GUI
 		void CloseAllForm();
 
 		// 
-		bool GetIsShowCreateForm()    { return frmDoublePwdCreate->GetIsShow(); }
-		bool GetIsShowAlterForm()     { return frmDoublePwdAlter->GetIsShow();  }
-		bool GetIsShowDoublePwdForm() { return frmDoublePwd->GetIsShow();       }
+		bool GetIsShowCreateForm() {
+			return frmDoublePwdCreate->GetIsShow();
+		}
+
+		bool GetIsShowAlterForm() {
+			return frmDoublePwdAlter->GetIsShow();
+		}
+
+		bool GetIsShowDoublePwdForm() {
+			return frmDoublePwd->GetIsShow();
+		}
 
 		// 
-		void SetType(int nType) { m_nType = nType; }
-		int  GetType()          { return  m_nType; }
+		void SetType(int nType) {
+			m_nType = nType;
+		}
 
-		void SetLockGridID(int id) { lockGridID = id; }
+		int GetType() {
+			return m_nType;
+		}
 
-		static const int MC_REQUEST	= -1;
-		static const int DELETE_CHARACTOR	= 1;	// 
-		static const int PACKAGE_UNLOCK		= 2;	// 
-		static const int STORE_OPEN_ASK		= 3;	// 
-		static const int ITEM_UNLOCK		= 4;	//   ning.yan 2008-11-10
+		void SetLockGridID(int id) {
+			lockGridID = id;
+		}
+
+		static const int MC_REQUEST = -1;
+		static const int DELETE_CHARACTOR = 1; // 
+		static const int PACKAGE_UNLOCK = 2; // 
+		static const int STORE_OPEN_ASK = 3; // 
+		static const int ITEM_UNLOCK = 4; //   ning.yan 2008-11-10
 		static const int MULTI_ITEM_UNLOCK = 5;
-		static const int SHOW_EXCHANGEFORM	= 5;
+		static const int SHOW_EXCHANGEFORM = 5;
 
 	protected:
-
 		virtual bool Init();
 		virtual void CloseForm();
 
@@ -68,7 +78,9 @@ namespace GUI
 		void ShowDoublePwdKeyboardForm();
 
 		// 
-		void SetFocusEditBox(CEdit* edt) { edtFocusEditBox = edt; }
+		void SetFocusEditBox(CEdit* edt) {
+			edtFocusEditBox = edt;
+		}
 
 		// 
 		void SendDeleteCharactor();
@@ -89,61 +101,55 @@ namespace GUI
 		void RandomInputButton();
 
 	private:
+		// 
+		CForm* frmDoublePwdCreate;
+		CEdit* edtDoublePwdCreate;
+		CEdit* edtDoublePwdCreateRetry;
 
 		// 
-		CForm*      frmDoublePwdCreate;
-		CEdit*		edtDoublePwdCreate;
-		CEdit*      edtDoublePwdCreateRetry;
+		CForm* frmDoublePwdAlter;
+		CEdit* edtDoublePwdAlterOld;
+		CEdit* edtDoublePwdAlterNew;
+		CEdit* edtDoublePwdAlterNewRetry;
 
 		// 
-		CForm*      frmDoublePwdAlter;
-		CEdit*		edtDoublePwdAlterOld;
-		CEdit*		edtDoublePwdAlterNew;
-		CEdit*		edtDoublePwdAlterNewRetry;
+		CForm* frmDoublePwd;
+		CEdit* edtDoublePwd;
 
 		// 
-		CForm*      frmDoublePwd;
-		CEdit*      edtDoublePwd;
+		CForm* frmDoublePwdInput;
 
 		// 
-		CForm*      frmDoublePwdInput;
+		CForm* frmDoublePwdInfo;
 
 		// 
-		CForm*		frmDoublePwdInfo;
+		CEdit* edtFocusEditBox;
 
 		// 
-		CEdit*		edtFocusEditBox;
-
-		// 
-		int         m_nType;
+		int m_nType;
 
 		int lockGridID; //TODO: No default value
 
 	private:
+		// 
+		static void _evtCreateFromMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 		// 
-		static void _evtCreateFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtAlterFromMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 		// 
-		static void _evtAlterFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtDoublePwdFromMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 		// 
-		static void _evtDoublePwdFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-
-		// 
-		static void _evtInputFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtInputFromMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 		// 
 		static void _evtEditFocus(CGuiData* pSender);
 
 		// 
-		static void _evtFormClose(CForm* pForm, bool& IsClose );
+		static void _evtFormClose(CForm* pForm, bool& IsClose);
 
 		// 
 		static bool IsPwdValid(const char* szStr);
-
 	}; // end of class CDoublePwdMgr
-
 } // end of namespace GUI
-
-

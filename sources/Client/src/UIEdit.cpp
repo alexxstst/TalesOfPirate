@@ -11,47 +11,41 @@ using namespace GUI;
 
 MPTexRect CEdit::_CursorImage;
 
-int	CEdit::_nCursorFlashCount = 0;
+int CEdit::_nCursorFlashCount = 0;
 bool CEdit::_bCursorIsShow = false;
-int	CEdit::_nCursorX = 0;
-int	CEdit::_nCursorY = 0;
+int CEdit::_nCursorX = 0;
+int CEdit::_nCursorY = 0;
 
 CEdit::CEdit(CForm& frmOwn)
-: CCompent(frmOwn), _bIsPassWord(false),  _bIsMulti(false), _bIsDigit(false), _bIsWrap(false), _nOffset(0)
-, _nMaxNum(64),_nMaxNumVisible(64), _nFontHeight(24),_nMaxLineNum(0)
-, _nCursorCol(0),_nCursorFirstCol(0),_nCursorSecondCol(0), _nCursorRow(0), _bParseText(false)
-, _color(COLOR_BLACK), evtKeyDown(NULL), evtKeyChar(NULL), _nLeftMargin(0), _nTopMargin(2), evtEnter(NULL)
-, evtChange(NULL), _pEnterButton(NULL), _nCursorColor(COLOR_BLACK)
-{
+	: CCompent(frmOwn), _bIsPassWord(false), _bIsMulti(false), _bIsDigit(false), _bIsWrap(false), _nOffset(0)
+	  , _nMaxNum(64), _nMaxNumVisible(64), _nFontHeight(24), _nMaxLineNum(0)
+	  , _nCursorCol(0), _nCursorFirstCol(0), _nCursorSecondCol(0), _nCursorRow(0), _bParseText(false)
+	  , _color(COLOR_BLACK), evtKeyDown(NULL), evtKeyChar(NULL), _nLeftMargin(0), _nTopMargin(2), evtEnter(NULL)
+	  , evtChange(NULL), _pEnterButton(NULL), _nCursorColor(COLOR_BLACK) {
 	_IsFocus = true;
-	_pImage = new CGuiPic( this );
-
+	_pImage = new CGuiPic(this);
 }
 
-CEdit::CEdit( const CEdit& rhs )
-: CCompent(rhs), _pImage(new CGuiPic(*rhs._pImage) )
-{
-	_Copy( rhs );
+CEdit::CEdit(const CEdit& rhs)
+	: CCompent(rhs), _pImage(new CGuiPic(*rhs._pImage)) {
+	_Copy(rhs);
 }
 
-CEdit& CEdit::operator=(const CEdit& rhs)
-{
+CEdit& CEdit::operator=(const CEdit& rhs) {
 	CCompent::operator=(rhs);
 
 	*_pImage = *rhs._pImage;
 
-	_Copy( rhs );
+	_Copy(rhs);
 	return *this;
 }
 
-CEdit::~CEdit(void)
-{
+CEdit::~CEdit(void) {
 	//delete _pImage;
 	SAFE_DELETE(_pImage); // UI
 }
 
-void CEdit::_Copy( const CEdit& rhs )
-{
+void CEdit::_Copy(const CEdit& rhs) {
 	evtEnter = rhs.evtEnter;
 	evtKeyDown = rhs.evtKeyDown;
 	evtKeyChar = rhs.evtKeyChar;
@@ -82,59 +76,48 @@ void CEdit::_Copy( const CEdit& rhs )
 	_pEnterButton = rhs._pEnterButton;
 }
 
-bool CEdit::OnKeyDown( int key )
-{
-	if( !IsNormal() ) return false;
+bool CEdit::OnKeyDown(int key) {
+	if (!IsNormal()) return false;
 
-	if( evtKeyDown)	evtKeyDown(this, key) ;
-
+	if (evtKeyDown) evtKeyDown(this, key);
 
 
-	const char* s = _str.c_str() ;
-	switch( key )
-	{
-	case VK_LEFT:
-		{
-			//begin:		
-			if ( _nCursorCol >=3 )
-			{
-				if (! (s[_nCursorCol-1] & 0x80) )
-				{				
-					if ( isdigit( s[_nCursorCol-1])  && _nCursorCol >=3)
-					{
-						if ( isdigit( s[_nCursorCol-2])  &&(s[_nCursorCol-3]=='#')) 
-						{
-							_nCursorCol -=3;
-							break;
-						}					
+	const char* s = _str.c_str();
+	switch (key) {
+	case VK_LEFT: {
+		//begin:		
+		if (_nCursorCol >= 3) {
+			if (!(s[_nCursorCol - 1] & 0x80)) {
+				if (isdigit(s[_nCursorCol - 1]) && _nCursorCol >= 3) {
+					if (isdigit(s[_nCursorCol - 2]) && (s[_nCursorCol - 3] == '#')) {
+						_nCursorCol -= 3;
+						break;
 					}
 				}
 			}
-			//end:
-
-			--_nCursorCol;
-			if( _str[_nCursorCol] & 0x80 )	--_nCursorCol;
-			
-
-			if(_nCursorCol%13 == 0){
-				if(GetIsMulti()){
-				--_nCursorRow;
-				
-				}
-			}
-			if( _nCursorCol <= 0 ) 
-			{
-				_nCursorCol = 0;				
-				if ( (int)_str.length() >=_nMaxNumVisible  ) //
-				{	
-					_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;
-				}
-			}
-			break;
-		
 		}
+		//end:
+
+		--_nCursorCol;
+		if (_str[_nCursorCol] & 0x80) --_nCursorCol;
+
+
+		if (_nCursorCol % 13 == 0) {
+			if (GetIsMulti()) {
+				--_nCursorRow;
+			}
+		}
+		if (_nCursorCol <= 0) {
+			_nCursorCol = 0;
+			if ((int)_str.length() >= _nMaxNumVisible) //
+			{
+				_strVisible = GetSelfString(_str, _nMaxNumVisible, true);
+			}
+		}
+		break;
+	}
 	case VK_RIGHT:
-		if( _str.length() ==0 )		return false ;
+		if (_str.length() == 0) return false;
 
 		/*
 		// begin:		
@@ -167,25 +150,23 @@ bool CEdit::OnKeyDown( int key )
 		}*/
 		break;
 	case VK_UP:
-		if( !GetIsMulti() ) return false;
+		if (!GetIsMulti()) return false;
 
 		break;
 	case VK_DOWN:
-		if( !GetIsMulti() ) return false;
+		if (!GetIsMulti()) return false;
 
 		break;
-	case VK_HOME:
-		{
-			RefreshCursor();
-			/*_nCursorCol = 0;
-			if ( (int)_str.length() >_nMaxNumVisible  ) //
-			{	
-				_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;  //
-			}*/
-		}
-		break;
-	case VK_END:
-	{
+	case VK_HOME: {
+		RefreshCursor();
+		/*_nCursorCol = 0;
+		if ( (int)_str.length() >_nMaxNumVisible  ) //
+		{	
+			_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;  //
+		}*/
+	}
+	break;
+	case VK_END: {
 		RefreshCursor();
 		/*_nCursorCol = (int)_str.length();
 		if ( (int)_str.length() >_nMaxNumVisible  ) //
@@ -195,29 +176,29 @@ bool CEdit::OnKeyDown( int key )
 		}*/
 		break;
 	}
-	case VK_PRIOR:	// pageup
-		if( !GetIsMulti() ) return false;
+	case VK_PRIOR: // pageup
+		if (!GetIsMulti()) return false;
 
 		break;
-	case VK_NEXT:	// pagedown
-		if( !GetIsMulti() ) return false;
+	case VK_NEXT: // pagedown
+		if (!GetIsMulti()) return false;
 
 		break;
 	case VK_DELETE:
 		_Delete();
-		_nCursorRow = (_str.size() +1)/15;
+		_nCursorRow = (_str.size() + 1) / 15;
 		break;
 	default:
-		
-		if(GetIsMulti()){
-			_nCursorRow = (_str.size() +1)/15;
+
+		if (GetIsMulti()) {
+			_nCursorRow = (_str.size() + 1) / 15;
 			RefreshCursor();
 		}
 		else {
 			return FALSE;
 		}
 	}
-	
+
 	_GetCursorPos(_nCursorCol);
 	return true;
 }
@@ -225,44 +206,36 @@ bool CEdit::OnKeyDown( int key )
 #include "resource.h"
 
 
-void CEdit::RefreshCursor()
-{
+void CEdit::RefreshCursor() {
 	_nCursorCol = g_InputBox.RefreshCursor();
-	_GetCursorPos(_nCursorCol );
+	_GetCursorPos(_nCursorCol);
 }
 
-void CEdit::RefreshText()
-{
+void CEdit::RefreshText() {
 	_str = g_InputBox.RefreshText();
 	_strVisible = _str;
 }
 
-void CEdit::ClearText()
-{
+void CEdit::ClearText() {
 	g_InputBox.ClearText();
 }
 
-bool CEdit::OnChar( char c )
-{	
-	if( !IsNormal() ) return false;
-	if( evtKeyChar && !evtKeyChar(this, c) ) return true;
+bool CEdit::OnChar(char c) {
+	if (!IsNormal()) return false;
+	if (evtKeyChar && !evtKeyChar(this, c)) return true;
 
-	switch( c )
-	{
-	case  0: return true;
-	case '\r':		// 
-		if( _pEnterButton )
-		{
+	switch (c) {
+	case 0: return true;
+	case '\r': // 
+		if (_pEnterButton) {
 			_pEnterButton->DoClick();
 			return false;
 		}
 
-		if( !GetIsMulti() )
-		{			
-			if( evtEnter && !_str.empty() ) evtEnter(this);  // Edit,
+		if (!GetIsMulti()) {
+			if (evtEnter && !_str.empty()) evtEnter(this); // Edit,
 		}
-		else
-		{
+		else {
 			//_nCursorCol = 0;
 			//_nCursorRow++;
 		}
@@ -358,20 +331,20 @@ bool CEdit::OnChar( char c )
 
 			break;
 		}*/
-	case '\t':		
+	case '\t':
 		break;
-	case 3:			// copy
-		if( !GetIsPassWord() )
+	case 3: // copy
+		if (!GetIsPassWord())
 			_Copy();
-			break;
-	case 22:		// paste
+		break;
+	case 22: // paste
 		_Paste();
 		break;
-	case 24:		// cut
-		if( !GetIsPassWord() )
+	case 24: // cut
+		if (!GetIsPassWord())
 			_Cut();
 		break;
-	case 27:		// ESC
+	case 27: // ESC
 		break ;
 	//case '':
 	case 'ff':
@@ -380,25 +353,25 @@ bool CEdit::OnChar( char c )
 	case '[':
 	case ']':
 	//case '\\':
-	case '~':	
+	case '~':
 	case '|':
-	case '@':{
+	case '@': {
 		DWORD dwThreadID = GetCurrentThreadId();
 		HKL hCurKeyboard = GetKeyboardLayout(dwThreadID);
-		unsigned int keyboard = reinterpret_cast<int> (hCurKeyboard);
-		unsigned int layout = keyboard>>16;
-		unsigned int lang = keyboard&0xFFFF;
-		if(layout == 0x0407 || layout == 0xf012 ){
-			_str+=c;
+		unsigned int keyboard = reinterpret_cast<int>(hCurKeyboard);
+		unsigned int layout = keyboard >> 16;
+		unsigned int lang = keyboard & 0xFFFF;
+		if (layout == 0x0407 || layout == 0xf012) {
+			_str += c;
 			SetCaption(_str.c_str());
 			return true;
-		}	
+		}
 		break;
 	}
 	case '\b':
 	default:
-		
-		break;/*
+
+		break; /*
 		if( GetIsMulti() )
 		{
 
@@ -436,35 +409,32 @@ bool CEdit::OnChar( char c )
 		}*/
 	}
 
-	
-    _GetCursorPos(_nCursorCol );
-	if( GetIsDigit() && !_isdigit(c) )
-	{
+
+	_GetCursorPos(_nCursorCol);
+	if (GetIsDigit() && !_isdigit(c)) {
 		return true;
 	}
 	//SetCaption(_str.c_str());	
-    if( evtChange ) evtChange(this);
+	if (evtChange) evtChange(this);
 	return false;
 }
 
-bool CEdit::_IsCursorInHZ( long l, char * s )
-{
+bool CEdit::_IsCursorInHZ(long l, char* s) {
 	return false;
 }
 
-void CEdit::_Copy()
-{
+void CEdit::_Copy() {
 	RefreshCursor();
-	
-	int len = (int)_str.length();	// 
+
+	int len = (int)_str.length(); // 
 	// 
 
-	if( !OpenClipboard( GetHWND() ) ) return;
+	if (!OpenClipboard(GetHWND())) return;
 
 	EmptyClipboard();
 
-	HGLOBAL hData = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, len + 1 );
-	if( !hData ) goto error;
+	HGLOBAL hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, len + 1);
+	if (!hData) goto error;
 
 	{
 		char* pData = (char*)GlobalLock(hData);
@@ -481,7 +451,6 @@ void CEdit::_Copy()
 	}
 error:
 	CloseClipboard();
-
 }
 
 
@@ -507,14 +476,11 @@ void CEdit::_Paste() {
 		if ((int)strlen(pData) + (int)_str.length() < GetMaxNum())
 			_str += pData;
 
-		if ((int)_str.length() <= _nMaxNumVisible)
-		{
+		if ((int)_str.length() <= _nMaxNumVisible) {
 			_nCursorCol = (int)_str.length();
 			_strVisible = _str;
-
 		}
-		else if ((int)_str.length() > _nMaxNumVisible)
-		{
+		else if ((int)_str.length() > _nMaxNumVisible) {
 			_nCursorCol = _nMaxNumVisible;
 			_strVisible = GetSelfString(_str, _nMaxNumVisible, false);
 		}
@@ -524,22 +490,19 @@ void CEdit::_Paste() {
 		SetCaption(_str.c_str());
 
 		if (evtChange) evtChange(this);
-
 	}
 
 error:
 	CloseClipboard();
-
 }
 
-void CEdit::_Cut()
-{
+void CEdit::_Cut() {
 	//RefreshText();
 	//_Paste();
 	//_Delete();
 }
 
-void CEdit::_Delete()    //
+void CEdit::_Delete() //
 {
 	//RefreshText();
 	/*int len = (int)_str.length() ;
@@ -607,127 +570,104 @@ void CEdit::_Delete()    //
 	*/
 }
 
-void CEdit::_UpdataLines()
-{
-	if( GetIsMulti() )
-	{
+void CEdit::_UpdataLines() {
+	if (GetIsMulti()) {
 	}
 }
 
-void CEdit::CorrectCursor()
-{
-	if (_bIsWrap)
-	{
-		int cursorPos=ui::GetWidth("S")*_nCursorCol;
-		if (_nOffset+GetWidth()-5<cursorPos)
-		{
-			_nOffset=cursorPos-GetWidth()+5;
+void CEdit::CorrectCursor() {
+	if (_bIsWrap) {
+		int cursorPos = ui::GetWidth("S") * _nCursorCol;
+		if (_nOffset + GetWidth() - 5 < cursorPos) {
+			_nOffset = cursorPos - GetWidth() + 5;
 		}
-		else if ( _nOffset>cursorPos )
-		{
-			_nOffset=cursorPos;
+		else if (_nOffset > cursorPos) {
+			_nOffset = cursorPos;
 		}
-		else if ( _nOffset>0 && _nOffset+GetWidth()-5>ui::GetWidth("S")*(int)(_str.length()) )
-		{
-			_nOffset=ui::GetWidth("S")*(int)(_str.length()) - GetWidth() +5;
-			if ( _nOffset< 0 ) _nOffset=0;
+		else if (_nOffset > 0 && _nOffset + GetWidth() - 5 > ui::GetWidth("S") * (int)(_str.length())) {
+			_nOffset = ui::GetWidth("S") * (int)(_str.length()) - GetWidth() + 5;
+			if (_nOffset < 0) _nOffset = 0;
 		}
 	}
-	else
-	{
-		_nOffset=0;
+	else {
+		_nOffset = 0;
 	}
 }
 
 
-void CEdit::Render()
-{
-	if( GetActive()==this )
-	{
+void CEdit::Render() {
+	if (GetActive() == this) {
 		CorrectCursor();
 		ShowFocus();
 	}
-	GetRender().SetClipRect( GetX(),GetY(), GetWidth(), GetHeight() );
+	GetRender().SetClipRect(GetX(), GetY(), GetWidth(), GetHeight());
 
-	if( !GetIsPassWord() )
-	{
-		if( _bParseText ) 
-		{
-			if ((int) _str.size() > _nMaxNumVisible )
-			{
-				g_TextParse.Render( _strVisible, GetX() - _nOffset ,GetY() ,  _color );		
+	if (!GetIsPassWord()) {
+		if (_bParseText) {
+			if ((int)_str.size() > _nMaxNumVisible) {
+				g_TextParse.Render(_strVisible, GetX() - _nOffset, GetY(), _color);
 			}
-			else
-			{
-				g_TextParse.Render( _str, GetX()  - _nOffset ,GetY(),  _color );		
+			else {
+				g_TextParse.Render(_str, GetX() - _nOffset, GetY(), _color);
 			}
 		}
-		else
-		{
+		else {
+			if ((int)_str.size() > _nMaxNumVisible) {
+				ui::Render((char*)_strVisible.c_str(), GetX() - _nOffset, GetY(), _color);
+			}
+			else {
+				if (GetIsMulti()) {
+					try {
+						int maxRows = _str.size() / 15;
+						//_nCursorRow = maxRows;
+						for (int i = 0; i <= maxRows; i++) {
+							char temp[15] = "";
 
-			if ( (int) _str.size() >_nMaxNumVisible ) 
-			{
-				ui::Render( (char*)_strVisible.c_str(), GetX() - _nOffset ,GetY(), _color);
-			}
-			else
-			{
-				if(GetIsMulti()){
-				try{
-				int maxRows =  _str.size()/15 ;
-				//_nCursorRow = maxRows;
-				for(int i = 0; i<=maxRows; i++){
-					char temp[15] = "";
-					
-					_str.copy(temp, 15, i*15);
-					ui::Render(temp, GetX() - _nOffset, GetY() + ui::GetHeight("a")*i, _color);
-					
-				}}
-				catch(...){
+							_str.copy(temp, 15, i * 15);
+							ui::Render(temp, GetX() - _nOffset, GetY() + ui::GetHeight("a") * i, _color);
+						}
+					}
+					catch (...) {
+					}
 				}
-				}else{
-				ui::Render( (char*)_str.c_str(), GetX()- _nOffset ,GetY(), _color);		
+				else {
+					ui::Render((char*)_str.c_str(), GetX() - _nOffset, GetY(), _color);
 				}
 			}
-		}	
+		}
 	}
-	else
-	{
+	else {
 		// *  added by billy 
-		char *cPassWord = new char[_nMaxNum + 1];
-		memset( cPassWord, 0, _nMaxNum + 1 );
-		int  length = (int)strlen ( (char*)_str.c_str() ) ;
+		char* cPassWord = new char[_nMaxNum + 1];
+		memset(cPassWord, 0, _nMaxNum + 1);
+		int length = (int)strlen((char*)_str.c_str());
 
-		for (int i = 0 ; i<length ; i++)
-			cPassWord[i] =	'*';
+		for (int i = 0; i < length; i++)
+			cPassWord[i] = '*';
 
-		ui::Render( (char*)cPassWord, GetX() - _nOffset, GetY(), _color );
-	//	_pImage->Render( GetX(), GetY() );
+		ui::Render((char*)cPassWord, GetX() - _nOffset, GetY(), _color);
+		//	_pImage->Render( GetX(), GetY() );
 
 		//delete [] cPassWord;
 		SAFE_DELETE_ARRAY(cPassWord); // UI
 	}
 
 	GetRender().Reset();
-
 }
 
-void CEdit::Init()
-{
-	_nCursorHeight = ui::GetHeight( "" ) - 2;
+void CEdit::Init() {
+	_nCursorHeight = ui::GetHeight("") - 2;
 
-	if( _pEnterButton && _pEnterButton->GetForm()!=GetForm() )
-	{
-		_pEnterButton = dynamic_cast<CTextButton*>( GetForm()->Find( _pEnterButton->GetName() ) );
+	if (_pEnterButton && _pEnterButton->GetForm() != GetForm()) {
+		_pEnterButton = dynamic_cast<CTextButton*>(GetForm()->Find(_pEnterButton->GetName()));
 	}
 }
 
-void CEdit::Refresh()
-{
+void CEdit::Refresh() {
 	CCompent::Refresh();
 	_pImage->Refresh();
 
-	if( GetActive()==this )
-	{
+	if (GetActive() == this) {
 		_GetCursorPos(_nCursorCol);
 		OnActive();
 	}
@@ -750,26 +690,22 @@ void CEdit::Refresh()
 //	CImeInput::s_Ime.SetShowPos( _nCursorX, _nCursorY + _nFontHeight );
 //}
 
-void CEdit::_GetCursorPos(int nCurPos)
-{
-	int cx= 0;	
+void CEdit::_GetCursorPos(int nCurPos) {
+	int cx = 0;
 	//_nCursorRow =  _str.size()/15 ;
-	if( GetIsMulti() )
-	{
-		
-		_nCursorY = GetY() + _nCursorRow*ui::GetHeight("a");
-		cx = ui::GetWidth( _str.substr(0, nCurPos%15).c_str() );	
-		cx-=_nOffset;
+	if (GetIsMulti()) {
+		_nCursorY = GetY() + _nCursorRow * ui::GetHeight("a");
+		cx = ui::GetWidth(_str.substr(0, nCurPos % 15).c_str());
+		cx -= _nOffset;
 	}
-	else
-	{
+	else {
 		_nCursorY = GetY() + _nTopMargin;
-		cx = ui::GetWidth( _str.substr(0, nCurPos).c_str() );	
-		cx-=_nOffset;
+		cx = ui::GetWidth(_str.substr(0, nCurPos).c_str());
+		cx -= _nOffset;
 	}
-	_nCursorX =  (int)GetRender().DrawConvertX2((float)cx) + GetX();  //added by billy
+	_nCursorX = (int)GetRender().DrawConvertX2((float)cx) + GetX(); //added by billy
 
-	CImeInput::s_Ime.SetShowPos( _nCursorX, _nCursorY + _nFontHeight );
+	CImeInput::s_Ime.SetShowPos(_nCursorX, _nCursorY + _nFontHeight);
 }
 
 //void CEdit::SetFocusEdit( CEdit* v ) 
@@ -786,11 +722,9 @@ void CEdit::_GetCursorPos(int nCurPos)
 //	_pFocusEdit=v; 
 //}
 
-void CEdit::SetCaption( const char * str) 
-{ 
-	if( GetActive()==this )
-	{
-		if(strlen(str) <= this->GetMaxNum()) // Add by lark.li 20080820
+void CEdit::SetCaption(const char* str) {
+	if (GetActive() == this) {
+		if (strlen(str) <= this->GetMaxNum()) // Add by lark.li 20080820
 		{
 			g_InputBox.SetText(str);
 			g_InputBox.SetCursorTail();
@@ -798,54 +732,48 @@ void CEdit::SetCaption( const char * str)
 			RefreshCursor();
 		}
 	}
-	else
-	{
+	else {
 		_str = str;
-		_nCursorCol=(int)_str.length();
+		_nCursorCol = (int)_str.length();
 	}
-	if( evtChange ) evtChange(this);
+	if (evtChange) evtChange(this);
 }
 
-void CEdit::OnLost()
-{
+void CEdit::OnLost() {
 	RefreshCursor();
 }
 
-void CEdit::OnActive()
-{
+void CEdit::OnActive() {
 	CCompent::OnActive();
 
-	::SetWindowPos( g_InputBox.GetEditWindow(), 0, GetX(), GetY(), 10000, 50, SWP_NOOWNERZORDER | SWP_NOREDRAW | SWP_HIDEWINDOW );
+	::SetWindowPos(g_InputBox.GetEditWindow(), 0, GetX(), GetY(), 10000, 50,
+				   SWP_NOOWNERZORDER | SWP_NOREDRAW | SWP_HIDEWINDOW);
 
-    //SetFocusEdit( this );
-	g_InputBox.SetMaxNum(_nMaxNum);	
+	//SetFocusEdit( this );
+	g_InputBox.SetMaxNum(_nMaxNum);
 	g_InputBox.SetText(_str.c_str());
 
-	if (!GetIsMulti() && _nCursorCol>=0 && _nCursorCol<=(int)(strlen(_str.c_str()))) //!GetIsMulti()
+	if (!GetIsMulti() && _nCursorCol >= 0 && _nCursorCol <= (int)(strlen(_str.c_str()))) //!GetIsMulti()
 	{
-		g_InputBox.SetSel(_nCursorCol,_nCursorCol);
+		g_InputBox.SetSel(_nCursorCol, _nCursorCol);
 	}
 
 	//::SendMessage( g_InputEdit, EM_SETLIMITTEXT, 10000, 0 );
-	
+
 	//g_InputBox.SetCursorTail();
 }
 
-void CEdit::SetAlpha( BYTE alpha )
-{ 
-	_pImage->SetAlpha(alpha); 
+void CEdit::SetAlpha(BYTE alpha) {
+	_pImage->SetAlpha(alpha);
 	_color = (_color & 0x00ffffff) & (alpha << 24);
 }
 
-void CEdit::SetTextColor( DWORD color ) 
-{ 
-	_color = color;		
+void CEdit::SetTextColor(DWORD color) {
+	_color = color;
 }
 
-void CEdit::ReplaceSel( const char * str, BOOL bCanUndo )
-{
-	if( GetActive()==this )
-	{
+void CEdit::ReplaceSel(const char* str, BOOL bCanUndo) {
+	if (GetActive() == this) {
 		g_InputBox.ReplaceSel(str);
 	}
 }

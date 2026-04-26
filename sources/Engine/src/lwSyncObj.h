@@ -6,151 +6,146 @@
 #include "lwErrorCode.h"
 
 LW_BEGIN
+	class lwEvent {
+	public:
+		HANDLE _handle;
+		BOOL _state;
 
-class lwEvent
-{
-public:
-    HANDLE _handle;
-    BOOL _state;
+	public:
+		lwEvent()
+			: _handle(0), _state(0) {
+		}
 
-public:
-    lwEvent()
-        :_handle(0), _state(0)
-    {}
+		~lwEvent() {
+			Destroy();
+		}
 
-    ~lwEvent()
-    {
-        Destroy();
-    }
+		LW_RESULT Create(LPSECURITY_ATTRIBUTES attributes, BOOL manual_flag, BOOL init_state, LPCTSTR name) {
+			_handle = ::CreateEvent(attributes, manual_flag, init_state, name);
+			if (_handle == NULL)
+				return LW_RET_FAILED;
 
-    LW_RESULT Create(LPSECURITY_ATTRIBUTES attributes, BOOL manual_flag, BOOL init_state, LPCTSTR name)
-    {
-        _handle = ::CreateEvent(attributes, manual_flag, init_state, name);
-        if(_handle == NULL)
-            return LW_RET_FAILED;
+			_state = init_state;
+			return LW_RET_OK;
+		}
 
-        _state = init_state;
-        return LW_RET_OK;
-    }
+		LW_RESULT Destroy() {
+			if (_handle) {
+				if (::CloseHandle(_handle) == 0)
+					return LW_RET_FAILED;
+				_handle = 0;
+				_state = 0;
+			}
+			return LW_RET_OK;
+		}
 
-    LW_RESULT Destroy()
-    {
-        if(_handle)
-        {
-            if(::CloseHandle(_handle) == 0)
-                return LW_RET_FAILED;
-            _handle = 0;
-            _state = 0;
-        }
-        return LW_RET_OK;
-    }
+		BOOL SetEvent() {
+			_state = TRUE;
+			return ::SetEvent(_handle);
+		}
 
-    BOOL SetEvent() { _state = TRUE; return ::SetEvent(_handle); }
-    BOOL ResetEvent() { _state = FALSE; return ::ResetEvent(_handle); }
-    BOOL GetState() const { return _state; }
-};
+		BOOL ResetEvent() {
+			_state = FALSE;
+			return ::ResetEvent(_handle);
+		}
 
-class lwSemaphore
-{
-public:
-    HANDLE _handle;
-    LONG _max_count;
+		BOOL GetState() const {
+			return _state;
+		}
+	};
 
-public:
-    lwSemaphore()
-        :_handle(0), _max_count(0)
-    {}
-    ~lwSemaphore()
-    {
-        Destroy();
-    }
+	class lwSemaphore {
+	public:
+		HANDLE _handle;
+		LONG _max_count;
 
-    LW_RESULT Create(LPSECURITY_ATTRIBUTES attributes, LONG init_count, LONG max_count, LPCTSTR name)
-    {
-        _handle = ::CreateSemaphore(attributes, init_count, max_count, name);
-        if(_handle == NULL)
-            return LW_RET_FAILED;
+	public:
+		lwSemaphore()
+			: _handle(0), _max_count(0) {
+		}
 
-        _max_count = max_count;
-        return LW_RET_OK;
-    }
+		~lwSemaphore() {
+			Destroy();
+		}
 
-    LW_RESULT Destroy()
-    {
-        if(_handle)
-        {
-            if(::CloseHandle(_handle) == 0)
-                return LW_RET_FAILED;
+		LW_RESULT Create(LPSECURITY_ATTRIBUTES attributes, LONG init_count, LONG max_count, LPCTSTR name) {
+			_handle = ::CreateSemaphore(attributes, init_count, max_count, name);
+			if (_handle == NULL)
+				return LW_RET_FAILED;
 
-            _handle = 0;
-            _max_count = 0;
-        }
-        return LW_RET_OK;
-    }
-    BOOL ReleaseSemaphore(LONG release_count, LPLONG prev_count)
-    {
-        return ::ReleaseSemaphore(_handle, release_count, prev_count);
-    }
+			_max_count = max_count;
+			return LW_RET_OK;
+		}
 
-    BOOL ReduceSemaphore(LONG count)
-    {
-        if(count > _max_count)
-            return FALSE;
+		LW_RESULT Destroy() {
+			if (_handle) {
+				if (::CloseHandle(_handle) == 0)
+					return LW_RET_FAILED;
 
-        while(count > 0)
-        {
-            ::WaitForSingleObject(_handle, 0);
-            count--;
-        }
-        return TRUE;
-    }
+				_handle = 0;
+				_max_count = 0;
+			}
+			return LW_RET_OK;
+		}
 
-};
+		BOOL ReleaseSemaphore(LONG release_count, LPLONG prev_count) {
+			return ::ReleaseSemaphore(_handle, release_count, prev_count);
+		}
 
-class lwCriticalSection
-{
-public:
-    CRITICAL_SECTION _handle;
-    DWORD _state;
+		BOOL ReduceSemaphore(LONG count) {
+			if (count > _max_count)
+				return FALSE;
 
-public:
-    lwCriticalSection()
-        :_state(LW_INVALID_INDEX)
-    {}
-    ~lwCriticalSection()
-    {
-        Destroy();
-    }
+			while (count > 0) {
+				::WaitForSingleObject(_handle, 0);
+				count--;
+			}
+			return TRUE;
+		}
+	};
 
-    LW_RESULT Create()
-    {
-        ::InitializeCriticalSection(&_handle);
-        _state = 0;
-        return LW_RET_OK;
-    }
-    LW_RESULT Destroy()
-    {
-        if(_state != LW_INVALID_INDEX)
-        {
-            ::DeleteCriticalSection(&_handle);
-            _state = LW_INVALID_INDEX;
-        }
-        return LW_RET_OK;
-    }
+	class lwCriticalSection {
+	public:
+		CRITICAL_SECTION _handle;
+		DWORD _state;
 
-    void Lock()
-    {
-        ::EnterCriticalSection(&_handle);
-        _state = 1;
-    }
-    void Unlock()
-    {
-        ::LeaveCriticalSection(&_handle);
-        _state = 0;
-    }
+	public:
+		lwCriticalSection()
+			: _state(LW_INVALID_INDEX) {
+		}
 
-    DWORD GetState() const { return _state; }
-};
+		~lwCriticalSection() {
+			Destroy();
+		}
+
+		LW_RESULT Create() {
+			::InitializeCriticalSection(&_handle);
+			_state = 0;
+			return LW_RET_OK;
+		}
+
+		LW_RESULT Destroy() {
+			if (_state != LW_INVALID_INDEX) {
+				::DeleteCriticalSection(&_handle);
+				_state = LW_INVALID_INDEX;
+			}
+			return LW_RET_OK;
+		}
+
+		void Lock() {
+			::EnterCriticalSection(&_handle);
+			_state = 1;
+		}
+
+		void Unlock() {
+			::LeaveCriticalSection(&_handle);
+			_state = 0;
+		}
+
+		DWORD GetState() const {
+			return _state;
+		}
+	};
 
 
 LW_END

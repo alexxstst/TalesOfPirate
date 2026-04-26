@@ -10,26 +10,20 @@ using namespace std;
 
 vector<CRecruitMemberData*> CRecruitMembersMgr::m_pRecruitMembers;
 
-CRecruitMembersMgr::CRecruitMembersMgr(void)
-{
+CRecruitMembersMgr::CRecruitMembersMgr(void) {
 }
 
-CRecruitMembersMgr::~CRecruitMembersMgr(void)
-{
+CRecruitMembersMgr::~CRecruitMembersMgr(void) {
 }
 
-void CRecruitMembersMgr::AddRecruitMember(CRecruitMemberData* pRecruitMember)
-{
+void CRecruitMembersMgr::AddRecruitMember(CRecruitMemberData* pRecruitMember) {
 	m_pRecruitMembers.push_back(pRecruitMember);
 }
 
-bool CRecruitMembersMgr::DelRecruitMember(CRecruitMemberData* pRecruitMember)
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	for (Iter=m_pRecruitMembers.begin();Iter!=m_pRecruitMembers.end();Iter++)
-	{
-		if ((*Iter)==pRecruitMember)
-		{
+bool CRecruitMembersMgr::DelRecruitMember(CRecruitMemberData* pRecruitMember) {
+	vector<CRecruitMemberData*>::iterator Iter;
+	for (Iter = m_pRecruitMembers.begin(); Iter != m_pRecruitMembers.end(); Iter++) {
+		if ((*Iter) == pRecruitMember) {
 			//delete (*Iter);
 			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
@@ -39,13 +33,10 @@ bool CRecruitMembersMgr::DelRecruitMember(CRecruitMemberData* pRecruitMember)
 	return false;
 }
 
-bool CRecruitMembersMgr::DelRecruitMemberByID(DWORD dwID)
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	for (Iter=m_pRecruitMembers.begin();Iter!=m_pRecruitMembers.end();Iter++)
-	{
-		if ((*Iter)->GetID()==dwID)
-		{
+bool CRecruitMembersMgr::DelRecruitMemberByID(DWORD dwID) {
+	vector<CRecruitMemberData*>::iterator Iter;
+	for (Iter = m_pRecruitMembers.begin(); Iter != m_pRecruitMembers.end(); Iter++) {
+		if ((*Iter)->GetID() == dwID) {
 			//delete (*Iter);
 			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
@@ -55,13 +46,10 @@ bool CRecruitMembersMgr::DelRecruitMemberByID(DWORD dwID)
 	return false;
 }
 
-bool CRecruitMembersMgr::DelRecruitMemberByName(string strName)
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	for (Iter=m_pRecruitMembers.begin();Iter!=m_pRecruitMembers.end();Iter++)
-	{
-		if ((*Iter)->GetName()==strName)
-		{
+bool CRecruitMembersMgr::DelRecruitMemberByName(string strName) {
+	vector<CRecruitMemberData*>::iterator Iter;
+	for (Iter = m_pRecruitMembers.begin(); Iter != m_pRecruitMembers.end(); Iter++) {
+		if ((*Iter)->GetName() == strName) {
 			//delete (*Iter);
 			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
@@ -71,50 +59,40 @@ bool CRecruitMembersMgr::DelRecruitMemberByName(string strName)
 	return false;
 }
 
-CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByID(DWORD dwID)
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	for (Iter=m_pRecruitMembers.begin();Iter!=m_pRecruitMembers.end();Iter++)
-	{
-		if ((*Iter)->GetID()==dwID)
-		{
+CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByID(DWORD dwID) {
+	vector<CRecruitMemberData*>::iterator Iter;
+	for (Iter = m_pRecruitMembers.begin(); Iter != m_pRecruitMembers.end(); Iter++) {
+		if ((*Iter)->GetID() == dwID) {
 			return (*Iter);
 		}
 	}
 	return NULL;
 }
 
-CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByName(string strName)
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	for (Iter=m_pRecruitMembers.begin();Iter!=m_pRecruitMembers.end();Iter++)
-	{
-		if ((*Iter)->GetName()==strName)
-		{
+CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByName(string strName) {
+	vector<CRecruitMemberData*>::iterator Iter;
+	for (Iter = m_pRecruitMembers.begin(); Iter != m_pRecruitMembers.end(); Iter++) {
+		if ((*Iter)->GetName() == strName) {
 			return (*Iter);
 		}
 	}
 	return NULL;
 }
 
-CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByIndex(DWORD dwIndex)
-{
-	if (dwIndex>=GetTotalRecruitMembers()) return NULL;
+CRecruitMemberData* CRecruitMembersMgr::FindRecruitMemberByIndex(DWORD dwIndex) {
+	if (dwIndex >= GetTotalRecruitMembers()) return NULL;
 	return m_pRecruitMembers[dwIndex];
 }
 
-DWORD CRecruitMembersMgr::GetTotalRecruitMembers()
-{
+DWORD CRecruitMembersMgr::GetTotalRecruitMembers() {
 	return static_cast<DWORD>(m_pRecruitMembers.size());
 }
 
-void CRecruitMembersMgr::ResetAll()
-{
-	vector <CRecruitMemberData*>::iterator Iter;
-	while (m_pRecruitMembers.size()>0)
-	{
-		Iter=m_pRecruitMembers.begin();
-		CRecruitMemberData* pNode=*Iter;
+void CRecruitMembersMgr::ResetAll() {
+	vector<CRecruitMemberData*>::iterator Iter;
+	while (m_pRecruitMembers.size() > 0) {
+		Iter = m_pRecruitMembers.begin();
+		CRecruitMemberData* pNode = *Iter;
 		//delete pNode;
 		SAFE_DELETE(pNode); // UI
 		m_pRecruitMembers.erase(Iter);

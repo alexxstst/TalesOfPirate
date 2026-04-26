@@ -6,42 +6,43 @@
 #include "lwDirectX.h"
 
 LW_BEGIN
+	class lwCamera {
+	public:
+		static void GetMatrixCameraToView(lwMatrix44* mat, const lwMatrix44* cam_mat);
+		static void GetMatrixViewToCamera(lwMatrix44* mat, const lwMatrix44* mat_view);
 
+	private:
+		lwMatrix44 _m;
 
+	public:
+		float _fov;
+		float _aspect;
+		float _znear;
+		float _zfar;
 
-class lwCamera
-{
-public:
-	static void GetMatrixCameraToView( lwMatrix44* mat, const lwMatrix44* cam_mat );
-	static void GetMatrixViewToCamera( lwMatrix44* mat, const lwMatrix44* mat_view);
+	public:
+		lwCamera();
 
-private:
-	lwMatrix44 _m;
+		int SetPerspectiveFov(float fov, float aspect, float zn, float zf);
 
-public:
-	float _fov;
-	float _aspect;
-	float _znear;
-	float _zfar;
+		void SetPosition(lwVector3* pos);
+		void SetPosition(lwVector3* face, lwVector3* up);
+		void SetPosition(lwVector3* pos, lwVector3* face, lwVector3* up);
 
-public:
-	lwCamera();
+		void SetPosition(const lwMatrix44* m) {
+			_m = *m;
+		}
 
-	int SetPerspectiveFov(float fov,float aspect,float zn,float zf);
+		void Rotate(DWORD axis, float angle);
 
-	void SetPosition(lwVector3* pos);
-	void SetPosition(lwVector3* face,lwVector3* up);
-	void SetPosition(lwVector3* pos,lwVector3* face,lwVector3* up);
-	void SetPosition(const lwMatrix44* m) { _m = *m; }
+		void SetTransform();
 
-	void Rotate(DWORD axis,float angle);
+		lwMatrix44* GetMatrix() {
+			return &_m;
+		}
 
-	void SetTransform();
-	lwMatrix44* GetMatrix() { return &_m; }
-
-	void GetMatrixView( lwMatrix44* mat );
-	void GetMatrixProj( lwMatrix44* mat );
-     
-};
+		void GetMatrixView(lwMatrix44* mat);
+		void GetMatrixProj(lwMatrix44* mat);
+	};
 
 LW_END

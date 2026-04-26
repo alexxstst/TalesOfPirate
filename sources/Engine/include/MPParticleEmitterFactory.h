@@ -3,12 +3,13 @@
 
 #include "MPEffPrerequisites.h"
 
-class MPParticleEmitterFactory
-{
+class MPParticleEmitterFactory {
 protected:
 	std::vector<MPParticleEmitter*> m_Emitters;
+
 public:
-	MPParticleEmitterFactory() {};
+	MPParticleEmitterFactory() {
+	};
 	virtual ~MPParticleEmitterFactory();
 
 	virtual string getName() const = 0;

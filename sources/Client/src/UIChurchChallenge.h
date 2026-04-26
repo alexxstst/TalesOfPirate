@@ -19,46 +19,39 @@
 #define ENABLE_CHURCHCHALLENGE   1
 
 
-namespace GUI
-{
+namespace GUI {
+	// 
+	class CChurchChallengeMgr : public CUIInterface {
+	public:
+		CChurchChallengeMgr(void);
+		virtual ~CChurchChallengeMgr(void);
 
-// 
-class CChurchChallengeMgr : public CUIInterface
-{
-public:
-	CChurchChallengeMgr(void);
-	virtual ~CChurchChallengeMgr(void);
+		void SetChallenge(const stChurchChallenge* pInfo);
+		void ShowForm(bool bShow = true);
 
-	void SetChallenge(const stChurchChallenge* pInfo);
-	void ShowForm(bool bShow = true);
+		void ChallengePriceAsk(void);
+		void CheckChallengePrice(void);
+		void NetSendChallenge(void);
 
-	void ChallengePriceAsk(void);
-	void CheckChallengePrice(void);
-	void NetSendChallenge(void);
+	protected:
+		virtual bool Init();
+		virtual void CloseForm();
 
-protected:
-	virtual bool Init();
-	virtual void CloseForm();
+	private:
+		CForm* frmChurchSale;
+		CTextButton* btnPriceUp;
 
-private:
+		CLabelEx* labInfoShow1;
+		CLabelEx* labInfoShow2;
+		CLabelEx* labInfoShow3;
 
-	CForm*			frmChurchSale;
-	CTextButton*	btnPriceUp;
+		stNumBox* _pNumberBox;
+		stChurchChallenge _stInfo;
 
-	CLabelEx*		labInfoShow1;
-	CLabelEx*		labInfoShow2;
-	CLabelEx*		labInfoShow3;
+		int _nPrice;
 
-	stNumBox*		_pNumberBox;
-	stChurchChallenge	_stInfo;
-
-	int				_nPrice;
-
-	static void _evtChallengeButtonDown(CGuiData *pSender, int x, int y, DWORD key);
-	static void _evtChallengeNumInput(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void _evtChallengeNumCheck(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-
-};
-
-
+		static void _evtChallengeButtonDown(CGuiData* pSender, int x, int y, DWORD key);
+		static void _evtChallengeNumInput(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtChallengeNumCheck(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+	};
 }

@@ -4,8 +4,7 @@
 #include "MPEffPrerequisites.h"
 #include "MPStringVector.h"
 
-class MPStringUtil
-{
+class MPStringUtil {
 public:
 	typedef std::stringstream StrStreamType;
 
@@ -14,7 +13,7 @@ public:
 	@remarks
 	.
 	*/
-	static void trim( String& str, bool left = true, bool right = true );
+	static void trim(String& str, bool left = true, bool right = true);
 
 	/** MPStringVector.
 	@param 
@@ -23,15 +22,15 @@ public:
 	maxSplits 00
 	.
 	*/
-	static MPStringVector split( const std::string& str, const std::string& delims = "\t\n ", unsigned int maxSplits = 0);
+	static MPStringVector split(const std::string& str, const std::string& delims = "\t\n ",
+								unsigned int maxSplits = 0);
 
 	/** .
 	*/
-	static void toLowerCase( String& str );
+	static void toLowerCase(String& str);
 
 	/** .
 	*/
-	static void toUpperCase( String& str );
-
+	static void toUpperCase(String& str);
 };
 #endif

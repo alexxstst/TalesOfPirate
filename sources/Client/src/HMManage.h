@@ -12,60 +12,78 @@ class CAttackRepSynchro;
 
 const int ERROR_FIGHT_ID = INT_MAX;
 
-class CServerHarm
-{
-    typedef std::list<CAttackEffect*> synchros;
-    friend CActor;
-public:
-    CServerHarm( CActor* pActor );
-    ~CServerHarm();
-
-	void	InitMemory();
-
-    void    Exec();             
-    void    Gouge( int nGouge );                // 
-
-    bool    AddHarm( CAttackEffect* s, CSkillRecord *pSkill );        // ,
-    bool    AddRep( CAttackRepSynchro* s );         // ,
-    bool    IsAllowStateOver();                 // 
-
-    void    ReadyExec()             { _nReadyExec++;            }
-	void    SetIsOuter( bool v );
-
-	void	ExecAll(int nCount);
-	void	ExecAll();
-
-	void	SetFightID( int v )		{ _nFightID = v;			}
-	void	SetSkill( CSkillRecord* p )	{ _pSkill = p;			}
-	
-	int		GetCount()				{ return (int)_harm.size();	}
-
-	void	DelHarm( CAttackEffect* p )	{ _harm.remove( p );	}
-
-	void 	HitRepresent( CSkillRecord* pSkill, int nAngle );
+class CServerHarm {
+	typedef std::list<CAttackEffect*> synchros;
+	friend CActor;
 
 public:
-    CSkillRecord*   GetSkill()      { return _pSkill;           }
+	CServerHarm(CActor* pActor);
+	~CServerHarm();
 
-    int     GetFightID()            { return _nFightID;         }
-	bool	GetIsExecEnd()		    { return _nFightID==ERROR_FIGHT_ID; }
+	void InitMemory();
+
+	void Exec();
+	void Gouge(int nGouge); // 
+
+	bool AddHarm(CAttackEffect* s, CSkillRecord* pSkill); // ,
+	bool AddRep(CAttackRepSynchro* s); // ,
+	bool IsAllowStateOver(); // 
+
+	void ReadyExec() {
+		_nReadyExec++;
+	}
+
+	void SetIsOuter(bool v);
+
+	void ExecAll(int nCount);
+	void ExecAll();
+
+	void SetFightID(int v) {
+		_nFightID = v;
+	}
+
+	void SetSkill(CSkillRecord* p) {
+		_pSkill = p;
+	}
+
+	int GetCount() {
+		return (int)_harm.size();
+	}
+
+	void DelHarm(CAttackEffect* p) {
+		_harm.remove(p);
+	}
+
+	void HitRepresent(CSkillRecord* pSkill, int nAngle);
+
+public:
+	CSkillRecord* GetSkill() {
+		return _pSkill;
+	}
+
+	int GetFightID() {
+		return _nFightID;
+	}
+
+	bool GetIsExecEnd() {
+		return _nFightID == ERROR_FIGHT_ID;
+	}
 
 private:
 
 private:
-    int         _nFightID;
-    CActor*     _pActor;            // Actor
+	int _nFightID;
+	CActor* _pActor; // Actor
 	CCharacter* _pCha;
 
-    synchros    _harm;              // ,
-    synchros    _rep;               // ,
+	synchros _harm; // ,
+	synchros _rep; // ,
 
-    CSkillRecord*   _pSkill;
+	CSkillRecord* _pSkill;
 
-    int         _nReadyExec;        // 
+	int _nReadyExec; // 
 
-	bool		_IsOuter;			// 
-
+	bool _IsOuter; // 
 };
 
 // 

@@ -3,60 +3,57 @@
 #include "NetProtocol.h"
 #include "UIMissionForm.h"
 
-namespace GUI
-{
+namespace GUI {
 #define MISLOG_REFRESH_TIME				2000	// 
 
-class CTreeNodeObj;
-class CMisLogForm : public CUIInterface
-{
-public:
-	CMisLogForm();
-	~CMisLogForm();
+	class CTreeNodeObj;
 
-	void MisLogList( const NET_MISLOG_LIST& List );
-	void MissionLog( WORD wMisID, const NET_MISPAGE& page );
-	void MisLogState( WORD wMisID, BYTE byState );
-	void MisClear( WORD wMisID );
-	void MisAddLog( WORD wMisID, BYTE byState );
-	void MisRefresh();
+	class CMisLogForm : public CUIInterface {
+	public:
+		CMisLogForm();
+		~CMisLogForm();
 
-protected:
-	bool Init();
-    void End();
+		void MisLogList(const NET_MISLOG_LIST& List);
+		void MissionLog(WORD wMisID, const NET_MISPAGE& page);
+		void MisLogState(WORD wMisID, BYTE byState);
+		void MisClear(WORD wMisID);
+		void MisAddLog(WORD wMisID, BYTE byState);
+		void MisRefresh();
 
-	void GetMisData( WORD wMisID, BYTE& byType, char szBuf[], USHORT sBufLen );
-	BOOL AddNode( WORD wMisID, BYTE byState, BYTE& byType );
-	void ClearAllNode();
+	protected:
+		bool Init();
+		void End();
 
-private:
-	// 
-	static void _MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey );
-	static void _ItemClickEvent(std::string strItem);
-	static void _MouseDown( CGuiData *pSender, int x, int y, DWORD key );
-	static void	_Show( CGuiData *pSender );
-	// 
-	static void _evtBreakYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		void GetMisData(WORD wMisID, BYTE& byType, char szBuf[], USHORT sBufLen);
+		BOOL AddNode(WORD wMisID, BYTE byState, BYTE& byType);
+		void ClearAllNode();
 
-	CForm*		m_pForm;
+	private:
+		// 
+		static void _MouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _ItemClickEvent(std::string strItem);
+		static void _MouseDown(CGuiData* pSender, int x, int y, DWORD key);
+		static void _Show(CGuiData* pSender);
+		// 
+		static void _evtBreakYesNoEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	// 
-	CTreeView*	m_pMisTree;
-	CMemoEx*	m_pMisInfo;
-	
-	// 
-	CTreeNodeObj*	m_pNormal;
-	CTreeNodeObj*	m_pHistory;
-	CTreeNodeObj*	m_pGuild;
-	CTreeNodeObj*	m_pInvalid;
+		CForm* m_pForm;
 
-	// 
-	NET_MISLOG_LIST m_LogList;
+		// 
+		CTreeView* m_pMisTree;
+		CMemoEx* m_pMisInfo;
 
-	// 
-	WORD  m_wMisID;
-	DWORD m_dwUpdateTick;
-};
+		// 
+		CTreeNodeObj* m_pNormal;
+		CTreeNodeObj* m_pHistory;
+		CTreeNodeObj* m_pGuild;
+		CTreeNodeObj* m_pInvalid;
 
+		// 
+		NET_MISLOG_LIST m_LogList;
+
+		// 
+		WORD m_wMisID;
+		DWORD m_dwUpdateTick;
+	};
 }
-

@@ -1,8 +1,7 @@
 ﻿#pragma once
 
-enum eAppMsg
-{
-	APP_NET_LOGINRET	=	WM_USER + 1,
+enum eAppMsg {
+	APP_NET_LOGINRET = WM_USER + 1,
 	APP_NET_CONNECT,
 	APP_NET_DISCONNECT,
 	APP_SWITCH_MAP,

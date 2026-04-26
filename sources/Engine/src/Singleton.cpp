@@ -1,8 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Singleton.h"
 
-namespace FontModule
-{
+namespace FontModule {
 	//template < typename T >
 	//	Singleton < T > ::Singleton( void )
 

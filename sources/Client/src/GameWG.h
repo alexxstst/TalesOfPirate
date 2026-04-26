@@ -1,13 +1,11 @@
-﻿
-#pragma once
+﻿#pragma once
 
 #include <unordered_set>
 #include <string>
 
 
 //   add by Philip.Wu  2006-07-06
-class CGameWG
-{
+class CGameWG {
 public:
 	CGameWG(void);
 	~CGameWG(void);
@@ -25,7 +23,6 @@ public:
 	void SafeTerminateThread();
 
 private:
-
 	// 
 	std::unordered_set<std::string> m_lstModule;
 
@@ -34,6 +31,4 @@ private:
 
 	// 
 	static UINT CALLBACK Run(void* param);
-
 };
-

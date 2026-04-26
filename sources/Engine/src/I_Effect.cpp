@@ -50,8 +50,7 @@ void I_Effect::DestroyTobMesh(CMPResManger* resMgr) {
 }
 
 
-void I_Effect::Init(MPRender* pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam)
-{
+void I_Effect::Init(MPRender* pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam) {
 	m_pDev = pDev;
 	_eEffectType = eType;
 	_fLength = 5.0f; //!2
@@ -85,9 +84,6 @@ void I_Effect::Init(MPRender* pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lPa
 
 
 	////_vecFrameColor[3]	=D3DCOLOR_ARGB(200,255,255,255);
-
-
-
 }
 
 void I_Effect::Reset() {
@@ -117,7 +113,6 @@ void I_Effect::ReleaseAll() {
 	_SpmatBBoard = NULL;
 
 	_iVSIndex = 0;
-
 }
 
 void I_Effect::BindingResInit(CMPResManger* m_CResMagr) {
@@ -823,8 +818,7 @@ bool CEffectModel::Copy(const CEffectModel& rhs) {
 	return true;
 }
 
-CEffectModel::CEffectModel(MPRender* pDev, lwIResourceMgr* pRes)
-{
+CEffectModel::CEffectModel(MPRender* pDev, lwIResourceMgr* pRes) {
 	m_pDev = pDev;
 	m_strName = "";
 
@@ -847,13 +841,13 @@ CEffectModel::CEffectModel(MPRender* pDev, lwIResourceMgr* pRes)
 CEffectModel::~CEffectModel() {
 	ReleaseModel();
 }
-void CEffectModel::InitDevice(MPRender* pDev, lwIResourceMgr* pRes)
-{
+
+void CEffectModel::InitDevice(MPRender* pDev, lwIResourceMgr* pRes) {
 	m_pDev = pDev;
 	m_pRes = pRes;
 }
-MPRender* CEffectModel::GetDev()
-{
+
+MPRender* CEffectModel::GetDev() {
 	return m_pDev;
 }
 
@@ -877,7 +871,6 @@ void CEffectModel::ReleaseModel() {
 
 
 bool CEffectModel::CreateTriangle() {
-
 	//// mesh
 	//// test lock method
 	//vbrender
@@ -915,19 +908,17 @@ bool CEffectModel::CreateTriangle() {
 	mi.texcoord0_seq[2] = lwVector2(1.0f, 1.0f);
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 1, 0, 3, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (TRI): vertex_num={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (TRI): vertex_num={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
 		return 0;
 	}
 
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (TRI): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (TRI): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return 0;
 	}
 
@@ -941,7 +932,6 @@ bool CEffectModel::CreateTriangle() {
 }
 
 bool CEffectModel::CreatePlaneTriangle() {
-
 	_dwVerCount = 3;
 	_dwFaceCount = 1;
 
@@ -975,19 +965,17 @@ bool CEffectModel::CreatePlaneTriangle() {
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 1, 0, 3, 0);
 
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (PLANETRI): vertex_num={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (PLANETRI): vertex_num={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
 		return 0;
 	}
 
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (PLANETRI): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (PLANETRI): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return 0;
 	}
 
@@ -999,7 +987,6 @@ bool CEffectModel::CreatePlaneTriangle() {
 }
 
 bool CEffectModel::CreateRect() {
-
 	_dwVerCount = 4;
 	_dwFaceCount = 2;
 
@@ -1041,18 +1028,16 @@ bool CEffectModel::CreateRect() {
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 2, 0, 4, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (RECT): vertex_num={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (RECT): vertex_num={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
 		return false;
 	}
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (RECT): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (RECT): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return false;
 	}
 	_lpSVB = _lwMesh->GetLockableStreamVB();
@@ -1064,7 +1049,6 @@ bool CEffectModel::CreateRect() {
 }
 
 bool CEffectModel::CreateRectZ() {
-
 	_dwVerCount = 4;
 	_dwFaceCount = 2;
 
@@ -1106,18 +1090,16 @@ bool CEffectModel::CreateRectZ() {
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 2, 0, 4, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (RECTZ): vertex_num={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (RECTZ): vertex_num={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
 		return false;
 	}
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (RECTZ): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (RECTZ): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return false;
 	}
 	_lpSVB = _lwMesh->GetLockableStreamVB();
@@ -1129,7 +1111,6 @@ bool CEffectModel::CreateRectZ() {
 }
 
 bool CEffectModel::CreatePlaneRect() {
-
 	_dwVerCount = 4;
 	_dwFaceCount = 2;
 
@@ -1170,18 +1151,16 @@ bool CEffectModel::CreatePlaneRect() {
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 2, 0, 4, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (PLANERECT): vertex_num={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (PLANERECT): vertex_num={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, static_cast<long long>(r));
 		return false;
 	}
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (PLANERECT): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (PLANERECT): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return false;
 	}
 	_lpSVB = _lwMesh->GetLockableStreamVB();
@@ -1194,7 +1173,6 @@ bool CEffectModel::CreatePlaneRect() {
 
 
 bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
-
 	m_nSegments = nSeg;
 	m_rHeight = fHei;
 	m_rRadius = 0;
@@ -1251,19 +1229,17 @@ bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], _dwFaceCount, 0, _dwVerCount, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (CONE): vertex_num={}, face_count={}, ret={}",
-		             __FUNCTION__, _dwVerCount, _dwFaceCount, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (CONE): vertex_num={}, face_count={}, ret={}",
+					 __FUNCTION__, _dwVerCount, _dwFaceCount, static_cast<long long>(r));
 		return 0;
 	}
 
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (CONE): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (CONE): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return 0;
 	}
 	_lpSVB = _lwMesh->GetLockableStreamVB();
@@ -1274,7 +1250,6 @@ bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
 }
 
 bool CEffectModel::CreateCylinder(int nSeg, float fHei, float fTopRadius, float fBottomRadius) {
-
 	m_nSegments = nSeg;
 	m_rHeight = fHei;
 	m_rRadius = fTopRadius;
@@ -1352,19 +1327,17 @@ bool CEffectModel::CreateCylinder(int nSeg, float fHei, float fTopRadius, float 
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], _dwFaceCount, 0, _dwVerCount, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (CYLINDER): vertex_num={}, face_count={}, ret={}",
-		             __FUNCTION__, _dwVerCount, _dwFaceCount, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (CYLINDER): vertex_num={}, face_count={}, ret={}",
+					 __FUNCTION__, _dwVerCount, _dwFaceCount, static_cast<long long>(r));
 		return 0;
 	}
 
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (CYLINDER): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (CYLINDER): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 		return 0;
 	}
 	_lpSVB = _lwMesh->GetLockableStreamVB();
@@ -1420,17 +1393,15 @@ bool CEffectModel::CreateShadeModel(WORD wVerNum, WORD wFaceNum, int iGridCrossN
 	}
 	lwSubsetInfo_Construct(&mi.subset_seq[0], wFaceNum, 0, wVerNum, 0);
 
-	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadSystemMemory(&mi); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadSystemMemory failed (SHADE): vertex_num={}, face_num={}, grid_cross={}, ret={}",
-		             __FUNCTION__, mi.vertex_num, wFaceNum, iGridCrossNum, static_cast<long long>(r));
+					 "[{}] LoadSystemMemory failed (SHADE): vertex_num={}, face_num={}, grid_cross={}, ret={}",
+					 __FUNCTION__, mi.vertex_num, wFaceNum, iGridCrossNum, static_cast<long long>(r));
 	}
-	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lwMesh->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] LoadVideoMemory failed (SHADE): ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
+					 "[{}] LoadVideoMemory failed (SHADE): ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
 	}
 
 	if (usesoft) {
@@ -1476,13 +1447,11 @@ void CEffectModel::FrameMove(DWORD dwDailTime) {
 
 void CEffectModel::Begin() {
 	//vs
-	if (_lwMesh)
-	{
-		if (LW_RESULT r = _lwMesh->BeginSet(); LW_FAILED(r))
-		{
+	if (_lwMesh) {
+		if (LW_RESULT r = _lwMesh->BeginSet(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] _lwMesh->BeginSet failed: name={}, ret={}",
-			             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+						 "[{}] _lwMesh->BeginSet failed: name={}, ret={}",
+						 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		}
 	}
 }
@@ -1494,30 +1463,25 @@ void CEffectModel::SetRenderNum(WORD wVer, WORD wFace) {
 
 void CEffectModel::RenderModel() {
 	if (!_lwMesh) {
-		if (LW_RESULT r = this->GetPrimitive()->RenderSubset(0); LW_FAILED(r))
-		{
+		if (LW_RESULT r = this->GetPrimitive()->RenderSubset(0); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] GetPrimitive()->RenderSubset(0) failed: name={}, ret={}",
-			             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+						 "[{}] GetPrimitive()->RenderSubset(0) failed: name={}, ret={}",
+						 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		}
 		if (this->GetPrimitive()->GetMtlTexAgent(1)) {
 			m_pDev->SetRenderStateForced(D3DRS_ALPHABLENDENABLE, TRUE);
-			if (LW_RESULT r = this->GetPrimitive()->RenderSubset(1); LW_FAILED(r))
-			{
+			if (LW_RESULT r = this->GetPrimitive()->RenderSubset(1); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] GetPrimitive()->RenderSubset(1) failed: name={}, ret={}",
-				             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+							 "[{}] GetPrimitive()->RenderSubset(1) failed: name={}, ret={}",
+							 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 			}
 		}
 	}
 	else {
-
-
-		if (LW_RESULT r = _lwMesh->DrawSubset(0); LW_FAILED(r))
-		{
+		if (LW_RESULT r = _lwMesh->DrawSubset(0); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] DrawSubset failed: name={}, ret={}",
-			             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+						 "[{}] DrawSubset failed: name={}, ret={}",
+						 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		}
 	}
 }
@@ -1528,13 +1492,11 @@ void CEffectModel::End() {
 	m_pDev->SetVertexShader(nullptr);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
 	//end
-	if (_lwMesh)
-	{
-		if (LW_RESULT r = _lwMesh->EndSet(); LW_FAILED(r))
-		{
+	if (_lwMesh) {
+		if (LW_RESULT r = _lwMesh->EndSet(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] _lwMesh->EndSet failed: name={}, ret={}",
-			             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+						 "[{}] _lwMesh->EndSet failed: name={}, ret={}",
+						 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		}
 	}
 	//same as commit before
@@ -1658,7 +1620,6 @@ void CTexCoordList::GetCoordFromModel(CEffectModel* pCModel) {
 void CTexCoordList::Reset() {
 	////!
 	////!
-
 }
 
 void CTexCoordList::GetCurCoord(S_BVECTOR<D3DXVECTOR2>& vecOutCoord, WORD& wCurIndex, float& fCurTime,
@@ -1722,7 +1683,6 @@ void CTexList::SetTextureName(const s_string& pszName) {
 void CTexList::Reset() {
 	////!
 	////!
-
 }
 
 //!
@@ -1885,15 +1845,13 @@ CEffectFont::CEffectFont() {
 	_lpBackTex = NULL;
 	_bUseBack = FALSE;
 	_iTextureID = -1;
-
 }
 
 CEffectFont::~CEffectFont() {
 }
 
 bool CEffectFont::CreateEffectFont(MPRender* pDev,
-								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain)
-{
+								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain) {
 	//	return false;
 	m_pRes = pCResMagr->m_pSysGraphics->GetResourceMgr();
 
@@ -1984,7 +1942,6 @@ bool CEffectFont::CreateEffectFont(MPRender* pDev,
 	//	return false;
 
 
-
 	m_vEffVer = new SEFFECT_VERTEX[_dwVerCount];
 	for (int m = 0; m < _iTextNum; m++) {
 		for (int n = 0; n < 4; n++) {
@@ -2043,7 +2000,6 @@ void CEffectFont::SetRenderText(char* pszText) {
 	t_SEffVer[2].m_SPos.y += 2.0f;
 	t_SEffVer[3].m_SPos.x += len + 2.5f;
 	t_SEffVer[3].m_SPos.y -= 2.0f;
-
 }
 
 void CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat) {
@@ -2058,11 +2014,11 @@ void CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat) {
 
 	m_pDev->SetTransformWorld(pmat);
 
-	if (HRESULT hr = m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX)); FAILED(hr))
-	{
+	if (HRESULT hr = m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &t_SEffVer, sizeof(SEFFECT_VERTEX));
+		FAILED(hr)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] DrawPrimitiveUP failed (back): hr=0x{:08X}",
-		             __FUNCTION__, static_cast<std::uint32_t>(hr));
+					 "[{}] DrawPrimitiveUP failed (back): hr=0x{:08X}",
+					 __FUNCTION__, static_cast<std::uint32_t>(hr));
 	}
 }
 
@@ -2080,11 +2036,11 @@ void CEffectFont::RenderEffectFont(D3DXMATRIX* pmat) {
 
 
 	for (int n = 0; n < (WORD)_vecCurText.size(); n++) {
-		if (HRESULT hr = m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX)); FAILED(hr))
-		{
+		if (HRESULT hr = m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &m_vEffVer[n * 4],
+															  sizeof(SEFFECT_VERTEX)); FAILED(hr)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] DrawPrimitiveUP failed (text glyph): n={}, hr=0x{:08X}",
-			             __FUNCTION__, n, static_cast<std::uint32_t>(hr));
+						 "[{}] DrawPrimitiveUP failed (text glyph): n={}, hr=0x{:08X}",
+						 __FUNCTION__, n, static_cast<std::uint32_t>(hr));
 		}
 	}
 }
@@ -2295,11 +2251,10 @@ void CEffectModel::Lock(BYTE** pvEffVer) {
 		return;
 	}
 
-	if (LW_RESULT r = _lpSVB->Lock(0, 0, (void**)pvEffVer, 0); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lpSVB->Lock(0, 0, (void**)pvEffVer, 0); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _lpSVB->Lock failed: name={}, ret={}",
-		             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+					 "[{}] _lpSVB->Lock failed: name={}, ret={}",
+					 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		MessageBox(NULL, "lock error msglock error", "error", 0);
 		*pvEffVer = 0;
 		assert(false);
@@ -2307,31 +2262,28 @@ void CEffectModel::Lock(BYTE** pvEffVer) {
 }
 
 void CEffectModel::Unlock() {
-	if (LW_RESULT r = _lpSVB->Unlock(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lpSVB->Unlock(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _lpSVB->Unlock failed: name={}, ret={}",
-		             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+					 "[{}] _lpSVB->Unlock failed: name={}, ret={}",
+					 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 	}
 }
 
 void CEffectModel::LockIB(BYTE** pIdx) {
-	if (LW_RESULT r = _lpSIB->Lock(0, 0, (void**)pIdx, 0); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lpSIB->Lock(0, 0, (void**)pIdx, 0); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _lpSIB->Lock failed: name={}, ret={}",
-		             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+					 "[{}] _lpSIB->Lock failed: name={}, ret={}",
+					 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 		MessageBox(NULL, "lock error msglock error", "error", 0);
 		assert(false);
 	}
 }
 
 void CEffectModel::UnlockIB() {
-	if (LW_RESULT r = _lpSIB->Unlock(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = _lpSIB->Unlock(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _lpSIB->Unlock failed: name={}, ret={}",
-		             __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
+					 "[{}] _lpSIB->Unlock failed: name={}, ret={}",
+					 __FUNCTION__, m_strName.c_str(), static_cast<long long>(r));
 	}
 }
 

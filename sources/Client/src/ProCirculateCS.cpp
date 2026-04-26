@@ -65,11 +65,13 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 				updateDiscordPresence(buffer, buf);
 			}
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Move):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Move):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Ping:\t{:3}", pMove->dwAveragePing));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", pMove->pos_num));
 			for (DWORD i = 0; i < pMove->pos_num; i++) {
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}, \t{}", pMove->pos_buf[i].x, pMove->pos_buf[i].y));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("\t{}, \t{}", pMove->pos_buf[i].x, pMove->pos_buf[i].y));
 			}
 
 			break;
@@ -90,16 +92,22 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 			//}
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Skill):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Skill):\tTick:[{}]", GetTickCount()));
 			if (pSkill->chMove == 2) {
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Ping:\t{:3}", pSkill->SMove.dwAveragePing));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("Ping:\t{:3}", pSkill->SMove.dwAveragePing));
 				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", pSkill->SMove.pos_num));
 				for (DWORD i = 0; i < pSkill->SMove.pos_num; i++) {
-					g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}, \t{}", pSkill->SMove.pos_buf[i].x, pSkill->SMove.pos_buf[i].y));
+					g_logManager.InternalLog(LogLevel::Debug, "common",
+											 std::format("\t{}, \t{}", pSkill->SMove.pos_buf[i].x,
+														 pSkill->SMove.pos_buf[i].y));
 				}
 			}
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Skill:\t{:3}, FightID:{}", pSkill->lSkillID, pSkill->byFightID));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Target:\t{}, \t{}", pSkill->lTarInfo1, pSkill->lTarInfo2));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Skill:\t{:3}, FightID:{}", pSkill->lSkillID, pSkill->byFightID));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Target:\t{}, \t{}", pSkill->lTarInfo1, pSkill->lTarInfo2));
 
 			break;
 		}
@@ -108,7 +116,9 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			// log
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Stop Skill State {}):\tTick:[{}]", *((short*)param), GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Stop Skill State {}):\tTick:[{}]", *((short*)param),
+												 GetTickCount()));
 
 			//
 			break;
@@ -124,7 +134,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			// log
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Lean):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Lean):\tTick:[{}]", GetTickCount()));
 
 			//
 			break;
@@ -136,7 +147,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pPick->lHandle);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Pick):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Pick):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -149,7 +161,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pThrow->lPosY);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Throw):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Throw):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -159,8 +172,10 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pUseItem->sTarGridID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Use Item):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(322), pUseItem->sGridID, pUseItem->sTarGridID));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Use Item):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(322), pUseItem->sGridID, pUseItem->sTarGridID));
 
 			break;
 		}
@@ -176,7 +191,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			}
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Unfix):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Unfix):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -187,7 +203,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pChangePos->sTarGridID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Item pos):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Item pos):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -196,7 +213,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pDelItem->sGridID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Del Item):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Del Item):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(323), pDelItem->sGridID));
 
 			break;
@@ -207,8 +225,10 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pItemInfo->sGridID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Item Info):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(324), pItemInfo->chType, pItemInfo->sGridID));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Item Info):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(324), pItemInfo->chType, pItemInfo->sGridID));
 
 			break;
 			break;
@@ -233,7 +253,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			}
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Look):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Look):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -244,7 +265,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pSTempChaPart->dwPartID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Temp):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Temp):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -257,7 +279,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			// log
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Event):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Event):\tTick:[{}]", GetTickCount()));
 
 			//
 			break;
@@ -268,7 +291,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pNetFace->sPose);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Face):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Face):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -278,8 +302,10 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pNetFace->sPose);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Skill Pos):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle:{}, Pose:{}", pNetFace->sAngle, pNetFace->sPose));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Skill Pos):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Angle:{}, Pose:{}", pNetFace->sAngle, pNetFace->sPose));
 			break;
 		}
 		case enumACTION_GUILDBANK:
@@ -292,14 +318,16 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pk.WriteInt64(pNetBank->sTarID);
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Bank Req):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Bank Req):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
 		case enumACTION_CLOSE_BANK: {
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Bank Close):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(Bank Close):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -318,7 +346,8 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 		case enumACTION_REQUESTGUILDBANK: {
 			pCNetIf->SendPacketMessage(pk);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(request guild):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("###Send(request guild):\tTick:[{}]", GetTickCount()));
 
 			break;
 		}
@@ -350,7 +379,8 @@ void CProCirculateCS::EndAction(CActionState* pState) {
 
 	CCharacter* pMainCha = CGameApp::GetCurScene()->GetMainCha();
 	if (pMainCha) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(EndAction):\tTick:[{}]", GetTickCount()));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 std::format("###Send(EndAction):\tTick:[{}]", GetTickCount()));
 	}
 }
 
@@ -484,7 +514,8 @@ void CProCirculate::EndPlay() {
 
 void CProCirculate::NewCha(const char* chaname, const char* birth, int type, int hair, int face) {
 	//   
-	auto pk = net::msg::serialize(net::msg::CmNewChaMessage{chaname, birth, (int64_t)type, (int64_t)hair, (int64_t)face});
+	auto pk = net::msg::serialize(
+		net::msg::CmNewChaMessage{chaname, birth, (int64_t)type, (int64_t)hair, (int64_t)face});
 	pCNetIf->SendPacketMessage(pk);
 }
 
@@ -525,7 +556,8 @@ void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
 
 	for (int i = ATTR_STR; i <= ATTR_LUK; i++) {
 		if (pCAttr->GetChangeBitFlag(i))
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(326), i, pCAttr->GetAttr(i)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(326), i, pCAttr->GetAttr(i)));
 	}
 
 	pCNetIf->SendPacketMessage(pk);

@@ -21,39 +21,38 @@ class CSkillRecord;
 struct D3DXVECTOR3;
 
 
-namespace GUI
-{
+namespace GUI {
 	class CGuiData;
 	class CCompent;
-    class CEdit;
-    class CListView;
-    class CGrid;
-    class CTextButton;
-    class CList;
-    class CFixList;
-    class CDragTitle;
-    class CTreeView;
-    class CImage;
-    class CCheckBox;
-    class CCheckGroup;
-    class CFrameImage;
-    class CLabel;
-    class CMemo;
-    class CProgressBar;
-    class CGuiPic;
-    class CLabelEx;
-    class CItemEx;
-    class CFlashImage;
-    class CGoodsGrid;
-    class COneCommand;
-    class CScroll;
-    class C3DCompent;
-    class CCommandObj;
-    class CForm;
-    class CMember;
-    class CTeam;
-    class CTeamMgr;
-    class CTreeGridNode;
+	class CEdit;
+	class CListView;
+	class CGrid;
+	class CTextButton;
+	class CList;
+	class CFixList;
+	class CDragTitle;
+	class CTreeView;
+	class CImage;
+	class CCheckBox;
+	class CCheckGroup;
+	class CFrameImage;
+	class CLabel;
+	class CMemo;
+	class CProgressBar;
+	class CGuiPic;
+	class CLabelEx;
+	class CItemEx;
+	class CFlashImage;
+	class CGoodsGrid;
+	class COneCommand;
+	class CScroll;
+	class C3DCompent;
+	class CCommandObj;
+	class CForm;
+	class CMember;
+	class CTeam;
+	class CTeamMgr;
+	class CTreeGridNode;
 	class CSkillList;
 	class CItemCommand;
 	class CSkillCommand;
@@ -64,7 +63,7 @@ namespace GUI
 
 	class CTextParse;
 
-    class CChat;
+	class CChat;
 	class CEditor;
 	class CBoxMgr;
 	class CTradeMgr;
@@ -75,8 +74,8 @@ namespace GUI
 	class CMisLogForm;
 	class CForgeMgr;
 
-	class CLotteryMgr;	//Add by lark.li 20080514
-	class CAmphitheaterForm;//Add by sunny.sun20080715
+	class CLotteryMgr; //Add by lark.li 20080514
+	class CAmphitheaterForm; //Add by sunny.sun20080715
 
 	class CNpcTradeMgr;
 	class CNpcTalkMgr;
@@ -101,101 +100,112 @@ namespace GUI
 	class CSpiritMgr;
 	class CPurifyMgr;
 	class CBlackTradeMgr;
-    class CPKSilverMgr;
+	class CPKSilverMgr;
 	class CFindTeamMgr;
-    class CComposeMgr;
-    class CBreakMgr;
-    class CFoundMgr;
-    class CCookingMgr;
+	class CComposeMgr;
+	class CBreakMgr;
+	class CFoundMgr;
+	class CCookingMgr;
 	class CMailMgr;
 	class CNumAnswerMgr;
 	class CChurchChallengeMgr;
-	extern CTextParse		g_TextParse;
+	extern CTextParse g_TextParse;
 
-class CUIInterface // 
-{
-public:
-	CUIInterface();
-	virtual ~CUIInterface()	{}
+	class CUIInterface // 
+	{
+	public:
+		CUIInterface();
 
-	static bool	All_Init();
-	static void All_End();
-	static void All_FrameMove( DWORD dwTime );
-	static void All_LoadingCall();
-	static void All_SwitchMap();
+		virtual ~CUIInterface() {
+		}
 
-	static void MainChaMove();
+		static bool All_Init();
+		static void All_End();
+		static void All_FrameMove(DWORD dwTime);
+		static void All_LoadingCall();
+		static void All_SwitchMap();
 
-protected:
-	virtual void LoadingCall()	{}
-	virtual bool Init()	{ return true;	}
-	virtual void End()	{}
-	virtual void FrameMove(DWORD dwTime){}
-	virtual void CloseForm() {}
-	virtual void SwitchMap() {}
+		static void MainChaMove();
 
-    static void		_evtDragToGoodsEvent(CGuiData *pSender, CCommandObj* pItem, int nGridID, bool& isAccept);  // 
+	protected:
+		virtual void LoadingCall() {
+		}
 
-protected:
-	bool Error(const char* strInfo, const char* strFormName, const char* strCompentName);
-	static CForm* _FindForm(const char * frmName);
+		virtual bool Init() {
+			return true;
+		}
 
-private:
-	static bool		_evtESCKey(char& key);
+		virtual void End() {
+		}
 
-	typedef std::vector<CUIInterface*> allmgr;
-	static allmgr	all;
-	static bool		_IsAllInit;
+		virtual void FrameMove(DWORD dwTime) {
+		}
 
-};
+		virtual void CloseForm() {
+		}
+
+		virtual void SwitchMap() {
+		}
+
+		static void _evtDragToGoodsEvent(CGuiData* pSender, CCommandObj* pItem, int nGridID, bool& isAccept); // 
+
+	protected:
+		bool Error(const char* strInfo, const char* strFormName, const char* strCompentName);
+		static CForm* _FindForm(const char* frmName);
+
+	private:
+		static bool _evtESCKey(char& key);
+
+		typedef std::vector<CUIInterface*> allmgr;
+		static allmgr all;
+		static bool _IsAllInit;
+	};
 }
 
-extern CEditor			g_stUIEditor;
-extern CChat            g_stUIChat;
-extern CBoxMgr			g_stUIBox;
-extern CTradeMgr		g_stUITrade;
-extern CEquipMgr		g_stUIEquip;
-extern CMiniMapMgr		g_stUIMap;
-extern CSystemMgr		g_stUISystem;
-extern CMissionMgr		g_stUIMission;
-extern CMisLogForm		g_stUIMisLog;
-extern CForgeMgr		g_stUIForge;
+extern CEditor g_stUIEditor;
+extern CChat g_stUIChat;
+extern CBoxMgr g_stUIBox;
+extern CTradeMgr g_stUITrade;
+extern CEquipMgr g_stUIEquip;
+extern CMiniMapMgr g_stUIMap;
+extern CSystemMgr g_stUISystem;
+extern CMissionMgr g_stUIMission;
+extern CMisLogForm g_stUIMisLog;
+extern CForgeMgr g_stUIForge;
 
-extern CLotteryMgr		g_stUILottery;	//Add by lark.li 20080514
-extern CAmphitheaterForm g_stUIAmphitheater;//Add by sunny.sun20080715
+extern CLotteryMgr g_stUILottery; //Add by lark.li 20080514
+extern CAmphitheaterForm g_stUIAmphitheater; //Add by sunny.sun20080715
 
-extern CNpcTradeMgr		g_stUINpcTrade;
-extern CNpcTalkMgr		g_stUINpcTalk;
-extern CStartMgr		g_stUIStart;
-extern CStateMgr		g_stUIState;
+extern CNpcTradeMgr g_stUINpcTrade;
+extern CNpcTalkMgr g_stUINpcTalk;
+extern CStartMgr g_stUIStart;
+extern CStateMgr g_stUIState;
 //extern CCozeMgr			g_stUICoze;
-extern CBoatMgr			g_stUIBoat;
-extern CBourseMgr		g_stUIBourse;
-extern CUIGuildList		g_stUIGuildList;
-extern CUIGuildMgr		g_stUIGuildMgr;
-extern CUIGuildApply	g_stUIGuildApply;
-extern CBankMgr			g_stUIBank;
-extern CGuildBankMgr	g_stUIGuildBank;
-extern CBoothMgr		g_stUIBooth;
-extern CHaircutMgr		g_stUIHaircut;
-extern CPkDialog		g_stUIPKDialog;
-extern CMakeEquipMgr	g_stUIMakeEquip;
+extern CBoatMgr g_stUIBoat;
+extern CBourseMgr g_stUIBourse;
+extern CUIGuildList g_stUIGuildList;
+extern CUIGuildMgr g_stUIGuildMgr;
+extern CUIGuildApply g_stUIGuildApply;
+extern CBankMgr g_stUIBank;
+extern CGuildBankMgr g_stUIGuildBank;
+extern CBoothMgr g_stUIBooth;
+extern CHaircutMgr g_stUIHaircut;
+extern CPkDialog g_stUIPKDialog;
+extern CMakeEquipMgr g_stUIMakeEquip;
 extern CGuildChallengeMgr g_stGuildChallenge;
-extern CDoublePwdMgr	g_stUIDoublePwd;
-extern CStoreMgr		g_stUIStore;
-extern CSpiritMgr		g_stUISpirit;
-extern CPurifyMgr		g_stUIPurify;
-extern CBlackTradeMgr   g_stUIBlackTrade;
-extern CPKSilverMgr     g_stUIPKSilver;
-extern CFindTeamMgr		g_stUIFindTeam;
-extern CComposeMgr      g_stUICompose;
-extern CBreakMgr        g_stUIBreak;
-extern CFoundMgr        g_stUIFound;
-extern CCookingMgr      g_stUICooking;
-extern CMailMgr			g_stUIMail;
-extern CNumAnswerMgr	g_stUINumAnswer;
+extern CDoublePwdMgr g_stUIDoublePwd;
+extern CStoreMgr g_stUIStore;
+extern CSpiritMgr g_stUISpirit;
+extern CPurifyMgr g_stUIPurify;
+extern CBlackTradeMgr g_stUIBlackTrade;
+extern CPKSilverMgr g_stUIPKSilver;
+extern CFindTeamMgr g_stUIFindTeam;
+extern CComposeMgr g_stUICompose;
+extern CBreakMgr g_stUIBreak;
+extern CFoundMgr g_stUIFound;
+extern CCookingMgr g_stUICooking;
+extern CMailMgr g_stUIMail;
+extern CNumAnswerMgr g_stUINumAnswer;
 extern CChurchChallengeMgr g_stChurchChallenge;
 
 //extern CChannelSwitchForm g_stUIChannelSwitch;
-
-

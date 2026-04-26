@@ -3,10 +3,11 @@
 
 /** . , .
 */
-template< typename T > class FactoryObj
-{
+template <typename T>
+class FactoryObj {
 public:
-	virtual ~FactoryObj() {};
+	virtual ~FactoryObj() {
+	};
 
 	/** .	*/
 	virtual const string& getType() const = 0;
@@ -15,11 +16,11 @@ public:
 	@param name 
 	@return .
 	*/
-	virtual T* createInstance( const string& name ) = 0;    
+	virtual T* createInstance(const string& name) = 0;
 	/** .
 	@param ptr 
 	*/
-	virtual void destroyInstance( T* ) = 0;    
+	virtual void destroyInstance(T*) = 0;
 };
 
 #endif

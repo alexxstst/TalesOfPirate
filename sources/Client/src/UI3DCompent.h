@@ -9,49 +9,62 @@
 #pragma once
 #include "uicompent.h"
 
-namespace GUI
-{
+namespace GUI {
+	class C3DCompent;
+	typedef void (*GUIRenderEvent)(C3DCompent* pSender, int x, int y);
 
-class C3DCompent;
-typedef void(*GUIRenderEvent)(C3DCompent *pSender, int x, int y);
+	class C3DCompent : public CCompent {
+	public:
+		C3DCompent(CForm& frmOwn);
+		C3DCompent(const C3DCompent& rhs);
+		C3DCompent& operator=(const C3DCompent& rhs);
+		virtual ~C3DCompent();
 
-class C3DCompent : public CCompent
-{
-public:
-	C3DCompent(CForm& frmOwn);
-	C3DCompent( const C3DCompent& rhs );
-	C3DCompent& operator=(const C3DCompent& rhs);
-	virtual ~C3DCompent();
+		GUI_CLONE(C3DCompent)
 
-	GUI_CLONE(C3DCompent)
+		virtual void Render();
+		virtual bool MouseRun(int x, int y, DWORD key);
 
-	virtual void	Render();
-	virtual bool	MouseRun( int x, int y, DWORD key );
-	virtual bool	IsHandleMouse()		{ return true;			}		// 
-	virtual void	Refresh();
+		virtual bool IsHandleMouse() {
+			return true;
+		} // 
+		virtual void Refresh();
 
-	void			SetRenderEvent( GUIRenderEvent p )			{ _pRenderEvent=p;			}
-	GUIRenderEvent	GetRenderEvent()	{ return _pRenderEvent;	}
+		void SetRenderEvent(GUIRenderEvent p) {
+			_pRenderEvent = p;
+		}
 
-	int				GetCenterX()	{ return _nCenterX;		}
-	int				GetCenterY()	{ return _nCenterY;		}
+		GUIRenderEvent GetRenderEvent() {
+			return _pRenderEvent;
+		}
 
-    void            SetPointer( void * p )  { _pPointer = p;    }
-    void*           GetPointer()            { return _pPointer; }
+		int GetCenterX() {
+			return _nCenterX;
+		}
 
-public:
-	GuiMouseEvent	evtMouseDown;		// 
-	GuiMouseEvent   evtMouseLDDown ;    //
+		int GetCenterY() {
+			return _nCenterY;
+		}
 
-protected:
-	void			_Copy( const C3DCompent& rhs );
+		void SetPointer(void* p) {
+			_pPointer = p;
+		}
 
-protected:
-	GUIRenderEvent		_pRenderEvent;
-	int					_nCenterX, _nCenterY;
+		void* GetPointer() {
+			return _pPointer;
+		}
 
-    void*            _pPointer;
+	public:
+		GuiMouseEvent evtMouseDown; // 
+		GuiMouseEvent evtMouseLDDown; //
 
-};
+	protected:
+		void _Copy(const C3DCompent& rhs);
 
+	protected:
+		GUIRenderEvent _pRenderEvent;
+		int _nCenterX, _nCenterY;
+
+		void* _pPointer;
+	};
 }

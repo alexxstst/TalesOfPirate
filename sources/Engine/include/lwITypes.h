@@ -252,7 +252,6 @@ LW_BEGIN
 	};
 
 
-
 	inline void lwPlayPoseInfo_Construct(lwPlayPoseInfo* info) {
 		memset(info, 0, sizeof(lwPlayPoseInfo));
 		info->bit_mask = PPI_MASK_INVALID;
@@ -749,7 +748,6 @@ LW_BEGIN
 	};
 
 	typedef lwVertDeclInfo9 lwVertDeclInfo;
-
 
 
 	enum {

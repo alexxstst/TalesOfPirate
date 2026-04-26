@@ -30,12 +30,19 @@
 #include <vector>
 
 class CMPFont;
-namespace dbc { class IniFile; }
+
+namespace dbc {
+	class IniFile;
+}
+
 struct lua_State;
 
 // Forward — чтобы не тянуть fontstash.h / FonsDx9Backend.h в публичный хедер.
 struct FONScontext;
-namespace fons { struct Dx9Backend; }
+
+namespace fons {
+	struct Dx9Backend;
+}
 
 enum class FontSlot {
 	TipText = 0,
@@ -59,13 +66,15 @@ public:
 	// Экспортировать g_SystemFont в Lua. Вызывать ДО font_bootstrap.lua.
 	void PushToLua(lua_State* L) const;
 
-	const std::string& GetResolvedFamily() const { return _resolvedFamily; }
+	const std::string& GetResolvedFamily() const {
+		return _resolvedFamily;
+	}
 
 	// Регистрация TTF через AddFontResourceExA(FR_PRIVATE). Параллельно читает
 	// family_name из файла через FreeType и сохраняет в _familyToPath, чтобы
 	// FontRender мог открыть тот же TTF напрямую (без поиска через GDI).
 	bool InstallFontFile(const std::filesystem::path& ttf);
-	int  InstallFontsFromDir(const std::filesystem::path& dir);
+	int InstallFontsFromDir(const std::filesystem::path& dir);
 
 	// Путь к TTF по имени семейства (как его вернул FreeType при регистрации).
 	// nullptr — если семейство не зарегистрировано через InstallFontFile*.
@@ -133,22 +142,22 @@ private:
 	// Выбор размера по текущему разрешению окна (нарастание: ≤ 800 — size800).
 	static int _CurrentSize(int size800, int size1024);
 
-	std::vector<std::unique_ptr<CMPFont>>  _fonts;
-	std::vector<std::string>                _fontNames;  // parallel to _fonts
-	std::unordered_map<std::string, int>    _byName;
+	std::vector<std::unique_ptr<CMPFont>> _fonts;
+	std::vector<std::string> _fontNames; // parallel to _fonts
+	std::unordered_map<std::string, int> _byName;
 
-	std::vector<std::string>                _registeredPaths;
+	std::vector<std::string> _registeredPaths;
 	// Family name (как читает FreeType, напр. "PT Sans") → полный путь к TTF.
 	std::unordered_map<std::string, std::string> _familyToPath;
-	std::string                             _resolvedFamily{"Arial"};
+	std::string _resolvedFamily{"Arial"};
 
 	// Общий fontstash (создаётся лениво в GetFonsContext).
-	std::unique_ptr<fons::Dx9Backend>       _fonsBackend;
-	FONScontext*                            _fons{nullptr};
+	std::unique_ptr<fons::Dx9Backend> _fonsBackend;
+	FONScontext* _fons{nullptr};
 	// Path → fonsFontId. Буфер TTF на шрифт (fontstash хранит указатель,
 	// память должна жить, пока жив FONScontext).
-	std::unordered_map<std::string, int>    _pathToFonsFontId;
+	std::unordered_map<std::string, int> _pathToFonsFontId;
 	std::vector<std::vector<unsigned char>> _fontBuffers;
 	// fontId → (asc-desc)/em (см. GetFonsSizeScale).
-	std::unordered_map<int, float>          _fonsIdToSizeScale;
+	std::unordered_map<int, float> _fonsIdToSizeScale;
 };

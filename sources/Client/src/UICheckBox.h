@@ -8,118 +8,142 @@
 #pragma once
 #include "uicompent.h"
 
-namespace GUI
-{
+namespace GUI {
+	// ,
+	class CCheckBox : public CCompent {
+	public:
+		enum eStyle {
+			stUnChecked,
+			stChecked,
+			stEnd,
+		};
 
-// ,
-class CCheckBox : public CCompent
-{
-public:
-	enum eStyle
-	{
-		stUnChecked,
-		stChecked,
-		stEnd,
+	public:
+		CCheckBox(CForm& frmOwn);
+		CCheckBox(const CCheckBox& rhs);
+		CCheckBox& operator=(const CCheckBox& rhs);
+
+		~CCheckBox() {
+			SAFE_DELETE(_pImage);
+		} // UI //delete _pImage; }
+		GUI_CLONE(CCheckBox)
+
+		virtual void Render();
+		virtual void Refresh();
+		virtual bool MouseRun(int x, int y, DWORD key);
+
+		virtual void SetAlpha(BYTE alpha) {
+			_pImage->SetAlpha(alpha);
+		}
+
+		virtual bool IsHandleMouse() {
+			return true;
+		}
+
+		virtual CGuiPic* GetImage() {
+			return _pImage;
+		}
+
+		bool GetIsChecked() {
+			return _isChecked;
+		}
+
+		void SetIsChecked(bool v);
+
+		void SetTextColor(DWORD color) {
+			_TextColor = color;
+		}
+
+		DWORD GetTextColor() {
+			return _TextColor;
+		}
+
+		const char* GetCaption() {
+			return _strCaption.c_str();
+		}
+
+		void SetCaption(const char* str) {
+			_strCaption = str;
+		}
+
+	public:
+		GuiEvent evtCheckChange;
+
+		static int s_nMarginLeft; // 
+
+	protected:
+		void _SetSelf();
+
+	protected:
+		DWORD _TextColor;
+		CGuiPic* _pImage; // ,bsChecked,bsUnChecked
+		std::string _strCaption;
+
+		bool _isChecked;
+
+	private:
+		bool _isDown;
+		int _nTextOffsetX;
+		int _nTextOffsetY;
 	};
 
-public:
-	CCheckBox(CForm& frmOwn);
-	CCheckBox( const CCheckBox& rhs );
-	CCheckBox& operator=(const CCheckBox& rhs);
-	~CCheckBox() { SAFE_DELETE(_pImage); } // UI //delete _pImage; }
-	GUI_CLONE(CCheckBox)
+	// 
+	class CCheckGroup : public CContainer {
+	public:
+		CCheckGroup(CForm& frmOwn);
+		CCheckGroup(const CCheckGroup& rhs);
+		CCheckGroup& operator=(const CCheckGroup& rhs);
+		GUI_CLONE(CCheckGroup)
 
-	virtual void	Render();
-	virtual void	Refresh();
-	virtual bool	MouseRun( int x, int y, DWORD key );
-	virtual void	SetAlpha( BYTE alpha )		{ _pImage->SetAlpha(alpha);		}
+		virtual void Init();
 
-	virtual bool	IsHandleMouse()				{ return true;					}
-	virtual CGuiPic* GetImage()					{ return _pImage;				}
+		virtual bool IsHandleMouse() {
+			return true;
+		}
 
-	bool			GetIsChecked()				{ return _isChecked;			}
-	void			SetIsChecked( bool v );
-	void			SetTextColor( DWORD color ) { _TextColor = color;			}
-	DWORD			GetTextColor()				{ return _TextColor;			}
+	public:
+		void AddCheckBox(CCheckBox* p);
 
-	const char*		GetCaption()				{ return _strCaption.c_str();	}
-	void			SetCaption( const char * str )	{ _strCaption = str;		}
+		CCheckBox* GetActive() {
+			return _pActive;
+		}
 
-public:
-	GuiEvent		evtCheckChange;
+		void SetActiveIndex(int n);
 
-	static int		s_nMarginLeft;		// 
+		int GetActiveIndex() {
+			return _nActive;
+		}
 
-protected:
-	void			_SetSelf();
+	public:
+		GuiEvent evtSelectChange;
 
-protected:
-	DWORD			_TextColor;
-	CGuiPic*		_pImage;			// ,bsChecked,bsUnChecked
-	std::string			_strCaption;
+	private:
+		void _UpdataActive(CCheckBox* active);
 
-	bool			_isChecked;
+		static void _CheckChange(CGuiData* pSender) {
+			((CCheckGroup*)(pSender->GetParent()))->_UpdataActive(dynamic_cast<CCheckBox*>(pSender));
+		}
 
-private:
-	bool			_isDown;
-	int				_nTextOffsetX;
-	int				_nTextOffsetY;
+		void _SetSelf();
 
-};
+	private:
+		int _nSize;
+		int _nActive;
 
-// 
-class CCheckGroup : public CContainer
-{
-public:
-	CCheckGroup(CForm& frmOwn);
-	CCheckGroup( const CCheckGroup& rhs );
-	CCheckGroup& operator=(const CCheckGroup& rhs);
-	GUI_CLONE(CCheckGroup)
+	private:
+		CCheckBox* _pActive;
+	};
 
-	virtual void	Init();
-	virtual bool	IsHandleMouse()		{ return true;		}
-
-public:
-	void			AddCheckBox( CCheckBox* p );
-	CCheckBox*		GetActive()			{ return _pActive;	}
-	
-	void            SetActiveIndex(int n ) ;
-	int				GetActiveIndex()	{ return _nActive;	}
-
-public:
-	GuiEvent		evtSelectChange;
-
-private:
-	void			_UpdataActive( CCheckBox* active );
-
-	static void		_CheckChange(CGuiData *pSender) {
-		((CCheckGroup*)(pSender->GetParent()))->_UpdataActive( dynamic_cast<CCheckBox*>(pSender) );
+	// 
+	inline void CCheckBox::SetIsChecked(bool v) {
+		_isChecked = v;
+		_pImage->SetFrame((int)_isChecked);
 	}
 
-	void			_SetSelf();
-
-private:	
-	int				_nSize;
-	int				_nActive;
-
-private:
-	CCheckBox*		_pActive;
-
-};
-
-// 
-inline void CCheckBox::SetIsChecked( bool v ) 
-{
-	_isChecked = v;
-	_pImage->SetFrame( (int)_isChecked );
-}
-
-inline void CCheckGroup::AddCheckBox( CCheckBox* p ) 
-{ 
-	if( CContainer::AddCompent(p) )	
-	{
-		_nSize = (int)_items.size();
-		p->evtCheckChange = _CheckChange;
+	inline void CCheckGroup::AddCheckBox(CCheckBox* p) {
+		if (CContainer::AddCompent(p)) {
+			_nSize = (int)_items.size();
+			p->evtCheckChange = _CheckChange;
+		}
 	}
-}
 }

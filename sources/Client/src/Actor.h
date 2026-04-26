@@ -2,57 +2,64 @@
 #include "STStateObj.h"
 #include "CharacterAction.h"
 
-enum eActorState
-{
-	enumNormal,		// 
-	enumDied,		// 
-	enumRemains,	// 
+enum eActorState {
+	enumNormal, // 
+	enumDied, // 
+	enumRemains, // 
 };
 
 
 // 
-class CActorDie
-{
+class CActorDie {
 public:
-	virtual ~CActorDie() {}
-	virtual void Exec()	 {}
+	virtual ~CActorDie() {
+	}
+
+	virtual void Exec() {
+	}
 };
 
 // 
 class CSceneItem;
-class CMonsterItem : public CActorDie
-{
+
+class CMonsterItem : public CActorDie {
 public:
-    CMonsterItem();
-    virtual ~CMonsterItem();
+	CMonsterItem();
+	virtual ~CMonsterItem();
 
-    void	Exec();
+	void Exec();
 
-    void    SetCha( CCharacter* pCha )	    { _pCha=pCha;	        }
-    void    SetItem( CSceneItem* pItem )    { _pItem = pItem;       }
-	CSceneItem*		GetItem()				{ return _pItem;		}
+	void SetCha(CCharacter* pCha) {
+		_pCha = pCha;
+	}
+
+	void SetItem(CSceneItem* pItem) {
+		_pItem = pItem;
+	}
+
+	CSceneItem* GetItem() {
+		return _pItem;
+	}
 
 private:
-    CSceneItem*         _pItem;
-    CCharacter*         _pCha;
-
+	CSceneItem* _pItem;
+	CCharacter* _pCha;
 };
 
 // 
 struct stNetNpcMission;
-class CMissionTrigger : public CActorDie
-{
+
+class CMissionTrigger : public CActorDie {
 public:
 	CMissionTrigger();
 	~CMissionTrigger();
 
 	virtual void Exec();
 
-	void	SetData( stNetNpcMission& v );
+	void SetData(stNetNpcMission& v);
 
 private:
-	stNetNpcMission		*_pData;
-
+	stNetNpcMission* _pData;
 };
 
 class CCharacter;
@@ -61,104 +68,119 @@ class CStateSynchro;
 class CSkillRecord;
 class CServerHarm;
 
-class CActor
-{
+class CActor {
 public:
-	CActor(CCharacter *pCha);
+	CActor(CCharacter* pCha);
 	~CActor();
 
-	void			InitState();
+	void InitState();
 
-	CActionState*	GetCurState()				{ return _pCurState;			}
-	CCharacter*		GetCha()					{ return _pCha;					}
-	eActorState		GetState()					{ return _eState;				}
-	void			SetState( eActorState v );
+	CActionState* GetCurState() {
+		return _pCurState;
+	}
 
-	bool			IsEmpty()					{ return _statelist.empty();	}
+	CCharacter* GetCha() {
+		return _pCha;
+	}
+
+	eActorState GetState() {
+		return _eState;
+	}
+
+	void SetState(eActorState v);
+
+	bool IsEmpty() {
+		return _statelist.empty();
+	}
 
 public:
-    void            PlayPose( int poseid, bool isKeep=false, bool isSend=false );
-	void			SetSleep()					{ _nWaitingTime = -1;			}
+	void PlayPose(int poseid, bool isKeep = false, bool isSend = false);
 
-public:		// CActionState 
-	bool	        SwitchState( CActionState* pState );						// ,,
-	bool	        InsertState( CActionState* pState, bool IsFront=false );	// ,
-    bool            AddState( CActionState* pState );
+	void SetSleep() {
+		_nWaitingTime = -1;
+	}
 
-    CActionState*   FindStateClass( const type_info& info );            // 
-    void            OverAllState();                                     // ,
+public: // CActionState 
+	bool SwitchState(CActionState* pState); // ,,
+	bool InsertState(CActionState* pState, bool IsFront = false); // ,
+	bool AddState(CActionState* pState);
 
-	void			CancelState();										// 
-	void			FrameMove(DWORD dwTimeParam);
+	CActionState* FindStateClass(const type_info& info); // 
+	void OverAllState(); // ,
 
-	CActionState*   GetServerState();
-	CActionState*   GetServerStateByID(int id);
-	CActionState*   GetNextState();
-	int				GetQueueCount()				{ return (int)_statelist.size();}
-	bool			IsEnabled()					{ return GetState()==enumNormal;}
+	void CancelState(); // 
+	void FrameMove(DWORD dwTimeParam);
 
-	void			FailedAction();
+	CActionState* GetServerState();
+	CActionState* GetServerStateByID(int id);
+	CActionState* GetNextState();
 
-public:	// 
-    void	        ActionBegin( DWORD pose_id );
-	void			ActionKeyFrame( DWORD pose_id, int key_frame );
-	void			ActionEnd( DWORD pose_id );
+	int GetQueueCount() {
+		return (int)_statelist.size();
+	}
 
-	void			Stop();
-    void	        IdleState();
+	bool IsEnabled() {
+		return GetState() == enumNormal;
+	}
 
-	void			ExecAllNet();			// 
+	void FailedAction();
 
-	void			ExecDied();
-	bool			AddDieExec( CActorDie* pDieExec );
-	
-	void			ClearQueueState();
+public: // 
+	void ActionBegin(DWORD pose_id);
+	void ActionKeyFrame(DWORD pose_id, int key_frame);
+	void ActionEnd(DWORD pose_id);
+
+	void Stop();
+	void IdleState();
+
+	void ExecAllNet(); // 
+
+	void ExecDied();
+	bool AddDieExec(CActorDie* pDieExec);
+
+	void ClearQueueState();
 
 protected:
-    //void            _InitIdle( DWORD pose );
+	//void            _InitIdle( DWORD pose );
 
-    typedef std::list<CStateSynchro*>  synchro;
-    void            _ExecSynchro( synchro& s );
-    void            _ClearSynchro( synchro& s );
+	typedef std::list<CStateSynchro*> synchro;
+	void _ExecSynchro(synchro& s);
+	void _ClearSynchro(synchro& s);
 
 protected:
-	CActionState*	_pCurState;				// 
+	CActionState* _pCurState; // 
 	typedef std::list<CActionState*> states;
-	states			_statelist;
+	states _statelist;
 
-	CCharacter*		_pCha;					// 
+	CCharacter* _pCha; // 
 
 public:
-    CServerHarm*    CreateHarmMgr();
-    CServerHarm*    FindHarm( int nFightID );
-    CServerHarm*    FindHarm();				// 
+	CServerHarm* CreateHarmMgr();
+	CServerHarm* FindHarm(int nFightID);
+	CServerHarm* FindHarm(); // 
 
 private:
-    typedef std::vector<CServerHarm*>    fights;
-    fights          _fights;
+	typedef std::vector<CServerHarm*> fights;
+	fights _fights;
 
-	typedef std::vector<CActorDie*>		dies;	// 
-	dies			_dies;
+	typedef std::vector<CActorDie*> dies; // 
+	dies _dies;
 
 protected:
-    int             _nWaitingTime;     // Wait,Pose
-	eActorState		_eState;
-
+	int _nWaitingTime; // Wait,Pose
+	eActorState _eState;
 };
 
 // 
-inline void	CActor::ActionKeyFrame( DWORD pose_id, int key_frame )	
-{ 
-	if( _pCurState ) _pCurState->ActionFrame(pose_id, key_frame);	
+inline void CActor::ActionKeyFrame(DWORD pose_id, int key_frame) {
+	if (_pCurState) _pCurState->ActionFrame(pose_id, key_frame);
 }
 
-inline void	CActor::ActionBegin( DWORD pose_id )							
-{ 
-    if ( _pCurState ) _pCurState->ActionBegin(pose_id);				
+inline void CActor::ActionBegin(DWORD pose_id) {
+	if (_pCurState) _pCurState->ActionBegin(pose_id);
 }
 
-inline bool CActor::AddDieExec( CActorDie* pDieExec )
-{
-	_dies.push_back( pDieExec );
+inline bool CActor::AddDieExec(CActorDie* pDieExec) {
+	_dies.push_back(pDieExec);
 	return true;
 }

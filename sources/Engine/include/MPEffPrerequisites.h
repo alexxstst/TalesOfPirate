@@ -89,7 +89,8 @@ class MPMaterialPtr;
 class MPCameraNOLEECH;
 class MPNode;
 class MPStringUtil;
-template <class T> class MPMapIterator;
+template <class T>
+class MPMapIterator;
 class MPScriptLoader;
 class MPParameterInterface;
 

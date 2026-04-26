@@ -14,78 +14,68 @@
 #define bpMSPD 10
 
 
+namespace GUI {
+	// 
+	class CStateMgr : public CUIInterface {
+	public:
+		void RefreshStateFrm();
 
+	protected:
+		virtual bool Init();
+		virtual void End();
+		virtual void FrameMove(DWORD dwTime);
 
-namespace GUI
-{
-// 
-class CStateMgr : public CUIInterface
-{
-public:
-	
+	private:
+		static void _evtMainShow(CGuiData* pSender);
+		static void MainMouseDown(CGuiData* pSender, int x, int y, DWORD key);
 
-	void			RefreshStateFrm();
+	private:
+		//frmState
+		CForm* frmState;
+		CLabelEx* labName; //
+		CLabelEx* labGuildName; //
+		CLabelEx* labStateLevel; //
+		CLabelEx* labStatePoint; // 
+		CLabelEx* labSkillPoint; //
+		CLabelEx* labJobShow; //
+		CLabelEx* labFameShow; //
 
-protected:
-	virtual bool	Init();
-    virtual void	End();
-	virtual void	FrameMove(DWORD dwTime);
+		//6
+		CLabelEx* labStrshow;
+		CLabelEx* labDexshow;
+		CLabelEx* labAgishow;
+		CLabelEx* labConshow;
+		CLabelEx* labStashow;
+		CLabelEx* labLukshow;
+		CLabelEx* labSailLevel;
+		CLabelEx* labSailEXP;
 
-private:
-	static void _evtMainShow(CGuiData *pSender);
-	static void MainMouseDown(CGuiData *pSender, int x, int y, DWORD key);
+		//8
+		CLabelEx* labMinAtackShow;
+		CLabelEx* labMaxAtackShow;
+		CLabelEx* labFleeShow;
+		CLabelEx* labAspeedShow;
+		CLabelEx* labMspeedShow;
+		CLabelEx* labHitShow;
+		CLabelEx* labDefenceShow;
+		//CLabelEx*		labCriticalShow;
+		//CLabelEx*		labMfShow;
+		CLabelEx* labPhysDefineShow;
 
-private:
-	//frmState
-	CForm*			frmState;
-	CLabelEx*		labName;                    //
-	CLabelEx*		labGuildName;               //
-	CLabelEx*		labStateLevel;              //
-	CLabelEx*		labStatePoint;              // 
-	CLabelEx*  		labSkillPoint;              //
-	CLabelEx*		labJobShow;					//
-	CLabelEx *      labFameShow;				//
+		//6 
+		CTextButton* btnStr; //
+		CTextButton* btnAgi; //
+		CTextButton* btnCon; //
+		CTextButton* btnSta; //
+		//CTextButton*   btnLuk;						//
+		CTextButton* btnDex; //     
 
-	//6
-	CLabelEx*		labStrshow;
-	CLabelEx*		labDexshow;
-	CLabelEx*		labAgishow;
-	CLabelEx*		labConshow;
-	CLabelEx*		labStashow;
-	CLabelEx*		labLukshow;
-	CLabelEx*		labSailLevel;
-	CLabelEx*		labSailEXP;
+		CLabelEx* labStateEXP;
+		CLabelEx* labStateHP;
+		CLabelEx* labStateSP;
 
-	//8
-	CLabelEx*		labMinAtackShow;
-	CLabelEx*		labMaxAtackShow;
-	CLabelEx*		labFleeShow;
-	CLabelEx*		labAspeedShow;
-	CLabelEx*		labMspeedShow;
-	CLabelEx*		labHitShow;
-	CLabelEx*		labDefenceShow;
-	//CLabelEx*		labCriticalShow;
-	//CLabelEx*		labMfShow;
-	CLabelEx*		labPhysDefineShow;
-
-	//6 
-	CTextButton*   btnStr;						//
-	CTextButton*   btnAgi;						//
-	CTextButton*   btnCon;						//
-	CTextButton*   btnSta;						//
-	//CTextButton*   btnLuk;						//
-	CTextButton*   btnDex;						//     
-
-	CLabelEx*		labStateEXP;
-	CLabelEx*		labStateHP;
-	CLabelEx*		labStateSP;
-
-	CLabelEx*		labFameSho;              //
-	CLabelEx*		labStateName;
-	CLabelEx*		labStateJob;
-
-
-};
-
+		CLabelEx* labFameSho; //
+		CLabelEx* labStateName;
+		CLabelEx* labStateJob;
+	};
 }
-

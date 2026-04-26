@@ -5,91 +5,101 @@ class CServerHarm;
 class CCharacter;
 
 // 
-class CStateSynchro
-{
-    friend class CSynchroManage;
+class CStateSynchro {
+	friend class CSynchroManage;
+
 public:
-    CStateSynchro();
-    virtual ~CStateSynchro();
+	CStateSynchro();
+	virtual ~CStateSynchro();
 
-    // ()
-    virtual CStateSynchro*   Gouge( float fRate )    { return NULL;  }
+	// ()
+	virtual CStateSynchro* Gouge(float fRate) {
+		return NULL;
+	}
 
-    void    Exec();
-    void    Exec( DWORD time );
+	void Exec();
+	void Exec(DWORD time);
 
-    bool    GetIsExec()							{ return _isExec;       }
+	bool GetIsExec() {
+		return _isExec;
+	}
 
-	void	SetServerHarm( CServerHarm* pHarm )	{ _pServerHarm=pHarm; 	}
-	CServerHarm*	GetServerHarm()				{ return _pServerHarm;	}
+	void SetServerHarm(CServerHarm* pHarm) {
+		_pServerHarm = pHarm;
+	}
 
-	void	Reset()								{ _isExec=false;		}
+	CServerHarm* GetServerHarm() {
+		return _pServerHarm;
+	}
 
-	virtual CCharacter*	GetHarmCha() = 0;
-	virtual const char* GetClassName()			{ return "CStateSynchro";}
+	void Reset() {
+		_isExec = false;
+	}
+
+	virtual CCharacter* GetHarmCha() = 0;
+
+	virtual const char* GetClassName() {
+		return "CStateSynchro";
+	}
 
 protected:
-    virtual void _Exec(){}
+	virtual void _Exec() {
+	}
 
-    bool			_isExec;
+	bool _isExec;
 
-	CServerHarm*	_pServerHarm;
+	CServerHarm* _pServerHarm;
 
 private:
-    int				_nID;				// CSynchroManage
-	DWORD			_dwExecTime;		// 
-	DWORD			_dwCreateTime;
-
+	int _nID; // CSynchroManage
+	DWORD _dwExecTime; // 
+	DWORD _dwCreateTime;
 };
 
 // 
-class CSynchroManage
-{
-    friend class CStateSynchro;
+class CSynchroManage {
+	friend class CStateSynchro;
+
 public:
-    CSynchroManage();
-    ~CSynchroManage();
+	CSynchroManage();
+	~CSynchroManage();
 
-    void	FrameMove( DWORD dwTime );
-	void	Reset();
+	void FrameMove(DWORD dwTime);
+	void Reset();
 
-public: 
-    static CSynchroManage* I() { return _pInstance;     }
-
-private:
-    void    _CollectEmpty();        // 
-
-private:
-    int     _AddState( CStateSynchro* pState );
-    bool    _DelState( CStateSynchro* pState );
+public:
+	static CSynchroManage* I() {
+		return _pInstance;
+	}
 
 private:
-    enum 
-    {
-        MAX_SIZE = 4096,
-        ERROR_ID = -1,
-    };
-
-    CStateSynchro*  _All[MAX_SIZE];
-    DWORD           _dwHead, _dwTail;       // 
-    DWORD           _nSynchroNum;           // 
+	void _CollectEmpty(); // 
 
 private:
-    static CSynchroManage* _pInstance;
+	int _AddState(CStateSynchro* pState);
+	bool _DelState(CStateSynchro* pState);
 
+private:
+	enum {
+		MAX_SIZE = 4096,
+		ERROR_ID = -1,
+	};
+
+	CStateSynchro* _All[MAX_SIZE];
+	DWORD _dwHead, _dwTail; // 
+	DWORD _nSynchroNum; // 
+
+private:
+	static CSynchroManage* _pInstance;
 };
 
 // 
-inline void CStateSynchro::Exec()
-{ 
-    _isExec = true; 
+inline void CStateSynchro::Exec() {
+	_isExec = true;
 }
 
-inline void CStateSynchro::Exec( DWORD time )
-{
-	if( time<_dwExecTime )
-	{
+inline void CStateSynchro::Exec(DWORD time) {
+	if (time < _dwExecTime) {
 		_dwExecTime = time;
 	}
 }
-

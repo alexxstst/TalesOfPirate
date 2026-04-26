@@ -12,101 +12,147 @@
 #include "lwPrimitiveHelper.h"
 
 LW_BEGIN
+	class lwPrimitive : public lwIPrimitive {
+		LW_STD_DECLARATION()
+
+	protected:
+		DWORD _id;
+		DWORD _parent_id;
+		lwStateCtrl _state_ctrl;
+
+		lwIResourceMgr* _res_mgr;
+		lwIMeshAgent* _mesh_agent;
+		lwIMtlTexAgent* _mtltex_agent_seq[LW_MAX_SUBSET_NUM];
+		lwIAnimCtrlAgent* _anim_agent;
+		lwIRenderCtrlAgent* _render_agent;
+		lwIHelperObject* _helper_object;
+
+	private:
+		LW_RESULT _UpdateTransparentState();
+
+	public:
+		lwPrimitive(lwIResourceMgr* mgr);
+		virtual ~lwPrimitive();
 
 
-class lwPrimitive : public lwIPrimitive
-{
-LW_STD_DECLARATION()
+		virtual void SetMatrixLocal(const lwMatrix44* mat);
+		virtual void SetMatrixParent(const lwMatrix44* mat);
 
-protected:
-    DWORD _id;
-    DWORD _parent_id;
-    lwStateCtrl _state_ctrl;
+		lwMatrix44* GetMatrixLocal();
+		lwMatrix44* GetMatrixGlobal();
 
-    lwIResourceMgr* _res_mgr;
-    lwIMeshAgent* _mesh_agent;
-    lwIMtlTexAgent* _mtltex_agent_seq[ LW_MAX_SUBSET_NUM ];
-    lwIAnimCtrlAgent* _anim_agent;
-    lwIRenderCtrlAgent* _render_agent;
-    lwIHelperObject* _helper_object;
+		void SetID(DWORD id) {
+			_id = id;
+		}
 
-private:
-    LW_RESULT _UpdateTransparentState();
+		void SetParentID(DWORD id) {
+			_parent_id = id;
+		}
 
-public:
-    lwPrimitive( lwIResourceMgr* mgr );
-    virtual ~lwPrimitive();
+		DWORD GetID() const {
+			return _id;
+		}
 
-
-    virtual void SetMatrixLocal( const lwMatrix44* mat );
-    virtual void SetMatrixParent( const lwMatrix44* mat );
-
-    lwMatrix44* GetMatrixLocal();
-    lwMatrix44* GetMatrixGlobal();
-    void SetID(DWORD id) { _id = id; }
-    void SetParentID( DWORD id ) { _parent_id = id; }
-    DWORD GetID() const { return _id; }
-    DWORD GetParentID() const { return _parent_id; }
-    
+		DWORD GetParentID() const {
+			return _parent_id;
+		}
 
 
-    LW_RESULT HitTest( lwPickInfo* info, const lwVector3* org, const lwVector3* ray );
+		LW_RESULT HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray);
 
-    LW_RESULT DestroyRenderCtrlAgent();
-    LW_RESULT DestroyMeshAgent();
-    LW_RESULT DestroyMtlTexAgent( DWORD subset );
-    LW_RESULT Destroy();
-
-
-    LW_RESULT Load( lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res );
-    LW_RESULT LoadMesh( lwMeshInfo* info );
-    LW_RESULT LoadMesh( const lwResFileMesh* info );
-    LW_RESULT LoadMtlTex( DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path );
-    LW_RESULT LoadAnimData( lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res );
-    LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci);
-
-    LW_RESULT ExtractGeomObjInfo(lwIGeomObjInfo* info);
-
-    virtual LW_RESULT Update();
-    virtual LW_RESULT Render();
-    virtual LW_RESULT RenderSubset( DWORD subset );
-
-    LW_RESULT Clone( lwIPrimitive** ret_obj );
-
-    lwIResourceMgr* GetResourceMgr() { return _res_mgr; }
-    lwIMtlTexAgent* GetMtlTexAgent( DWORD id ) { return _mtltex_agent_seq[ id ]; }
-    lwIMeshAgent* GetMeshAgent() { return _mesh_agent; }
-    lwIAnimCtrlAgent* GetAnimAgent() { return _anim_agent; }
-    lwIRenderCtrlAgent* GetRenderCtrlAgent() { return _render_agent; }
-    lwIHelperObject* GetHelperObject() { return _helper_object; }
-    LW_RESULT GetSubsetNum(DWORD* subset_num);
+		LW_RESULT DestroyRenderCtrlAgent();
+		LW_RESULT DestroyMeshAgent();
+		LW_RESULT DestroyMtlTexAgent(DWORD subset);
+		LW_RESULT Destroy();
 
 
-    void SetMeshAgent( lwIMeshAgent* agent ) { _mesh_agent = agent; }
-    void SetMtlTexAgent( DWORD subset, lwIMtlTexAgent* agent ) { _mtltex_agent_seq[ subset ] = agent; }
-    void SetAnimCtrlAgent(lwIAnimCtrlAgent* agent) { _anim_agent = agent; }
-    void SetRenderCtrl( lwIRenderCtrlAgent* obj ) { _render_agent = obj; }
-    void SetHelperObject(lwIHelperObject* obj) { _helper_object = obj; }
-    void SetMaterial(const lwMaterial* mtl);
-    void SetOpacity(float opacity);
+		LW_RESULT Load(lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT LoadMesh(lwMeshInfo* info);
+		LW_RESULT LoadMesh(const lwResFileMesh* info);
+		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path);
+		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci);
 
-    // object state method
-    void SetState(const lwStateCtrl* ctrl) { _state_ctrl = *ctrl; }
-    void SetState(DWORD state, BYTE value)
-    { _state_ctrl.SetState(state, value); }
-    BYTE GetState(DWORD state) const 
-    { return _state_ctrl.GetState(state); }
+		LW_RESULT ExtractGeomObjInfo(lwIGeomObjInfo* info);
 
-    LW_RESULT SetTextureLOD(DWORD level);
-    LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
-    LW_RESULT ResetTexture(DWORD subset, DWORD stage, const char* file, const char* tex_path);
+		virtual LW_RESULT Update();
+		virtual LW_RESULT Render();
+		virtual LW_RESULT RenderSubset(DWORD subset);
 
-	void setPixelShader( const std::string& filename )
-	{
-		_render_agent->setPixelShader( filename );
-	}
-};
+		LW_RESULT Clone(lwIPrimitive** ret_obj);
 
-LW_RESULT lwPrimitivePlayDefaultAnimation( lwIPrimitive* obj, bool IsGlitched = false );
+		lwIResourceMgr* GetResourceMgr() {
+			return _res_mgr;
+		}
+
+		lwIMtlTexAgent* GetMtlTexAgent(DWORD id) {
+			return _mtltex_agent_seq[id];
+		}
+
+		lwIMeshAgent* GetMeshAgent() {
+			return _mesh_agent;
+		}
+
+		lwIAnimCtrlAgent* GetAnimAgent() {
+			return _anim_agent;
+		}
+
+		lwIRenderCtrlAgent* GetRenderCtrlAgent() {
+			return _render_agent;
+		}
+
+		lwIHelperObject* GetHelperObject() {
+			return _helper_object;
+		}
+
+		LW_RESULT GetSubsetNum(DWORD* subset_num);
+
+
+		void SetMeshAgent(lwIMeshAgent* agent) {
+			_mesh_agent = agent;
+		}
+
+		void SetMtlTexAgent(DWORD subset, lwIMtlTexAgent* agent) {
+			_mtltex_agent_seq[subset] = agent;
+		}
+
+		void SetAnimCtrlAgent(lwIAnimCtrlAgent* agent) {
+			_anim_agent = agent;
+		}
+
+		void SetRenderCtrl(lwIRenderCtrlAgent* obj) {
+			_render_agent = obj;
+		}
+
+		void SetHelperObject(lwIHelperObject* obj) {
+			_helper_object = obj;
+		}
+
+		void SetMaterial(const lwMaterial* mtl);
+		void SetOpacity(float opacity);
+
+		// object state method
+		void SetState(const lwStateCtrl* ctrl) {
+			_state_ctrl = *ctrl;
+		}
+
+		void SetState(DWORD state, BYTE value) {
+			_state_ctrl.SetState(state, value);
+		}
+
+		BYTE GetState(DWORD state) const {
+			return _state_ctrl.GetState(state);
+		}
+
+		LW_RESULT SetTextureLOD(DWORD level);
+		LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
+		LW_RESULT ResetTexture(DWORD subset, DWORD stage, const char* file, const char* tex_path);
+
+		void setPixelShader(const std::string& filename) {
+			_render_agent->setPixelShader(filename);
+		}
+	};
+
+	LW_RESULT lwPrimitivePlayDefaultAnimation(lwIPrimitive* obj, bool IsGlitched = false);
 
 LW_END

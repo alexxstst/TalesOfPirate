@@ -3,102 +3,110 @@
 #include "gamecommon.h"
 
 struct NET_CHARTRADE_BOATDATA;
-namespace GUI
-{
-// 
-class CTradeMgr : public CUIInterface
-{
-public:
-	void	ShowCharTradeRequest( BYTE byType, DWORD dwRequestID );				// 
-	void	ShowCharTrade( BYTE byType, DWORD dwAcceptID,DWORD dwRequestID );	// 
-	void	CancelCharTrade(  DWORD dwCharID );						// 
-	void	ShowCharTradeMoney(DWORD dwCharID, DWORD dwMoney);   // 
-	void	ShowCharTradeIMP(DWORD dwCharID, DWORD dwMoney);   // 
 
-	void	ValidateTradeData( DWORD dwCharID );
-	void	ValidateTrade(  DWORD dwCharID );
-	void	ShowTradeSuccess(); // 
-	void	ShowTradeFailed();  // 
-
-	void    CloseAllForm();		// 
-
+namespace GUI {
 	// 
-	void	DragTradeToItem(DWORD dwCharID,BYTE byIndex,BYTE byItemIndex );
+	class CTradeMgr : public CUIInterface {
+	public:
+		void ShowCharTradeRequest(BYTE byType, DWORD dwRequestID); // 
+		void ShowCharTrade(BYTE byType, DWORD dwAcceptID, DWORD dwRequestID); // 
+		void CancelCharTrade(DWORD dwCharID); // 
+		void ShowCharTradeMoney(DWORD dwCharID, DWORD dwMoney); // 
+		void ShowCharTradeIMP(DWORD dwCharID, DWORD dwMoney); // 
 
-	//sItem:  byIndex :  byCount
-	//byItemIndex: 
-	void	DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE byCount,BYTE byItemIndex, SItemGrid* pGrid, const NET_CHARTRADE_BOATDATA* const pBoat );
+		void ValidateTradeData(DWORD dwCharID);
+		void ValidateTrade(DWORD dwCharID);
+		void ShowTradeSuccess(); // 
+		void ShowTradeFailed(); // 
 
-	CGoodsGrid*     GetPlayertradeSaleGrid()    { return  grdSale;		} 
-	CGoodsGrid*		GetRequestGrid()			{ return  grdRequest;	} //
+		void CloseAllForm(); // 
 
-	void			LocalSaleItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );  // 
-	void			LocalCancelItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );// 
+		// 
+		void DragTradeToItem(DWORD dwCharID, BYTE byIndex, BYTE byItemIndex);
 
-	// 
-	bool			IsTrading();
+		//sItem:  byIndex :  byCount
+		//byItemIndex: 
+		void DragItemToTrade(DWORD dwCharID, USHORT sItemID, BYTE byIndex, BYTE byCount, BYTE byItemIndex,
+							 SItemGrid* pGrid, const NET_CHARTRADE_BOATDATA* const pBoat);
 
-	CForm*			GetForm()	{ return frmPlayertrade; } //
+		CGoodsGrid* GetPlayertradeSaleGrid() {
+			return grdSale;
+		}
 
-protected:
-	bool Init();
-    void End();
-    void FrameMove(DWORD dwTime);
+		CGoodsGrid* GetRequestGrid() {
+			return grdRequest;
+		} //
 
-	void Clear();
+		void LocalSaleItem(CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem); // 
+		void LocalCancelItem(CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem); // 
 
-protected:
-	static void _evtSelectYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-    static void _evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow);     // 
+		// 
+		bool IsTrading();
 
-	static void _evtIMPFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void _evtGoldFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void _MainMousePlayerTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void _evtSelfRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// 
-	static void _evtOtherRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// 
+		CForm* GetForm() {
+			return frmPlayertrade;
+		} //
 
-private:
-	CGoodsGrid* GetPlayertradeBuyGrid()     { return  grdBuy;	}
-	static void _evtLocalSaleEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+	protected:
+		bool Init();
+		void End();
+		void FrameMove(DWORD dwTime);
 
-private:
-	CForm*		frmPlayertrade;
-	CForm*		frmRequest;				//()
-	CGoodsGrid* grdRequest;
-	CGoodsGrid*	grdBuy;
-	CGoodsGrid*	grdSale;
-	CLabelEx*	labOtherGold;
-	CLabelEx*	labSelfGold;
+		void Clear();
 
-	CLabelEx*	labOtherIMP;
-	CLabelEx*	labSelfIMP;
-	
-	CTextButton*	btnTrade;
-	CTextButton*	btnYes;
-	CTextButton*	btnGold;
-	CTextButton*	btnIMP;
+	protected:
+		static void _evtSelectYesNoEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtThrowItemEvent(CGuiData* pSender, int id,bool& isThrow); // 
 
-	CCheckBox*		chkTrade;
-	CCheckBox*		chkYes;
+		static void _evtIMPFormEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtGoldFormEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _MainMousePlayerTradeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtSelfRMouseGridEvent(CGuiData* pSender, CCommandObj* pItem, int nGridID); // 
+		static void _evtOtherRMouseGridEvent(CGuiData* pSender, CCommandObj* pItem, int nGridID); // 
 
-	DWORD			m_dwAcceptID;         // 
-	DWORD			m_dwRequestID;        // 
-	BYTE			m_bTradeType;		  // ,RoleCommand.h TRADE_CHAR_TYPE
+	private:
+		CGoodsGrid* GetPlayertradeBuyGrid() {
+			return grdBuy;
+		}
 
-	DWORD			m_dwMainID;
+		static void _evtLocalSaleEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-private:
-	struct stSale
-	{
-		stSale() : dwSaleID(0), nGridID(0), nDragID(0) {}
+	private:
+		CForm* frmPlayertrade;
+		CForm* frmRequest; //()
+		CGoodsGrid* grdRequest;
+		CGoodsGrid* grdBuy;
+		CGoodsGrid* grdSale;
+		CLabelEx* labOtherGold;
+		CLabelEx* labSelfGold;
 
-		DWORD   dwSaleID;
-		int		nGridID;
-		int		nDragID;
+		CLabelEx* labOtherIMP;
+		CLabelEx* labSelfIMP;
+
+		CTextButton* btnTrade;
+		CTextButton* btnYes;
+		CTextButton* btnGold;
+		CTextButton* btnIMP;
+
+		CCheckBox* chkTrade;
+		CCheckBox* chkYes;
+
+		DWORD m_dwAcceptID; // 
+		DWORD m_dwRequestID; // 
+		BYTE m_bTradeType; // ,RoleCommand.h TRADE_CHAR_TYPE
+
+		DWORD m_dwMainID;
+
+	private:
+		struct stSale {
+			stSale() : dwSaleID(0), nGridID(0), nDragID(0) {
+			}
+
+			DWORD dwSaleID;
+			int nGridID;
+			int nDragID;
+		};
+
+		stSale _sSale;
 	};
-	stSale		_sSale;
-
-};
-
 }
-

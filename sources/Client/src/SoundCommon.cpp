@@ -4,8 +4,7 @@
 
 using namespace std;
 
-string StringToLower(const string& theString)
-{
+string StringToLower(const string& theString) {
 	string aString;
 
 	for (unsigned i = 0; i < theString.length(); i++)
@@ -14,10 +13,8 @@ string StringToLower(const string& theString)
 	return aString;
 }
 
-string GetDirectSoundString( HRESULT theResult )
-{
-	switch(theResult)
-	{
+string GetDirectSoundString(HRESULT theResult) {
+	switch (theResult) {
 	case DSERR_ALLOCATED: return "DSERR_ALLOCATED";
 	case DSERR_ALREADYINITIALIZED: return "DSERR_ALREADYINITIALIZED";
 	case DSERR_BADFORMAT: return "DSERR_BADFORMAT";
@@ -36,41 +33,36 @@ string GetDirectSoundString( HRESULT theResult )
 	}
 
 	char aBuf[50];
-	sprintf(aBuf,"%x",theResult);
+	sprintf(aBuf, "%x", theResult);
 	return aBuf;
 }
 
-void MkDir(const string& theDir)
-{
+void MkDir(const string& theDir) {
 	string aPath = theDir;
 
 	int aCurPos = 0;
-	for (;;)
-	{
+	for (;;) {
 		auto aSlashPos = aPath.find('\\', aCurPos);
-		if (aSlashPos == std::string::npos)
-		{
+		if (aSlashPos == std::string::npos) {
 			mkdir(aPath.c_str());
 			break;
 		}
 
-		aCurPos = aSlashPos+1;
+		aCurPos = aSlashPos + 1;
 
 		string aCurPath = aPath.substr(0, aSlashPos);
 		mkdir(aCurPath.c_str());
 	}
 }
 
-string GetFileDir(const string& thePath, bool withSlash)
-{
+string GetFileDir(const string& thePath, bool withSlash) {
 	int aLastSlash = max((int) thePath.rfind('\\'), (int) thePath.rfind('/'));
 
 	if (aLastSlash == -1)
 		return "";
-	else
-	{
+	else {
 		if (withSlash)
-			return thePath.substr(0, aLastSlash+1);
+			return thePath.substr(0, aLastSlash + 1);
 		else
 			return thePath.substr(0, aLastSlash);
 	}

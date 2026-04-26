@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-class CChatRecord
-{
+class CChatRecord {
 public:
 	CChatRecord(void);
 	~CChatRecord(void);

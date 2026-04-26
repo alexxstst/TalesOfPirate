@@ -3,22 +3,20 @@
 #include "lwSlotMap.h"
 
 LW_BEGIN
+	typedef lwSlotMapVoidPtr1024 lwObjectPoolSkeleton;
+	typedef lwSlotMapVoidPtr1024 lwObjectPoolSkin;
 
-typedef lwSlotMapVoidPtr1024 lwObjectPoolSkeleton;
-typedef lwSlotMapVoidPtr1024 lwObjectPoolSkin;
 
+	class lwSysCharacter {
+	private:
+		lwObjectPoolSkeleton* _pool_skeleton;
+		lwObjectPoolSkin* _pool_skinmesh;
 
-class lwSysCharacter
-{
-private:
-    lwObjectPoolSkeleton* _pool_skeleton;
-    lwObjectPoolSkin* _pool_skinmesh;
+	public:
+		lwSysCharacter();
+		~lwSysCharacter();
 
-public:
-    lwSysCharacter();
-    ~lwSysCharacter();
-
-    LW_RESULT QuerySkeleton( DWORD* ret_id, const char* file );
-};
+		LW_RESULT QuerySkeleton(DWORD* ret_id, const char* file);
+	};
 
 LW_END

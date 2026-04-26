@@ -2642,56 +2642,46 @@ void CCharacter::RenderCloakGlow() {
 	}
 }
 
-void CCharacter::_UpdateYaw()
-{
+void CCharacter::_UpdateYaw() {
 	SetYaw(Angle2Radian((float)_nYaw));
 	UpdateYawPitchRoll();
 	_nTurnCnt = 0;
 
-	if (GetDrunkState())
-	{
+	if (GetDrunkState()) {
 		UpdateChaMatrix();
 	}
 }
 
-void CCharacter::_UpdatePitch()
-{
+void CCharacter::_UpdatePitch() {
 	SetPitch(Angle2Radian((float)_nPitch));
-	if (GetDrunkState())
-	{
+	if (GetDrunkState()) {
 		UpdateChaMatrix();
 	}
 }
 
-void CCharacter::_UpdateRoll()
-{
+void CCharacter::_UpdateRoll() {
 	SetRoll(Angle2Radian((float)_nRoll));
-	if (GetDrunkState())
-	{
+	if (GetDrunkState()) {
 		UpdateChaMatrix();
 	}
 }
 
-void CCharacter::_UpdatePos()
-{
+void CCharacter::_UpdatePos() {
 	_vPos.x = (float)_nCurX / 100.0f;
 	_vPos.y = (float)_nCurY / 100.0f;
 	SetPos((float*)&_vPos);
-	if (GetDrunkState())
-	{
+	if (GetDrunkState()) {
 		UpdateChaMatrix();
 	}
 }
 
-void CCharacter::_CalPos(float fProgressRate)
-{
+void CCharacter::_CalPos(float fProgressRate) {
 	float fX = (float)_nLastPosX * (1.0f - fProgressRate) + (float)_nTargetX * fProgressRate;
 	float fY = (float)_nLastPosY * (1.0f - fProgressRate) + (float)_nTargetY * fProgressRate;
 	setPos((int)fX, (int)fY);
 }
 
-void CCharacter::_DetachAllItem()
-{
+void CCharacter::_DetachAllItem() {
 	DetachItem(LINK_ID_LEFTHAND);
 	DetachItem(LINK_ID_RIGHTHAND);
 	DetachItem(21);
@@ -2699,50 +2689,39 @@ void CCharacter::_DetachAllItem()
 	DetachItem(23);
 }
 
-void CCharacter::HitEffect(int nAngle)
-{
-	if (!_hits.empty())
-	{
-		for (hits::iterator it = _hits.begin(); it != _hits.end(); ++it)
-		{
+void CCharacter::HitEffect(int nAngle) {
+	if (!_hits.empty()) {
+		for (hits::iterator it = _hits.begin(); it != _hits.end(); ++it) {
 			SelfEffect(it->nEffectID, it->nDummy, false, -1, nAngle);
 		}
 	}
 }
 
-void CCharacter::MoveTo(int nTargetX, int nTargetY)
-{
+void CCharacter::MoveTo(int nTargetX, int nTargetY) {
 	ForceMove(nTargetX, nTargetY);
-	if (!_isArrive)
-	{
+	if (!_isArrive) {
 		FaceTo(_GetTargetAngle(nTargetX, nTargetY));
 	}
 }
 
-void CCharacter::CheckIsFightArea()
-{
-	if (_pScene->GetTerrain())
-	{
-		_InFight = !(_pScene->GetTerrain()->GetTile(GetCurX() / 100, GetCurY() / 100)->sRegion & enumAREA_TYPE_NOT_FIGHT);
+void CCharacter::CheckIsFightArea() {
+	if (_pScene->GetTerrain()) {
+		_InFight = !(_pScene->GetTerrain()->GetTile(GetCurX() / 100, GetCurY() / 100)->sRegion &
+			enumAREA_TYPE_NOT_FIGHT);
 	}
 }
 
-int CCharacter::GetPose(int pose)
-{
-	if (_InFight)
-	{
-		switch (pose)
-		{
+int CCharacter::GetPose(int pose) {
+	if (_InFight) {
+		switch (pose) {
 		case POSE_WAITING:
 			return POSE_WAITING2;
 		case POSE_RUN:
 			return POSE_RUN2;
 		}
 	}
-	else
-	{
-		switch (pose)
-		{
+	else {
+		switch (pose) {
 		case POSE_WAITING2:
 			return POSE_WAITING;
 		case POSE_RUN2:
@@ -2754,32 +2733,26 @@ int CCharacter::GetPose(int pose)
 	return pose;
 }
 
-void CCharacter::StopMove()
-{
-	if (_IsMoveTimeType)
-	{
+void CCharacter::StopMove() {
+	if (_IsMoveTimeType) {
 		_isArrive = true;
 	}
-	else
-	{
+	else {
 		_isStopMove = true;
 	}
 }
 
-void CCharacter::RefreshShadow()
-{
-	if (_IsShowShadow && (GetDefaultChaInfo()->chTerritory != defCHA_TERRITORY_SEA) && GetActor()->GetState() == enumNormal && !IsHide())
-	{
+void CCharacter::RefreshShadow() {
+	if (_IsShowShadow && (GetDefaultChaInfo()->chTerritory != defCHA_TERRITORY_SEA) && GetActor()->GetState() ==
+		enumNormal && !IsHide()) {
 		SetShadeShow(SCENENODE_SHADOW, true);
 	}
-	else
-	{
+	else {
 		SetShadeShow(SCENENODE_SHADOW, false);
 	}
 }
 
-void CCharacter::StopAni()
-{
+void CCharacter::StopAni() {
 	_Special.AllFalse();
 	_nHeightOff = 0;
 	_fMapHeight = 0.0f;
@@ -2789,25 +2762,35 @@ void CCharacter::StopAni()
 	_nCurY = _nHelixCenterY;
 }
 
-void CCharacter::setChaCtrlType(int type)
-{
+void CCharacter::setChaCtrlType(int type) {
 	_eChaCtrlType = (EChaCtrlType)type;
-	switch (type)
-	{
-	case enumCHACTRL_NONE:           _nDanger = 0;  break;
-	case enumCHACTRL_PLAYER:         _nDanger = 1;  break;
-	case enumCHACTRL_NPC:            _nDanger = 2;  break;
+	switch (type) {
+	case enumCHACTRL_NONE: _nDanger = 0;
+		break;
+	case enumCHACTRL_PLAYER: _nDanger = 1;
+		break;
+	case enumCHACTRL_NPC: _nDanger = 2;
+		break;
 
-	case enumCHACTRL_NPC_EVENT:      _nDanger = 7;  break;
-	case enumCHACTRL_MONS_TREE:      _nDanger = 7;  break;
-	case enumCHACTRL_MONS_MINE:      _nDanger = 7;  break;
-	case enumCHACTRL_MONS_FISH:      _nDanger = 7;  break;
-	case enumCHACTRL_MONS_DBOAT:     _nDanger = 7;  break;
+	case enumCHACTRL_NPC_EVENT: _nDanger = 7;
+		break;
+	case enumCHACTRL_MONS_TREE: _nDanger = 7;
+		break;
+	case enumCHACTRL_MONS_MINE: _nDanger = 7;
+		break;
+	case enumCHACTRL_MONS_FISH: _nDanger = 7;
+		break;
+	case enumCHACTRL_MONS_DBOAT: _nDanger = 7;
+		break;
 
-	case enumCHACTRL_PLAYER_PET:     _nDanger = 8;  break;
-	case enumCHACTRL_MONS_REPAIRABLE:_nDanger = 9;  break;
+	case enumCHACTRL_PLAYER_PET: _nDanger = 8;
+		break;
+	case enumCHACTRL_MONS_REPAIRABLE: _nDanger = 9;
+		break;
 
-	case enumCHACTRL_MONS:           _nDanger = 10; break;
-	default:                         _nDanger = 0;  break;
+	case enumCHACTRL_MONS: _nDanger = 10;
+		break;
+	default: _nDanger = 0;
+		break;
 	}
 }

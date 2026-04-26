@@ -5,19 +5,16 @@
 
 Connection::Connection(NetIF* netif)
 	: m_netif(netif), m_status(CNST_INVALID),
-	  m_timeout(0), m_tick(0), m_port(0)
-{
+	  m_timeout(0), m_tick(0), m_port(0) {
 	memset(m_hostname, 0, sizeof(m_hostname));
 }
 
-Connection::~Connection()
-{
+Connection::~Connection() {
 	if (m_connectThread.joinable())
 		m_connectThread.join();
 }
 
-bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
-{
+bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout) {
 	ToLogService("connections", "Connect: {}, {}", hostname, port);
 
 	if (m_status == CNST_CONNECTING || m_status == CNST_CONNECTED || m_status == CNST_HANDSHAKE)
@@ -50,7 +47,8 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 				//         
 				m_netif->GetClient().Disconnect(0);
 			}
-		} else {
+		}
+		else {
 			int expected = CNST_CONNECTING;
 			if (!m_status.compare_exchange_strong(expected, CNST_FAILURE)) {
 				//    (, CNST_TIMEOUT)
@@ -61,19 +59,16 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 	return true;
 }
 
-void Connection::Disconnect(int reason)
-{
+void Connection::Disconnect(int reason) {
 	ToLogService("connections", "Disconnect");
 	m_netif->GetClient().Disconnect(reason);
 }
 
-void Connection::OnDisconnect()
-{
+void Connection::OnDisconnect() {
 	m_status = CNST_INVALID;
 }
 
-void Connection::CHAPSTR(bool handshake)
-{
+void Connection::CHAPSTR(bool handshake) {
 	std::lock_guard<std::mutex> lock(m_mtx);
 	int newval = handshake ? CNST_HANDSHAKE : CNST_CONNECTED;
 	int old = m_status.exchange(newval);
@@ -84,17 +79,16 @@ void Connection::CHAPSTR(bool handshake)
 	}
 }
 
-int Connection::GetConnStat()
-{
+int Connection::GetConnStat() {
 	if (m_status == CNST_CONNECTING && m_timeout &&
-	    (GetTickCount() - m_tick) > m_timeout)
-	{
+		(GetTickCount() - m_tick) > m_timeout) {
 		std::lock_guard<std::mutex> lock(m_mtx);
 		int expected = CNST_CONNECTING;
 		if (m_status.compare_exchange_strong(expected, CNST_TIMEOUT)) {
 			//       ,   .
 			//   ,     Process().
-		} else if (expected == CNST_CONNECTED || expected == CNST_HANDSHAKE) {
+		}
+		else if (expected == CNST_CONNECTED || expected == CNST_HANDSHAKE) {
 			//    
 			m_status = expected;
 		}

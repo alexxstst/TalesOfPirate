@@ -383,7 +383,9 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 	else {
 		cha = CGameApp::GetCurScene()->SearchByID(id);
 		if (!cha) {
-			g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(259), id, list.nPointNum, list.SPos[0].x, list.SPos[0].y));
+			g_logManager.InternalLog(LogLevel::Debug, "network",
+									 SafeVFormat(GetLanguageString(259), id, list.nPointNum, list.SPos[0].x,
+												 list.SPos[0].y));
 			return;
 		}
 
@@ -392,16 +394,21 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 		if (!g_state) {
 			g_state = new CWaitMoveState(cha->GetActor());
 			if (!cha->GetActor()->SwitchState(g_state)) {
-				g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(260), static_cast<int>(cha->GetActor()->GetState(), cha->getLogName(),
-				   list.nPointNum, static_cast<int>(list.sState), list.SPos[1].x, list.SPos[1].y, GetTickCount())));
+				g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(
+											 GetLanguageString(260),
+											 static_cast<int>(cha->GetActor()->GetState(), cha->getLogName(),
+												 list.nPointNum, static_cast<int>(list.sState), list.SPos[1].x, list.
+												 SPos[1].y, GetTickCount())));
 				return;
 			}
 		}
 	}
 
 	if (!g_state) {
-		g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(261), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
-		   list.SPos[1].y, GetTickCount()));
+		g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(
+									 GetLanguageString(261), cha->getLogName(), list.nPointNum, list.sState,
+									 list.SPos[1].x,
+									 list.SPos[1].y, GetTickCount()));
 		return;
 	}
 
@@ -415,8 +422,10 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 			g_state->MoveEnd(list.SPos[list.nPointNum - 1].x, list.SPos[list.nPointNum - 1].y, list.sState);
 		}
 		else {
-			g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(262), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
-			   list.SPos[1].y, GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(
+										 GetLanguageString(262), cha->getLogName(), list.nPointNum, list.sState,
+										 list.SPos[1].x,
+										 list.SPos[1].y, GetTickCount()));
 		}
 	}
 }
@@ -448,16 +457,22 @@ void stNetActorCreate::SetValue(CCharacter* pCha) {
 #ifdef _LOG_NAME_
 	char pszLogName[256];
 	sprintf(pszLogName, "%s+%u", szName.c_str(), ulWorldID);
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SeeType:{}, Create Cha:{}, Type:{}", static_cast<int>(chSeeType), pCha->getName(),
-	   pCha->GetDefaultChaInfo()->szName));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CommID:{}, CommName:{}, MottoName:{}", ulCommID, szCommName, strMottoName));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SideID:[{}], sAngle:{}, GM:{}, Icon:{}", static_cast<int>(SSideInfo.chSideID), sAngle, static_cast<int>(chGMLv), sIcon));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("GuildID:{}, Name:{}, Motto:{}", lGuildID, strGuildName, strGuildMotto));
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SeeType:{}, Create Cha:{}, Type:{}",
+																	static_cast<int>(chSeeType), pCha->getName(),
+																	pCha->GetDefaultChaInfo()->szName));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("CommID:{}, CommName:{}, MottoName:{}", ulCommID, szCommName, strMottoName));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("SideID:[{}], sAngle:{}, GM:{}, Icon:{}", static_cast<int>(SSideInfo.chSideID),
+										 sAngle, static_cast<int>(chGMLv), sIcon));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("GuildID:{}, Name:{}, Motto:{}", lGuildID, strGuildName, strGuildMotto));
 #endif
 }
 
 CCharacter* stNetActorCreate::CreateCha() {
-	ToLogService("common", "Create WorldID:{}, ChaID = {}, Pos = [{},{}]", ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y);
+	ToLogService("common", "Create WorldID:{}, ChaID = {}, Pos = [{},{}]", ulWorldID, ulChaID, SArea.centre.x,
+				 SArea.centre.y);
 
 	if (chSeeType == enumENTITY_SEEN_SWITCH) {
 		CCharacter* pCha = g_stUIBoat.FindCha(ulWorldID);
@@ -476,7 +491,8 @@ CCharacter* stNetActorCreate::CreateCha() {
 
 	CCharacter* p = GetCharacter(ulWorldID);
 	if (p) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(264), szName.c_str(), ulWorldID, p->getLogName()));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 SafeVFormat(GetLanguageString(264), szName.c_str(), ulWorldID, p->getLogName()));
 		p->SetValid(FALSE);
 	}
 
@@ -493,13 +509,15 @@ CCharacter* stNetActorCreate::CreateCha() {
 
 	if (!p) {
 		ToLogService("network", LogLevel::Error,
-		   "msgNetCreateActor AddCharacter Failed:chType[{}], chCtrlType[{}], MainType[{}], id[{}], type[{}], x[{}], y[{}], name[{}]",
-		   static_cast<int>(pChaRec->chModalType), static_cast<int>(chCtrlType), static_cast<int>(chMainCha), ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y, szName);
+					 "msgNetCreateActor AddCharacter Failed:chType[{}], chCtrlType[{}], MainType[{}], id[{}], type[{}], x[{}], y[{}], name[{}]",
+					 static_cast<int>(pChaRec->chModalType), static_cast<int>(chCtrlType), static_cast<int>(chMainCha),
+					 ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y, szName);
 		return 0;
 	}
 
 	SPKCtrl.Exec(p);
-	p->SetMainType((eMainChaType)chMainCha); // This value is zero for enumENTITY_SEEN_SWITCH, only set on initial creation
+	p->SetMainType((eMainChaType)chMainCha);
+	// This value is zero for enumENTITY_SEEN_SWITCH, only set on initial creation
 	SetValue(p);
 
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("MainChaType:{}", static_cast<int>(chMainCha)));
@@ -593,7 +611,9 @@ CCharacter* stNetActorCreate::CreateCha() {
 }
 
 void stNetNPCShow::SetNpcShow(CCharacter* pCha) {
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("NpcType:{}\tNpcState:{}", static_cast<int>(byNpcType), static_cast<int>(byNpcState)));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("NpcType:{}\tNpcState:{}", static_cast<int>(byNpcType),
+										 static_cast<int>(byNpcState)));
 
 	if (pCha) {
 		pCha->setNpcState(byNpcState);
@@ -665,7 +685,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 	// Find attacker
 	CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(nID);
 	if (!pCha) {
-		g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(267), SSkillRep.lSkillID, nID));
+		g_logManager.InternalLog(LogLevel::Debug, "network",
+								 SafeVFormat(GetLanguageString(267), SSkillRep.lSkillID, nID));
 		return;
 	}
 
@@ -724,7 +745,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 		else {
 			state = dynamic_cast<CWaitAttackState*>(g_state);
 			if (!state) {
-				ToLogService("network", "msgNetActorSkillRep g_state[{}] not is CWaitAttackState", static_cast<int>(SSkillRep.byFightID));
+				ToLogService("network", "msgNetActorSkillRep g_state[{}] not is CWaitAttackState",
+							 static_cast<int>(SSkillRep.byFightID));
 				return;
 			}
 		}
@@ -1189,8 +1211,9 @@ void NetSay(stNetSay& netsay, DWORD dwColour) // Nearby chat
 	}
 
 	if (!cha->IsPlayer()) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(272), netsay.m_srcid, cha->getName().c_str(), cha->getLogName(),
-		   netsay.m_content));
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(272), netsay.m_srcid,
+																		cha->getName().c_str(), cha->getLogName(),
+																		netsay.m_content));
 	}
 
 	//g_stUICoze.OnRoadSay( cha, netsay.m_content );
@@ -1202,13 +1225,15 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 	return NULL;
 #endif
 
-	ToLogService("common", "Create - ID:{}, Angle:{}, Pos:[{}, {}], WorldID:{}, EventID:{}", info.lID, info.sAngle, info.SPos.x,
-	   info.SPos.y, info.lWorldID, info.SEvent.usEventID);
+	ToLogService("common", "Create - ID:{}, Angle:{}, Pos:[{}, {}], WorldID:{}, EventID:{}", info.lID, info.sAngle,
+				 info.SPos.x,
+				 info.SPos.y, info.lWorldID, info.SEvent.usEventID);
 
 	CGameScene* pScene = CGameApp::GetCurScene();
 	CSceneItem* pItem = pScene->SearchItemByID(info.lWorldID);
 	if (pItem) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(273), info.lID, pItem->GetItemInfo()->szName));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 SafeVFormat(GetLanguageString(273), info.lID, pItem->GetItemInfo()->szName));
 		pItem->SetValid(FALSE);
 	}
 
@@ -1245,9 +1270,12 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 				if (pFromCha->IsResource())
 					break;
 
-				ToLogService("common", "\tCreateItem, Type:{} - ID:{}, Name:{}, ItemPos:[{}, {}], WorldID:{}, ChaLogName:{}, ChaPos[{}, {}]",
-				   static_cast<int>(info.chAppeType), info.lID, pItem->GetItemInfo()->szName, info.SPos.x, info.SPos.y, info.lWorldID,
-				   pFromCha->getLogName(), pFromCha->GetCurX(), pFromCha->GetCurY());
+				ToLogService(
+					"common",
+					"\tCreateItem, Type:{} - ID:{}, Name:{}, ItemPos:[{}, {}], WorldID:{}, ChaLogName:{}, ChaPos[{}, {}]",
+					static_cast<int>(info.chAppeType), info.lID, pItem->GetItemInfo()->szName, info.SPos.x, info.SPos.y,
+					info.lWorldID,
+					pFromCha->getLogName(), pFromCha->GetCurX(), pFromCha->GetCurY());
 
 				if (info.chAppeType == enumITEM_APPE_MONS) {
 					if (pFromCha->GetActor()->AddDieExec(pThrowItem)) {
@@ -1379,7 +1407,8 @@ void NetTempChangeChaPart(unsigned int nID, stTempChangeChaPart& SPart) {
 void NetActorChangeCha(unsigned int nID, stNetChangeCha& SChangeCha) {
 	// log
 	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(278), GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("New Character ID: {}\tOld Character ID: {}", SChangeCha.ulMainChaID, nID));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("New Character ID: {}\tOld Character ID: {}", SChangeCha.ulMainChaID, nID));
 	//
 
 	g_stUIBoat.ChangeMainCha(SChangeCha.ulMainChaID);
@@ -1956,7 +1985,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 	int count = SKitbag.nGridNum;
 	if (count > grd->GetMaxNum()) {
 		count = grd->GetMaxNum();
-		g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(280), SKitbag.nGridNum, grd->GetMaxNum()));
+		g_logManager.InternalLog(LogLevel::Debug, "network",
+								 SafeVFormat(GetLanguageString(280), SKitbag.nGridNum, grd->GetMaxNum()));
 	}
 
 	CItemRecord* item = NULL;
@@ -1970,7 +2000,7 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 
 	for (int i = 0; i < count; i++) {
 		ToLogService("common", "ID:{}, GridID:{}, Num:{}", pGrid[i].SGridContent.sID, pGrid[i].sGridID,
-		   pGrid[i].SGridContent.sNum);
+					 pGrid[i].SGridContent.sNum);
 
 		if (pGrid[i].SGridContent.sID > 0) {
 			if (chType == enumSYN_KITBAG_EQUIP) {
@@ -1984,7 +2014,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			}
 			item = GetItemRecordInfo(pGrid[i].SGridContent.sID);
 			if (!item) {
-				g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(281), pGrid[i].SGridContent.sID));
+				g_logManager.InternalLog(LogLevel::Debug, "network",
+										 SafeVFormat(GetLanguageString(281), pGrid[i].SGridContent.sID));
 				continue;
 			}
 
@@ -1996,7 +2027,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 				nMarginNum = 0;
 				pObj = new CItemCommand(item);
 				if (!grd->SetItem(pGrid[i].sGridID, pObj)) {
-					g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(282), item->szName, pGrid[i].sGridID));
+					g_logManager.InternalLog(LogLevel::Debug, "network",
+											 SafeVFormat(GetLanguageString(282), item->szName, pGrid[i].sGridID));
 					continue;
 				}
 			}
@@ -2007,19 +2039,24 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			nMarginNum = pObj->GetTotalNum() - nMarginNum;
 
 
-		if (SKitbag.chBagType != 1 && nMarginNum > 0) // modify by Philip.Wu  2006-06-21  Picking 0 items BUG fix
+			if (SKitbag.chBagType != 1 && nMarginNum > 0) // modify by Philip.Wu  2006-06-21  Picking 0 items BUG fix
 			{
 				switch (chType) {
-				case enumSYN_KITBAG_PICK: g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(283), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_PICK: g_pGameApp->SysInfo(
+						"%s", SafeVFormat(GetLanguageString(283), item->szName, nMarginNum).c_str());
 					break;
-			//case enumSYN_KITBAG_FROM_NPC:	g_pGameApp->SysInfo("NPC gave [%s x %d]!", item->szName, nMarginNum );	break;
-				case enumSYN_KITBAG_SYSTEM: g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(284), item->szName, nMarginNum).c_str());
+				//case enumSYN_KITBAG_FROM_NPC:	g_pGameApp->SysInfo("NPC gave [%s x %d]!", item->szName, nMarginNum );	break;
+				case enumSYN_KITBAG_SYSTEM: g_pGameApp->SysInfo(
+						"%s", SafeVFormat(GetLanguageString(284), item->szName, nMarginNum).c_str());
 					break;
-				case enumSYN_KITBAG_TRADE: g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(285), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_TRADE: g_pGameApp->SysInfo(
+						"%s", SafeVFormat(GetLanguageString(285), item->szName, nMarginNum).c_str());
 					break;
-				case enumSYN_KITBAG_FORGES: g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(286), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_FORGES: g_pGameApp->SysInfo(
+						"%s", SafeVFormat(GetLanguageString(286), item->szName, nMarginNum).c_str());
 					break;
-				case enumSYN_KITBAG_FORGEF: g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(287), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_FORGEF: g_pGameApp->SysInfo(
+						"%s", SafeVFormat(GetLanguageString(287), item->szName, nMarginNum).c_str());
 					break;
 				}
 			}
@@ -2043,7 +2080,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 				case enumSYN_KITBAG_SWITCH:
 					break;
 				default:
-					g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(288), pGrid[i].sGridID));
+					g_logManager.InternalLog(LogLevel::Debug, "network",
+											 SafeVFormat(GetLanguageString(288), pGrid[i].sGridID));
 				}
 				continue;
 			}

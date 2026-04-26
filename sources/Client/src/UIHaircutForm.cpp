@@ -22,45 +22,40 @@
 
 //         UI-
 inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
-	char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
+	char _buf[512];
+	snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
 	g_logManager.InternalLog(LogLevel::Error, "common", _buf);
 	return false;
 }
 
-namespace GUI
-{
+namespace GUI {
 	//~ ==================================================================
-	CHaircutMgr::CHaircutMgr()
-	{
+	CHaircutMgr::CHaircutMgr() {
 		m_pHairTools = new CHairTools;
 	}
 
 	//~ ==================================================================
-	CHaircutMgr::~CHaircutMgr()
-	{
+	CHaircutMgr::~CHaircutMgr() {
 		//delete m_pHairTools;
 		SAFE_DELETE(m_pHairTools); // UI
 	}
 
 	//~ ==================================================================
-	bool CHaircutMgr::Init()
-	{
-		CFormMgr &mgr = CFormMgr::s_Mgr;
+	bool CHaircutMgr::Init() {
+		CFormMgr& mgr = CFormMgr::s_Mgr;
 
 		frmHaircut = mgr.Find("frmHead", enumMainForm);
-		if ( !frmHaircut)
-		{
+		if (!frmHaircut) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(615).c_str());
 			return false;
 		}
-		frmHaircut->evtEntrustMouseEvent = _MainMouseHaircutEvent ;
+		frmHaircut->evtEntrustMouseEvent = _MainMouseHaircutEvent;
 		frmHaircut->evtClose = _MainOnCloseEvent;
 
 		char szBuf[16];
-		for (int i(0); i<defHAIR_MAX_ITEM; i++)
-		{
-			sprintf(szBuf, "cmdHead%d", i+1);
-			cmdProp[i] = dynamic_cast<COneCommand *>(frmHaircut->Find(szBuf));
+		for (int i(0); i < defHAIR_MAX_ITEM; i++) {
+			sprintf(szBuf, "cmdHead%d", i + 1);
+			cmdProp[i] = dynamic_cast<COneCommand*>(frmHaircut->Find(szBuf));
 			if (!cmdProp[i])
 				return Error(GetLanguageString(616).c_str(),
 							 frmHaircut->GetName(), szBuf);
@@ -83,62 +78,55 @@ namespace GUI
 
 		// 
 		CTextButton* btnLeftColor = (CTextButton*)frmHaircut->Find("btnLeftColor");
-		if( !btnLeftColor ) 
-		{
+		if (!btnLeftColor) {
 			Error(GetLanguageString(616).c_str(),
-				frmHaircut->GetName(), "btnLeftColor");
+				  frmHaircut->GetName(), "btnLeftColor");
 			return false;
 		}
 		btnLeftColor->evtMouseClick = _gui_event_left_color;
 
 		CTextButton* btnRightColor = (CTextButton*)frmHaircut->Find("btnRightColor");
-		if( !btnRightColor ) 
-		{
+		if (!btnRightColor) {
 			Error(GetLanguageString(616).c_str(),
-				frmHaircut->GetName(), "btnRightColor");
+				  frmHaircut->GetName(), "btnRightColor");
 			return false;
 		}
 		btnRightColor->evtMouseClick = _gui_event_right_color;
 
 		CTextButton* btnLeftHair = (CTextButton*)frmHaircut->Find("btnLeftHair");
-		if( !btnLeftHair ) 
-		{
+		if (!btnLeftHair) {
 			Error(GetLanguageString(616).c_str(),
-				frmHaircut->GetName(), "btnLeftHair");
+				  frmHaircut->GetName(), "btnLeftHair");
 			return false;
 		}
 		btnLeftHair->evtMouseClick = _gui_event_left_hair;
 
 		CTextButton* btnRightHair = (CTextButton*)frmHaircut->Find("btnRightHair");
-		if( !btnLeftHair ) 
-		{
+		if (!btnLeftHair) {
 			Error(GetLanguageString(616).c_str(),
-				frmHaircut->GetName(), "btnRightHair");
+				  frmHaircut->GetName(), "btnRightHair");
 			return false;
 		}
 		btnRightHair->evtMouseClick = _gui_event_right_hair;
 
-		C3DCompent* ui3dCreateCha = (C3DCompent*)frmHaircut->Find( "ui3dCreateCha" );
-		if( ui3dCreateCha )
-		{
-			ui3dCreateCha->SetRenderEvent( _cha_render_event );
+		C3DCompent* ui3dCreateCha = (C3DCompent*)frmHaircut->Find("ui3dCreateCha");
+		if (ui3dCreateCha) {
+			ui3dCreateCha->SetRenderEvent(_cha_render_event);
 		}
 
 		CTextButton* btnLeft3d = (CTextButton*)frmHaircut->Find("btnLeft3d");
-		if (!btnLeft3d)
-		{
+		if (!btnLeft3d) {
 			Error(GetLanguageString(45).c_str(),
-				frmHaircut->GetName(), "btnLeft3d");
+				  frmHaircut->GetName(), "btnLeft3d");
 			return false;
 		}
 		btnLeft3d->evtMouseClick = _gui_event_left_rotate;
 		btnLeft3d->evtMouseDownContinue = _gui_event_left_continue_rotate;
 
 		CTextButton* btnRight3d = (CTextButton*)frmHaircut->Find("btnRight3d");
-		if (!btnRight3d)
-		{
+		if (!btnRight3d) {
 			Error(GetLanguageString(45).c_str(),
-				frmHaircut->GetName(), "btnRight3d");
+				  frmHaircut->GetName(), "btnRight3d");
 			return false;
 		}
 		btnRight3d->evtMouseClick = _gui_event_right_rotate;
@@ -146,36 +134,33 @@ namespace GUI
 		return true;
 	}
 
-	void CHaircutMgr::CloseForm()
-	{
-		if (frmHaircut->GetIsShow())
-		{
+	void CHaircutMgr::CloseForm() {
+		if (frmHaircut->GetIsShow()) {
 			frmHaircut->SetIsShow(false);
 		}
 	}
 
-	void CHaircutMgr::SwitchMap()
-	{
+	void CHaircutMgr::SwitchMap() {
 		m_pCurrMainCha = 0;
 	}
 
 
-
 	//~ ==================================================================
-	void CHaircutMgr::ShowHaircutForm()
-	{
+	void CHaircutMgr::ShowHaircutForm() {
 		//CCharacter* pCha = g_pGameApp->GetCurScene()->GetGoodsCha();
 		//if (!pCha) return;
 
 		CCharacter* pMainCha = g_stUIBoat.GetHuman();
-		if (!pMainCha){ g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(617).c_str()); return; }
+		if (!pMainCha) {
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(617).c_str());
+			return;
+		}
 
-		m_pHairTools->RefreshCha( pMainCha->GetDefaultChaInfo()->lID );
+		m_pHairTools->RefreshCha(pMainCha->GetDefaultChaInfo()->lID);
 		//
-		
-		if( (m_dwHairTypeMaxNum = m_pHairTools->GetHairMax()) <= 0 ) 
-		{
-			g_pGameApp->MsgBox("%s", GetLanguageString(618).c_str() );
+
+		if ((m_dwHairTypeMaxNum = m_pHairTools->GetHairMax()) <= 0) {
+			g_pGameApp->MsgBox("%s", GetLanguageString(618).c_str());
 			return;
 		}
 
@@ -185,32 +170,32 @@ namespace GUI
 		//
 		frmHaircut->Show();
 
-		CCharacter* pCha = CGameApp::GetCurScene()->AddCharacter( pMainCha->getTypeID() );
-		if( !pCha ) { g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(619).c_str()); return; }
+		CCharacter* pCha = CGameApp::GetCurScene()->AddCharacter(pMainCha->getTypeID());
+		if (!pCha) {
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(619).c_str());
+			return;
+		}
 		pCha->GetActor()->SetSleep();
 		pCha->UpdataFace(pMainCha->GetPart());
 
 		m_pCurrMainCha = pCha;
 		Refresh(0, 0);
-		m_pCurrMainCha->PlayPose( 1, PLAY_LOOP_SMOOTH );
+		m_pCurrMainCha->PlayPose(1, PLAY_LOOP_SMOOTH);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::Refresh(DWORD dwHairType, DWORD dwHairColor)
-	{
+	void CHaircutMgr::Refresh(DWORD dwHairType, DWORD dwHairColor) {
 		m_dwHairTypeIndex = dwHairType;
 		m_dwHairColorIndex = dwHairColor;
 
 		CHairName* pHairName = m_pHairTools->GetHair(m_dwHairTypeIndex);
-		if (!pHairName)
-		{
+		if (!pHairName) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(620).c_str());
 			return;
 		}
 
 
-		if ( (m_dwHairColorMaxNum = pHairName->GetMax()) <= 0)
-		{
+		if ((m_dwHairColorMaxNum = pHairName->GetMax()) <= 0) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(621).c_str());
 			return;
 		}
@@ -231,60 +216,55 @@ namespace GUI
 		m_dwHairTypeIndex = dwHairType;
 		m_dwHairColorIndex = dwHairColor;
 
-		for ( int j(0); j<pGrid->GetMaxNum(); j++)
-		{
+		for (int j(0); j < pGrid->GetMaxNum(); j++) {
 			CCommandObj* pObj = pGrid->GetItem(j);
-			if(pObj){
+			if (pObj) {
 				CItemCommand* pItem = dynamic_cast<CItemCommand*>(pObj);
-				if( !pItem ) {
+				if (!pItem) {
 					continue;
 				}
-				pItem->SetIsValid( true );
+				pItem->SetIsValid(true);
 			}
 		}
 
 		// 
 		CItemCommand* propItem = NULL;
-		for (int i(0); i<defHAIR_MAX_ITEM; i++)
-		{
-			CItemRecord *pItemRecord = GetItemRecordInfo(pHairRecord->dwNeedItem[i][0]);
+		for (int i(0); i < defHAIR_MAX_ITEM; i++) {
+			CItemRecord* pItemRecord = GetItemRecordInfo(pHairRecord->dwNeedItem[i][0]);
 			if (!pItemRecord) continue;
 
-			propItem = new CItemCommand( pItemRecord );
-			cmdProp[i]->AddCommand( propItem );
-			propItem->SetTotalNum( pHairRecord->dwNeedItem[i][1] );
+			propItem = new CItemCommand(pItemRecord);
+			cmdProp[i]->AddCommand(propItem);
+			propItem->SetTotalNum(pHairRecord->dwNeedItem[i][1]);
 
 			CItemCommand* pItem = NULL;
-			int j=0;
-			for (j=0; j<pGrid->GetMaxNum(); j++)
-			{
+			int j = 0;
+			for (j = 0; j < pGrid->GetMaxNum(); j++) {
 				pItem = dynamic_cast<CItemCommand*>(pGrid->GetItem(j));
-				if( !pItem ) continue;
+				if (!pItem) continue;
 
-				if( !pItem->GetIsValid() ) continue;
+				if (!pItem->GetIsValid()) continue;
 
-				if( pItem->GetItemInfo()->Id==pHairRecord->dwNeedItem[i][0])
-				{
-					if( pItem->GetTotalNum()>=(int)pHairRecord->dwNeedItem[i][1] )
+				if (pItem->GetItemInfo()->Id == pHairRecord->dwNeedItem[i][0]) {
+					if (pItem->GetTotalNum() >= (int)pHairRecord->dwNeedItem[i][1])
 						break;
 				}
 			}
-			
-			if (j < pGrid->GetMaxNum())
-			{	//
+
+			if (j < pGrid->GetMaxNum()) {
+				//
 				m_iGoodsIndex[i] = j;
-				pItem->SetIsValid( false );
+				pItem->SetIsValid(false);
 			}
-			else
-			{	// 
+			else {
+				// 
 				m_iGoodsIndex[i] = -1;
-				propItem->SetIsValid( false );
+				propItem->SetIsValid(false);
 			}
 		}
-	
+
 		// 
-		if (m_pCurrMainCha)
-		{
+		if (m_pCurrMainCha) {
 			// ,
 			lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
 			BYTE loadtex_flag = res_bs->GetValue(OPT_RESMGR_LOADTEXTURE_MT);
@@ -292,26 +272,25 @@ namespace GUI
 			res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, 0);
 			res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, 0);
 
-			m_pCurrMainCha->ChangePart( enumEQUIP_HEAD, pHairRecord->dwItemID );
+			m_pCurrMainCha->ChangePart(enumEQUIP_HEAD, pHairRecord->dwItemID);
 
-            res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, loadtex_flag);
-            res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, loadmesh_flag);
+			res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, loadtex_flag);
+			res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, loadmesh_flag);
 
-			m_pCurrMainCha->PlayPose( 1, PLAY_LOOP_SMOOTH );
+			m_pCurrMainCha->PlayPose(1, PLAY_LOOP_SMOOTH);
 		}
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::RenderCha(int x,int y)
-	{
-		if( !m_pCurrMainCha ) return;
+	void CHaircutMgr::RenderCha(int x, int y) {
+		if (!m_pCurrMainCha) return;
 
-		g_Render.LookAt( D3DXVECTOR3( 11.0f, 36.0f, 10.0f ), D3DXVECTOR3( 8.70f, 12.0f, 8.0f ), MPRender::VIEW_3DUI );
-		y +=100;
+		g_Render.LookAt(D3DXVECTOR3(11.0f, 36.0f, 10.0f), D3DXVECTOR3(8.70f, 12.0f, 8.0f), MPRender::VIEW_3DUI);
+		y += 100;
 
 		MPMatrix44 old_mat = *m_pCurrMainCha->GetMatrix();
 		m_pCurrMainCha->SetUIYaw(180 + m_nChaRotate);
-		m_pCurrMainCha->SetUIScaleDis(9.0f * g_Render.GetScrWidth()/TINY_RES_X );
+		m_pCurrMainCha->SetUIScaleDis(9.0f * g_Render.GetScrWidth() / TINY_RES_X);
 		m_pCurrMainCha->RenderForUI(x, y);
 		m_pCurrMainCha->SetMatrix(&old_mat);
 
@@ -319,18 +298,15 @@ namespace GUI
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::RotateCha(eDirectType enumDirect)
-	{
+	void CHaircutMgr::RotateCha(eDirectType enumDirect) {
 		m_nChaRotate += 180;
 		m_nChaRotate += -((int)(enumDirect)) * 15;
 		m_nChaRotate = (m_nChaRotate + 360) % 360;
 		m_nChaRotate -= 180;
-
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::ChangeHairColor(eDirectType enumDirect)
-	{
+	void CHaircutMgr::ChangeHairColor(eDirectType enumDirect) {
 		m_dwHairColorIndex += ((int)(enumDirect));
 
 		// 
@@ -340,8 +316,7 @@ namespace GUI
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::ChangeHairType(eDirectType enumDirect)
-	{
+	void CHaircutMgr::ChangeHairType(eDirectType enumDirect) {
 		m_dwHairTypeIndex += ((int)(enumDirect));
 
 		// 
@@ -351,23 +326,21 @@ namespace GUI
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_MainMouseHaircutEvent(CCompent *pSender, int nMsgType, 
-		int x, int y, DWORD dwKey)
-	{
-		if( nMsgType!=CForm::mrYes ) return;
+	void CHaircutMgr::_MainMouseHaircutEvent(CCompent* pSender, int nMsgType,
+											 int x, int y, DWORD dwKey) {
+		if (nMsgType != CForm::mrYes) return;
 
 		//
 		stNetUpdateHair sNetUpdateHair;
-		memset( &sNetUpdateHair, 0, sizeof(sNetUpdateHair) );
+		memset(&sNetUpdateHair, 0, sizeof(sNetUpdateHair));
 		sNetUpdateHair.sScriptID = g_stUIHaircut.m_sScriptID;
-		for( int i=0; i<defHAIR_MAX_ITEM; i++ )
+		for (int i = 0; i < defHAIR_MAX_ITEM; i++)
 			sNetUpdateHair.sGridLoc[i] = g_stUIHaircut.m_iGoodsIndex[i];
-		CS_UpdateHair( sNetUpdateHair );
+		CS_UpdateHair(sNetUpdateHair);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_MainOnCloseEvent( CForm* pForm, bool& IsClose )
-	{
+	void CHaircutMgr::_MainOnCloseEvent(CForm* pForm, bool& IsClose) {
 		if (!g_stUIHaircut.m_pCurrMainCha)
 			return;
 
@@ -375,75 +348,64 @@ namespace GUI
 		g_stUIHaircut.Clear();
 
 		stNetUpdateHair sNetUpdateHair;
-		memset( &sNetUpdateHair, 0, sizeof(sNetUpdateHair) );
-		CS_UpdateHair( sNetUpdateHair );
+		memset(&sNetUpdateHair, 0, sizeof(sNetUpdateHair));
+		CS_UpdateHair(sNetUpdateHair);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_left_color(CGuiData *sender, int x, int y, DWORD key )
-	{
+	void CHaircutMgr::_gui_event_left_color(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.ChangeHairColor(LEFT);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_right_color(CGuiData *sender, int x, int y, DWORD key )
-	{
+	void CHaircutMgr::_gui_event_right_color(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.ChangeHairColor(RIGHT);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_left_hair(CGuiData *sender, int x, int y, DWORD key )
-	{
+	void CHaircutMgr::_gui_event_left_hair(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.ChangeHairType(LEFT);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_right_hair(CGuiData *sender, int x, int y, DWORD key )
-	{
+	void CHaircutMgr::_gui_event_right_hair(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.ChangeHairType(RIGHT);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_left_rotate(CGuiData *sender, int x, int y, DWORD key )
-	{
+	void CHaircutMgr::_gui_event_left_rotate(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.RotateCha(LEFT);
 	}
-	
+
 	//~ ==================================================================
-	void CHaircutMgr::_gui_event_right_rotate(CGuiData *sender, int x, int y, DWORD key )
-	{
-		g_stUIHaircut.RotateCha(RIGHT);
-	}
-	
-	//~ ==================================================================
-	void CHaircutMgr::_gui_event_left_continue_rotate(CGuiData *sender )
-	{
-		g_stUIHaircut.RotateCha(LEFT);
-	}
-	
-	//~ ==================================================================
-	void CHaircutMgr::_gui_event_right_continue_rotate(CGuiData *sender )
-	{
+	void CHaircutMgr::_gui_event_right_rotate(CGuiData* sender, int x, int y, DWORD key) {
 		g_stUIHaircut.RotateCha(RIGHT);
 	}
 
 	//~ ==================================================================
-	void CHaircutMgr::_cha_render_event( C3DCompent *pSender, int x, int y)
-	{
+	void CHaircutMgr::_gui_event_left_continue_rotate(CGuiData* sender) {
+		g_stUIHaircut.RotateCha(LEFT);
+	}
+
+	//~ ==================================================================
+	void CHaircutMgr::_gui_event_right_continue_rotate(CGuiData* sender) {
+		g_stUIHaircut.RotateCha(RIGHT);
+	}
+
+	//~ ==================================================================
+	void CHaircutMgr::_cha_render_event(C3DCompent* pSender, int x, int y) {
 		g_stUIHaircut.RenderCha(x, y);
 	}
 
-	void CHaircutMgr::Clear()
-	{
+	void CHaircutMgr::Clear() {
 		CGoodsGrid* pGrid = g_stUIEquip.GetGoodsGrid();
 		if (!pGrid) return;
 
-		for ( int j(0); j<pGrid->GetMaxNum(); j++)
-		{
+		for (int j(0); j < pGrid->GetMaxNum(); j++) {
 			CItemCommand* pItem = dynamic_cast<CItemCommand*>(pGrid->GetItem(j));
-			if( !pItem ) continue;
+			if (!pItem) continue;
 
-			pItem->SetIsValid( true );
+			pItem->SetIsValid(true);
 		}
 	}
 }

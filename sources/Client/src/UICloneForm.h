@@ -5,51 +5,55 @@
 //----------------------------------------------------------------------
 #pragma once
 
-namespace GUI
-{
-class CForm;
+namespace GUI {
+	class CForm;
 
-// ,,, 
-class CCloneForm
-{
-public:
-	CCloneForm();
-	~CCloneForm();
+	// ,,, 
+	class CCloneForm {
+	public:
+		CCloneForm();
+		~CCloneForm();
 
-	void	SetSample( CForm* frm )	{ _pSample = frm;	}
+		void SetSample(CForm* frm) {
+			_pSample = frm;
+		}
 
-	CForm*	Clone();
-	bool	Release( CForm* p );
+		CForm* Clone();
+		bool Release(CForm* p);
 
-private:
-	CForm*	_pSample;		// 
+	private:
+		CForm* _pSample; // 
 
-	typedef std::vector<CForm*>	vfrm;
-	vfrm	_vfrm;
+		typedef std::vector<CForm*> vfrm;
+		vfrm _vfrm;
 
-    int     _nCount;		// 
+		int _nCount; // 
+	};
 
-};
+	// ,,,
+	class CHideForm {
+	public:
+		void Init(CForm* frm) {
+			_vfrm.push_back(frm);
+		}
 
-// ,,,
-class CHideForm
-{
-public:
-	void	Init( CForm* frm )		{ _vfrm.push_back( frm );	}
+		CForm* GetHide();
+		void CloseAll(); // 
 
-	CForm*	GetHide();
-	void	CloseAll();		// 
+		CForm* GetForm(int n) {
+			return _vfrm[n];
+		}
 
-	CForm*  GetForm( int n )		{ return _vfrm[n];			}
-	int		GetCount()				{ return (int)_vfrm.size();	}
+		int GetCount() {
+			return (int)_vfrm.size();
+		}
 
-	CForm*  operator[]( int n )		{ return _vfrm[n];			}
+		CForm* operator[](int n) {
+			return _vfrm[n];
+		}
 
-private:
-	typedef std::vector<CForm*>	vfrm;
-	vfrm	_vfrm;
-
-};
-
+	private:
+		typedef std::vector<CForm*> vfrm;
+		vfrm _vfrm;
+	};
 }
-

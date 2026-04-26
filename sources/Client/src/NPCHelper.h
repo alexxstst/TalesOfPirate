@@ -6,16 +6,14 @@
 
 enum class NPCHelperType { MonsterList, NPCList };
 
-inline NPCData* GetNPCDataInfo(int nTypeID, NPCHelperType type)
-{
+inline NPCData* GetNPCDataInfo(int nTypeID, NPCHelperType type) {
 	if (type == NPCHelperType::MonsterList)
 		return MonsterListRecordStore::Instance()->Get(nTypeID);
 	else
 		return NPCListRecordStore::Instance()->Get(nTypeID);
 }
 
-inline int GetNPCMaxId(NPCHelperType type)
-{
+inline int GetNPCMaxId(NPCHelperType type) {
 	if (type == NPCHelperType::MonsterList)
 		return MonsterListRecordStore::Instance()->GetMaxId();
 	else

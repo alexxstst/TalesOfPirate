@@ -12,8 +12,7 @@ typedef unsigned int ABGR;
 @remarks
 	40.01.0
 */
-class MPColorValue
-{
+class MPColorValue {
 public:
 	static MPColorValue Black;
 	static MPColorValue White;
@@ -22,17 +21,18 @@ public:
 	static MPColorValue Blue;
 
 	explicit MPColorValue(float red = 1.0f, float green = 1.0f,
-						  float blue = 1.0f,float alpha = 1.0f ) 
-		: r(red), g(green), b(blue), a(alpha)
-	{ }
+						  float blue = 1.0f, float alpha = 1.0f)
+		: r(red), g(green), b(blue), a(alpha) {
+	}
 
 	bool operator==(const MPColorValue& rhs) const;
 	bool operator!=(const MPColorValue& rhs) const;
 
 	union {
 		struct {
-			float r,g,b,a;
+			float r, g, b, a;
 		};
+
 		float val[4];
 	};
 
@@ -59,8 +59,7 @@ public:
 	*/
 	void setAsABGR(const ABGR val);
 
-	inline MPColorValue& operator += ( const MPColorValue& rkVector )
-	{
+	inline MPColorValue& operator +=(const MPColorValue& rkVector) {
 		r += rkVector.r;
 		g += rkVector.g;
 		b += rkVector.b;
@@ -69,8 +68,7 @@ public:
 		return *this;
 	}
 
-	inline MPColorValue& operator -= ( const MPColorValue& rkVector )
-	{
+	inline MPColorValue& operator -=(const MPColorValue& rkVector) {
 		r -= rkVector.r;
 		g -= rkVector.g;
 		b -= rkVector.b;
@@ -79,8 +77,7 @@ public:
 		return *this;
 	}
 
-	inline MPColorValue& operator *= (const float fScalar )
-	{
+	inline MPColorValue& operator *=(const float fScalar) {
 		r *= fScalar;
 		g *= fScalar;
 		b *= fScalar;
@@ -88,9 +85,8 @@ public:
 		return *this;
 	}
 
-	inline MPColorValue& operator /= (const float fScalar )
-	{
-		assert( fScalar != 0.0 );
+	inline MPColorValue& operator /=(const float fScalar) {
+		assert(fScalar != 0.0);
 
 		float fInv = 1.0 / fScalar;
 
@@ -102,8 +98,7 @@ public:
 		return *this;
 	}
 
-	inline MPColorValue& operator /= (const MPColorValue& rkVector )
-	{
+	inline MPColorValue& operator /=(const MPColorValue& rkVector) {
 		r /= rkVector.r;
 		g /= rkVector.g;
 		b /= rkVector.b;
@@ -115,8 +110,7 @@ public:
 
 //=============================================================================
 //=============================================================================
-inline const MPColorValue operator +(const MPColorValue& lhs, const MPColorValue& rhs)
-{
+inline const MPColorValue operator +(const MPColorValue& lhs, const MPColorValue& rhs) {
 	MPColorValue kSum;
 
 	kSum.r = lhs.r + rhs.r;
@@ -126,9 +120,9 @@ inline const MPColorValue operator +(const MPColorValue& lhs, const MPColorValue
 
 	return kSum;
 }
+
 //-----------------------------------------------------------------------------
-inline const MPColorValue operator -(const MPColorValue& lhs, const MPColorValue& rhs)
-{
+inline const MPColorValue operator -(const MPColorValue& lhs, const MPColorValue& rhs) {
 	MPColorValue kDiff;
 
 	kDiff.r = lhs.r - rhs.r;
@@ -138,26 +132,26 @@ inline const MPColorValue operator -(const MPColorValue& lhs, const MPColorValue
 
 	return kDiff;
 }
+
 //-----------------------------------------------------------------------------
-inline const MPColorValue operator *(const float fScalar, const MPColorValue& rhs)
-{
+inline const MPColorValue operator *(const float fScalar, const MPColorValue& rhs) {
 	MPColorValue kProd;
 
-	kProd.r = fScalar*rhs.r;
-	kProd.g = fScalar*rhs.g;
-	kProd.b = fScalar*rhs.b;
-	kProd.a = fScalar*rhs.a;
+	kProd.r = fScalar * rhs.r;
+	kProd.g = fScalar * rhs.g;
+	kProd.b = fScalar * rhs.b;
+	kProd.a = fScalar * rhs.a;
 
 	return kProd;
 }
+
 //-----------------------------------------------------------------------------
-inline const MPColorValue operator *(const MPColorValue& lhs, const float fScalar)
-{
+inline const MPColorValue operator *(const MPColorValue& lhs, const float fScalar) {
 	return (fScalar * lhs);
 }
+
 //-----------------------------------------------------------------------------
-inline const MPColorValue operator *(const MPColorValue& lhs, const MPColorValue& rhs)
-{
+inline const MPColorValue operator *(const MPColorValue& lhs, const MPColorValue& rhs) {
 	MPColorValue kProd;
 
 	kProd.r = lhs.r * rhs.r;
@@ -167,9 +161,9 @@ inline const MPColorValue operator *(const MPColorValue& lhs, const MPColorValue
 
 	return kProd;
 }
+
 //-----------------------------------------------------------------------------
-inline const MPColorValue operator /(const MPColorValue& lhs, const MPColorValue& rhs)
-{
+inline const MPColorValue operator /(const MPColorValue& lhs, const MPColorValue& rhs) {
 	MPColorValue kProd;
 
 	kProd.r = lhs.r / rhs.r;
@@ -179,10 +173,10 @@ inline const MPColorValue operator /(const MPColorValue& lhs, const MPColorValue
 
 	return kProd;
 }
+
 //-----------------------------------------------------------------------------
-inline MPColorValue operator /(const MPColorValue& lhs, const float fScalar )
-{
-	assert( fScalar != 0.0 );
+inline MPColorValue operator /(const MPColorValue& lhs, const float fScalar) {
+	assert(fScalar != 0.0);
 
 	MPColorValue kDiv;
 

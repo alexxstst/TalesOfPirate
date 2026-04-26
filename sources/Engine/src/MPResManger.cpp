@@ -66,8 +66,6 @@ CMPResManger::CMPResManger(void) {
 	_lstTobMeshs.clear();
 
 
-	ZeroMemory(_psDefault, 256);
-
 	WORD iw;
 	_vecMeshList.resize(MAXMESH_COUNT);
 	_vecPartCtrl.resize(MAXPART_COUNT);
@@ -237,8 +235,6 @@ bool CMPResManger::InitRes(MPRender* pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatvie
 	lstrcpy(_pszEFFectPath, "effect");
 
 	LoadTotalTexture();
-
-	LoadDefaultText("effect\\font.txt");
 
 	LoadTotalData();
 
@@ -1091,28 +1087,6 @@ bool CMPResManger::LoadTotalPath() {
 		FindClose(t_hFind);
 	}
 
-	return true;
-}
-
-bool CMPResManger::LoadDefaultText(const char* pszFileName) {
-	FILE* pfile = fopen(pszFileName, "rt");
-
-	if (!pfile) {
-		MessageBox(NULL, _psDefault, "ERROR", 0);
-		return false;
-	}
-	int idx = 0;
-	int rval = fgetc(pfile);
-	while (rval != EOF) {
-		_psDefault[idx] = (char)rval;
-
-		rval = fgetc(pfile);
-
-		idx++;
-		if (idx >= 418)
-			break;
-	}
-	fclose(pfile);
 	return true;
 }
 

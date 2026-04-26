@@ -9,52 +9,51 @@
 #include "UIGlobalVar.h"
 #include "NetProtocol.h"
 
-namespace GUI
-{
+namespace GUI {
 	class CForm;
 	class CGoodsGrid;
 	class CLabel;
 
 	struct stNumBox;
-     
-	class CGuildBankMgr : public CUIInterface
-	{
-	public:
-		void		ShowBank(); // 
-		CGoodsGrid* GetBankGoodsGrid() { return grdBank; } // 
 
-		bool		PushToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); // 
-		bool		PopFromBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); //
-		bool		BankToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem);  //
-		void		UpdateGuildGold(const char* value);
+	class CGuildBankMgr : public CUIInterface {
+	public:
+		void ShowBank(); // 
+		CGoodsGrid* GetBankGoodsGrid() {
+			return grdBank;
+		} // 
+
+		bool PushToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); // 
+		bool PopFromBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); //
+		bool BankToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); //
+		void UpdateGuildGold(const char* value);
+
 	protected:
 		virtual bool Init(); // 
 		virtual void CloseForm(); // 
 
 	private:
-		static void _MoveItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  // 
-		static void _MoveAItemEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  //
-		static void _evtBankToBank(CGuiData *pSender,int nFirst, int nSecond, bool& isSwap);  //
-		static void _evtOnClose( CForm* pForm, bool& IsClose );//
-		
-		static void _EnterGoldTake(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-		static void _EnterGoldPut(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-		static void _OnClickGoldTake(CGuiData *pSender, int x, int y, DWORD key);
-		static void _OnClickGoldPut(CGuiData *pSender, int x, int y, DWORD key);
+		static void _MoveItemsEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey); // 
+		static void _MoveAItemEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey); //
+		static void _evtBankToBank(CGuiData* pSender, int nFirst, int nSecond, bool& isSwap); //
+		static void _evtOnClose(CForm* pForm, bool& IsClose); //
+
+		static void _EnterGoldTake(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _EnterGoldPut(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _OnClickGoldTake(CGuiData* pSender, int x, int y, DWORD key);
+		static void _OnClickGoldPut(CGuiData* pSender, int x, int y, DWORD key);
 
 	private:
-		stNumBox*		m_pkNumberBox; // 
-		stNetBank		m_kNetBank;
+		stNumBox* m_pkNumberBox; // 
+		stNetBank m_kNetBank;
 
 		// 
-		CForm*			frmBank; // 
-		CGoodsGrid*	grdBank; // 
-		CLabel*			labGuildMoney;
-		CTextButton*	btnGoldPut;
-		CTextButton*	btnGoldTake;
-
+		CForm* frmBank; // 
+		CGoodsGrid* grdBank; // 
+		CLabel* labGuildMoney;
+		CTextButton* btnGoldPut;
+		CTextButton* btnGoldTake;
 	}; // end of class CGuildBankMgr
-
 } // end of namespace GUI
 
 #endif // end of UI_BANK_FORM_H

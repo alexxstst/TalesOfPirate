@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-enum eFormTemplete
-{
+enum eFormTemplete {
 	enumLoginForm = 0,
 	enumMainForm,
 	enumSelectChaForm,

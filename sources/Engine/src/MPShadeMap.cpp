@@ -12,23 +12,22 @@
 
 #define CLAMP(A, MIN, MAX)		( (A) > (MAX) ) ? (MAX) :  ( ( (A) < (MIN) ) ? (MIN) : (A) )
 
-extern CMPResManger        ResMgr;
+extern CMPResManger ResMgr;
 
-CMPShadeMap::CMPShadeMap(void)
-{
+CMPShadeMap::CMPShadeMap(void) {
 	m_iType = SHADE_SINGLE;
 
 
-	_SVerPos = D3DXVECTOR3(0.0f,0.0f,0);
+	_SVerPos = D3DXVECTOR3(0.0f, 0.0f, 0);
 
 	_dwColor = 0x80ffffff;
 	_pfDailTime = NULL;
 	_bShow = true;
-		
+
 	_iIdxTech = 2;
 	_pCEffectFile = NULL;
 
-	_eSrcBlend	= D3DBLEND_SRCALPHA;
+	_eSrcBlend = D3DBLEND_SRCALPHA;
 	_eDestBlend = D3DBLEND_INVSRCALPHA;
 
 	_bUpdate = true;
@@ -38,49 +37,41 @@ CMPShadeMap::CMPShadeMap(void)
 	_pModel = NULL;
 }
 
-CMPShadeMap::~CMPShadeMap(void)
-{
-
+CMPShadeMap::~CMPShadeMap(void) {
 	SAFE_DELETE(_pModel);
 }
-void	CMPShadeMap::setTextureName(s_string& strName)
-{
-	if((strstr(strName.c_str(),".dds")==NULL)&&strstr(strName.c_str(),".tga")==NULL)
-	{
+
+void CMPShadeMap::setTextureName(s_string& strName) {
+	if ((strstr(strName.c_str(), ".dds") == NULL) && strstr(strName.c_str(), ".tga") == NULL) {
 		_strTexName = strName;
-	}else
-	{
+	}
+	else {
 		_strTexName = strName.substr(0, strName.length() - 4);
 	}
 }
 
 
-void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
-{
+void CMPShadeMap::BoundingRes(CMPResManger* m_CResMagr) {
 	int t_iID;
-		
+
 	t_iID = m_CResMagr->GetTextureID(_strTexName);
-	if(t_iID == -1)
-	{
-		MessageBox(NULL,_strTexName.c_str() ,"shade",MB_OK);
+	if (t_iID == -1) {
+		MessageBox(NULL, _strTexName.c_str(), "shade",MB_OK);
 		_lpCurTex = NULL;
 	}
-	else
-	{
+	else {
 		_lpCurTex = m_CResMagr->GetTextureByIDlw(t_iID);
-
 	}
 
 
-	if(!_pModel)
-	{
+	if (!_pModel) {
 		_pModel = new CEffectModel;
-		_pModel->InitDevice(m_CResMagr->m_pDev,m_CResMagr->m_pSysGraphics->GetResourceMgr());
+		_pModel->InitDevice(m_CResMagr->m_pDev, m_CResMagr->m_pSysGraphics->GetResourceMgr());
 	}
-	
+
 
 	_pfDailTime = m_CResMagr->GetDailTime();
-		
+
 	_pCEffectFile = m_CResMagr->GetEffectFile();
 
 	_pMatViewProj = m_CResMagr->GetViewProjMat();
@@ -88,97 +79,82 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 	m_bUseSoft = m_CResMagr->m_bUseSoftOrg;
 
 
-
-
 	m_dwVsConst = m_CResMagr->GetDevCap()->MaxVertexShaderConst;
 
 	_UpSea = false;
 }
 
-bool	CMPShadeMap::CreateShadeMap(float fRadius)
-{
-
+bool CMPShadeMap::CreateShadeMap(float fRadius) {
 	_fRadius = fRadius;
-	_fGridMax      = _fRadius / TILESIZE + 1;
+	_fGridMax = _fRadius / TILESIZE + 1;
 	_iGridCrossNum = (int)_fGridMax;
-	if(_fGridMax - (float)_iGridCrossNum > 0)
+	if (_fGridMax - (float)_iGridCrossNum > 0)
 		_iGridCrossNum++;
 
-	if(!SetGridNum(_iGridCrossNum))
+	if (!SetGridNum(_iGridCrossNum))
 		return false;
 
 	//VB
-	for( int n = 0; n < _iVerNum; n++)
-	{
-		_SShadePos[n] = D3DXVECTOR3(0,0,0);
-		_SShadeUV[n]  = D3DXVECTOR2(0,0);
+	for (int n = 0; n < _iVerNum; n++) {
+		_SShadePos[n] = D3DXVECTOR3(0, 0, 0);
+		_SShadeUV[n] = D3DXVECTOR2(0, 0);
 	}
 
 	return true;
 }
 
-bool	CMPShadeMap::SetGridNum(int iNum)
-{
-	_iGridCrossNum = iNum;/////77777
+bool CMPShadeMap::SetGridNum(int iNum) {
+	_iGridCrossNum = iNum; /////77777
 	_iGridNum = _iGridCrossNum * _iGridCrossNum;
 
 	_iFaceCount = _iGridNum * 2;
-		
-	_iVerNum		= (_iGridCrossNum + 1)*(_iGridCrossNum + 1);
-	_iIndexNum			= _iGridCrossNum * _iGridCrossNum * 6;
 
-	if(DWORD(_iVerNum * 2 + 8)>m_dwVsConst)
+	_iVerNum = (_iGridCrossNum + 1) * (_iGridCrossNum + 1);
+	_iIndexNum = _iGridCrossNum * _iGridCrossNum * 6;
+
+	if (DWORD(_iVerNum * 2 + 8) > m_dwVsConst)
 		m_bUseSoft = TRUE;
 
 
 	//!IB
 
 
-	_pModel->CreateShadeModel(_iVerNum,_iFaceCount,_iGridCrossNum,m_bUseSoft);
+	_pModel->CreateShadeModel(_iVerNum, _iFaceCount, _iGridCrossNum, m_bUseSoft);
 
 
 	return true;
 }
 
-void	CMPShadeMap::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
-{
+void CMPShadeMap::setFrameTexture(s_string& strTexName, CMPResManger* pCResMagr) {
 	_strTexName = strTexName;
 	int t_iID;
-		
+
 	t_iID = pCResMagr->GetTextureID(_strTexName);
-	if(t_iID == -1)
-	{
-		MessageBox(NULL,_strTexName.c_str(),"",MB_OK);
+	if (t_iID == -1) {
+		MessageBox(NULL, _strTexName.c_str(), "",MB_OK);
 		_lpCurTex = NULL;
 	}
-	else
-	{
+	else {
 		_lpCurTex = pCResMagr->GetTextureByIDlw(t_iID);
 	}
 }
 
 
-void	CMPShadeMap::FrameMove(DWORD	dwDailTime)
-{
-	static	float dwTime = 1.5f;
+void CMPShadeMap::FrameMove(DWORD dwDailTime) {
+	static float dwTime = 1.5f;
 	_bUpdate = false;
 	dwTime += *_pfDailTime;
-	if(dwTime > 1.5f)
-	{
+	if (dwTime > 1.5f) {
 		dwTime = 0;
 		_bUpdate = true;
 	}
-
 }
 
-void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
-{
-	if(!_bShow)
+void CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float fAngle) {
+	if (!_bShow)
 		return;
-	if(!_bUpdate)
-	{
-		if(fEquat(_SVerPos.x,SVerPos.x) &&fEquat(_SVerPos.y,SVerPos.y))
-		{
+	if (!_bUpdate) {
+		if (fEquat(_SVerPos.x, SVerPos.x) && fEquat(_SVerPos.y, SVerPos.y)) {
 			return;
 		}
 	}
@@ -188,97 +164,85 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 
 
 	//TILE
-	int nX	= (int)((_SVerPos.x - _fRadius / 2 ));
-	int nY	= (int)((_SVerPos.y - _fRadius / 2 ));
+	int nX = (int)((_SVerPos.x - _fRadius / 2));
+	int nY = (int)((_SVerPos.y - _fRadius / 2));
 
-	for( int y = 0; y < _iGridCrossNum + 1; y++ )
-	{
-		for( int x = 0; x < _iGridCrossNum + 1; x++ )
-		{
-			int iIndex = x + y*(_iGridCrossNum + 1);
+	for (int y = 0; y < _iGridCrossNum + 1; y++) {
+		for (int x = 0; x < _iGridCrossNum + 1; x++) {
+			int iIndex = x + y * (_iGridCrossNum + 1);
 
-			float	fGridX = (float)(nX + x * TILESIZE);
-			float	fGridY = (float)(nY + y * TILESIZE);
+			float fGridX = (float)(nX + x * TILESIZE);
+			float fGridY = (float)(nY + y * TILESIZE);
 			_SShadePos[iIndex].x = fGridX;
 			_SShadePos[iIndex].y = fGridY;
-			if(pMap)
-			{
-				float objHeight,height;
+			if (pMap) {
+				float objHeight, height;
 				{
 					int iGridx = (int)(fGridX * 2);
-					int iGridy = (int)(fGridY* 2);
-					if(y == _iGridCrossNum)
+					int iGridy = (int)(fGridY * 2);
+					if (y == _iGridCrossNum)
 						iGridy -= 1;
-					if(x == _iGridCrossNum)
+					if (x == _iGridCrossNum)
 						iGridx -= 1;
 					height = pMap->GetGridHeight(iGridx, iGridy);
 					objHeight = pMap->GetTileHeight((int)(fGridX), (int)(fGridY));
 
-					if(_UpSea)
-					{
-						if(objHeight <= 0)
+					if (_UpSea) {
+						if (objHeight <= 0)
 							objHeight = 0;
 					}
-					if(height > objHeight &&  !pMap->IsGridBlock(iGridx, iGridy))
+					if (height > objHeight && !pMap->IsGridBlock(iGridx, iGridy))
 						objHeight = height;
 				}
 
-				_SShadePos[iIndex].z = objHeight  + 0.015f;
+				_SShadePos[iIndex].z = objHeight + 0.015f;
 			}
 			else
 				_SShadePos[iIndex].z = SVerPos.z + 0.015f;
 
-			float fU,fV;
+			float fU, fV;
 
 			{
-				fU = ( fGridX - _SVerPos.x ) / ( _fGridMax * TILESIZE);
-				fV = ( fGridY - _SVerPos.y ) / ( _fGridMax * TILESIZE);
-				_SShadeUV[iIndex].x	=  CLAMP(fU + 0.5f, 0.0f, 1.0f);
-				_SShadeUV[iIndex].y	=  CLAMP(fV + 0.5f, 0.0f, 1.0f);
-
+				fU = (fGridX - _SVerPos.x) / (_fGridMax * TILESIZE);
+				fV = (fGridY - _SVerPos.y) / (_fGridMax * TILESIZE);
+				_SShadeUV[iIndex].x = CLAMP(fU + 0.5f, 0.0f, 1.0f);
+				_SShadeUV[iIndex].y = CLAMP(fV + 0.5f, 0.0f, 1.0f);
 			}
-			if(fAngle != 0)
-			{
+			if (fAngle != 0) {
 				D3DXMATRIX mat;
 
-				D3DXVECTOR3	vpos(0.5f, 0.5f, 0);
+				D3DXVECTOR3 vpos(0.5f, 0.5f, 0);
 				auto v = D3DXVECTOR3(0, 0, 1);
 				GetMatrixRotation(&mat, &vpos, &v, fAngle);
 
 				D3DXVec2TransformCoord(&_SShadeUV[iIndex], &_SShadeUV[iIndex], &mat);
-
 			}
-
 		}
 	}
-	if(m_bUseSoft)
+	if (m_bUseSoft)
 		FillVertex();
 }
 
-void CMPShadeMap::RenderVS()
-{
+void CMPShadeMap::RenderVS() {
 	if (!_bShow)
 		return;
 	D3DXMATRIX t_mat;
 	D3DXMatrixIdentity(&t_mat);
-	if (_lpCurTex && _lpCurTex->IsLoadingOK())
-	{
+	if (_lpCurTex && _lpCurTex->IsLoadingOK()) {
 		_pModel->m_pDev->SetTexture(0, _lpCurTex->GetTex());
 	}
-	else
-	{
+	else {
 		_pCEffectFile->End();
 		return;
 	}
 
 	_pModel->Begin();
 
-	if (!_pCEffectFile->SetTechnique(_iIdxTech))
-	{
+	if (!_pCEffectFile->SetTechnique(_iIdxTech)) {
 		return;
 	}
 
-	_pCEffectFile->Begin(D3DXFX_DONOTSAVESHADERSTATE);//D3DXFX_DONOTSAVESTATE
+	_pCEffectFile->Begin(D3DXFX_DONOTSAVESHADERSTATE); //D3DXFX_DONOTSAVESTATE
 	_pCEffectFile->Pass(0);
 	//to fix overlay of models
 	_pCEffectFile->m_pDev->SetRenderState(D3DRS_ZENABLE, FALSE);
@@ -299,9 +263,7 @@ void CMPShadeMap::RenderVS()
 
 	D3DXVECTOR4 tv(0, 0, 0, 0);
 	int nIndex = 9;
-	for (int n = 0; n < _iVerNum; n++)
-	{
-
+	for (int n = 0; n < _iVerNum; n++) {
 		tv.x = _SShadeUV[n].x;
 		tv.y = _SShadeUV[n].y;
 		_pModel->m_pDev->SetVertexShaderConstantF(nIndex++, tv, 1);
@@ -319,31 +281,28 @@ void CMPShadeMap::RenderVS()
 	_pCEffectFile->End();
 }
 
-void	CMPShadeMap::FillVertex()
-{
-	SEFFECT_SHADE_VERTEX *pVertex(0);
+void CMPShadeMap::FillVertex() {
+	SEFFECT_SHADE_VERTEX* pVertex(0);
 	if (!_pModel)
 		return;
 
-	_pModel->SetRenderNum( _iVerNum, _iFaceCount);
+	_pModel->SetRenderNum(_iVerNum, _iFaceCount);
 
 	_pModel->Lock((BYTE**)&pVertex);
-	if(pVertex == 0)
-	{
+	if (pVertex == 0) {
 		MessageBox(NULL, "msgLockFailed lock error msglock error CMPShadeMap::FillVertex() line 552", "error", 0);
 		return;
 	}
 
-	int nIndex = 9;//!VS9
-	for( int n = 0; n < _iVerNum; n++)
-	{
+	int nIndex = 9; //!VS9
+	for (int n = 0; n < _iVerNum; n++) {
 		pVertex[n].m_dwDiffuse = _dwColor;
 		pVertex[n].m_SPos.x = _SShadePos[n].x;
 		pVertex[n].m_SPos.y = _SShadePos[n].y;
 		pVertex[n].m_SPos.z = _SShadePos[n].z;
 
-		pVertex[n].m_SUV.x  = _SShadeUV[n].x;
-		pVertex[n].m_SUV.y  = _SShadeUV[n].y;
+		pVertex[n].m_SUV.x = _SShadeUV[n].x;
+		pVertex[n].m_SUV.y = _SShadeUV[n].y;
 
 		pVertex[n].m_SUV2.x = (float)nIndex;
 		nIndex++;
@@ -365,8 +324,7 @@ void CMPShadeMap::RenderSoft() {
 	_pCEffectFile->m_pDev->SetRenderStateForced(D3DRS_ALPHABLENDENABLE, TRUE);
 	_pCEffectFile->m_pDev->SetRenderStateForced(D3DRS_ZWRITEENABLE, FALSE);
 	_pCEffectFile->m_pDev->SetRenderStateForced(D3DRS_CULLMODE, D3DCULL_CCW);
-	if (_iIdxTech != 4)
-	{
+	if (_iIdxTech != 4) {
 		if (!_pCEffectFile->SetTechnique(_iIdxTech))
 			return;
 		_pCEffectFile->Begin(D3DXFX_DONOTSAVESTATE);
@@ -382,15 +340,13 @@ void CMPShadeMap::RenderSoft() {
 	if (_lpCurTex && _lpCurTex->IsLoadingOK())
 		_pModel->m_pDev->SetTexture(0, _lpCurTex->GetTex());
 	else {
-		if (_iIdxTech != 4)
-		{
+		if (_iIdxTech != 4) {
 			_pCEffectFile->End();
 		}
 		return;
 	}
 	//to fix models get front of each other when render wings/pets
-	if (_iIdxTech != 4)
-	{
+	if (_iIdxTech != 4) {
 		_pModel->GetDev()->SetTransformWorld(&t_mat);
 	}
 
@@ -402,71 +358,65 @@ void CMPShadeMap::RenderSoft() {
 	_pModel->m_pDev->SetVertexShader(nullptr);
 	_pModel->m_pDev->SetFVF(EFFECT_SHADE_FVF);
 	//this part not 100% sure of it yet need testing
-	if (_iIdxTech != 4)
-	{
+	if (_iIdxTech != 4) {
 		_pCEffectFile->End();
 	}
 }
 
-void	CMPShadeMap::Render()
-{
-	if(!m_bUseSoft)
+void CMPShadeMap::Render() {
+	if (!m_bUseSoft)
 		RenderVS();
 	else
 		RenderSoft();
 }
 
-bool	CMPShadeMap::SaveToFile(FILE* pFile)
-{
+bool CMPShadeMap::SaveToFile(FILE* pFile) {
 	char t_pszName[32];
 
 	int t_temp;
 	//!
-	fwrite(&_fRadius,sizeof(float),1,pFile);
+	fwrite(&_fRadius, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName,_strTexName.c_str());
-	fwrite(t_pszName, sizeof(char),32,pFile);
+	lstrcpy(t_pszName, _strTexName.c_str());
+	fwrite(t_pszName, sizeof(char), 32, pFile);
 
 	//!
 	t_temp = (int)_eSrcBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 	t_temp = (int)_eDestBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 
 
-	fwrite(&_dwColor, sizeof(D3DXCOLOR),1,pFile);
-	fwrite(&_iIdxTech, sizeof(int),1,pFile);
+	fwrite(&_dwColor, sizeof(D3DXCOLOR), 1, pFile);
+	fwrite(&_iIdxTech, sizeof(int), 1, pFile);
 
 	return true;
 }
-bool	CMPShadeMap::LoadFromFile(FILE* pFile)
-{
 
+bool CMPShadeMap::LoadFromFile(FILE* pFile) {
 	int t_temp;
 	////!
 
 
 	//!
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eSrcBlend = (D3DBLEND)t_temp;
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eDestBlend = (D3DBLEND)t_temp;
 
-	fread(&_dwColor, sizeof(D3DXCOLOR),1,pFile);
-	fread(&_iIdxTech, sizeof(int),1,pFile);
+	fread(&_dwColor, sizeof(D3DXCOLOR), 1, pFile);
+	fread(&_iIdxTech, sizeof(int), 1, pFile);
 	return true;
 }
 
-CMPShadeEX::CMPShadeEX(int iFrameCount)
-{
+CMPShadeEX::CMPShadeEX(int iFrameCount) {
 	m_iType = SHADE_ANI;
 
 	_iFrameCount = iFrameCount;
-	_iCurFrame =0;
+	_iCurFrame = 0;
 	_fCurTime = 0;
 	_vecFrameColor.resize(_iFrameCount);
-	for(int n = 0; n < _iFrameCount; n++)
-	{
+	for (int n = 0; n < _iFrameCount; n++) {
 		_vecFrameColor[n] = 0xffffffff;
 	}
 	_fFrameTime = 0.1f;
@@ -482,19 +432,16 @@ CMPShadeEX::CMPShadeEX(int iFrameCount)
 
 	_iNumTex = 1;
 	_vecTexOffset.resize(_iNumTex);
-	for(int n = 0; n < _iNumTex; n++)
-	{
-		_vecTexOffset[n] = D3DXVECTOR2(0,0);
+	for (int n = 0; n < _iNumTex; n++) {
+		_vecTexOffset[n] = D3DXVECTOR2(0, 0);
 	}
 	_vecTexSave.clear();
 }
 
-CMPShadeEX::~CMPShadeEX(void)
-{
+CMPShadeEX::~CMPShadeEX(void) {
 }
 
-bool	CMPShadeEX::CreateSpliteTexture(int iRow, int iColnum)
-{
+bool CMPShadeEX::CreateSpliteTexture(int iRow, int iColnum) {
 	_iRow = iRow;
 	_iCol = iColnum;
 
@@ -504,13 +451,11 @@ bool	CMPShadeEX::CreateSpliteTexture(int iRow, int iColnum)
 	float fsizeh = 1.0f / iColnum;
 
 	_vecTexOffset.resize(_iNumTex);
-	for(int h = 0;h < iColnum; h++)
-	{
-		for(int  w = 0; w < iRow; w++)
-		{
+	for (int h = 0; h < iColnum; h++) {
+		for (int w = 0; w < iRow; w++) {
 			int idx = w + h * iRow;
 			_vecTexOffset[idx].x = w * fsizew;
-			_vecTexOffset[idx].y = h * fsizeh ;
+			_vecTexOffset[idx].y = h * fsizeh;
 		}
 	}
 	_vecTexSave.resize(_iVerNum);
@@ -518,49 +463,41 @@ bool	CMPShadeEX::CreateSpliteTexture(int iRow, int iColnum)
 	return true;
 }
 
-void	CMPShadeEX::setFrameCount(int iCount)
-{
+void CMPShadeEX::setFrameCount(int iCount) {
 	_iFrameCount = iCount;
 }
 
-void	CMPShadeEX::setFrameTime(float fTime)
-{
+void CMPShadeEX::setFrameTime(float fTime) {
 	_fFrameTime = fTime;
 }
-void	CMPShadeEX::setTexFrameTime(float fTime)
-{
+
+void CMPShadeEX::setTexFrameTime(float fTime) {
 	_fTexFrameTime = fTime;
 }
 
-void	CMPShadeEX::setFrameColor(int iIdx, D3DCOLOR SColor)
-{
+void CMPShadeEX::setFrameColor(int iIdx, D3DCOLOR SColor) {
 	_vecFrameColor[iIdx] = SColor;
 }
-void	CMPShadeEX::setColor(D3DXCOLOR SColor)
-{
-	for(int n = 0; n < _iFrameCount; n++)
-	{
+
+void CMPShadeEX::setColor(D3DXCOLOR SColor) {
+	for (int n = 0; n < _iFrameCount; n++) {
 		_vecFrameColor[n] = SColor;
 	}
 }
 
 
-void	CMPShadeEX::FrameMove(DWORD	dwDailTime)
-{
-	if(!_bShow)
+void CMPShadeEX::FrameMove(DWORD dwDailTime) {
+	if (!_bShow)
 		return;
 
 	int iNextFrame;
 	_fCurTime += *_pfDailTime;
-	if(_fCurTime >=_fFrameTime)
-	{
+	if (_fCurTime >= _fFrameTime) {
 		_iCurFrame++;
-		if(_iCurFrame >= _iFrameCount)
-		{
-			if(_bLoop)
+		if (_iCurFrame >= _iFrameCount) {
+			if (_bLoop)
 				_iCurFrame = 0;
-			else
-			{
+			else {
 				_bLoop = false;
 				_bShow = false;
 				return;
@@ -568,95 +505,84 @@ void	CMPShadeEX::FrameMove(DWORD	dwDailTime)
 		}
 		_fCurTime = 0;
 	}
-	if(_iCurFrame == _iFrameCount - 1)
+	if (_iCurFrame == _iFrameCount - 1)
 		iNextFrame = _iCurFrame;
 	else
 		iNextFrame = _iCurFrame + 1;
 	_fLerp = _fCurTime / _fFrameTime;
-	D3DXColorLerp( &_dwColor, &_vecFrameColor[_iCurFrame], &_vecFrameColor[iNextFrame], _fLerp );
+	D3DXColorLerp(&_dwColor, &_vecFrameColor[_iCurFrame], &_vecFrameColor[iNextFrame], _fLerp);
 
 	_fTexCurTime += *_pfDailTime;
-	if(_fTexCurTime >= _fTexFrameTime)
-	{
+	if (_fTexCurTime >= _fTexFrameTime) {
 		_iCurTex++;
-		if(_iCurTex == _iNumTex)
-		{
+		if (_iCurTex == _iNumTex) {
 			_iCurTex = 0;
 		}
 		_fTexCurTime = 0;
 	}
 }
 
-void	CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
-{
-	if(!_bShow)
+void CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float fAngle) {
+	if (!_bShow)
 		return;
-	if(_SVerPos == SVerPos)
-	{
-		if(_iNumTex > 1)
-		{
-			for(int n = 0; n < _iVerNum; n++)
-			{
-				_SShadeUV[n].x =	_vecTexSave[n].x / _iRow;
-				_SShadeUV[n].y =	_vecTexSave[n].y / _iCol;
-				_SShadeUV[n].x +=	_vecTexOffset[_iCurTex].x;
-				_SShadeUV[n].y +=	_vecTexOffset[_iCurTex].y;
+	if (_SVerPos == SVerPos) {
+		if (_iNumTex > 1) {
+			for (int n = 0; n < _iVerNum; n++) {
+				_SShadeUV[n].x = _vecTexSave[n].x / _iRow;
+				_SShadeUV[n].y = _vecTexSave[n].y / _iCol;
+				_SShadeUV[n].x += _vecTexOffset[_iCurTex].x;
+				_SShadeUV[n].y += _vecTexOffset[_iCurTex].y;
 			}
 		}
 		return;
 	}
 	_SVerPos = SVerPos;
 	//TILE
-	int nX	= (int)((_SVerPos.x - _fRadius / 2 ) /*/ TILESIZE*/);
-	int nY	= (int)((_SVerPos.y - _fRadius / 2 ) /*/ TILESIZE*/);
-	
-	for( int y = 0; y < _iGridCrossNum + 1; y++ )
-	{
-		for( int x = 0; x < _iGridCrossNum + 1; x++ )
-		{
-			int iIndex = x + y*(_iGridCrossNum + 1);
+	int nX = (int)((_SVerPos.x - _fRadius / 2) /*/ TILESIZE*/);
+	int nY = (int)((_SVerPos.y - _fRadius / 2) /*/ TILESIZE*/);
 
-			float	fGridX = (float)(nX + x * TILESIZE) /*/ TILESIZE*/;
-			float	fGridY = (float)(nY + y * TILESIZE) /*/ TILESIZE*/;
+	for (int y = 0; y < _iGridCrossNum + 1; y++) {
+		for (int x = 0; x < _iGridCrossNum + 1; x++) {
+			int iIndex = x + y * (_iGridCrossNum + 1);
+
+			float fGridX = (float)(nX + x * TILESIZE) /*/ TILESIZE*/;
+			float fGridY = (float)(nY + y * TILESIZE) /*/ TILESIZE*/;
 			_SShadePos[iIndex].x = fGridX;
 			_SShadePos[iIndex].y = fGridY;
-			if(pMap)
-			{
-				float height,objheight;
+			if (pMap) {
+				float height, objheight;
 				int iGridx = (int)(fGridX * 2);
-				int iGridy = (int)(fGridY* 2);
-				if(y == _iGridCrossNum)
+				int iGridy = (int)(fGridY * 2);
+				if (y == _iGridCrossNum)
 					iGridy -= 1;
-				if(x == _iGridCrossNum)
+				if (x == _iGridCrossNum)
 					iGridx -= 1;
 				objheight = pMap->GetGridHeight(iGridx, iGridy);
 				height = pMap->GetTileHeight((int)(fGridX), (int)(fGridY));
 
-				if(_UpSea)
-				{
-					if(height <= 0)
+				if (_UpSea) {
+					if (height <= 0)
 						height = 0;
 				}
-				if( objheight > height )
+				if (objheight > height)
 					height = objheight;
 
-				_SShadePos[iIndex].z = height  + 0.01f;
+				_SShadePos[iIndex].z = height + 0.01f;
 			}
 			else
 				_SShadePos[iIndex].z = SVerPos.z + 0.01f;
 
-			float fU,fV;
+			float fU, fV;
 			{
-				fU = ( fGridX - _SVerPos.x ) / ( _fGridMax * TILESIZE);
-				fV = ( fGridY - _SVerPos.y ) / ( _fGridMax * TILESIZE);
-				_SShadeUV[iIndex].x	=  CLAMP(fU + 0.5f, 0.0f, 1.0f); 
-				_SShadeUV[iIndex].y	=  CLAMP(fV + 0.5f, 0.0f, 1.0f);
+				fU = (fGridX - _SVerPos.x) / (_fGridMax * TILESIZE);
+				fV = (fGridY - _SVerPos.y) / (_fGridMax * TILESIZE);
+				_SShadeUV[iIndex].x = CLAMP(fU + 0.5f, 0.0f, 1.0f);
+				_SShadeUV[iIndex].y = CLAMP(fV + 0.5f, 0.0f, 1.0f);
 			}
-			if(fAngle != 0)
-			{
+			if (fAngle != 0) {
 				D3DXMATRIX mat;
 
-				D3DXVECTOR3	vpos(0.5f, 0.5f, 0);
+				D3DXVECTOR3 vpos(0.5f, 0.5f, 0);
 				const auto v = D3DXVECTOR3(0, 0, 1);
 				GetMatrixRotation(&mat, &vpos, &v, fAngle);
 
@@ -664,107 +590,96 @@ void	CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 			}
 		}
 	}
-	if(_iNumTex > 1)
-	{
-		for(int n = 0; n < _iVerNum; n++)
-		{
-			_vecTexSave[n]		 = _SShadeUV[n];
-			_SShadeUV[n].x		/=  _iRow;
-			_SShadeUV[n].y		/=  _iCol;
-			_SShadeUV[n]		+=  _vecTexOffset[_iCurTex];
+	if (_iNumTex > 1) {
+		for (int n = 0; n < _iVerNum; n++) {
+			_vecTexSave[n] = _SShadeUV[n];
+			_SShadeUV[n].x /= _iRow;
+			_SShadeUV[n].y /= _iCol;
+			_SShadeUV[n] += _vecTexOffset[_iCurTex];
 		}
 	}
 }
 
-bool	CMPShadeEX::SaveToFile(FILE* pFile)
-{
+bool CMPShadeEX::SaveToFile(FILE* pFile) {
 	char t_pszName[32];
 
 	int t_temp;
 	//!
-	fwrite(&_fRadius,sizeof(float),1,pFile);
+	fwrite(&_fRadius, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName,_strTexName.c_str());
-	fwrite(t_pszName, sizeof(char),32,pFile);
+	lstrcpy(t_pszName, _strTexName.c_str());
+	fwrite(t_pszName, sizeof(char), 32, pFile);
 
-	fwrite(&_iRow,sizeof(int),1,pFile);
-	fwrite(&_iCol,sizeof(int),1,pFile);
+	fwrite(&_iRow, sizeof(int), 1, pFile);
+	fwrite(&_iCol, sizeof(int), 1, pFile);
 
 	//!
 	t_temp = (int)_eSrcBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 	t_temp = (int)_eDestBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 
 
 	//!
 	//!
-	fwrite(&_iFrameCount,sizeof(int),1,pFile);
+	fwrite(&_iFrameCount, sizeof(int), 1, pFile);
 	//!
-	fwrite(&_fFrameTime,sizeof(float),1,pFile);
+	fwrite(&_fFrameTime, sizeof(float), 1, pFile);
 	//!
-	for( int n = 0; n < _iFrameCount; n++)
-	{
-		fwrite(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
+	for (int n = 0; n < _iFrameCount; n++) {
+		fwrite(&_vecFrameColor[n], sizeof(D3DXCOLOR), 1, pFile);
 	}
 	///////////////!
 	//!
-	fwrite(&_fTexFrameTime,sizeof(float),1,pFile);
+	fwrite(&_fTexFrameTime, sizeof(float), 1, pFile);
 
-	fwrite(&_iIdxTech, sizeof(int),1,pFile);
+	fwrite(&_iIdxTech, sizeof(int), 1, pFile);
 
 	return true;
 }
 
-bool	CMPShadeEX::LoadFromFile(FILE* pFile)
-{
-
+bool CMPShadeEX::LoadFromFile(FILE* pFile) {
 	int t_temp;
 	////!
 
 
-
 	//!
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eSrcBlend = (D3DBLEND)t_temp;
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eDestBlend = (D3DBLEND)t_temp;
 
 	//!
-	fread(&_iFrameCount,sizeof(int),1,pFile);
+	fread(&_iFrameCount, sizeof(int), 1, pFile);
 	//!
-	fread(&_fFrameTime,sizeof(float),1,pFile);
+	fread(&_fFrameTime, sizeof(float), 1, pFile);
 
 	//!
 	_vecFrameColor.resize(_iFrameCount);
-	for( int n = 0; n < _iFrameCount; n++)
-	{
-		fread(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
+	for (int n = 0; n < _iFrameCount; n++) {
+		fread(&_vecFrameColor[n], sizeof(D3DXCOLOR), 1, pFile);
 	}
 	///////////////!
 	//!
-	fread(&_fTexFrameTime,sizeof(float),1,pFile);
+	fread(&_fTexFrameTime, sizeof(float), 1, pFile);
 
-	fread(&_iIdxTech, sizeof(int),1,pFile);
+	fread(&_iIdxTech, sizeof(int), 1, pFile);
 
 	return true;
 }
 
-CMPShadeCtrl::CMPShadeCtrl(void)
-{
+CMPShadeCtrl::CMPShadeCtrl(void) {
 	_pShadeMap = NULL;
 }
 
-CMPShadeCtrl::~CMPShadeCtrl(void)
-{
+CMPShadeCtrl::~CMPShadeCtrl(void) {
 	SAFE_DELETE(_pShadeMap);
 }
 
-bool	CMPShadeCtrl::Create(s_string& strTexName,  CMPResManger	*pCResMagr, float fSize, 
-							 bool bAni,int iRow, int iColnum)
-{
+bool CMPShadeCtrl::Create(s_string& strTexName, CMPResManger* pCResMagr, float fSize,
+						  bool bAni, int iRow, int iColnum) {
 	SAFE_DELETE(_pShadeMap);
-	if(!bAni)
+	if (!bAni)
 		_pShadeMap = new CMPShadeMap;
 	else
 		_pShadeMap = new CMPShadeEX;
@@ -773,103 +688,95 @@ bool	CMPShadeCtrl::Create(s_string& strTexName,  CMPResManger	*pCResMagr, float 
 	_pShadeMap->BoundingRes(pCResMagr);
 
 	_pShadeMap->CreateShadeMap(fSize);
-	if(bAni)
-		((CMPShadeEX*)_pShadeMap)->CreateSpliteTexture(iRow,iColnum);
+	if (bAni)
+		((CMPShadeEX*)_pShadeMap)->CreateSpliteTexture(iRow, iColnum);
 
 	return true;
 }
-void	CMPShadeCtrl::SetAlphaType(D3DBLEND eSrcBlend, D3DBLEND eDestBlend)
-{ 
-	_pShadeMap->SetAlphaType(eSrcBlend,eDestBlend);
+
+void CMPShadeCtrl::SetAlphaType(D3DBLEND eSrcBlend, D3DBLEND eDestBlend) {
+	_pShadeMap->SetAlphaType(eSrcBlend, eDestBlend);
 }
-void	CMPShadeCtrl::setFrameCount(int iCount)
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+void CMPShadeCtrl::setFrameCount(int iCount) {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		((CMPShadeEX*)_pShadeMap)->setFrameCount(iCount);
 }
 
-void	CMPShadeCtrl::setFrameTime(float fTime)
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+void CMPShadeCtrl::setFrameTime(float fTime) {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		((CMPShadeEX*)_pShadeMap)->setFrameTime(fTime);
 }
-void	CMPShadeCtrl::setTexFrameTime(float fTime)
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+void CMPShadeCtrl::setTexFrameTime(float fTime) {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		((CMPShadeEX*)_pShadeMap)->setTexFrameTime(fTime);
 }
 
-void	CMPShadeCtrl::setFrameColor(int iIdx, D3DCOLOR SColor)
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
-		((CMPShadeEX*)_pShadeMap)->setFrameColor(iIdx,SColor);
-
+void CMPShadeCtrl::setFrameColor(int iIdx, D3DCOLOR SColor) {
+	if (_pShadeMap->m_iType == SHADE_ANI)
+		((CMPShadeEX*)_pShadeMap)->setFrameColor(iIdx, SColor);
 }
-void	CMPShadeCtrl::setColor(D3DXCOLOR SColor)
-{
-	if(_pShadeMap->m_iType == SHADE_SINGLE)
+
+void CMPShadeCtrl::setColor(D3DXCOLOR SColor) {
+	if (_pShadeMap->m_iType == SHADE_SINGLE)
 		_pShadeMap->SetColor(SColor);
 	else
 		((CMPShadeEX*)_pShadeMap)->SetColor(SColor);
 }
-	
-int     CMPShadeCtrl::getFrameCount()
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+int CMPShadeCtrl::getFrameCount() {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		return ((CMPShadeEX*)_pShadeMap)->getFrameCount();
 	return 0;
 }
 
-float	CMPShadeCtrl::getFrameTime()
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+float CMPShadeCtrl::getFrameTime() {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		return ((CMPShadeEX*)_pShadeMap)->getFrameTime();
 	return 0;
 }
-float	CMPShadeCtrl::getTexFrameTime()
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+float CMPShadeCtrl::getTexFrameTime() {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		return ((CMPShadeEX*)_pShadeMap)->getTexFrameTime();
 	return 0;
 }
-void	CMPShadeCtrl::getFrameColor(int iIdx, D3DCOLOR* pSColor)
-{
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+void CMPShadeCtrl::getFrameColor(int iIdx, D3DCOLOR* pSColor) {
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		return ((CMPShadeEX*)_pShadeMap)->getFrameColor(iIdx, pSColor);
 }
-void	CMPShadeCtrl::getColor(D3DXCOLOR* pSColor)
-{
-		_pShadeMap->getColor(pSColor);
-}
-void	CMPShadeCtrl::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
-{
-	_pShadeMap->setFrameTexture(strTexName,pCResMagr);
+
+void CMPShadeCtrl::getColor(D3DXCOLOR* pSColor) {
+	_pShadeMap->getColor(pSColor);
 }
 
-void	CMPShadeCtrl::FrameMove(DWORD	dwDailTime)
-{
+void CMPShadeCtrl::setFrameTexture(s_string& strTexName, CMPResManger* pCResMagr) {
+	_pShadeMap->setFrameTexture(strTexName, pCResMagr);
+}
+
+void CMPShadeCtrl::FrameMove(DWORD dwDailTime) {
 	_pShadeMap->FrameMove(dwDailTime);
 }
 
-void	CMPShadeCtrl::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
-{
-	_pShadeMap->MoveTo(SVerPos,pMap,-fAngle);
+void CMPShadeCtrl::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float fAngle) {
+	_pShadeMap->MoveTo(SVerPos, pMap, -fAngle);
 }
-void	CMPShadeCtrl::Render()
-{
+
+void CMPShadeCtrl::Render() {
 	_pShadeMap->Render();
 }
 
-bool	CMPShadeCtrl::SaveToFile(char* pchName)
-{
+bool CMPShadeCtrl::SaveToFile(char* pchName) {
 	FILE* pFile;
 	pFile = fopen(pchName, "wb");
-	if(!pFile)
+	if (!pFile)
 		return false;
-	fwrite(&_pShadeMap->m_iType, sizeof(int),1,pFile);
-	
+	fwrite(&_pShadeMap->m_iType, sizeof(int), 1, pFile);
 
-	if(_pShadeMap->m_iType == SHADE_ANI)
+
+	if (_pShadeMap->m_iType == SHADE_ANI)
 		return ((CMPShadeEX*)_pShadeMap)->SaveToFile(pFile);
 	else
 		_pShadeMap->SaveToFile(pFile);
@@ -877,7 +784,7 @@ bool	CMPShadeCtrl::SaveToFile(char* pchName)
 	fclose(pFile);
 	return true;
 }
-bool	CMPShadeCtrl::LoadFromFile(char* pchName)
-{
+
+bool CMPShadeCtrl::LoadFromFile(char* pchName) {
 	return true;
 }

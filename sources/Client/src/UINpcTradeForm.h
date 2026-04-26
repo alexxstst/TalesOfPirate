@@ -3,87 +3,94 @@
 #include "NetProtocol.h"
 #include "uiboxform.h"
 
-namespace GUI
-{
-// NPC
-class CNpcTradeMgr : public CUIInterface
-{
-public:
-	friend class CEquipMgr;
-	void        ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, DWORD dwNpcID );
-    void        SaleToNpc(BYTE byIndex ,BYTE byCount, USHORT sItemID ,DWORD dwMoney ) ;
-    void        BuyFromNpc(BYTE byIndex ,BYTE byCount, USHORT sItemID ,DWORD dwMoney);
-
+namespace GUI {
 	// NPC
-	bool		IsNpcGoods( CGoodsGrid* pGrid );
+	class CNpcTradeMgr : public CUIInterface {
+	public:
+		friend class CEquipMgr;
+		void ShowTradePage(const NET_TRADEINFO& TradeInfo, BYTE byCmd, DWORD dwNpcID);
+		void SaleToNpc(BYTE byIndex, BYTE byCount, USHORT sItemID, DWORD dwMoney);
+		void BuyFromNpc(BYTE byIndex, BYTE byCount, USHORT sItemID, DWORD dwMoney);
 
-	// NPC
-	void		LocalBuyFromNpc( CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );
+		// NPC
+		bool IsNpcGoods(CGoodsGrid* pGrid);
 
-	// NPC
-	void		LocalSaleToNpc( CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );
+		// NPC
+		void LocalBuyFromNpc(CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem);
 
-	void SellSelectedItems(CGoodsGrid* grid);
-	bool		GetIsShow() { return frmNPCtrade->GetIsShow(); }
+		// NPC
+		void LocalSaleToNpc(CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem);
 
-protected:
-	bool Init();
-    void End();
-	void CloseForm();
+		void SellSelectedItems(CGoodsGrid* grid);
+		bool GetIsShow() {
+			return frmNPCtrade->GetIsShow();
+		}
 
-	static void		_BuyTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void		_SaleTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+	protected:
+		bool Init();
+		void End();
+		void CloseForm();
 
-	// 
-	static void		_BuyEquipYesNoTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void		_SaleEquipYesNoTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _BuyTradeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _SaleTradeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-private:
-	void	_NpcItemRefresh( CItemCommand* pItem );
+		// 
+		static void _BuyEquipYesNoTradeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _SaleEquipYesNoTradeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	CGoodsGrid*     GetNPCtradeWeaponGrid()           { return grdNPCtradeWeapon;   }
-	CGoodsGrid*     GetNPCtradeEquipGrid()            { return grdNPCtradeEquip;    }
-	CGoodsGrid*     GetNPCtradeOtherGrid()            { return grdNPCtradeOther;    }
+	private:
+		void _NpcItemRefresh(CItemCommand* pItem);
 
-private:
-	DWORD 		_dwNpcID;
-	bool		_IsShow;
+		CGoodsGrid* GetNPCtradeWeaponGrid() {
+			return grdNPCtradeWeapon;
+		}
 
-private:
-	CForm*		frmNPCtrade; 
+		CGoodsGrid* GetNPCtradeEquipGrid() {
+			return grdNPCtradeEquip;
+		}
 
-	CGoodsGrid*	grdNPCtradeWeapon; //NPC
-	CGoodsGrid*	grdNPCtradeEquip;
-	CGoodsGrid*	grdNPCtradeOther;
+		CGoodsGrid* GetNPCtradeOtherGrid() {
+			return grdNPCtradeOther;
+		}
 
-private:
-	struct stBuy
-	{
-		stBuy() : pBox(NULL), dwNpcID(0), nIndex(0), nDragIndex(0), nBuyGrid(0) {}
+	private:
+		DWORD _dwNpcID;
+		bool _IsShow;
 
-		stTradeBox*	pBox;
-		DWORD		dwNpcID;
-		int			nIndex;
-		int			nDragIndex;
-		int			nBuyGrid;
+	private:
+		CForm* frmNPCtrade;
+
+		CGoodsGrid* grdNPCtradeWeapon; //NPC
+		CGoodsGrid* grdNPCtradeEquip;
+		CGoodsGrid* grdNPCtradeOther;
+
+	private:
+		struct stBuy {
+			stBuy() : pBox(NULL), dwNpcID(0), nIndex(0), nDragIndex(0), nBuyGrid(0) {
+			}
+
+			stTradeBox* pBox;
+			DWORD dwNpcID;
+			int nIndex;
+			int nDragIndex;
+			int nBuyGrid;
+		};
+
+		stBuy _sBuy;
+
+		struct stSale {
+			stSale() : pBox(NULL), dwNpcID(0), nIndex(0) {
+			}
+
+			stTradeBox* pBox;
+			DWORD dwNpcID;
+			int nIndex;
+		};
+
+		stSale _sSale;
 	};
-	stBuy		_sBuy;
 
-	struct stSale
-	{
-		stSale() : pBox(NULL), dwNpcID(0), nIndex(0) {}
-
-		stTradeBox*	pBox;
-		DWORD		dwNpcID;
-		int			nIndex;
-	};
-	stSale		_sSale;
-};
-
-inline bool CNpcTradeMgr::IsNpcGoods( CGoodsGrid* pGrid )
-{
-	return pGrid==grdNPCtradeWeapon || pGrid==grdNPCtradeEquip || pGrid==grdNPCtradeOther;
+	inline bool CNpcTradeMgr::IsNpcGoods(CGoodsGrid* pGrid) {
+		return pGrid == grdNPCtradeWeapon || pGrid == grdNPCtradeEquip || pGrid == grdNPCtradeOther;
+	}
 }
-
-}
-

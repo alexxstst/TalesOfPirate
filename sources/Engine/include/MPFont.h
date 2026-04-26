@@ -8,36 +8,41 @@
 
 bool GetIntersectRect(RECT* pdest, RECT* psrc, RECT* pclip);
 
-namespace ui
-{
+namespace ui {
 #define UI_STATE_NOCLIP		0
 #define UI_STATE_CLIP		1
 
-	class UIClip
-	{
+	class UIClip {
 	public:
-		static UIClip* Instance()
-		{
+		static UIClip* Instance() {
 			if (m_pClip) return m_pClip;
 			m_pClip = new UIClip;
 			return m_pClip;
 		}
 
-		void SetClipRect(int x, int y, int w, int h)
-		{
-			m_rectClip.left   = x;
-			m_rectClip.top    = y;
-			m_rectClip.right  = x + w;
+		void SetClipRect(int x, int y, int w, int h) {
+			m_rectClip.left = x;
+			m_rectClip.top = y;
+			m_rectClip.right = x + w;
 			m_rectClip.bottom = y + h;
 			m_byState = UI_STATE_CLIP;
 		}
 
-		void Reset() { m_byState = UI_STATE_NOCLIP; }
+		void Reset() {
+			m_byState = UI_STATE_NOCLIP;
+		}
 
-		BYTE  GetClipState() { return m_byState; }
-		RECT& GetClipRect()  { return m_rectClip; }
+		BYTE GetClipState() {
+			return m_byState;
+		}
 
-		static UIClip* GetCliper() { return m_pClip; }
+		RECT& GetClipRect() {
+			return m_rectClip;
+		}
+
+		static UIClip* GetCliper() {
+			return m_pClip;
+		}
 
 		bool GetIntersectRect(RECT* pdest, RECT* psrc, BYTE* byFill = NULL);
 
@@ -46,9 +51,9 @@ namespace ui
 		~UIClip();
 
 	private:
-		BYTE            m_byState;
-		RECT            m_rectClip;
-		static UIClip*  m_pClip;
+		BYTE m_byState;
+		RECT m_rectClip;
+		static UIClip* m_pClip;
 	};
 }
 
@@ -66,4 +71,5 @@ namespace ui
 // CMPFont — alias-через-наследование к FontRender. Старые call-sites
 // продолжают работать без изменений: pointer/container типа CMPFont*
 // разрешаются как FontRender*, все методы приходят из базы.
-class CMPFont : public FontRender {};
+class CMPFont : public FontRender {
+};

@@ -1,62 +1,50 @@
-﻿
-
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadBase.h"
 #include "CrushSystem.h"
 #include <process.h>
 
 
-
-unsigned int __stdcall ThreadFunc(void* param)
-{
-    ::SetThreadName("thread-base");
-    TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
-    return ((CThreadBase*)param)->Run();
+unsigned int __stdcall ThreadFunc(void* param) {
+	::SetThreadName("thread-base");
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+	return ((CThreadBase*)param)->Run();
 }
 
 
-CThreadBase::CThreadBase()
-{
+CThreadBase::CThreadBase() {
 }
 
 
-CThreadBase::~CThreadBase()
-{
+CThreadBase::~CThreadBase() {
 }
 
 
-bool CThreadBase::Begin(int flag)
-{
-    // 
-    m_thread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, CREATE_SUSPENDED, &m_threadid);
+bool CThreadBase::Begin(int flag) {
+	// 
+	m_thread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, CREATE_SUSPENDED, &m_threadid);
 
 	ToLogService("common", "{}:{}", m_threadid, "CThreadBase");
 
-    if(m_thread)
-    {
-        //  CPU 
-        SetThreadAffinityMask(m_thread, 1);
-        ResumeThread(m_thread);
-    }
+	if (m_thread) {
+		//  CPU 
+		SetThreadAffinityMask(m_thread, 1);
+		ResumeThread(m_thread);
+	}
 
-    return NULL != m_thread;
+	return NULL != m_thread;
 }
 
 
-bool CThreadBase::Resume()
-{
-    return -1 != ResumeThread((HANDLE)m_thread);
+bool CThreadBase::Resume() {
+	return -1 != ResumeThread((HANDLE)m_thread);
 }
 
 
-bool CThreadBase::Suspend()
-{
-    return -1 != SuspendThread((HANDLE)m_thread);
+bool CThreadBase::Suspend() {
+	return -1 != SuspendThread((HANDLE)m_thread);
 }
 
 
-bool CThreadBase::Terminate()
-{
-    return TRUE == TerminateThread((HANDLE)m_thread, 0);
+bool CThreadBase::Terminate() {
+	return TRUE == TerminateThread((HANDLE)m_thread, 0);
 }
-

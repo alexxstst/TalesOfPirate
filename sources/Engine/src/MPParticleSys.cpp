@@ -410,7 +410,6 @@ void CMPPartSys::SetSkillCtrl(SkillCtrl* pCtrl) {
 		if (m_bShade)
 			m_cShade.Create(_strTexName, m_pCResMagr, *_vecFrameSize[0]);
 	}
-
 }
 
 
@@ -590,7 +589,6 @@ void CMPPartSys::SetTextureName(const s_string& strTexName, CMPResManger* pCResM
 
 	if (m_bShade)
 		m_cShade.setFrameTexture(_strTexName, pCResMagr);
-
 }
 
 void CMPPartSys::SetModelName(const s_string& strModelName, CMPResManger* pCResMagr) {
@@ -1162,7 +1160,6 @@ void CMPPartSys::RenderSoft() {
 							&_vecParticle[n]->m_SCurMat);
 
 
-
 					_pCModel->RenderModel();
 					_pCModel->GetDev()->SetRenderState(D3DRS_TEXTUREFACTOR, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 					_pCModel->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
@@ -1175,9 +1172,6 @@ void CMPPartSys::RenderSoft() {
 		_pCEffectFile->End();
 	}
 	else {
-
-
-
 		CMPParticle* pParticle;
 
 		if (_iType == PARTTICLE_ARRAW) {
@@ -1288,7 +1282,6 @@ void CMPPartSys::RenderSoft() {
 //-----------------------------------------------------------------------------
 void CMPPartSys::setYaw(float fYaw) {
 	if (_CPPart) {
-
 		for (WORD n = 0; n < _wFrameCount; ++n) {
 			_vecFrameAngle[n]->z = fYaw;
 		}
@@ -1298,8 +1291,6 @@ void CMPPartSys::setYaw(float fYaw) {
 //-----------------------------------------------------------------------------
 void CMPPartSys::setPitch(float fPitch) {
 	if (_CPPart) {
-
-
 		for (WORD n = 0; n < _wFrameCount; ++n) {
 			_vecFrameAngle[n]->x = fPitch;
 		}
@@ -1568,8 +1559,6 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime) {
 				(*pPart->_vecFrameSize[wNextFrame] - *pPart->_vecFrameSize[wCurFrame]) * fLerp;
 
 
-
-
 			float fDailTime = *(pPart->_pfDailTime);
 			pParticle->m_vPos += pParticle->m_vVel * fDailTime + 0.5 * pParticle->m_vAccel * fDailTime * fDailTime;
 
@@ -1674,8 +1663,6 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime) {
 			fLerp = pParticle->GetLerpValue();
 			pParticle->m_fSize = *pPart->_vecFrameSize[wCurFrame] +
 				(*pPart->_vecFrameSize[wNextFrame] - *pPart->_vecFrameSize[wCurFrame]) * fLerp;
-
-
 
 
 			float fDailTime = *(pPart->_pfDailTime);
@@ -1850,10 +1837,6 @@ bool _CreateRange(CMPPartSys* pPart, CMPParticle* pCtrl) {
 		pParticle->m_SCurColor = D3DXCOLOR(1, 1, 1, 1);
 		D3DXMatrixIdentity(&pParticle->m_SCurMat);
 		pParticle->m_vCurAngle = D3DXVECTOR3(0, 0, 0);
-
-
-
-
 	}
 	return true;
 }
@@ -2203,11 +2186,9 @@ bool _CreateBlast2(CMPPartSys* pPart, CMPParticle* pCtrl) {
 		pParticle = pPart->_vecParticle[n];
 
 
-
 		pParticle->m_vOldPos.x = dir.x;
 		pParticle->m_vOldPos.y = dir.y;
 		pParticle->m_vOldPos.z = dir.z;
-
 
 
 		pParticle->m_vPos = pPart->_vPos;
@@ -2252,7 +2233,8 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 					pParticle->m_vAccel.x += 1;
 					pParticle->m_vCurAngle = pParticle->m_vPos;
 				}
-			}else
+			}
+			else
 				wCurFrame = pParticle->GetCurFrame(*pPart->_pfDailTime, pPart->_wFrameCount);
 
 			float fvel{};
@@ -2285,7 +2267,6 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 					wNextFrame = wCurFrame;
 				else
 					wNextFrame = wCurFrame + 1;
-
 			}
 			fLerp = pParticle->GetLerpValue();
 			pParticle->m_fSize = *pPart->_vecFrameSize[wCurFrame] +
@@ -2646,8 +2627,6 @@ void _FrameMoveStrip(CMPPartSys* pPart, DWORD dwDailTime) {
 }
 
 bool _CreateWind(CMPPartSys* pPart, CMPParticle* pCtrl) {
-
-
 	//float fFrameTime = pParticle->m_fLife / pPart->_wFrameCount;//
 
 	//	pParticle->m_fLife		=   Randf(pPart->_fVecl);//pPart->_fLife;//
@@ -2680,12 +2659,10 @@ bool _CreateWind(CMPPartSys* pPart, CMPParticle* pCtrl) {
 }
 
 void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
-
 	//	//size
 	//	//
 	//		int icurp = m * iNum + n;//
 	//		//
-
 
 
 	//			//D3DXColorLerp( &pParticle->m_SCurColor,
@@ -2693,8 +2670,6 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
 	//				D3DXMatrixScaling(&pParticle->m_SCurMat,
 
 	//				D3DXMatrixMultiply(&pParticle->m_SCurMat,
-
-
 
 
 	//			//D3DXVec3Lerp(&pParticle->m_vCurAngle,pPart->_vecFrameAngle[wCurFrame],
@@ -2845,7 +2820,6 @@ void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime) {
 				else {
 					pPart->Stop();
 				}
-
 			}
 			else {
 				if (pPart->_vPos.z <= 0.1f || pPart->_vPos.z > 50.0f) {

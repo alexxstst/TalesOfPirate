@@ -36,60 +36,56 @@
 
 // follow your dreams !!!!
 
-enum
-{
-    SBF_BTN_HEADLEFT =      0,
-    SBF_BTN_HEADRIGHT,
-    //SBF_BTN_BODYLEFT,
-    //SBF_BTN_BODYRIGHT,
-    SBF_BTN_POWERLEFT,
-    SBF_BTN_POWERRIGHT,
-    SBF_BTN_WEAPONLEFT,
-    SBF_BTN_WEAPONRIGHT,
-    SBF_BTN_SIGNLEFT,
-    SBF_BTN_SIGNRIGHT,
+enum {
+	SBF_BTN_HEADLEFT = 0,
+	SBF_BTN_HEADRIGHT,
+	//SBF_BTN_BODYLEFT,
+	//SBF_BTN_BODYRIGHT,
+	SBF_BTN_POWERLEFT,
+	SBF_BTN_POWERRIGHT,
+	SBF_BTN_WEAPONLEFT,
+	SBF_BTN_WEAPONRIGHT,
+	SBF_BTN_SIGNLEFT,
+	SBF_BTN_SIGNRIGHT,
 
-    SBF_BTN_ITEM_NUM,
+	SBF_BTN_ITEM_NUM,
 
-    SBF_BTN_VIEW3D_LEFT =   0,
-    SBF_BTN_VIEW3D_RIGHT,
-    SBF_BTN_VIEW3D_TOP,
-    SBF_BTN_VIEW3D_BOTTOM,
+	SBF_BTN_VIEW3D_LEFT = 0,
+	SBF_BTN_VIEW3D_RIGHT,
+	SBF_BTN_VIEW3D_TOP,
+	SBF_BTN_VIEW3D_BOTTOM,
 
-    SBF_BTN_VIEW3D_NUM,
+	SBF_BTN_VIEW3D_NUM,
 
-    SBF_TEXT_ATTACK =       0,
-    SBF_TEXT_DEFENCE,
-    SBF_TEXT_ENDURE,
-    SBF_TEXT_SUPPLY,
-    SBF_TEXT_SPEED,
-    SBF_TEXT_COOLDOWN,
-    SBF_TEXT_DISTANCE,
-    SBF_TEXT_CAPACITY,
-    SBF_TEXT_MONEY,
-    SBF_TEXT_BODY,
-    SBF_TEXT_HEAD,
-    SBF_TEXT_POWER,
-    SBF_TEXT_WEAPON,
-    SBF_TEXT_SIGN,
+	SBF_TEXT_ATTACK = 0,
+	SBF_TEXT_DEFENCE,
+	SBF_TEXT_ENDURE,
+	SBF_TEXT_SUPPLY,
+	SBF_TEXT_SPEED,
+	SBF_TEXT_COOLDOWN,
+	SBF_TEXT_DISTANCE,
+	SBF_TEXT_CAPACITY,
+	SBF_TEXT_MONEY,
+	SBF_TEXT_BODY,
+	SBF_TEXT_HEAD,
+	SBF_TEXT_POWER,
+	SBF_TEXT_WEAPON,
+	SBF_TEXT_SIGN,
 
-    SBF_TEXT_PROP_NUM,    
-
-
+	SBF_TEXT_PROP_NUM,
 };
 
-struct xShipBuilderForm
-{
-    CForm* wnd;
-    C3DCompent* view3d;
-    CTextButton* btn_item[SBF_BTN_ITEM_NUM];
-    CTextButton* btn_view3d[SBF_BTN_VIEW3D_NUM];
-    CLabelEx* lbl_prop[SBF_TEXT_PROP_NUM];
-    CTextButton* btn_create;
-    CTextButton* btn_cancel;
-    CEdit* name;
+struct xShipBuilderForm {
+	CForm* wnd;
+	C3DCompent* view3d;
+	CTextButton* btn_item[SBF_BTN_ITEM_NUM];
+	CTextButton* btn_view3d[SBF_BTN_VIEW3D_NUM];
+	CLabelEx* lbl_prop[SBF_TEXT_PROP_NUM];
+	CTextButton* btn_create;
+	CTextButton* btn_cancel;
+	CEdit* name;
 
-	CLabelEx* lbl_ship_level; 
+	CLabelEx* lbl_ship_level;
 	CLabelEx* lbl_ship_exp;
 
 	// Open/close ship cabin UI (Michael Chen 2005-05-26)
@@ -103,22 +99,19 @@ struct xShipBuilderForm
 	CImage* imgShipOrigin;
 };
 
-class xShipFactory
-{
-    enum
-    {
-        ITEM_HEAD =     0,
-        ITEM_POWER,
-        ITEM_WEAPON,
-        ITEM_GOODS,
+class xShipFactory {
+	enum {
+		ITEM_HEAD = 0,
+		ITEM_POWER,
+		ITEM_WEAPON,
+		ITEM_GOODS,
 
 		MIN_LENGTH = 2,
 		MAX_LENGTH = 16,
-    };
+	};
 
 public:
-	enum eState
-	{
+	enum eState {
 		STATE_CREATE,
 		STATE_INFO,
 		STATE_INFO_OTHER,
@@ -126,89 +119,104 @@ public:
 		STATE_TRADE_FREEDOM,
 	};
 
-    const static DWORD __PartRange[4][2];
+	const static DWORD __PartRange[4][2];
 
-    CGameScene* scene;
-    CFormMgr* form_mgr;
-    CCharacter* ship;
-    xShipBuilderForm sbf;
-    int yaw_degree;
-    int pitch_degree;
-    char item_id[4]; // head, power, weapon, goods
-    char ship_name[130];
-    DWORD item_part[8];
-    BYTE mt_flag;
-    int type;
+	CGameScene* scene;
+	CFormMgr* form_mgr;
+	CCharacter* ship;
+	xShipBuilderForm sbf;
+	int yaw_degree;
+	int pitch_degree;
+	char item_id[4]; // head, power, weapon, goods
+	char ship_name[130];
+	DWORD item_part[8];
+	BYTE mt_flag;
+	int type;
 
-	DWORD m_dwBoatID;		// Boat ID -- Michael Chen(2005-05-26)
+	DWORD m_dwBoatID; // Boat ID -- Michael Chen(2005-05-26)
 	eState m_state;
 
 public:
-	static void	__ButtonYesNo(CGuiData *pSender, int x, int y, DWORD dwKey);
-	static void __ProcBtnItem(CGuiData *sender, int x, int y, DWORD key);
-	static void __ProcBtnView3d(CGuiData *sender, int x, int y, DWORD key);
-	static void __Proc3DView(C3DCompent *pSender, int x, int y);
-    static void __ProcShipName(CGuiData *pSender);
+	static void __ButtonYesNo(CGuiData* pSender, int x, int y, DWORD dwKey);
+	static void __ProcBtnItem(CGuiData* sender, int x, int y, DWORD key);
+	static void __ProcBtnView3d(CGuiData* sender, int x, int y, DWORD key);
+	static void __Proc3DView(C3DCompent* pSender, int x, int y);
+	static void __ProcShipName(CGuiData* pSender);
 
 	// Open/close ship cabin UI event (Michael Chen 2005-05-26)
-    static void __ButtonOpenRoom(CGuiData *pSender, int x, int y, DWORD dwKey);
-	static void __ButtonCloseRoom(CGuiData *pSender, int x, int y, DWORD dwKey);
+	static void __ButtonOpenRoom(CGuiData* pSender, int x, int y, DWORD dwKey);
+	static void __ButtonCloseRoom(CGuiData* pSender, int x, int y, DWORD dwKey);
 	// chkShip checkbox change event (Michael Chen 2005-05-26)
-	static void __CheckShip(CGuiData *pSender);
+	static void __CheckShip(CGuiData* pSender);
 	// When form is closed, notify server to cancel ship creation (Michael Chen 2005-06-06)
-	static void __HideForm(CGuiData *pSender);
+	static void __HideForm(CGuiData* pSender);
 
 private:
-	xShipBuildInfo *m_pkBoatInfo;
-	int				m_count;
-public:
-    xShipFactory();
-    ~xShipFactory();
+	xShipBuildInfo* m_pkBoatInfo;
+	int m_count;
 
-    void SetType(int t) { type = t; }
-    BOOL Init(CGameScene* s);
-    void ShowFlipBtn(int show, const char* name);
-    void Show(int flag);
-    void FrameMove();
-    void Render3DView(int x, int y);
-    BOOL Update(xShipBuildInfo* info, BOOL flag, const char* name); 
+public:
+	xShipFactory();
+	~xShipFactory();
+
+	void SetType(int t) {
+		type = t;
+	}
+
+	BOOL Init(CGameScene* s);
+	void ShowFlipBtn(int show, const char* name);
+	void Show(int flag);
+	void FrameMove();
+	void Render3DView(int x, int y);
+	BOOL Update(xShipBuildInfo* info, BOOL flag, const char* name);
 	BOOL UpdateBoatCreate(xShipBuildInfo* info, BOOL flag, const char* name);
 	BOOL UpdateBoatInfo(xShipBuildInfo* info, BOOL flag, const char* name);
 	BOOL UpdateBoatFreedomTrade(const char* name, DWORD* dwModelInfo, size_t size);
 	BOOL SetShipModelInfo(DWORD* dwModelInfo, size_t size);
-    BOOL CreateShip(DWORD type_id, DWORD* part_buf); // tyep_id: 301
-    BOOL ChangePart(DWORD part_id, DWORD file_id);
-    BOOL UpdateShipPart(CGuiData* sender);
-    BOOL CheckShipName();
-    BOOL Close(CGuiData* sender);
-    BOOL IsVisible();
+	BOOL CreateShip(DWORD type_id, DWORD* part_buf); // tyep_id: 301
+	BOOL ChangePart(DWORD part_id, DWORD file_id);
+	BOOL UpdateShipPart(CGuiData* sender);
+	BOOL CheckShipName();
+	BOOL Close(CGuiData* sender);
+	BOOL IsVisible();
 	// Get cabin by boat ID. Michael Chen (2005-05-26).
-	void SetBoatID(DWORD dwBoatID)	{ m_dwBoatID = dwBoatID; }
-	DWORD GetBoatID() { return m_dwBoatID; }
+	void SetBoatID(DWORD dwBoatID) {
+		m_dwBoatID = dwBoatID;
+	}
+
+	DWORD GetBoatID() {
+		return m_dwBoatID;
+	}
+
 	BOOL GetCabinByID();
 	void SetBoatAttr();
 	void SetManBoatAttr();
-	void SetState(eState state) { m_state = state;	}
-	eState GetState() { return m_state; }
+
+	void SetState(eState state) {
+		m_state = state;
+	}
+
+	eState GetState() {
+		return m_state;
+	}
+
 	void UpdateBoatAttr();
 	void ClearBoatAttr();
 
-    void Test();
+	void Test();
 };
 
-class xShipLaunchList
-{
+class xShipLaunchList {
 public:
-    CGameScene* scene;
-    CFormMgr* form_mgr;
-    CForm* wnd;
-    CMemo* memo;
-    CTextButton* btn_close;
-    CTextButton* btn_cancel;
+	CGameScene* scene;
+	CFormMgr* form_mgr;
+	CForm* wnd;
+	CMemo* memo;
+	CTextButton* btn_close;
+	CTextButton* btn_cancel;
 
 	/* Flag indicates whether to show launch list or trade selection (Michael Chen) */
-	typedef enum enumFlag
-	{
+	typedef enum enumFlag {
 		eLaunch,
 		eTrade,
 		eCreate,
@@ -219,47 +227,49 @@ public:
 		eUpgrade,
 	} eFlag;
 
-
 public:
-    static void __ProcSelectChange(CGuiData *pSender);
-    static void	__ButtonClose(CGuiData *pSender, int x, int y, DWORD dwKey);
+	static void __ProcSelectChange(CGuiData* pSender);
+	static void __ButtonClose(CGuiData* pSender, int x, int y, DWORD dwKey);
 
-    xShipLaunchList();
-    ~xShipLaunchList();
-    BOOL Init(CGameScene* s);
-    void SelectItem(CGuiData *pSender);
+	xShipLaunchList();
+	~xShipLaunchList();
+	BOOL Init(CGameScene* s);
+	void SelectItem(CGuiData* pSender);
 	/* flag: whether launching or trading (Michael Chen) */
-    void Update(DWORD num, const BOAT_BERTH_DATA* data, const eFlag flag=eLaunch);
+	void Update(DWORD num, const BOAT_BERTH_DATA* data, const eFlag flag = eLaunch);
 	/* Set NPC ID, required for trading (Michael Chen) */
-	void SetNpcID(DWORD dwNpcID) { m_dwNpcID = dwNpcID; }
-	/* Set type, required for trading (Michael Chen) */
-	void SetType(BYTE byType) { m_byType = byType; }
+	void SetNpcID(DWORD dwNpcID) {
+		m_dwNpcID = dwNpcID;
+	}
 
-    void Test();
+	/* Set type, required for trading (Michael Chen) */
+	void SetType(BYTE byType) {
+		m_byType = byType;
+	}
+
+	void Test();
 
 	// Close ship selection form, called from xShipMgr internally.  add by Philip.Wu  2006-06-02
 	void CloseForm(void);
-	
+
 private:
 	eFlag m_eFlag;
 	DWORD m_dwNpcID;
-	BYTE  m_byType;
-
+	BYTE m_byType;
 };
 
-class xShipMgr
-{
+class xShipMgr {
 public:
-    xShipFactory* _factory;
-    xShipLaunchList* _launch_list;
+	xShipFactory* _factory;
+	xShipLaunchList* _launch_list;
 
 public:
-    xShipMgr();
-    ~xShipMgr();
+	xShipMgr();
+	~xShipMgr();
 
-    BOOL Init(CGameScene* s);
-    void FrameMove();
+	BOOL Init(CGameScene* s);
+	void FrameMove();
 
 	// Close ship selection form, called externally.  add by Philip.Wu  2006-06-02
-	void	CloseForm();
+	void CloseForm();
 };

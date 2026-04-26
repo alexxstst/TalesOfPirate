@@ -124,8 +124,8 @@ BOOL PC_GUILD(LPRPACKET pk) {
 		if (lPacketIndex == 0 && l_num > 0) //  
 		{
 			NetPC_GUILD_START_BEGIN(static_cast<uLong>(startData.guildId),
-								   startData.guildName.c_str(),
-								   static_cast<uLong>(startData.leaderId));
+									startData.guildName.c_str(),
+									static_cast<uLong>(startData.leaderId));
 		}
 		for (uChar i = 0; i < l_num; ++i) {
 			const auto& m = startData.members[i];

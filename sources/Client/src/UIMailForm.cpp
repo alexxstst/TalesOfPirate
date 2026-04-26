@@ -1,5 +1,4 @@
-﻿
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "gameapp.h"
 #include "UIMailForm.h"
 #include "UIFormMgr.h"
@@ -8,53 +7,44 @@
 
 using namespace std;
 
-namespace GUI
-{
-	CMailMgr::CMailMgr(void)
-	{
+namespace GUI {
+	CMailMgr::CMailMgr(void) {
 	}
 
-	CMailMgr::~CMailMgr(void)
-	{
+	CMailMgr::~CMailMgr(void) {
 	}
 
 
-	bool CMailMgr::Init()
-	{
+	bool CMailMgr::Init() {
 		frmQuestion = CFormMgr::s_Mgr.Find("frmQuestion");
-		if(! frmQuestion)
-		{
+		if (!frmQuestion) {
 			ToLogService("common", "main.clu   frmQuestion not found.");
 			return false;
 		}
 		frmQuestion->evtEntrustMouseEvent = _evtQuestionFormEvent;
 
 		edtQuestionTitle = dynamic_cast<CEdit*>(frmQuestion->Find("edtQuestionTitle"));
-		if(! edtQuestionTitle)
-		{
+		if (!edtQuestionTitle) {
 			ToLogService("common", "main.clu   frmQuestion:edtQuestionTitle not found.");
 			return false;
 		}
 		edtQuestionTitle->SetIsWrap(true);
 
 		memCentent = dynamic_cast<CMemo*>(frmQuestion->Find("memCentent"));
-		if(! memCentent)
-		{
+		if (!memCentent) {
 			ToLogService("common", "main.clu   frmQuestion:memCentent not found.");
 			return false;
 		}
 
 
 		frmAnswer = CFormMgr::s_Mgr.Find("frmAnswer");
-		if(! frmAnswer)
-		{
+		if (!frmAnswer) {
 			ToLogService("common", "main.clu   frmAnswer not found.");
 			return false;
 		}
 
 		memMiss = dynamic_cast<CMemo*>(frmAnswer->Find("memMiss"));
-		if(! memMiss)
-		{
+		if (!memMiss) {
 			ToLogService("common", "main.clu   frmAnswer:memMiss not found.");
 			return false;
 		}
@@ -63,15 +53,12 @@ namespace GUI
 	}
 
 
-	void CMailMgr::CloseForm()
-	{
+	void CMailMgr::CloseForm() {
 	}
 
 
-	void CMailMgr::FrameMove(DWORD dwTime)
-	{
-		if(frmQuestion && frmQuestion->GetIsShow())
-		{
+	void CMailMgr::FrameMove(DWORD dwTime) {
+		if (frmQuestion && frmQuestion->GetIsShow()) {
 			memCentent->SetCaption(edtQuestionTitle->GetCaption());
 			memCentent->ProcessCaption();
 			memCentent->Refresh();
@@ -79,8 +66,7 @@ namespace GUI
 	}
 
 
-	void CMailMgr::ShowQuestionForm()
-	{
+	void CMailMgr::ShowQuestionForm() {
 		memCentent->SetCaption("");
 		memCentent->ProcessCaption();
 		memCentent->Refresh();
@@ -89,11 +75,9 @@ namespace GUI
 	}
 
 
-	void CMailMgr::ShowAnswerForm(const char* szTitle, const char* szContent)
-	{
+	void CMailMgr::ShowAnswerForm(const char* szTitle, const char* szContent) {
 		string strAnswer("");
-		if(strlen(szTitle) > 0)
-		{
+		if (strlen(szTitle) > 0) {
 			strAnswer += szTitle;
 			strAnswer += "\n";
 		}
@@ -107,11 +91,9 @@ namespace GUI
 	}
 
 
-	void CMailMgr::SubmitQuestion()
-	{
-		if(strlen(edtQuestionTitle->GetCaption()) < 16)
-		{
-			g_pGameApp->MsgBox("%s", GetLanguageString(914).c_str());	// 816
+	void CMailMgr::SubmitQuestion() {
+		if (strlen(edtQuestionTitle->GetCaption()) < 16) {
+			g_pGameApp->MsgBox("%s", GetLanguageString(914).c_str()); // 816
 			return;
 		}
 
@@ -123,15 +105,11 @@ namespace GUI
 	}
 
 
-	void CMailMgr::_evtQuestionFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-	{
+	void CMailMgr::_evtQuestionFormEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 		string strName = pSender->GetName();
-		if(strName == "btnSubmit")	// 
+		if (strName == "btnSubmit") // 
 		{
 			g_stUIMail.SubmitQuestion();
 		}
 	}
-
 }
-
-

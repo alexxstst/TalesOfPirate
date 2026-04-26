@@ -45,7 +45,7 @@ inline float Randf(float _f1, float _f2) {
 
 inline bool PointInstrPointRange(D3DXVECTOR3* vPoint1, D3DXVECTOR3* vPoint2, float fRange) {
 	return ((fabs(vPoint1->x - vPoint2->x) < fRange) &&
-			(fabs(vPoint1->y - vPoint2->y) < fRange));
+		(fabs(vPoint1->y - vPoint2->y) < fRange));
 }
 
 inline bool PointPointRange(D3DXVECTOR3* vPoint1, D3DXVECTOR3* vPoint2, float fRange) {
@@ -397,7 +397,6 @@ public:
 	void SetFrameColor(int iFrame, DWORD dwColor) {
 		if (iFrame < _wFrameCount)
 			*_vecFrameColor[iFrame] = dwColor;
-
 	}
 
 	void SetAlpha(float falpha);

@@ -1,5 +1,4 @@
-﻿
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameWG.h"
 #include "PacketCmd.h"
 #include "CrushSystem.h"
@@ -10,13 +9,11 @@
 
 
 CGameWG::CGameWG(void)
-	: m_hThread(0)
-{
+	: m_hThread(0) {
 }
 
 
-CGameWG::~CGameWG(void)
-{
+CGameWG::~CGameWG(void) {
 	SafeTerminateThread();
 
 	m_lstModule.clear();
@@ -24,53 +21,45 @@ CGameWG::~CGameWG(void)
 
 
 // 
-bool CGameWG::RefreshModule(void)
-{
-    bool          bRet        = false;
+bool CGameWG::RefreshModule(void) {
+	bool bRet = false;
 
-	try
-	{
-		MODULEENTRY32 me32        = {0};
-		std::string   strModule;
+	try {
+		MODULEENTRY32 me32 = {0};
+		std::string strModule;
 
-		std::unique_ptr<void, decltype(&CloseHandle)> hModuleSnap(CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId()), &CloseHandle);
+		std::unique_ptr<void, decltype(&CloseHandle)> hModuleSnap(
+			CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId()), &CloseHandle);
 		if (hModuleSnap.get() == INVALID_HANDLE_VALUE)
 			return false;
 
-		me32.dwSize = sizeof(MODULEENTRY32); 
+		me32.dwSize = sizeof(MODULEENTRY32);
 
-		if(Module32First(hModuleSnap.get(), &me32)) 
-		{
+		if (Module32First(hModuleSnap.get(), &me32)) {
 			// 
-			do
-			{
+			do {
 				strModule = me32.szModule;
 				m_lstModule.insert(strModule);
 			}
-			while(Module32Next(hModuleSnap.get(), &me32));
+			while (Module32Next(hModuleSnap.get(), &me32));
 
 			bRet = true;
 		}
-		else
-		{
+		else {
 			// 
 			bRet = false;
 		}
 	}
-	catch(...)
-	{
-		
+	catch (...) {
 	}
 
-    return bRet;
+	return bRet;
 }
 
 
 // 
-bool CGameWG::IsUseHdts(void)
-{
-	if (m_lstModule.contains("hookit.dll"))
-	{
+bool CGameWG::IsUseHdts(void) {
+	if (m_lstModule.contains("hookit.dll")) {
 		return true;
 	}
 
@@ -79,17 +68,14 @@ bool CGameWG::IsUseHdts(void)
 
 
 // 
-void CGameWG::BeginThread(void)
-{
-    m_hThread = (HANDLE)_beginthreadex(0, 0, Run, this, 0, 0);
+void CGameWG::BeginThread(void) {
+	m_hThread = (HANDLE)_beginthreadex(0, 0, Run, this, 0, 0);
 }
 
 
 // 
-void CGameWG::SafeTerminateThread()
-{
-	if(m_hThread)
-	{
+void CGameWG::SafeTerminateThread() {
+	if (m_hThread) {
 		TerminateThread(m_hThread, 0);
 		CloseHandle(m_hThread);
 
@@ -99,38 +85,31 @@ void CGameWG::SafeTerminateThread()
 
 
 //
-UINT CALLBACK CGameWG::Run(void* param)
-{
+UINT CALLBACK CGameWG::Run(void* param) {
 	::SetThreadName("game-wg");
 	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 	CGameWG* pGameWG = (CGameWG*)(param);
 
-	for(;;)
-	{
-		Sleep(60 * 1000);	//
+	for (;;) {
+		Sleep(60 * 1000); //
 
-		if(! g_NetIF || ! g_NetIF->IsConnected())
-		{
+		if (!g_NetIF || !g_NetIF->IsConnected()) {
 			// 
 			continue;
 		}
 
-		if(! pGameWG->RefreshModule())
-		{
+		if (!pGameWG->RefreshModule()) {
 			// 
 			continue;
 		}
 
-		if(pGameWG->IsUseHdts())
-		{
+		if (pGameWG->IsUseHdts()) {
 			// 
 
 			CS_ReportWG(GetLanguageString(143).c_str());
 			break;
 		}
-
 	}
 
 	return 0;
 }
-

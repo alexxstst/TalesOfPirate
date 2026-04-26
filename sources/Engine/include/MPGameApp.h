@@ -42,204 +42,275 @@ class ConsoleProcessor;
 #define M_MClick	0x1000
 #define M_RClick	0x2000
 
-class MPGameApp
-{
+class MPGameApp {
 public:
-
 	MPGameApp();
 	~MPGameApp();
-    virtual void _PreMouseRun( DWORD dwMouseKey) {}
+
+	virtual void _PreMouseRun(DWORD dwMouseKey) {
+	}
 
 	// camMove Vim 3D Vision
-    virtual void _FrameMove(DWORD dwTimeParam, bool camMove=false)	{            }
-    virtual void _Render()                     {            }
-    virtual BOOL _Init()                       {return TRUE;}       
-    virtual void _End()                        {            }
-    
-    BOOL	Init(HINSTANCE hInst, const char *pszClassName, int nScrWidth = 800, int nScrHeight = 600, int nColorBit = 16, BOOL bFullScreen = FALSE);
-	void	FrameMove(DWORD dwTimeParam);
-	void	Render();
-    virtual void    End();
+	virtual void _FrameMove(DWORD dwTimeParam, bool camMove = false) {
+	}
 
-	virtual void	MouseButtonDown(int nButton)			{}
-	virtual void	MouseButtonUp(int nButton)				{}
-	virtual void	MouseButtonDB(int nButton)				{}
-	virtual void	MouseMove(int nOffsetX, int nOffsetY)	{}
-	virtual void	MouseScroll(int nOffset)				{}
-	virtual void	HandleKeyDown(DWORD dwKey)				{}
-	virtual void	HandleKeyUp()							{}
-	virtual void	MouseContinue(int nButton)				{}
+	virtual void _Render() {
+	}
 
-	
+	virtual BOOL _Init() {
+		return TRUE;
+	}
 
-	DWORD			GetMouseKey(){ return _dwMouseKey;}
+	virtual void _End() {
+	}
+
+	BOOL Init(HINSTANCE hInst, const char* pszClassName, int nScrWidth = 800, int nScrHeight = 600, int nColorBit = 16,
+			  BOOL bFullScreen = FALSE);
+	void FrameMove(DWORD dwTimeParam);
+	void Render();
+	virtual void End();
+
+	virtual void MouseButtonDown(int nButton) {
+	}
+
+	virtual void MouseButtonUp(int nButton) {
+	}
+
+	virtual void MouseButtonDB(int nButton) {
+	}
+
+	virtual void MouseMove(int nOffsetX, int nOffsetY) {
+	}
+
+	virtual void MouseScroll(int nOffset) {
+	}
+
+	virtual void HandleKeyDown(DWORD dwKey) {
+	}
+
+	virtual void HandleKeyUp() {
+	}
+
+	virtual void MouseContinue(int nButton) {
+	}
+
+
+	DWORD GetMouseKey() {
+		return _dwMouseKey;
+	}
 
 	// input interface
-	BOOL IsKeyContinue(BYTE btDIKey);		// 
+	BOOL IsKeyContinue(BYTE btDIKey); // 
 	BOOL IsKeyDown(BYTE btDIKey);
-	BOOL IsMouseButtonPress(int nButtonNo);  // 
-	BOOL IsCtrlPress()
-	{
+	BOOL IsMouseButtonPress(int nButtonNo); // 
+	BOOL IsCtrlPress() {
 		return (GetKeyState(VK_CONTROL) & 0xff00);
 	}
-	BOOL IsAltPress()
-	{
+
+	BOOL IsAltPress() {
 		return (GetKeyState(VK_MENU) & 0xff00);
 	}
-	BOOL IsShiftPress()
-	{
+
+	BOOL IsShiftPress() {
 		return (GetKeyState(VK_SHIFT) & 0xff00);
 	}
 
-	int					GetMouseX()	   { return _nMousePosX; }
-	int					GetMouseY()    { return _nMousePosY; }
-	void				SetMouseXY(int nPosX, int nPosY) { _nMousePosX = nPosX; _nMousePosY = nPosY; }
-    HWND                GetHWND()      { return _hWnd;       } 
-    int                 GetWindowWidth()    { return _nWindowWidth;  }    
-    int                 GetWindowHeight()   { return _nWindowHeight; }
-    BOOL                IsFullScreen()      { return _bFullScreen;   } 
-    void                EnableCheckInputWnd(BOOL bEnable)   { _bCheckInputWnd = bEnable;}
-	
+	int GetMouseX() {
+		return _nMousePosX;
+	}
+
+	int GetMouseY() {
+		return _nMousePosY;
+	}
+
+	void SetMouseXY(int nPosX, int nPosY) {
+		_nMousePosX = nPosX;
+		_nMousePosY = nPosY;
+	}
+
+	HWND GetHWND() {
+		return _hWnd;
+	}
+
+	int GetWindowWidth() {
+		return _nWindowWidth;
+	}
+
+	int GetWindowHeight() {
+		return _nWindowHeight;
+	}
+
+	BOOL IsFullScreen() {
+		return _bFullScreen;
+	}
+
+	void EnableCheckInputWnd(BOOL bEnable) {
+		_bCheckInputWnd = bEnable;
+	}
+
 	// Console
-	ConsoleProcessor*	GetConsole() { return _pConsole; }
+	ConsoleProcessor* GetConsole() {
+		return _pConsole;
+	}
 
 
-	void				SetCaption(const char *pszCaption);
+	void SetCaption(const char* pszCaption);
 
-	void				EnableSprintScreen(BOOL	bEnable)	{_bEnSpScreen = bEnable;     }
-	BOOL				IsEnableSpScreen()					{ return _bEnSpScreen;       }
+	void EnableSprintScreen(BOOL bEnable) {
+		_bEnSpScreen = bEnable;
+	}
 
-	void				EnableSprintAvi(BOOL	bEnable)	{_bEnSpAvi = bEnable;        }
-	BOOL				IsEnableSpAvi()					    { return _bEnSpAvi;          }
+	BOOL IsEnableSpScreen() {
+		return _bEnSpScreen;
+	}
 
-	void				EnableSprintSmMap(BOOL	bEnable)	{_bEnSpSmMap = bEnable;      }
-	BOOL				IsEnableSpSmMap()					{ return _bEnSpSmMap;        }
-    DWORD               GetFrameMoveUseTime()               { return _dwFrameMoveUseTime;}
-    DWORD               GetRenderUseTime()                  { return _dwRenderUseTime;   }
+	void EnableSprintAvi(BOOL bEnable) {
+		_bEnSpAvi = bEnable;
+	}
 
-	void				SetInputActive(bool bActive);
+	BOOL IsEnableSpAvi() {
+		return _bEnSpAvi;
+	}
 
-	BOOL				LoadResource();
-	BOOL				LoadRes2();
-	BOOL				LoadRes3();
+	void EnableSprintSmMap(BOOL bEnable) {
+		_bEnSpSmMap = bEnable;
+	}
+
+	BOOL IsEnableSpSmMap() {
+		return _bEnSpSmMap;
+	}
+
+	DWORD GetFrameMoveUseTime() {
+		return _dwFrameMoveUseTime;
+	}
+
+	DWORD GetRenderUseTime() {
+		return _dwRenderUseTime;
+	}
+
+	void SetInputActive(bool bActive);
+
+	BOOL LoadResource();
+	BOOL LoadRes2();
+	BOOL LoadRes3();
 
 protected:
-
-	BOOL		_InitInput();
-	void		_RenderAxis();
-	void		_ReadKeyboardInput();
-	void		_SetupView(MPCameraNOLEECH *pCamera);	// D3D ViewMatrix
+	BOOL _InitInput();
+	void _RenderAxis();
+	void _ReadKeyboardInput();
+	void _SetupView(MPCameraNOLEECH* pCamera); // D3D ViewMatrix
 
 	// UI
-	void		_RenderUI();
+	void _RenderUI();
 
-	bool		_CanInput();
+	bool _CanInput();
+
 protected:
+	HINSTANCE _hInst;
+	HWND _hWnd;
 
-	HINSTANCE				_hInst;
-	HWND					_hWnd;
+	bool _bActive;
 
-	bool					_bActive;
-	
 	// Texture Management
 
-	BYTE					_bCanDB;
+	BYTE _bCanDB;
 
-	BYTE					_btButtonState[3];
-	BYTE					_btLastButtonState[3];
+	BYTE _btButtonState[3];
+	BYTE _btLastButtonState[3];
 
-	UINT					_nDBClickTime;
-	UINT					_nLastClickTime;
-	bool					_bLastDBClick;
+	UINT _nDBClickTime;
+	UINT _nLastClickTime;
+	bool _bLastDBClick;
 
-	UINT					_nDBTime;
+	UINT _nDBTime;
 
 
+	BOOL _bDrag;
+	int _nLastDragX;
+	int _nLastDragY;
+	int _nMousePosX;
+	int _nMousePosY;
 
-	BOOL					_bDrag;
-	int						_nLastDragX;
-	int						_nLastDragY;
-	int						_nMousePosX;
-	int						_nMousePosY;
-
-	int						_nLogoTexID;
+	int _nLogoTexID;
 
 	// Console
-	ConsoleProcessor*		_pConsole;
+	ConsoleProcessor* _pConsole;
 
 
+	BOOL _bEnSpScreen;
+	BOOL _bEnSpAvi;
+	BOOL _bEnSpSmMap;
+	int _nWindowWidth;
+	int _nWindowHeight;
+	BOOL _bFullScreen;
+	BOOL _bCheckInputWnd;
 
-	BOOL					_bEnSpScreen;
-	BOOL					_bEnSpAvi;
-	BOOL					_bEnSpSmMap;
-    int                     _nWindowWidth;
-    int                     _nWindowHeight;
-    BOOL                    _bFullScreen;
-    BOOL                    _bCheckInputWnd;
-    
-    // performance routines
-    DWORD                   _dwRenderUseTime;
-    DWORD                   _dwFrameMoveUseTime;
+	// performance routines
+	DWORD _dwRenderUseTime;
+	DWORD _dwFrameMoveUseTime;
 
-	DWORD					_dwMouseKey;
+	DWORD _dwMouseKey;
 
-	DIMOUSESTATE2			_sDims2;
+	DIMOUSESTATE2 _sDims2;
 
 public:
 	//  Phase-аксессоры — тонкие редиректы на InputSystem (совместимость с legacy API).
-	inline BYTE getKeyState ( BYTE dikey );
-	inline BYTE getASCIIKeyState ( BYTE codeASCII );
-	inline BOOL isKeyFree ( BYTE dikey );
-	inline BOOL isKeyPush ( BYTE dikey );
-	inline BOOL isKeyHold ( BYTE dikey );
-	inline BOOL isKeyPop  ( BYTE dikey );
-	inline BOOL isKeyChange ( BYTE dikey );
+	inline BYTE getKeyState(BYTE dikey);
+	inline BYTE getASCIIKeyState(BYTE codeASCII);
+	inline BOOL isKeyFree(BYTE dikey);
+	inline BOOL isKeyPush(BYTE dikey);
+	inline BOOL isKeyHold(BYTE dikey);
+	inline BOOL isKeyPop(BYTE dikey);
+	inline BOOL isKeyChange(BYTE dikey);
 
-	inline BOOL isKeyStateDown ( BYTE dikey );
-	inline BOOL isKeyStateUp ( BYTE dikey );
+	inline BOOL isKeyStateDown(BYTE dikey);
+	inline BOOL isKeyStateUp(BYTE dikey);
 };
 
-inline BOOL MPGameApp::IsKeyContinue(BYTE dikey)
-{
-	return isKeyHold ( dikey );
+inline BOOL MPGameApp::IsKeyContinue(BYTE dikey) {
+	return isKeyHold(dikey);
 }
 
-inline BOOL MPGameApp::IsKeyDown(BYTE dikey)
-{
-	return isKeyPush ( dikey );
+inline BOOL MPGameApp::IsKeyDown(BYTE dikey) {
+	return isKeyPush(dikey);
 }
 
-inline BOOL MPGameApp::IsMouseButtonPress(int nButtonNo)
-{
+inline BOOL MPGameApp::IsMouseButtonPress(int nButtonNo) {
 	return _btButtonState[nButtonNo];
 }
 
-inline BYTE MPGameApp::getKeyState(BYTE dikey)
-{
+inline BYTE MPGameApp::getKeyState(BYTE dikey) {
 	return Corsairs::Engine::Input::InputSystem::Instance().GetKeyPhase(dikey);
 }
 
-inline BYTE MPGameApp::getASCIIKeyState(BYTE codeASCII)
-{
+inline BYTE MPGameApp::getASCIIKeyState(BYTE codeASCII) {
 	return Corsairs::Engine::Input::InputSystem::Instance().GetAsciiPhase(codeASCII);
 }
 
-inline BOOL MPGameApp::isKeyFree(BYTE dikey)  { return getKeyState(dikey) & KEY_FREE; }
-inline BOOL MPGameApp::isKeyPush(BYTE dikey)  { return getKeyState(dikey) & KEY_PUSH; }
-inline BOOL MPGameApp::isKeyHold(BYTE dikey)  { return getKeyState(dikey) & KEY_HOLD; }
-inline BOOL MPGameApp::isKeyPop(BYTE dikey)   { return getKeyState(dikey) & KEY_POP;  }
-
-inline BOOL MPGameApp::isKeyChange(BYTE dikey)
-{
-	return ( isKeyPush ( dikey ) || isKeyPop ( dikey ) );
+inline BOOL MPGameApp::isKeyFree(BYTE dikey) {
+	return getKeyState(dikey) & KEY_FREE;
 }
 
-inline BOOL MPGameApp::isKeyStateDown(BYTE dikey)
-{
-	return ( isKeyPush ( dikey ) || isKeyHold ( dikey ) );
+inline BOOL MPGameApp::isKeyPush(BYTE dikey) {
+	return getKeyState(dikey) & KEY_PUSH;
 }
 
-inline BOOL MPGameApp::isKeyStateUp(BYTE dikey)
-{
-	return ( isKeyFree ( dikey ) || isKeyPop ( dikey ) );
+inline BOOL MPGameApp::isKeyHold(BYTE dikey) {
+	return getKeyState(dikey) & KEY_HOLD;
+}
+
+inline BOOL MPGameApp::isKeyPop(BYTE dikey) {
+	return getKeyState(dikey) & KEY_POP;
+}
+
+inline BOOL MPGameApp::isKeyChange(BYTE dikey) {
+	return (isKeyPush(dikey) || isKeyPop(dikey));
+}
+
+inline BOOL MPGameApp::isKeyStateDown(BYTE dikey) {
+	return (isKeyPush(dikey) || isKeyHold(dikey));
+}
+
+inline BOOL MPGameApp::isKeyStateUp(BYTE dikey) {
+	return (isKeyFree(dikey) || isKeyPop(dikey));
 }

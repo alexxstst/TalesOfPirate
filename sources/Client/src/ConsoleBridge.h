@@ -37,27 +37,27 @@
 
 class ConsoleBridge {
 public:
-    static ConsoleBridge& Get();
+	static ConsoleBridge& Get();
 
-    std::string Dispatch(std::string_view cmd);
-    bool        CanOpen();
-    void        InitLuaAPI();
-    bool        ReloadLua();
+	std::string Dispatch(std::string_view cmd);
+	bool CanOpen();
+	void InitLuaAPI();
+	bool ReloadLua();
 
-    // Запомнить главный поток (вызывается из InitLuaAPI).
-    void RegisterMainThread();
-    // Проверка принадлежности вызывающего потока главному; при несоответствии
-    // пишет лог-ошибку и возвращает false.
-    bool IsMainThread(const char* where) const;
+	// Запомнить главный поток (вызывается из InitLuaAPI).
+	void RegisterMainThread();
+	// Проверка принадлежности вызывающего потока главному; при несоответствии
+	// пишет лог-ошибку и возвращает false.
+	bool IsMainThread(const char* where) const;
 
 private:
-    ConsoleBridge() = default;
-    ConsoleBridge(const ConsoleBridge&) = delete;
-    ConsoleBridge& operator=(const ConsoleBridge&) = delete;
+	ConsoleBridge() = default;
+	ConsoleBridge(const ConsoleBridge&) = delete;
+	ConsoleBridge& operator=(const ConsoleBridge&) = delete;
 
-    void _RegisterLuaNamespace();
-    bool _LoadConsoleScripts();
+	void _RegisterLuaNamespace();
+	bool _LoadConsoleScripts();
 
-    std::thread::id _mainThreadId{};
-    bool _mainThreadRegistered = false;
+	std::thread::id _mainThreadId{};
+	bool _mainThreadRegistered = false;
 };

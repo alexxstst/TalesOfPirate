@@ -35,9 +35,9 @@ bool GetIntersectRect(RECT* pdest, RECT* psrc, RECT* pclip) {
 	if (psrc->bottom > pclip->bottom) {
 		y2 = pclip->bottom - psrc->bottom;
 	}
-	pdest->left   = psrc->left   - x1;
-	pdest->right  = psrc->right  + x2;
-	pdest->top    = psrc->top    - y1;
+	pdest->left = psrc->left - x1;
+	pdest->right = psrc->right + x2;
+	pdest->top = psrc->top - y1;
 	pdest->bottom = psrc->bottom + y2;
 	return true;
 }
@@ -69,9 +69,9 @@ bool ui::UIClip::GetIntersectRect(RECT* pdest, RECT* psrc, BYTE* byFill) {
 	if (psrc->bottom > prc->bottom) {
 		y2 = prc->bottom - psrc->bottom;
 	}
-	pdest->left   = psrc->left   - x1;
-	pdest->right  = psrc->right  + x2;
-	pdest->top    = psrc->top    - y1;
+	pdest->left = psrc->left - x1;
+	pdest->right = psrc->right + x2;
+	pdest->top = psrc->top - y1;
 	pdest->bottom = psrc->bottom + y2;
 	return true;
 }

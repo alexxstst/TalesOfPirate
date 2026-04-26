@@ -9,172 +9,210 @@
 #include "uiform.h"
 #include "uicursor.h"
 
-namespace GUI
-{
-class CCommandObj;
-typedef void (*UseComandEvent)(CCommandObj* pItem,bool& isUse);
+namespace GUI {
+	class CCommandObj;
+	typedef void (*UseComandEvent)(CCommandObj* pItem, bool& isUse);
 
-enum eAccept
-{
-	enumAccept,		// 
-	enumRefuse,		// 
-	enumFast,		// 
-};
+	enum eAccept {
+		enumAccept, // 
+		enumRefuse, // 
+		enumFast, // 
+	};
 
-enum eMouseAction
-{
-	enumMA_None,		// 
+	enum eMouseAction {
+		enumMA_None, // 
 
-	enumMA_Gui,			// GUI
-	enumMA_Skill,		// ,
-	enumMA_Drill,		// 
-};
+		enumMA_Gui, // GUI
+		enumMA_Skill, // ,
+		enumMA_Drill, // 
+	};
 
-class CCommandObj;
-class CContainer;
-class CCompent : public CGuiData
-{
-public:
-	friend class CFormMgr;
-	friend class CForm;
-	friend class CContainer;
-public:
-	CCompent(CForm& frmOwn);
-	CCompent(const CCompent& rhs);
-	CCompent& operator=( const CCompent& rhs );
-	virtual ~CCompent(void);
-	GUI_CLONE(CCompent)
+	class CCommandObj;
+	class CContainer;
 
-	virtual bool	MouseRun( int x, int y, DWORD key );
-    virtual void    Refresh();
-    virtual void    FrameMove( DWORD dwTime ) {}
-	virtual bool	IsFrameMove()				{ return false;		}
+	class CCompent : public CGuiData {
+	public:
+		friend class CFormMgr;
+		friend class CForm;
+		friend class CContainer;
 
-	eCompentAlign	GetAlign()	{ return _align; }
-	virtual void	SetAlign( eCompentAlign v );
-	virtual void	SetIsDrag( bool v );
-    virtual void	SetIsShow( bool v );
+	public:
+		CCompent(CForm& frmOwn);
+		CCompent(const CCompent& rhs);
+		CCompent& operator=(const CCompent& rhs);
+		virtual ~CCompent(void);
+		GUI_CLONE(CCompent)
 
-	virtual void	SetParent( CGuiData* p );
+		virtual bool MouseRun(int x, int y, DWORD key);
+		virtual void Refresh();
 
-	void			SetForm( CForm* f );
-	virtual			CForm* GetForm()	        { return _frmOwn;	}
+		virtual void FrameMove(DWORD dwTime) {
+		}
 
-	virtual CCompent* Find( const char* str )   { return _frmOwn->Find( str ); }
+		virtual bool IsFrameMove() {
+			return false;
+		}
 
-    virtual CCompent* GetHintCompent( int x, int y );                       // 
+		eCompentAlign GetAlign() {
+			return _align;
+		}
 
-    virtual CCompent*       GetHitCommand(int x, int y)     { return NULL;  }   // ,Compent
-    virtual UseComandEvent  GetUseCommantEvent()            { return NULL;  }   // itemitem
-    virtual eAccept	        SetCommand( CCommandObj* p, int x, int y )	{ return enumRefuse;    }   // command
+		virtual void SetAlign(eCompentAlign v);
+		virtual void SetIsDrag(bool v);
+		virtual void SetIsShow(bool v);
 
-public:
-	virtual void	OnActive();		// 
-	virtual void	OnLost() { if ( evtLost ) evtLost(this );	}		// 
+		virtual void SetParent(CGuiData* p);
 
-	virtual bool	OnKeyDown( int key )	{ return false;		}
-	virtual bool	OnChar( char c )		{ return false;		}
+		void SetForm(CForm* f);
 
-	virtual bool	IsHandleMouse()			{ return false;		}		// 
+		virtual CForm* GetForm() {
+			return _frmOwn;
+		}
 
-	static void		SetActive(CCompent* v);
-	static CCompent* GetActive()			{ return _pActive;	}
+		virtual CCompent* Find(const char* str) {
+			return _frmOwn->Find(str);
+		}
 
-	void	SetIsFocus( bool v )			{ _IsFocus = v;		}
-	bool	GetIsFocus()					{ return _IsFocus;	}
+		virtual CCompent* GetHintCompent(int x, int y); // 
 
-    void            AddForm();
+		virtual CCompent* GetHitCommand(int x, int y) {
+			return NULL;
+		} // ,Compent
+		virtual UseComandEvent GetUseCommantEvent() {
+			return NULL;
+		} // itemitem
+		virtual eAccept SetCommand(CCommandObj* p, int x, int y) {
+			return enumRefuse;
+		} // command
 
-	eMouseAction	GetMouseAction()						{ return _eMouseAction;			}
-	void			SetMouseAction( eMouseAction v )		{ _eMouseAction = v;			}
+	public:
+		virtual void OnActive(); // 
+		virtual void OnLost() {
+			if (evtLost) evtLost(this);
+		} // 
 
-	static CCompent* GetLastMouseCompent()					{ return _pLastMouseCompent;	}
+		virtual bool OnKeyDown(int key) {
+			return false;
+		}
 
-public:
-	GuiEvent		evtLost;		// 
-	GuiEvent		evtActive;		// 
+		virtual bool OnChar(char c) {
+			return false;
+		}
 
-protected:
-	virtual void	_AddForm();		// Form
-	void			_SetActive();
+		virtual bool IsHandleMouse() {
+			return false;
+		} // 
 
-private:
-	void			_Copy( const CCompent& rhs );
+		static void SetActive(CCompent* v);
 
-protected:
-	static CCompent*	_pActive;	// 
+		static CCompent* GetActive() {
+			return _pActive;
+		}
 
-protected:
-	CForm			*_frmOwn;		// ,
+		void SetIsFocus(bool v) {
+			_IsFocus = v;
+		}
 
-	bool			_IsFocus;		// 
+		bool GetIsFocus() {
+			return _IsFocus;
+		}
 
-	eCompentAlign	_align;
-	bool			_isChild;		// 
-	eMouseAction	_eMouseAction;	// 
+		void AddForm();
 
-	static CCompent*	_pLastMouseCompent;
+		eMouseAction GetMouseAction() {
+			return _eMouseAction;
+		}
 
-};
+		void SetMouseAction(eMouseAction v) {
+			_eMouseAction = v;
+		}
 
-// ,CCompent
-class CContainer : public CCompent
-{
-public:
-	CContainer(CForm& frmOwn);
-	CContainer( const CContainer& rhs );
-	CContainer& operator=(const CContainer& rhs);
-	virtual ~CContainer(void);
-	GUI_CLONE(CContainer)
+		static CCompent* GetLastMouseCompent() {
+			return _pLastMouseCompent;
+		}
 
-	virtual void	Init();
-	virtual void	Render();
-	virtual void	Refresh();
-	virtual bool	MouseRun( int x, int y, DWORD key );
-	virtual void	SetAlpha( BYTE alpha );
-	virtual CCompent* Find( const char* str );
-    virtual CCompent* GetHitCommand(int x, int y);
-    virtual CCompent* GetHintCompent( int x, int y );
-    virtual void    FrameMove( DWORD dwTime );
+	public:
+		GuiEvent evtLost; // 
+		GuiEvent evtActive; // 
 
-	bool			AddCompent( CCompent* p );
-	CCompent*		GetIndex( unsigned int index );
+	protected:
+		virtual void _AddForm(); // Form
+		void _SetActive();
 
-	int				GetIndex( CCompent* p );		// p,,-1
-	int				GetSize() { return (int)_items.size(); }
+	private:
+		void _Copy(const CCompent& rhs);
 
-	void			ForEach( CompentFun pFun );
-	
-	virtual eAccept	SetCommand( CCommandObj* p, int x, int y )	{ return enumRefuse;			}
+	protected:
+		static CCompent* _pActive; // 
 
-private:
-	void			_SetSelf( const CContainer& rhs );
+	protected:
+		CForm* _frmOwn; // ,
 
-protected:
-	typedef std::vector<CCompent*>	items;
-	items			_items;
-	items			_mouse;				// 
+		bool _IsFocus; // 
 
-};
+		eCompentAlign _align;
+		bool _isChild; // 
+		eMouseAction _eMouseAction; // 
 
-// 
-inline void CCompent::_SetActive() 
-{
-    if( !_isChild && _IsFocus && GetActive()!=this )
-		SetActive( this );
-}
+		static CCompent* _pLastMouseCompent;
+	};
 
-inline void CCompent::SetForm( CForm* f ) 
-{ 
-	_frmOwn = f;
-	_pParent = f;
-	_isChild = false;
-}
+	// ,CCompent
+	class CContainer : public CCompent {
+	public:
+		CContainer(CForm& frmOwn);
+		CContainer(const CContainer& rhs);
+		CContainer& operator=(const CContainer& rhs);
+		virtual ~CContainer(void);
+		GUI_CLONE(CContainer)
 
-inline CCompent* CContainer::GetIndex( unsigned int index )
-{
-	if( index < _items.size() ) return _items[index];
-	return NULL;
-}
+		virtual void Init();
+		virtual void Render();
+		virtual void Refresh();
+		virtual bool MouseRun(int x, int y, DWORD key);
+		virtual void SetAlpha(BYTE alpha);
+		virtual CCompent* Find(const char* str);
+		virtual CCompent* GetHitCommand(int x, int y);
+		virtual CCompent* GetHintCompent(int x, int y);
+		virtual void FrameMove(DWORD dwTime);
 
+		bool AddCompent(CCompent* p);
+		CCompent* GetIndex(unsigned int index);
+
+		int GetIndex(CCompent* p); // p,,-1
+		int GetSize() {
+			return (int)_items.size();
+		}
+
+		void ForEach(CompentFun pFun);
+
+		virtual eAccept SetCommand(CCommandObj* p, int x, int y) {
+			return enumRefuse;
+		}
+
+	private:
+		void _SetSelf(const CContainer& rhs);
+
+	protected:
+		typedef std::vector<CCompent*> items;
+		items _items;
+		items _mouse; // 
+	};
+
+	// 
+	inline void CCompent::_SetActive() {
+		if (!_isChild && _IsFocus && GetActive() != this)
+			SetActive(this);
+	}
+
+	inline void CCompent::SetForm(CForm* f) {
+		_frmOwn = f;
+		_pParent = f;
+		_isChild = false;
+	}
+
+	inline CCompent* CContainer::GetIndex(unsigned int index) {
+		if (index < _items.size()) return _items[index];
+		return NULL;
+	}
 }

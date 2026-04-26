@@ -18,37 +18,37 @@ extern lua_State* g_LuaState;
 // Register a raw lua_CFunction (int(lua_State*)) directly
 #define LUA_REGISTER_CFUNC(L, fn) lua_register(L, #fn, fn)
 
-enum eScriptReturn
-{
+enum eScriptReturn {
 	R_OK = 1,
 	R_FAIL = -1,
 };
 
-class CScript
-{
+class CScript {
 public:
 	CScript();
 	virtual ~CScript();
 
-	DWORD GetScriptID() { return _dwScriptID; }
+	DWORD GetScriptID() {
+		return _dwScriptID;
+	}
 
 public:
-	static CScript* GetScriptObj( DWORD id ) {
-		if( id<_dwCount ) return _AllObj[id];
+	static CScript* GetScriptObj(DWORD id) {
+		if (id < _dwCount) return _AllObj[id];
 		return NULL;
 	}
-	static bool		Init();
-	static bool		Clear();
+
+	static bool Init();
+	static bool Clear();
 
 private:
-	DWORD		_dwScriptID;
+	DWORD _dwScriptID;
 
 private:
-	static CScript**		_AllObj;
-	static DWORD			_dwCount;
-	static DWORD			_dwFreeCount;
-	static DWORD			_dwLastFree;
-
+	static CScript** _AllObj;
+	static DWORD _dwCount;
+	static DWORD _dwFreeCount;
+	static DWORD _dwLastFree;
 };
 
 // Log Lua error from stack and pop it
@@ -71,8 +71,7 @@ inline void LuaPrintError(lua_State* L) {
 // Load a .lua script with error logging
 int LoadLuaScript(lua_State* L, const std::string& filename);
 
-class CScriptMgr
-{
+class CScriptMgr {
 public:
 	CScriptMgr();
 	~CScriptMgr();
@@ -80,11 +79,10 @@ public:
 	bool Init();
 	bool LoadScript();
 	bool Clear();
-	bool DoFile( const char* szLuaFile );
-	bool DoString( const char* szLuaString );
+	bool DoFile(const char* szLuaFile);
+	bool DoString(const char* szLuaString);
 
-	std::string	GetStoneHint( const char* szHintFun, int Lv );
+	std::string GetStoneHint(const char* szHintFun, int Lv);
 
-	bool DoString( const char* szFunc, const char* szFormat, ... );
-
+	bool DoString(const char* szFunc, const char* szFormat, ...);
 };

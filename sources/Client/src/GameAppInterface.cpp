@@ -1484,7 +1484,8 @@ void CGameApp::AutoTest() {
 
 					for (int k = 0; k < hair.GetFailItemNum(); k++) {
 						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwFailItemID[k]))
-							SysInfo("%s", SafeVFormat(GetLanguageString(86), hair.Id, j + 1, hair.dwFailItemID[k]).c_str());
+							SysInfo(
+								"%s", SafeVFormat(GetLanguageString(86), hair.Id, j + 1, hair.dwFailItemID[k]).c_str());
 					}
 					AutoTestUpdate();
 				}
@@ -1545,7 +1546,8 @@ void CGameApp::AutoTest() {
 				auto itemPath = std::format("model/item/{}.lgo", module);
 				auto chaPath = std::format("model/character/{}.lgo", module);
 				if (!IsExistFile(itemPath.c_str()) && !IsExistFile(chaPath.c_str())) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(j == 0 ? 88 : 89), id, item.szName, j, item.chModule[j]).c_str());
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(j == 0 ? 88 : 89), id, item.szName, j,
+												   item.chModule[j]).c_str());
 				}
 			}
 
@@ -1579,7 +1581,8 @@ void CGameApp::AutoTest() {
 			for (int k = 0; k < ITEM_REFINE_NUM; k++) {
 				int effectID = refine.Value[k];
 				if (effectID > 0 && !GetItemRefineEffectInfo(effectID)) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.Id, std::string_view(refine.DataName.c_str()), effectID).c_str());
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.Id,
+												   std::string_view(refine.DataName.c_str()), effectID).c_str());
 				}
 			}
 		});
@@ -1597,7 +1600,8 @@ void CGameApp::AutoTest() {
 					for (int level = 0; level < 4; level++) {
 						int nEffectID = info.sEffectID[k][j] * 10 + level;
 						if (!GetMagicInfo(nEffectID)) {
-							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.Id, std::string_view(info.DataName.c_str()), nEffectID).c_str());
+							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.Id,
+														   std::string_view(info.DataName.c_str()), nEffectID).c_str());
 						}
 					}
 				}
@@ -1615,18 +1619,15 @@ void CGameApp::AutoTest() {
 	g_pGameApp->HasLogFile("autotest");
 }
 
-void CGameApp::SendMessage(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
-{
+void CGameApp::SendMessage(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2) {
 	int i = 0;
-	while (!::PostMessage(GetHWND(), dwTypeID, dwParam1, dwParam2) && i <= 10)
-	{
+	while (!::PostMessage(GetHWND(), dwTypeID, dwParam1, dwParam2) && i <= 10) {
 		Sleep(50);
 		i++;
 	}
 }
 
-void CGameApp::SetStartMinimap(int ix, int iy, int destx, int desty)
-{
+void CGameApp::SetStartMinimap(int ix, int iy, int destx, int desty) {
 	xp = (float)((ix / SHOWRSIZE) * SHOWRSIZE) + (SHOWRSIZE / 2);
 	yp = (float)((iy / SHOWRSIZE) * SHOWRSIZE) + (SHOWRSIZE / 2);
 
@@ -1637,29 +1638,23 @@ void CGameApp::SetStartMinimap(int ix, int iy, int destx, int desty)
 	yp1 = yp;
 }
 
-DWORD CGameApp::GetSkillClock(int skill_id)
-{
+DWORD CGameApp::GetSkillClock(int skill_id) {
 	std::map<int, DWORD>::iterator it = m_mapSkillClock.find(skill_id);
-	if (it != m_mapSkillClock.end())
-	{
+	if (it != m_mapSkillClock.end()) {
 		return m_mapSkillClock[skill_id];
 	}
 	return NULL;
 }
 
-void CGameApp::SetSkillClock(int skill_id, DWORD dwSkillTime)
-{
-	if (!GetSkillClock(skill_id))
-	{
+void CGameApp::SetSkillClock(int skill_id, DWORD dwSkillTime) {
+	if (!GetSkillClock(skill_id)) {
 		m_mapSkillClock[skill_id] = dwSkillTime;
 	}
 }
 
-void CGameApp::DeleteSkillClock(int skill_id)
-{
+void CGameApp::DeleteSkillClock(int skill_id) {
 	std::map<int, DWORD>::iterator it = m_mapSkillClock.find(skill_id);
-	if (it != m_mapSkillClock.end())
-	{
+	if (it != m_mapSkillClock.end()) {
 		m_mapSkillClock.erase(skill_id);
 	}
 }

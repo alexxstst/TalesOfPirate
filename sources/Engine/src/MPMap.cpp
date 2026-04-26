@@ -10,8 +10,8 @@
 #include "MPTextureSet.h"
 #include "MPTerrainSet.h"
 #include "MPMath.h"
-#include "MPCamera.h" 
-#include "assert.h" 
+#include "MPCamera.h"
+#include "assert.h"
 #include "MPRender.h"
 
 
@@ -25,341 +25,322 @@ using namespace std;
 #define SEA_TILE_SIZE       4
 
 MPMap::MPMap()
-:_bEdit(FALSE),
- _bSeaVisible(TRUE),
- _bShowCenterPoint(FALSE),
- _fp(NULL),
- _bUseVB(FALSE),
- _bClip(TRUE),
- _bWireFrame(FALSE),
- _pfnProc(NULL),
- _bBatchRender(TRUE),
- m_dwMaxLoadingTime(0),
- _bEnableNormalLight(FALSE),
- _dwLoadingCnt(0),
- _nUpdateRender(2),
- _pLandVB(NULL),
- _bUseLandVB(TRUE),
- _nLastTileStartX(0),
- _nLastTileStartY(0),
- _nLastSectionX(0),
- _nLastSectionY(0),
- _bRenderSea(FALSE),
- m_bCullTile(FALSE),
-  _pOffsetIdx(NULL),
-  m_dwMapDataSize(0),
-  m_dwMapPos(0)
-{
+	: _bEdit(FALSE),
+	  _bSeaVisible(TRUE),
+	  _bShowCenterPoint(FALSE),
+	  _fp(NULL),
+	  _bUseVB(FALSE),
+	  _bClip(TRUE),
+	  _bWireFrame(FALSE),
+	  _pfnProc(NULL),
+	  _bBatchRender(TRUE),
+	  m_dwMaxLoadingTime(0),
+	  _bEnableNormalLight(FALSE),
+	  _dwLoadingCnt(0),
+	  _nUpdateRender(2),
+	  _pLandVB(NULL),
+	  _bUseLandVB(TRUE),
+	  _nLastTileStartX(0),
+	  _nLastTileStartY(0),
+	  _nLastSectionX(0),
+	  _nLastSectionY(0),
+	  _bRenderSea(FALSE),
+	  m_bCullTile(FALSE),
+	  _pOffsetIdx(NULL),
+	  m_dwMapDataSize(0),
+	  m_dwMapPos(0) {
 	_fShowCenterX = 0;
 	_fShowCenterY = 0;
 
 	_pDefaultTile = new MPTile;
-	
+
 	_pDefaultTile->Init();
-	
-	_pDefaultTile->TexLayer[0].btTexNo	 = UNDERWATER_TEXNO;
+
+	_pDefaultTile->TexLayer[0].btTexNo = UNDERWATER_TEXNO;
 	_pDefaultTile->TexLayer[0].btAlphaNo = 15;
-	_pDefaultTile->TexLayer[1].btTexNo   = 255; // DefaultTile
-	_pDefaultTile->fHeight				 = UNDERWATER_HEIGHT;
-	_pDefaultTile->dwColor				 = 0xffffffff;
-    // _pDefaultTile->TexLayer
+	_pDefaultTile->TexLayer[1].btTexNo = 255; // DefaultTile
+	_pDefaultTile->fHeight = UNDERWATER_HEIGHT;
+	_pDefaultTile->dwColor = 0xffffffff;
+	// _pDefaultTile->TexLayer
 
 	memset(&_ActiveSectionArray, 0, 512 * 512 * sizeof(MPActiveMapSection*));
 
 	_nWaterLoopFrame = 0;
 
-	SetShowSize(36, 30);		// Increasing to 120,120 Mdr.st May 2020 - FPO alpha
-	
+	SetShowSize(36, 30); // Increasing to 120,120 Mdr.st May 2020 - FPO alpha
+
 	SetSectionBufferSize(128);
 
 #if(defined DRAW_SEA_USE_DYNAMIC_BUFFER)
-    _pVertBuf = new MPSeaTileVertex[1024];
+	_pVertBuf = new MPSeaTileVertex[1024];
 #endif
-    
-    _dwSeaDefaultColor = D3DCOLOR_ARGB(0xcf, 140, 140, 220);
+
+	_dwSeaDefaultColor = D3DCOLOR_ARGB(0xcf, 140, 140, 220);
 
 	m_iRange = 512;
 }
 
-MPMap::~MPMap()
-{
+MPMap::~MPMap() {
 	ClearAllSection(TRUE);
 	delete _pDefaultTile;
 	SAFE_DELETE_ARRAY(_pOffsetIdx);
-    if(_fp) fclose(_fp);
+	if (_fp) fclose(_fp);
 #if(defined DRAW_SEA_USE_DYNAMIC_BUFFER)
-    delete[] _pVertBuf;
+	delete[] _pVertBuf;
 #endif
-    SAFE_RELEASE(_pLandVB);
+	SAFE_RELEASE(_pLandVB);
 }
 
-void MPMap::FrameMove(DWORD dwTimeParam)
-{
+void MPMap::FrameMove(DWORD dwTimeParam) {
 	_nWaterLoopFrame++;
-	if(_nWaterLoopFrame >= MAX_WATER_LOOP) _nWaterLoopFrame = 0;
+	if (_nWaterLoopFrame >= MAX_WATER_LOOP) _nWaterLoopFrame = 0;
 }
 
-float AlphaNo2UV[16][2] = 
+float AlphaNo2UV[16][2] =
 {
-    0.0f,  0.0f,
-    
-    0.0f,  0.0f,   // 1
-    0.25f, 0.0f,
-    0.5f,  0.0f,
-    0.75f, 0.0f,
-    
-    0.0f,  0.25f,
-    0.25f, 0.25f,
-    0.5f,  0.25f,
-    0.75f, 0.25f,
+	0.0f, 0.0f,
 
-    0.0f,  0.5f,
-    0.25f, 0.5f,
-    0.5f,  0.5f,
-    0.75f, 0.5f,
+	0.0f, 0.0f, // 1
+	0.25f, 0.0f,
+	0.5f, 0.0f,
+	0.75f, 0.0f,
 
-    0.0f,  0.75f,
-    0.25f, 0.75f, // 14
-    0.5f,  0.75f
+	0.0f, 0.25f,
+	0.25f, 0.25f,
+	0.5f, 0.25f,
+	0.75f, 0.25f,
+
+	0.0f, 0.5f,
+	0.25f, 0.5f,
+	0.5f, 0.5f,
+	0.75f, 0.5f,
+
+	0.0f, 0.75f,
+	0.25f, 0.75f, // 14
+	0.5f, 0.75f
 };
 
 
-void MPMap::Render()
-{
-	if(_fp==NULL) return; 
+void MPMap::Render() {
+	if (_fp == NULL) return;
 
-    MPTimer t;
-    t.Begin();
+	MPTimer t;
+	t.Begin();
 
-    g_Render.EnableMipmap(FALSE);
-	
-    if(_bUseLandVB)
-    {
-       if(_pLandVB==NULL)
-        {
-            int nVertexCnt = MAX_RENDER_TILE * 6; // 
-	        _dwLandVBSize = nVertexCnt * sizeof(MPTileVertex);
-            HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(_dwLandVBSize, 
-		        0, FVF_LAND, D3DPOOL_MANAGED, &_pLandVB, NULL);
+	g_Render.EnableMipmap(FALSE);
 
-	        if(FAILED(hr))
-	        {
-                ToLogService("errors", LogLevel::Error,
-                             "[{}] CreateVertexBuffer (Land) failed: size={}, hr=0x{:08X}",
-                             __FUNCTION__, _dwLandVBSize, static_cast<std::uint32_t>(hr));
-                _pLandVB = NULL;
-            }
-        }
-    }
+	if (_bUseLandVB) {
+		if (_pLandVB == NULL) {
+			int nVertexCnt = MAX_RENDER_TILE * 6; // 
+			_dwLandVBSize = nVertexCnt * sizeof(MPTileVertex);
+			HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(_dwLandVBSize,
+																  0, FVF_LAND, D3DPOOL_MANAGED, &_pLandVB, NULL);
 
-    if(_bUseVB)
-    {
+			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+							 "[{}] CreateVertexBuffer (Land) failed: size={}, hr=0x{:08X}",
+							 __FUNCTION__, _dwLandVBSize, static_cast<std::uint32_t>(hr));
+				_pLandVB = NULL;
+			}
+		}
+	}
+
+	if (_bUseVB) {
 #if(defined DRAW_SEA_USE_DYNAMIC_BUFFER)
 #else
-        if(_pVB==NULL)
-        {
-            int nVertexCnt = (_nShowWidth / SEA_TILE_SIZE + 1)* (_nShowHeight / SEA_TILE_SIZE + 1) * 6;
-	        HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(sizeof(MPSeaTileVertex) * nVertexCnt, 
-		        D3DUSAGE_WRITEONLY, FVF_SEA,  D3DPOOL_DEFAULT, &_pVB, NULL);
+		if (_pVB == NULL) {
+			int nVertexCnt = (_nShowWidth / SEA_TILE_SIZE + 1) * (_nShowHeight / SEA_TILE_SIZE + 1) * 6;
+			HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(sizeof(MPSeaTileVertex) * nVertexCnt,
+																  D3DUSAGE_WRITEONLY, FVF_SEA, D3DPOOL_DEFAULT, &_pVB,
+																  NULL);
 
-	        if(FAILED(hr))
-	        {
-                const DWORD seaVBSize = sizeof(MPSeaTileVertex) * nVertexCnt;
-                ToLogService("errors", LogLevel::Error,
-                             "[{}] CreateVertexBuffer (Sea) failed: size={}, hr=0x{:08X}",
-                             __FUNCTION__, seaVBSize, static_cast<std::uint32_t>(hr));
-                _pVB = NULL;
-            }
-        }
+			if (FAILED(hr)) {
+				const DWORD seaVBSize = sizeof(MPSeaTileVertex) * nVertexCnt;
+				ToLogService("errors", LogLevel::Error,
+							 "[{}] CreateVertexBuffer (Sea) failed: size={}, hr=0x{:08X}",
+							 __FUNCTION__, seaVBSize, static_cast<std::uint32_t>(hr));
+				_pVB = NULL;
+			}
+		}
 #endif
-    }
+	}
 
 
-    if(_bShowCenterPoint)
-	{
+	if (_bShowCenterPoint) {
 		_RenderFocusRect();
-		g_Render.AddLine(D3DXVECTOR3(_fShowCenterX, _fShowCenterY, 0.0f), D3DXVECTOR3(_fShowCenterX, _fShowCenterY, 4.0f), 0xFF0000FF);
-   	}
+		g_Render.AddLine(D3DXVECTOR3(_fShowCenterX, _fShowCenterY, 0.0f),
+						 D3DXVECTOR3(_fShowCenterX, _fShowCenterY, 4.0f), 0xFF0000FF);
+	}
 
 	g_Render.ResetWorldTransform();
 
 	g_Render.SetRenderState(D3DRS_CLIPPING, TRUE);
-	
+
 	g_Render.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	g_Render.SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);	 // blend the colors based on the
-	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	 // alpha value
-				
-			
+	g_Render.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA); // blend the colors based on the
+	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA); // alpha value
+
+
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE, FALSE);
-    g_Render.SetRenderState(D3DRS_COLORVERTEX, TRUE);
+	g_Render.SetRenderState(D3DRS_COLORVERTEX, TRUE);
 
-    g_Render.EnableZBuffer(TRUE);
-	g_Render.SetRenderState( D3DRS_LIGHTING, _bEnableNormalLight );
+	g_Render.EnableZBuffer(TRUE);
+	g_Render.SetRenderState(D3DRS_LIGHTING, _bEnableNormalLight);
 
-	
+
 	D3DMATERIALX material;
-	D3DUtil_InitMaterial( material, 1.0f, 1.0f, 1.0f, 1.0f);
+	D3DUtil_InitMaterial(material, 1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient.r = 0.80f;
 	material.Ambient.g = 0.80f;
 	material.Ambient.b = 0.80f;
 	material.Ambient.a = 1.0f;
-	
+
 	g_Render.GetDevice()->SetMaterial(&material);
 
 	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
-	
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1);
-			
-	g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE); 
-	g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-	g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
-	
-	g_Render.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);  
 
-	g_Render.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);  
-	g_Render.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_DIFFUSE);  
-	g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
-	
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+
+	g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	g_Render.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+	g_Render.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+
+	g_Render.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	g_Render.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
 
 
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-	
+
 	g_Render.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
 
-
 	g_Render.SetVertexShader(NULL);
 	g_Render.SetFVF(FVF_LAND);
-	
-    //-------------------------------------------------------------------
-    //Render Logic Cycle Begin-------------------------------------------
-    //-------------------------------------------------------------------
-    
-    int nTileStartX = (int)(_fShowCenterX - (float)(_nShowWidth)  / 2.0f);
+
+	//-------------------------------------------------------------------
+	//Render Logic Cycle Begin-------------------------------------------
+	//-------------------------------------------------------------------
+
+	int nTileStartX = (int)(_fShowCenterX - (float)(_nShowWidth) / 2.0f);
 	int nTileStartY = (int)(_fShowCenterY - (float)(_nShowHeight) / 2.0f);
 
-	if(nTileStartX!=_nLastTileStartX || nTileStartY!=_nLastTileStartY)
-    {
-       _nUpdateRender = 2;
-	   _nLastTileStartX = nTileStartX;
-       _nLastTileStartY = nTileStartY;
-       _nLastGridStartX = nTileStartX * 2;
-       _nLastGridStartY = nTileStartY * 2;
-    }
+	if (nTileStartX != _nLastTileStartX || nTileStartY != _nLastTileStartY) {
+		_nUpdateRender = 2;
+		_nLastTileStartX = nTileStartX;
+		_nLastTileStartY = nTileStartY;
+		_nLastGridStartX = nTileStartX * 2;
+		_nLastGridStartY = nTileStartY * 2;
+	}
 
 
-
-    
-	if(m_bCullTile)
-	{
+	if (m_bCullTile) {
 		_GenerateTerrainGroup(nTileStartX, nTileStartY);
-		_FillVB(); 
-	}else
-	{
-		if(_nUpdateRender)
-		{
-			if(_nUpdateRender==2)
-			{
+		_FillVB();
+	}
+	else {
+		if (_nUpdateRender) {
+			if (_nUpdateRender == 2) {
 				_GenerateTerrainGroup(nTileStartX, nTileStartY);
 			}
-			
+
 			_FillVB();
 		}
 	}
- 
-    _RenderVB();
+
+	_RenderVB();
 
 
-    _nUpdateRender = 0;
-    //-------------------------------------------------------------------
-    //Render Logic Cycle End---------------------------------------------
-    //-------------------------------------------------------------------
-    
-    
-   	g_Render.SetTexture(0, NULL); 
+	_nUpdateRender = 0;
+	//-------------------------------------------------------------------
+	//Render Logic Cycle End---------------------------------------------
+	//-------------------------------------------------------------------
+
+
+	g_Render.SetTexture(0, NULL);
 	g_Render.SetTexture(1, NULL);
-		
-	if(_bWireFrame)
-	{
+
+	if (_bWireFrame) {
 		g_Render.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		g_Render.EnableZBuffer(FALSE);
 		g_Render.EnableAlpha(FALSE);
 		g_Render.SetVertexShader(NULL);
 		g_Render.SetFVF(FVF_LAND);
-	    
-        _RenderVB(_bWireFrame);
-        
-        g_Render.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
+		_RenderVB(_bWireFrame);
+
+		g_Render.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		g_Render.EnableZBuffer(TRUE);
 		g_Render.EnableAlpha(TRUE);
 	}
-	
-    g_Render.SetRenderState(D3DRS_CLIPPING, TRUE);
 
-    g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_DISABLE);  
+	g_Render.SetRenderState(D3DRS_CLIPPING, TRUE);
 
-    m_dwTerrainRenderTime = t.End();
+	g_Render.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+
+	m_dwTerrainRenderTime = t.End();
 }
 
-void MPMap::RenderSmMap()
-{
-	if(_fp==NULL) return; 
-	
+void MPMap::RenderSmMap() {
+	if (_fp == NULL) return;
+
 	g_Render.ResetWorldTransform();
 
 	g_Render.SetRenderState(D3DRS_CLIPPING, TRUE);
-	
+
 	g_Render.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	g_Render.SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);	 // blend the colors based on the
-	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	 // alpha value
-				
-			
+	g_Render.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA); // blend the colors based on the
+	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA); // alpha value
+
+
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE, FALSE);
-    g_Render.SetRenderState(D3DRS_COLORVERTEX, TRUE);
+	g_Render.SetRenderState(D3DRS_COLORVERTEX, TRUE);
 
 	//g_Render.SetTextureStageState( 1, D3DTSS_MAGFILTER, D3DTEXF_POINT);	// tile texture
 	g_Render.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-	
+
 	//g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_POINT);	// tile texture
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-	
+
 	g_Render.EnableZBuffer(FALSE);
-	g_Render.SetRenderState( D3DRS_LIGHTING, TRUE );
-	
+	g_Render.SetRenderState(D3DRS_LIGHTING, TRUE);
+
 	D3DMATERIALX material;
-	D3DUtil_InitMaterial( material, 1.0f, 1.0f, 1.0f, 1.0f);
+	D3DUtil_InitMaterial(material, 1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient.r = 0.50f;
 	material.Ambient.g = 0.50f;
 	material.Ambient.b = 0.50f;
 	material.Ambient.a = 1.0f;
-	
+
 	g_Render.GetDevice()->SetMaterial(&material);
 
 	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
-	
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
-			
-	g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE); 
+
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+
+	g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-	g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
-	
-	g_Render.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);  
-	g_Render.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_DIFFUSE);  
-	g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
-	
-	
+	g_Render.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+	g_Render.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	g_Render.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
@@ -370,63 +351,58 @@ void MPMap::RenderSmMap()
 
 	g_Render.SetVertexShader(NULL);
 	g_Render.SetFVF(FVF_LAND);
-	
-	int nTileStartX = (int)(_fShowCenterX - (float)(_nShowWidth)  / 2.0f);
+
+	int nTileStartX = (int)(_fShowCenterX - (float)(_nShowWidth) / 2.0f);
 	int nTileStartY = (int)(_fShowCenterY - (float)(_nShowHeight) / 2.0f);
 
-	
-	MPTile *TileList[4];
+
+	MPTile* TileList[4];
 	int x, y, i;
-	for(y = 0; y < _nShowHeight; y++)
-	{
-		for(x = 0; x < _nShowWidth; x++)
-		{
+	for (y = 0; y < _nShowHeight; y++) {
+		for (x = 0; x < _nShowWidth; x++) {
 			int nX = nTileStartX + x;
 			int nY = nTileStartY + y;
-			
-			if(nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
-			
-			MPTile *pTile = GetTile(nX, nY);
-			
-			if(!pTile) continue;
+
+			if (nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
+
+			MPTile* pTile = GetTile(nX, nY);
+
+			if (!pTile) continue;
 
 			TileList[0] = pTile;
 			TileList[1] = GetGroupTile(nX, nY, 1);
 			TileList[2] = GetGroupTile(nX, nY, 2);
 			TileList[3] = GetGroupTile(nX, nY, 3);
-			
+
 			_CalTileNormal(nX, nY);
-	
-			for(i = 0; i < 4; i++)
-			{
-				MPTileTex *pLayer = &(pTile->TexLayer[i]);
-				
-				if(pLayer->btTexNo==0) break;
-				if(pLayer->btAlphaNo==0) continue;
+
+			for (i = 0; i < 4; i++) {
+				MPTileTex* pLayer = &(pTile->TexLayer[i]);
+
+				if (pLayer->btTexNo == 0) break;
+				if (pLayer->btAlphaNo == 0) continue;
 
 				float fScale = 0.25f;
 				float fU = (float)(nX % (int)(1.0f / fScale)) * fScale;
 				float fV = (float)(nY % (int)(1.0f / fScale)) * fScale;
-				
-				if(pLayer->btAlphaNo==15)
-				{
+
+				if (pLayer->btAlphaNo == 15) {
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 					g_Render.EnableAlpha(FALSE);
-				
+
 					g_Render.SetTexture(0, GetTextureByID(GetTerrainTextureID(pLayer->btTexNo)));
 					g_Render.SetTexture(1, NULL);
-					
+
 					pTile->SetTerrainUV(0, fU, fV, fScale);
 					pTile->RenderTerrain(nX, nY, TileList);
 				}
-				else
-				{
+				else {
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_MIRROR);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_MIRROR);
 					g_Render.EnableAlpha(TRUE);
-					
-					g_Render.SetTexture(0, GetTextureByID(GetTerrainAlphaTextureID(pLayer->btAlphaNo))); 
+
+					g_Render.SetTexture(0, GetTextureByID(GetTerrainAlphaTextureID(pLayer->btAlphaNo)));
 					g_Render.SetTexture(1, GetTextureByID(GetTerrainTextureID(pLayer->btTexNo)));
 
 					pTile->SetTerrainUV(0, 0.0f, 0.0f, 1.0f);
@@ -437,98 +413,103 @@ void MPMap::RenderSmMap()
 			}
 		}
 	}
-	
 }
 
-void MPMap::_RenderFocusRect()
-{
-	int nSectionX = (int)(_fShowCenterX / (float)_nSectionWidth)  * _nSectionWidth;
+void MPMap::_RenderFocusRect() {
+	int nSectionX = (int)(_fShowCenterX / (float)_nSectionWidth) * _nSectionWidth;
 	int nSectionY = (int)(_fShowCenterY / (float)_nSectionHeight) * _nSectionHeight;
 
 	int nTileStartX = nSectionX;
 	int nTileStartY = nSectionY;
-	
-	VECTOR3 v[32]; int x, y, n = 0, nX, nY;
+
+	VECTOR3 v[32];
+	int x, y, n = 0, nX, nY;
 
 	float fHeight = SEA_LEVEL;
-	float fStep   = 0.01f;
-	
-	for(x = 0; x < _nSectionWidth; x++)
-	{
-		nX = nTileStartX + x; nY = nTileStartY;
-		
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
-		else                   fHeight = pTile->fHeight + fStep;
-		v[n].x = (float)nX; v[n].y = (float)nY; v[n].z = fHeight;
+	float fStep = 0.01f;
+
+	for (x = 0; x < _nSectionWidth; x++) {
+		nX = nTileStartX + x;
+		nY = nTileStartY;
+
+		MPTile* pTile = GetTile(nX, nY);
+		if (pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
+		else fHeight = pTile->fHeight + fStep;
+		v[n].x = (float)nX;
+		v[n].y = (float)nY;
+		v[n].z = fHeight;
 		n++;
 	}
-	for(y = 0; y < _nSectionHeight; y++)
-	{
-		nX = nTileStartX + _nSectionWidth; nY = nTileStartY + y;
-		
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
-		else                   fHeight = pTile->fHeight + fStep;
-		v[n].x = (float)nX; v[n].y = (float)nY; v[n].z = fHeight;
+	for (y = 0; y < _nSectionHeight; y++) {
+		nX = nTileStartX + _nSectionWidth;
+		nY = nTileStartY + y;
+
+		MPTile* pTile = GetTile(nX, nY);
+		if (pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
+		else fHeight = pTile->fHeight + fStep;
+		v[n].x = (float)nX;
+		v[n].y = (float)nY;
+		v[n].z = fHeight;
 		n++;
 	}
-	for(x = 0; x < _nSectionWidth; x++)
-	{
-		nX = nTileStartX + _nSectionWidth - x; nY = nTileStartY + _nSectionHeight;
-		
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
-		else                   fHeight = pTile->fHeight + fStep;
-		v[n].x = (float)nX; v[n].y = (float)nY; v[n].z = fHeight;
+	for (x = 0; x < _nSectionWidth; x++) {
+		nX = nTileStartX + _nSectionWidth - x;
+		nY = nTileStartY + _nSectionHeight;
+
+		MPTile* pTile = GetTile(nX, nY);
+		if (pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
+		else fHeight = pTile->fHeight + fStep;
+		v[n].x = (float)nX;
+		v[n].y = (float)nY;
+		v[n].z = fHeight;
 		n++;
 	}
-	for(y = 0; y < _nSectionHeight; y++)
-	{
-		nX = nTileStartX; nY = nTileStartY + _nSectionHeight - y;
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
-		else                   fHeight = pTile->fHeight + fStep;
-		v[n].x = (float)nX; v[n].y = (float)nY; v[n].z = fHeight;
+	for (y = 0; y < _nSectionHeight; y++) {
+		nX = nTileStartX;
+		nY = nTileStartY + _nSectionHeight - y;
+		MPTile* pTile = GetTile(nX, nY);
+		if (pTile->IsDefault()) fHeight = SEA_LEVEL + fStep;
+		else fHeight = pTile->fHeight + fStep;
+		v[n].x = (float)nX;
+		v[n].y = (float)nY;
+		v[n].z = fHeight;
 		n++;
 	}
-	for(int k = 0; k < n; k++)
-	{
-		if(k==n-1)
-		{
-			g_Render.AddLine(v[k], v[0] ,0xFFFFFF00);
+	for (int k = 0; k < n; k++) {
+		if (k == n - 1) {
+			g_Render.AddLine(v[k], v[0], 0xFFFFFF00);
 			break;
 		}
-		g_Render.AddLine(v[k], v[k + 1] ,0xFFFFFF00);
+		g_Render.AddLine(v[k], v[k + 1], 0xFFFFFF00);
 	}
 }
 
-void MPMap::RenderSea()
-{
-    if(!_bRenderSea) return;
+void MPMap::RenderSea() {
+	if (!_bRenderSea) return;
 
-	MPTimer t; t.Begin();
-    
-    g_Render.ResetWorldTransform();
-	
-	int nStartX = (int)(_fShowCenterX - (float)_nShowWidth  / 2.0f);
+	MPTimer t;
+	t.Begin();
+
+	g_Render.ResetWorldTransform();
+
+	int nStartX = (int)(_fShowCenterX - (float)_nShowWidth / 2.0f);
 	int nStartY = (int)(_fShowCenterY - (float)_nShowHeight / 2.0f);
 
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE); 
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
-	
-	g_Render.SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);	 // blend the colors based on the
-	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	 // alpha value
-	
+
+	g_Render.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA); // blend the colors based on the
+	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA); // alpha value
+
 	g_Render.EnableAlpha(TRUE);
 	g_Render.EnableZBuffer(TRUE);
-	
-	g_Render.SetRenderState( D3DRS_LIGHTING, FALSE );
+
+	g_Render.SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	g_Render.SetTexture(0, NULL);
 	g_Render.SetTexture(1, NULL);
-	
+
 	MPSeaTileVertex SVertex[4];
 	SVertex[0].tu = 0;
 	SVertex[0].tv = 0;
@@ -542,81 +523,75 @@ void MPMap::RenderSea()
 	SVertex[0].dwColor = 0xFFffffff;
 	SVertex[1].dwColor = 0xFFffffff;
 	SVertex[2].dwColor = 0xFFffffff;
-	SVertex[3].dwColor = 0xFFffffff; 
-	
-	g_Render.SetTextureStageState( 0, D3DTSS_COLOROP,  D3DTOP_MODULATE); // D3DTOP_DOTPRODUCT3 );
-	g_Render.SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-	g_Render.SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_CURRENT );
-	
-	g_Render.SetTexture(0, GetTextureByID(GetWaterBumpTextureID(_nWaterLoopFrame))); 
-	
+	SVertex[3].dwColor = 0xFFffffff;
+
+	g_Render.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE); // D3DTOP_DOTPRODUCT3 );
+	g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_CURRENT);
+
+	g_Render.SetTexture(0, GetTextureByID(GetWaterBumpTextureID(_nWaterLoopFrame)));
+
 	g_Render.SetVertexShader(NULL);
 	g_Render.SetFVF(FVF_SEA);
 
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,  D3DTOP_SELECTARG1  );
-	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1,D3DTA_DIFFUSE );
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1,D3DTA_DIFFUSE);
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2,D3DTA_TEXTURE);
 
 	int nSize = SEA_TILE_SIZE;
 	int nSeaStartX = nStartX / nSize;
 	int nSeaStartY = nStartY / nSize;
 
-	int nSeaCntX = _nShowWidth  / nSize;
+	int nSeaCntX = _nShowWidth / nSize;
 	int nSeaCntY = _nShowHeight / nSize;
 
-	if(_nShowWidth  % nSize!=0)  nSeaCntX++;
-	if(_nShowHeight % nSize!=0)  nSeaCntY++;
-	
-	int nTileCnt   = nSeaCntX * nSeaCntY;
-	int nVertexCnt = nTileCnt * 6;
-	int nTriCnt    = nTileCnt * 2;
+	if (_nShowWidth % nSize != 0) nSeaCntX++;
+	if (_nShowHeight % nSize != 0) nSeaCntY++;
 
-	MPSeaTileVertex   *pCurVertex = NULL;
-	
+	int nTileCnt = nSeaCntX * nSeaCntY;
+	int nVertexCnt = nTileCnt * 6;
+	int nTriCnt = nTileCnt * 2;
+
+	MPSeaTileVertex* pCurVertex = NULL;
+
 	int x, y;
-	if(_bUseVB)
-	{
-//				// 0 1 2 
-//				// 1 3 4
-		HRESULT hr = _pVB->Lock(0, nVertexCnt * sizeof(MPSeaTileVertex), (void**)&pCurVertex, D3DLOCK_NOOVERWRITE );
-	    if(FAILED(hr))
-	    {
-	        ToLogService("errors", LogLevel::Error,
-	                     "[{}] _pVB->Lock failed: nVertexCnt={}, hr=0x{:08X}",
-	                     __FUNCTION__, nVertexCnt, static_cast<std::uint32_t>(hr));
-	        return;
-	    }
-		for(y = 0; y < nSeaCntY; y++)
-		{
-			for(x = 0; x < nSeaCntX; x++)
-			{
+	if (_bUseVB) {
+		//				// 0 1 2 
+		//				// 1 3 4
+		HRESULT hr = _pVB->Lock(0, nVertexCnt * sizeof(MPSeaTileVertex), (void**)&pCurVertex, D3DLOCK_NOOVERWRITE);
+		if (FAILED(hr)) {
+			ToLogService("errors", LogLevel::Error,
+						 "[{}] _pVB->Lock failed: nVertexCnt={}, hr=0x{:08X}",
+						 __FUNCTION__, nVertexCnt, static_cast<std::uint32_t>(hr));
+			return;
+		}
+		for (y = 0; y < nSeaCntY; y++) {
+			for (x = 0; x < nSeaCntX; x++) {
 				int nX = (nSeaStartX + x) * nSize;
 				int nY = (nSeaStartY + y) * nSize;
 
-				if(nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
-			
+				if (nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
+
 				SVertex[0].dwColor = _dwSeaDefaultColor;
 				SVertex[1].dwColor = _dwSeaDefaultColor;
 				SVertex[2].dwColor = _dwSeaDefaultColor;
 				SVertex[3].dwColor = _dwSeaDefaultColor;
-			
-				for(int i = 0; i < 4; i++)
-				{
+
+				for (int i = 0; i < 4; i++) {
 					int nCurX = nX + MPTile::Offset[i][0] * nSize;
 					int nCurY = nY + MPTile::Offset[i][1] * nSize;
-				
-					SVertex[i].p = VECTOR3( (float)nCurX, (float)nCurY, SEA_LEVEL);
-				
-					MPTile *pTile = GetTile(nCurX, nCurY);
-					if((SEA_LEVEL - pTile->fHeight) < 0.5f)
-					{
-						SVertex[i].dwColor = 0x00ffffff; 
+
+					SVertex[i].p = VECTOR3((float)nCurX, (float)nCurY, SEA_LEVEL);
+
+					MPTile* pTile = GetTile(nCurX, nCurY);
+					if ((SEA_LEVEL - pTile->fHeight) < 0.5f) {
+						SVertex[i].dwColor = 0x00ffffff;
 					}
-				}   
+				}
 				// 1 2 3 
 				memcpy(pCurVertex, &SVertex, 3 * sizeof(MPSeaTileVertex));
-				pCurVertex+=3;  
-				
+				pCurVertex += 3;
+
 				// 1 3 4
 				memcpy(pCurVertex, &SVertex[3], 1 * sizeof(MPSeaTileVertex));
 				pCurVertex++;
@@ -624,434 +599,398 @@ void MPMap::RenderSea()
 				pCurVertex++;
 				memcpy(pCurVertex, &SVertex[1], 1 * sizeof(MPSeaTileVertex));
 				pCurVertex++;
-			} 
+			}
 		}
-	
+
 		_pVB->Unlock();
 		g_Render.SetStreamSource(0, _pVB, 0, sizeof(MPSeaTileVertex));
-		if(HRESULT hr = g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, 0, nTriCnt); FAILED(hr))
+		if (HRESULT hr = g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, 0, nTriCnt); FAILED(hr))
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] DrawPrimitive (sea) failed: nTriCnt={}, hr=0x{:08X}",
-			             __FUNCTION__, nTriCnt, static_cast<std::uint32_t>(hr));
+						 "[{}] DrawPrimitive (sea) failed: nTriCnt={}, hr=0x{:08X}",
+						 __FUNCTION__, nTriCnt, static_cast<std::uint32_t>(hr));
 	}
-	else
-	{
-		for(y = 0; y < nSeaCntY; y++)
-		{
-			for(x = 0; x < nSeaCntX; x++)
-			{
+	else {
+		for (y = 0; y < nSeaCntY; y++) {
+			for (x = 0; x < nSeaCntX; x++) {
 				int nX = (nSeaStartX + x) * nSize;
 				int nY = (nSeaStartY + y) * nSize;
 
-				if(nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
-			
+				if (nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
+
 				SVertex[0].dwColor = _dwSeaDefaultColor;
 				SVertex[1].dwColor = _dwSeaDefaultColor;
 				SVertex[2].dwColor = _dwSeaDefaultColor;
 				SVertex[3].dwColor = _dwSeaDefaultColor;
-			
-				for(int i = 0; i < 4; i++)
-				{
+
+				for (int i = 0; i < 4; i++) {
 					int nCurX = nX + MPTile::Offset[i][0] * nSize;
 					int nCurY = nY + MPTile::Offset[i][1] * nSize;
-				
-					SVertex[i].p = VECTOR3( (float)nCurX, (float)nCurY, SEA_LEVEL);
-				
-					MPTile *pTile = GetTile(nCurX, nCurY);
-					if((SEA_LEVEL - pTile->fHeight) < 0.5f)
-					{
+
+					SVertex[i].p = VECTOR3((float)nCurX, (float)nCurY, SEA_LEVEL);
+
+					MPTile* pTile = GetTile(nCurX, nCurY);
+					if ((SEA_LEVEL - pTile->fHeight) < 0.5f) {
 						SVertex[i].dwColor = 0x00ffffff;
 					}
 				}
 
-                // begin by lsh
+				// begin by lsh
 #if(defined DRAW_TERRAIN_USE_DYNAMIC_BUFFER)
 
-                lwInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
-                lwIDynamicStreamMgr* dsm = imgr->res_mgr->GetDynamicStreamMgr();
-                dsm->BindDataVB(0, &SVertex, sizeof(MPSeaTileVertex) * 4, sizeof(MPSeaTileVertex));
-				if(LW_RESULT r = dsm->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); LW_FAILED(r))
+				lwInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
+				lwIDynamicStreamMgr* dsm = imgr->res_mgr->GetDynamicStreamMgr();
+				dsm->BindDataVB(0, &SVertex, sizeof(MPSeaTileVertex) * 4, sizeof(MPSeaTileVertex));
+				if (LW_RESULT r = dsm->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); LW_FAILED(r))
 					ToLogService("errors", LogLevel::Error,
-					             "[{}] dsm->DrawPrimitive (sea strip) failed: ret={}",
-					             __FUNCTION__, static_cast<long long>(r));
+								 "[{}] dsm->DrawPrimitive (sea strip) failed: ret={}",
+								 __FUNCTION__, static_cast<long long>(r));
 #else
 				g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &SVertex, sizeof(MPSeaTileVertex));
 #endif
-                // end
+				// end
 			}
 		}
 	}
 
 	g_Render.SetTexture(0, NULL);
 	g_Render.SetTexture(1, NULL);
-	
-	g_Render.SetRenderState( D3DRS_LIGHTING, TRUE);
 
-    m_dwSeaRenderTime = t.End();
+	g_Render.SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	m_dwSeaRenderTime = t.End();
 }
 
 
-BOOL MPMap::GetPickPos(int nPosX, int nPosY, D3DXVECTOR3 &vPickPos)
-{
+BOOL MPMap::GetPickPos(int nPosX, int nPosY, D3DXVECTOR3& vPickPos) {
 	vPickPos = D3DXVECTOR3(-1, -1, -10000);
 
 	D3DXVECTOR3 vPickRayOrig, vPickRayDir;
-	
+
 	g_Render.GetPickRayVector(nPosX, nPosY, &vPickRayOrig, &vPickRayDir);
-	
+
 	float fDistance = 70;
-    float fStep     = 0.6f;
-	
-    D3DXVECTOR3 vecEnd = vPickRayOrig + vPickRayDir * fDistance;
-    list<D3DXVECTOR3> PointList;
-    GetSamplePointList(vPickRayOrig.x, vPickRayOrig.y, vecEnd.x, vecEnd.y, fStep, 0.3f, PointList);
-    
-    for(list<D3DXVECTOR3>::iterator it = PointList.begin(); it!=PointList.end(); it++)
-    {
-        D3DXVECTOR3 *pVec = &(*it);
+	float fStep = 0.6f;
 
-        int nX = (int)(pVec->x);
-        int nY = (int)(pVec->y);
+	D3DXVECTOR3 vecEnd = vPickRayOrig + vPickRayDir * fDistance;
+	list<D3DXVECTOR3> PointList;
+	GetSamplePointList(vPickRayOrig.x, vPickRayOrig.y, vecEnd.x, vecEnd.y, fStep, 0.3f, PointList);
 
-        if(nX < 0 || nX >=_nWidth )  continue;
-		if(nY < 0 || nY >=_nHeight ) continue;
-		
-        int nOffX = nX;
-        int nOffY = nY;
+	for (list<D3DXVECTOR3>::iterator it = PointList.begin(); it != PointList.end(); it++) {
+		D3DXVECTOR3* pVec = &(*it);
 
-        float fX = (float)nX;
-        float fY = (float)nY;
-        
-		float fHeight[4] = { SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL };
-		for(int i = 0; i < 4; i++)
-		{
-			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0])* 2,\
-				(nY + MPTile::Offset[i][1])* 2);
+		int nX = (int)(pVec->x);
+		int nY = (int)(pVec->y);
+
+		if (nX < 0 || nX >= _nWidth) continue;
+		if (nY < 0 || nY >= _nHeight) continue;
+
+		int nOffX = nX;
+		int nOffY = nY;
+
+		float fX = (float)nX;
+		float fY = (float)nY;
+
+		float fHeight[4] = {SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL};
+		for (int i = 0; i < 4; i++) {
+			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0]) * 2,\
+									   (nY + MPTile::Offset[i][1]) * 2);
 		}
 		float fx1 = (float)nX;
 		float fx2 = (float)nX + 1;
 		float fy1 = (float)nY;
 		float fy2 = (float)nY + 1;
-		
-		D3DXVECTOR3 v0( fx1, fy1, fHeight[0]); 
-		D3DXVECTOR3 v1( fx2, fy1, fHeight[1]); 
-		D3DXVECTOR3 v2( fx1, fy2, fHeight[2]); 
-		D3DXVECTOR3 v3( fx2, fy2, fHeight[3]); 		
-		
+
+		D3DXVECTOR3 v0(fx1, fy1, fHeight[0]);
+		D3DXVECTOR3 v1(fx2, fy1, fHeight[1]);
+		D3DXVECTOR3 v2(fx1, fy2, fHeight[2]);
+		D3DXVECTOR3 v3(fx2, fy2, fHeight[3]);
+
 		float u, v;
-		if( D3DXIntersectTri(&v0, &v1, &v2, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE)
-		{
-			vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);	
+		if (D3DXIntersectTri(&v0, &v1, &v2, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE) {
+			vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);
 			return TRUE;
 		}
-			
-		if( D3DXIntersectTri(&v2, &v1, &v3, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE)
-		{
-			vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);		
+
+		if (D3DXIntersectTri(&v2, &v1, &v3, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE) {
+			vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);
 			return TRUE;
 		}
 	}
-	return FALSE; 
+	return FALSE;
 }
 
-BOOL MPMap::GetPickPosEditor(int nPosX, int nPosY, D3DXVECTOR3 &vPickPos)
-{
+BOOL MPMap::GetPickPosEditor(int nPosX, int nPosY, D3DXVECTOR3& vPickPos) {
 	vPickPos = D3DXVECTOR3(-1, -1, -10000);
 
 	D3DXVECTOR3 vPickRayOrig, vPickRayDir;
-	
+
 	g_Render.GetPickRayVector(nPosX, nPosY, &vPickRayOrig, &vPickRayDir);
-	
+
 	float fDistance = 70;
-    float fStep     = 0.6f;
-	
-    D3DXVECTOR3 vecEnd = vPickRayOrig + vPickRayDir * fDistance;
-    list<D3DXVECTOR3> PointList;
-    GetSamplePointList(vPickRayOrig.x, vPickRayOrig.y, vecEnd.x, vecEnd.y, fStep, 0.3f, PointList);
-    
-    for(list<D3DXVECTOR3>::iterator it = PointList.begin(); it!=PointList.end(); it++)
-    {
-        D3DXVECTOR3 *pVec = &(*it);
+	float fStep = 0.6f;
 
-        int nX = (int)(pVec->x);
-        int nY = (int)(pVec->y);
+	D3DXVECTOR3 vecEnd = vPickRayOrig + vPickRayDir * fDistance;
+	list<D3DXVECTOR3> PointList;
+	GetSamplePointList(vPickRayOrig.x, vPickRayOrig.y, vecEnd.x, vecEnd.y, fStep, 0.3f, PointList);
 
-        if(nX < 0 || nX >=_nWidth )  continue;
-		if(nY < 0 || nY >=_nHeight ) continue;
-		
-        int nOffX = nX;
-        int nOffY = nY;
+	for (list<D3DXVECTOR3>::iterator it = PointList.begin(); it != PointList.end(); it++) {
+		D3DXVECTOR3* pVec = &(*it);
 
-        float fX = (float)nX;
-        float fY = (float)nY;
-        
-		float fHeight[4] = { SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL };
+		int nX = (int)(pVec->x);
+		int nY = (int)(pVec->y);
+
+		if (nX < 0 || nX >= _nWidth) continue;
+		if (nY < 0 || nY >= _nHeight) continue;
+
+		int nOffX = nX;
+		int nOffY = nY;
+
+		float fX = (float)nX;
+		float fY = (float)nY;
+
+		float fHeight[4] = {SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL};
 #if 1
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile) 
-		{
-			for(int i = 0; i < 4; i++)
-			{
-				MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-				if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
+		MPTile* pTile = GetTile(nX, nY);
+		if (pTile) {
+			for (int i = 0; i < 4; i++) {
+				MPTile* pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
+				if (!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
 			}
 		}
 
 #else
-		for(int i = 0; i < 4; i++)
-		{
-			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0])* 2,\
-				(nY + MPTile::Offset[i][1])* 2);
+		for (int i = 0; i < 4; i++) {
+			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0]) * 2,\
+									   (nY + MPTile::Offset[i][1]) * 2);
 		}
 #endif
 		float fx1 = (float)nX;
 		float fx2 = (float)nX + 1;
 		float fy1 = (float)nY;
 		float fy2 = (float)nY + 1;
-		
-		D3DXVECTOR3 v0( fx1, fy1, fHeight[0]); 
-		D3DXVECTOR3 v1( fx2, fy1, fHeight[1]); 
-		D3DXVECTOR3 v2( fx1, fy2, fHeight[2]); 
-		D3DXVECTOR3 v3( fx2, fy2, fHeight[3]); 		
-		
+
+		D3DXVECTOR3 v0(fx1, fy1, fHeight[0]);
+		D3DXVECTOR3 v1(fx2, fy1, fHeight[1]);
+		D3DXVECTOR3 v2(fx1, fy2, fHeight[2]);
+		D3DXVECTOR3 v3(fx2, fy2, fHeight[3]);
+
 		float u, v;
-		if( D3DXIntersectTri(&v0, &v1, &v2, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE)
-		{
-			vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);	
+		if (D3DXIntersectTri(&v0, &v1, &v2, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE) {
+			vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);
 			return TRUE;
 		}
-			
-		if( D3DXIntersectTri(&v2, &v1, &v3, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE)
-		{
-			vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);		
+
+		if (D3DXIntersectTri(&v2, &v1, &v3, &vPickRayOrig, &vPickRayDir, &u, &v, NULL) == TRUE) {
+			vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);
 			return TRUE;
 		}
 	}
-	return FALSE; 
+	return FALSE;
 }
 
 
-float MPMap::GetHeight(float fX, float fY)  // ?  
+float MPMap::GetHeight(float fX, float fY) // ?  
 {
 	int nX = (int)fX;
 	int nY = (int)fY;
-	
+
 	float fx1 = (float)nX;
 	float fx2 = (float)nX + 1;
 	float fy1 = (float)nY;
 	float fy2 = (float)nY + 1;
-		
-	float fHeight[4] = { SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL };
-	
-	MPTile *pTile = GetTile(nX, nY);
-	for(int i = 0; i < 4; i++)
-	{
-		MPTile *pCurTile = GetGroupTile(nX, nY, i);
+
+	float fHeight[4] = {SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL};
+
+	MPTile* pTile = GetTile(nX, nY);
+	for (int i = 0; i < 4; i++) {
+		MPTile* pCurTile = GetGroupTile(nX, nY, i);
 		fHeight[i] = pCurTile->fHeight;
 	}
-	
-	D3DXVECTOR3 v0( fx1, fy1, fHeight[0]); 
-	D3DXVECTOR3 v1( fx2, fy1, fHeight[1]); 
-	D3DXVECTOR3 v2( fx1, fy2, fHeight[2]); 
-	D3DXVECTOR3 v3( fx2, fy2, fHeight[3]); 		
-		
+
+	D3DXVECTOR3 v0(fx1, fy1, fHeight[0]);
+	D3DXVECTOR3 v1(fx2, fy1, fHeight[1]);
+	D3DXVECTOR3 v2(fx1, fy2, fHeight[2]);
+	D3DXVECTOR3 v3(fx2, fy2, fHeight[3]);
+
 	VECTOR3 vOrig(fX, fY, 20.0f);
 	VECTOR3 vDir(0, 0, -1);
 	float u, v;
-	
+
 	VECTOR3 vPickPos;
-	if( D3DXIntersectTri(&v0, &v1, &v2, &vOrig, &vDir, &u, &v, NULL) == TRUE)
-	{
-		vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);	
+	if (D3DXIntersectTri(&v0, &v1, &v2, &vOrig, &vDir, &u, &v, NULL) == TRUE) {
+		vPickPos = v0 + u * (v1 - v0) + v * (v2 - v0);
 		return vPickPos.z;
 	}
-			
-	if( D3DXIntersectTri(&v2, &v1, &v3, &vOrig, &vDir, &u, &v, NULL) == TRUE)
-	{
-		vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);		
+
+	if (D3DXIntersectTri(&v2, &v1, &v3, &vOrig, &vDir, &u, &v, NULL) == TRUE) {
+		vPickPos = v2 + u * (v1 - v2) + v * (v3 - v2);
 		return vPickPos.z;
 	}
 
 	return 0.0f;
 }
 
-void MPMap::_CalTileNormal(int nX, int nY)
-{
+void MPMap::_CalTileNormal(int nX, int nY) {
 	VECTOR3 vAround[4], vNormal[4];
 
-	float f1 = (float)(rand()%20) / 100.0f;
-	float f2 = (float)(rand()%20) / 100.0f;
-	float f3 = (float)(rand()%10) / 100.0f;
-	
-	vAround[ 0 ] = D3DXVECTOR3( -1,  0, GetTile(nX - 1, nY)->fHeight);
-	vAround[ 1 ] = D3DXVECTOR3(  0,  1, GetTile(nX, nY + 1)->fHeight);
-	vAround[ 2 ] = D3DXVECTOR3(  1,  0, GetTile(nX + 1, nY)->fHeight);
-	vAround[ 3 ] = D3DXVECTOR3(  0, -1, GetTile(nX, nY - 1)->fHeight);	
-	
+	float f1 = (float)(rand() % 20) / 100.0f;
+	float f2 = (float)(rand() % 20) / 100.0f;
+	float f3 = (float)(rand() % 10) / 100.0f;
+
+	vAround[0] = D3DXVECTOR3(-1, 0, GetTile(nX - 1, nY)->fHeight);
+	vAround[1] = D3DXVECTOR3(0, 1, GetTile(nX, nY + 1)->fHeight);
+	vAround[2] = D3DXVECTOR3(1, 0, GetTile(nX + 1, nY)->fHeight);
+	vAround[3] = D3DXVECTOR3(0, -1, GetTile(nX, nY - 1)->fHeight);
+
 	float fHeight = GetTile(nX, nY)->fHeight;
 
 	VECTOR3 v = VECTOR3(0, 0, fHeight);
-	vNormal[ 0 ] = ComputeNormalVector( v, vAround[1], vAround[0]);	
-	vNormal[ 1 ] = ComputeNormalVector( v, vAround[2], vAround[1]);	
-	vNormal[ 2 ] = ComputeNormalVector( v, vAround[3], vAround[2]);	
-	vNormal[ 3 ] = ComputeNormalVector( v, vAround[0], vAround[3]);
-	VECTOR3 vR = ( vNormal[ 0 ] + vNormal[ 1 ]  + vNormal[ 2 ] + vNormal[ 3 ] ) / 4;
-	
+	vNormal[0] = ComputeNormalVector(v, vAround[1], vAround[0]);
+	vNormal[1] = ComputeNormalVector(v, vAround[2], vAround[1]);
+	vNormal[2] = ComputeNormalVector(v, vAround[3], vAround[2]);
+	vNormal[3] = ComputeNormalVector(v, vAround[0], vAround[3]);
+	VECTOR3 vR = (vNormal[0] + vNormal[1] + vNormal[2] + vNormal[3]) / 4;
+
 	D3DXVec3Normalize(&vR, &vR);
-	
 }
 
 
-struct SRenderTileInfo
-{
-    MPTile *pTile;
-    short sx;
-    short sy;
-    MPTile *pNeighbor[3];
+struct SRenderTileInfo {
+	MPTile* pTile;
+	short sx;
+	short sy;
+	MPTile* pNeighbor[3];
 };
 
-struct STileGroup
-{
-    short               sTile[MAX_RENDER_TILE];
-    short               sTileCnt;
-    BYTE                btLayer;
-    BYTE                btTextureID;
-    STileGroup(): btTextureID(0), sTileCnt(0), btLayer(0){}
+struct STileGroup {
+	short sTile[MAX_RENDER_TILE];
+	short sTileCnt;
+	BYTE btLayer;
+	BYTE btTextureID;
+
+	STileGroup() : btTextureID(0), sTileCnt(0), btLayer(0) {
+	}
 };
 
 #define MAX_RENDER_GROUP 160
 static SRenderTileInfo TilePool[MAX_RENDER_TILE];
-static STileGroup      TileGroup[4][MAX_RENDER_GROUP];
-static STileGroup*     RenderGroup[MAX_RENDER_GROUP];
-static int             nRenderGroupCnt = 0;
-static int             nLockVertex     = 0;
-static int             nRenderTileCnt  = 0;
+static STileGroup TileGroup[4][MAX_RENDER_GROUP];
+static STileGroup* RenderGroup[MAX_RENDER_GROUP];
+static int nRenderGroupCnt = 0;
+static int nLockVertex = 0;
+static int nRenderTileCnt = 0;
 
-BOOL MPMap::_AddRenderGroup(BYTE btLayer, int nTexNo, MPTile *pTile, short sTileX, short sTileY)
-{
-   if(nRenderTileCnt>=MAX_RENDER_TILE) 
-   {
-        return FALSE;
-   }
+BOOL MPMap::_AddRenderGroup(BYTE btLayer, int nTexNo, MPTile* pTile, short sTileX, short sTileY) {
+	if (nRenderTileCnt >= MAX_RENDER_TILE) {
+		return FALSE;
+	}
 
-   if(nTexNo>=MAX_RENDER_GROUP) 
-   {
+	if (nTexNo >= MAX_RENDER_GROUP) {
 		ToLogService("errors", LogLevel::Error, "AddRenderGroup{}", MAX_RENDER_GROUP);
 		return FALSE;
-   }
-   if(btLayer>=4)
-   {
+	}
+	if (btLayer >= 4) {
 		ToLogService("errors", LogLevel::Error, "AddRenderGroup{}", 3);
 		return FALSE;
-   }
-   
-   STileGroup *pGroup = &TileGroup[btLayer][nTexNo];
-   pGroup->btLayer = btLayer;
-   pGroup->btTextureID = nTexNo;
-   pGroup->sTile[pGroup->sTileCnt] = nRenderTileCnt;
-   pGroup->sTileCnt++;
-   
-   SRenderTileInfo *pInfo = &TilePool[nRenderTileCnt];
-   pInfo->pTile = pTile;
-   pInfo->sx    = sTileX;
-   pInfo->sy    = sTileY;
-   pInfo->pNeighbor[0] = GetGroupTile(sTileX, sTileY, 1);
-   pInfo->pNeighbor[1] = GetGroupTile(sTileX, sTileY, 2);
-   pInfo->pNeighbor[2] = GetGroupTile(sTileX, sTileY, 3);
-   
-   nRenderTileCnt++;
-   return TRUE;
+	}
+
+	STileGroup* pGroup = &TileGroup[btLayer][nTexNo];
+	pGroup->btLayer = btLayer;
+	pGroup->btTextureID = nTexNo;
+	pGroup->sTile[pGroup->sTileCnt] = nRenderTileCnt;
+	pGroup->sTileCnt++;
+
+	SRenderTileInfo* pInfo = &TilePool[nRenderTileCnt];
+	pInfo->pTile = pTile;
+	pInfo->sx = sTileX;
+	pInfo->sy = sTileY;
+	pInfo->pNeighbor[0] = GetGroupTile(sTileX, sTileY, 1);
+	pInfo->pNeighbor[1] = GetGroupTile(sTileX, sTileY, 2);
+	pInfo->pNeighbor[2] = GetGroupTile(sTileX, sTileY, 3);
+
+	nRenderTileCnt++;
+	return TRUE;
 }
 
 
-void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
-{
-    // Terrain Texture GroupVB
-    for(int i = 0; i < nRenderGroupCnt; i++)
-    {
-        RenderGroup[i]->sTileCnt = 0;
-    }
-    nRenderGroupCnt = 0;
-    
-    MPTimer t;
-    t.Begin();
+void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY) {
+	// Terrain Texture GroupVB
+	for (int i = 0; i < nRenderGroupCnt; i++) {
+		RenderGroup[i]->sTileCnt = 0;
+	}
+	nRenderGroupCnt = 0;
 
-    nRenderTileCnt = 0;
+	MPTimer t;
+	t.Begin();
 
-    BOOL bFull = FALSE;
+	nRenderTileCnt = 0;
 
-    float fh[4];
+	BOOL bFull = FALSE;
+
+	float fh[4];
 	_bRenderSea = FALSE;
 
-    for(short y = 0; y < _nShowHeight; y++)
-	{
-		for(short x = 0; x < _nShowWidth; x++)
-		{
+	for (short y = 0; y < _nShowHeight; y++) {
+		for (short x = 0; x < _nShowWidth; x++) {
 			short sX = nTileStartX + x;
 			short sY = nTileStartY + y;
-			if(sX < 0 || sX >= _nWidth || sY < 0 || sY >= _nHeight) continue;
-		
-			MPTile *pTile = GetTile(sX, sY);
-            if(!pTile) continue;
+			if (sX < 0 || sX >= _nWidth || sY < 0 || sY >= _nHeight) continue;
 
-			if(pTile->fHeight < (SEA_LEVEL - 0.05f)) 
-			{
+			MPTile* pTile = GetTile(sX, sY);
+			if (!pTile) continue;
+
+			if (pTile->fHeight < (SEA_LEVEL - 0.05f)) {
 				_bRenderSea = TRUE; // 
 			}
 
 			_fTileHeightBuffer[y][x] = pTile->fHeight;
-			_sTileRegionAttr[y][x]   = pTile->sRegion;
-            
+			_sTileRegionAttr[y][x] = pTile->sRegion;
+
 			int gx = x * 2;
-            int gy = y * 2;
-			
-			_fHeightBuffer[gy][gx]         = pTile->getObjHeight(0);
-            _fHeightBuffer[gy][gx + 1]     = pTile->getObjHeight(1);
-            _fHeightBuffer[gy + 1][gx]     = pTile->getObjHeight(2);
-            _fHeightBuffer[gy + 1][gx + 1] = pTile->getObjHeight(3);
-            
-            _btBlockBuffer[gy][gx]         = pTile->IsBlock(0);
-            _btBlockBuffer[gy][gx + 1]     = pTile->IsBlock(1);
-            _btBlockBuffer[gy + 1][gx]     = pTile->IsBlock(2);
-            _btBlockBuffer[gy + 1][gx + 1] = pTile->IsBlock(3);
-            
-            //lemon add for cull
-			if(m_bCullTile)
-			{
+			int gy = y * 2;
+
+			_fHeightBuffer[gy][gx] = pTile->getObjHeight(0);
+			_fHeightBuffer[gy][gx + 1] = pTile->getObjHeight(1);
+			_fHeightBuffer[gy + 1][gx] = pTile->getObjHeight(2);
+			_fHeightBuffer[gy + 1][gx + 1] = pTile->getObjHeight(3);
+
+			_btBlockBuffer[gy][gx] = pTile->IsBlock(0);
+			_btBlockBuffer[gy][gx + 1] = pTile->IsBlock(1);
+			_btBlockBuffer[gy + 1][gx] = pTile->IsBlock(2);
+			_btBlockBuffer[gy + 1][gx + 1] = pTile->IsBlock(3);
+
+			//lemon add for cull
+			if (m_bCullTile) {
 				fh[0] = pTile->fHeight;
 				fh[1] = GetGroupTile(sX, sY, 1)->fHeight;
 				fh[2] = GetGroupTile(sX, sY, 2)->fHeight;
 				fh[3] = GetGroupTile(sX, sY, 3)->fHeight;
 
-				if(!pTile->IsVisibale(sX, sY, fh))
+				if (!pTile->IsVisibale(sX, sY, fh))
 					continue;
 			}
-			
-			if(pTile->TexLayer[0].btTexNo==0) continue;
-            
-            if(pTile->TexLayer[0].btAlphaNo==15) 
-            {
-                if(!_AddRenderGroup(0, pTile->TexLayer[0].btTexNo, pTile, sX, sY))
-                {
-                    bFull = TRUE;
-                    goto groupend;
-                }
-            }
-            
-            for(int i = 1; i < 4; i++)
-			{
-				MPTileTex *pLayer = &(pTile->TexLayer[i]);
-			
-				if(pLayer->btTexNo==0)   break;
-				if(pLayer->btAlphaNo==0) continue;
 
-                if(!_AddRenderGroup(i, pLayer->btTexNo, pTile, sX, sY))
-                {
-                    bFull = TRUE;
-                    goto groupend;
-                }
-            }
-        }
+			if (pTile->TexLayer[0].btTexNo == 0) continue;
+
+			if (pTile->TexLayer[0].btAlphaNo == 15) {
+				if (!_AddRenderGroup(0, pTile->TexLayer[0].btTexNo, pTile, sX, sY)) {
+					bFull = TRUE;
+					goto groupend;
+				}
+			}
+
+			for (int i = 1; i < 4; i++) {
+				MPTileTex* pLayer = &(pTile->TexLayer[i]);
+
+				if (pLayer->btTexNo == 0) break;
+				if (pLayer->btAlphaNo == 0) continue;
+
+				if (!_AddRenderGroup(i, pLayer->btTexNo, pTile, sX, sY)) {
+					bFull = TRUE;
+					goto groupend;
+				}
+			}
+		}
 	}
 
 	{
@@ -1060,10 +999,8 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 
 		m_pBlock->SetGrid(nBlockStartX * 2, nBlockStartY * 2);
 
-		for (short y = 0; y < m_iRange; y++)
-		{
-			for (short x = 0; x < m_iRange; x++)
-			{
+		for (short y = 0; y < m_iRange; y++) {
+			for (short x = 0; x < m_iRange; x++) {
 				short sX = nBlockStartX + x;
 				short sY = nBlockStartY + y;
 				if (sX < 0 || sX >= _nWidth || sY < 0 || sY >= _nHeight) continue;
@@ -1085,177 +1022,155 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 	}
 groupend:
 
-    if(bFull) ToLogService("errors", LogLevel::Error, "(>{})", MAX_RENDER_TILE * 2);
+	if (bFull) ToLogService("errors", LogLevel::Error, "(>{})", MAX_RENDER_TILE * 2);
 
-    nLockVertex = 0;
+	nLockVertex = 0;
 
-    for(int n = 0; n < 4; n++)
-    {
-        for(int i = 0; i < MAX_RENDER_GROUP; i++)
-        {
-            STileGroup *pGroup = &TileGroup[n][i];
-            if(pGroup->sTileCnt)
-            {
-                RenderGroup[nRenderGroupCnt] = pGroup;
-                nRenderGroupCnt++;
-                nLockVertex+=(pGroup->sTileCnt * 6);
-            }
-        }
-    }
-    DWORD dwGroupTime = t.End();
-
+	for (int n = 0; n < 4; n++) {
+		for (int i = 0; i < MAX_RENDER_GROUP; i++) {
+			STileGroup* pGroup = &TileGroup[n][i];
+			if (pGroup->sTileCnt) {
+				RenderGroup[nRenderGroupCnt] = pGroup;
+				nRenderGroupCnt++;
+				nLockVertex += (pGroup->sTileCnt * 6);
+			}
+		}
+	}
+	DWORD dwGroupTime = t.End();
 }
 
-void MPMap::_FillVB()
-{
-    if(_pLandVB==NULL) return;
-    
-    MPTimer t; t.Begin();
-        
-    MPTileVertex *pCurVertex = NULL;
-    HRESULT hr = _pLandVB->Lock(0, nLockVertex * sizeof(MPTileVertex), (void**)&pCurVertex, 0 );
-	if(FAILED(hr))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] _pLandVB->Lock failed: nLockVertex={}, hr=0x{:08X}",
-                     __FUNCTION__, nLockVertex, static_cast<std::uint32_t>(hr));
-        return;
-    }
+void MPMap::_FillVB() {
+	if (_pLandVB == NULL) return;
 
-    MPTile *TileList[4];
-    
-    int nSize = sizeof(MPTileVertex);
-            
-    for(int j = 0; j < nRenderGroupCnt; j++)
-    {
-        STileGroup *pGroup = RenderGroup[j];
-            
-        int nLayer = pGroup->btLayer;
-        for(int i = 0; i < pGroup->sTileCnt; i++)
-        {
-            SRenderTileInfo *pInfo = &TilePool[pGroup->sTile[i]];
-            MPTile *pTile = pInfo->pTile;
-			if( !pTile ) 
-			{
+	MPTimer t;
+	t.Begin();
+
+	MPTileVertex* pCurVertex = NULL;
+	HRESULT hr = _pLandVB->Lock(0, nLockVertex * sizeof(MPTileVertex), (void**)&pCurVertex, 0);
+	if (FAILED(hr)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] _pLandVB->Lock failed: nLockVertex={}, hr=0x{:08X}",
+					 __FUNCTION__, nLockVertex, static_cast<std::uint32_t>(hr));
+		return;
+	}
+
+	MPTile* TileList[4];
+
+	int nSize = sizeof(MPTileVertex);
+
+	for (int j = 0; j < nRenderGroupCnt; j++) {
+		STileGroup* pGroup = RenderGroup[j];
+
+		int nLayer = pGroup->btLayer;
+		for (int i = 0; i < pGroup->sTileCnt; i++) {
+			SRenderTileInfo* pInfo = &TilePool[pGroup->sTile[i]];
+			MPTile* pTile = pInfo->pTile;
+			if (!pTile) {
 				ToLogService("common", LogLevel::Error, "Terrain _FillVB pTile = null!, {}", pGroup->sTile[i]);
 				continue;
 			}
-            int nX = pInfo->sx;
-            int nY = pInfo->sy;
-            TileList[0] = pTile;
-            TileList[1] = pInfo->pNeighbor[0];
+			int nX = pInfo->sx;
+			int nY = pInfo->sy;
+			TileList[0] = pTile;
+			TileList[1] = pInfo->pNeighbor[0];
 			TileList[2] = pInfo->pNeighbor[1];
 			TileList[3] = pInfo->pNeighbor[2];
-		
+
 			float fU = (float)(nX % 4) * .25f;
-            float fV = (float)(nY % 4) * .25f;
-				
-            if(nLayer==0)
-            {
-                pTile->SetTerrainUV(0, fU, fV, .25f);
+			float fV = (float)(nY % 4) * .25f;
+
+			if (nLayer == 0) {
+				pTile->SetTerrainUV(0, fU, fV, .25f);
 			}
-            else
-            {
-                MPTileTex *pLayer = &pTile->TexLayer[nLayer];
-                float fU1 = AlphaNo2UV[pLayer->btAlphaNo][0];
-                float fV1 = AlphaNo2UV[pLayer->btAlphaNo][1];
-                pTile->SetTerrainUV_Inter(0, fU1, fV1, 0.25f);
-                pTile->SetTerrainUV(1, fU, fV, 0.25f);
-            }
-            
-            pTile->RenderTerrain(nX, nY, TileList);
-                
-            memcpy(pCurVertex, &(MPTile::_TVertex[0]), nSize * 3);
-            pCurVertex+=3;				   
-            
+			else {
+				MPTileTex* pLayer = &pTile->TexLayer[nLayer];
+				float fU1 = AlphaNo2UV[pLayer->btAlphaNo][0];
+				float fV1 = AlphaNo2UV[pLayer->btAlphaNo][1];
+				pTile->SetTerrainUV_Inter(0, fU1, fV1, 0.25f);
+				pTile->SetTerrainUV(1, fU, fV, 0.25f);
+			}
 
-            // 1 3 4
-            memcpy(pCurVertex, &(MPTile::_TVertex[3]), nSize);
-            pCurVertex++;
-            memcpy(pCurVertex, &(MPTile::_TVertex[2]), nSize);
-            pCurVertex++;
-            memcpy(pCurVertex, &(MPTile::_TVertex[1]), nSize);
-            pCurVertex++;
-            
-        }
-    }
+			pTile->RenderTerrain(nX, nY, TileList);
 
-    DWORD dwFillTime = t.End();
+			memcpy(pCurVertex, &(MPTile::_TVertex[0]), nSize * 3);
+			pCurVertex += 3;
 
-    _pLandVB->Unlock();
+
+			// 1 3 4
+			memcpy(pCurVertex, &(MPTile::_TVertex[3]), nSize);
+			pCurVertex++;
+			memcpy(pCurVertex, &(MPTile::_TVertex[2]), nSize);
+			pCurVertex++;
+			memcpy(pCurVertex, &(MPTile::_TVertex[1]), nSize);
+			pCurVertex++;
+		}
+	}
+
+	DWORD dwFillTime = t.End();
+
+	_pLandVB->Unlock();
 }
 
-void MPMap::_RenderVB(BOOL bWireframe)
-{
-    if(_pLandVB==NULL) return;
-    
-    g_Render.GetDevice()->SetStreamSource(0, _pLandVB, 0, sizeof(MPTileVertex));
-        
-    int nStartVertex = 0;
-    for(int j = 0; j < nRenderGroupCnt; j++)
-    {
-        STileGroup *pGroup = RenderGroup[j];
-        if(pGroup->sTileCnt==0) continue;
+void MPMap::_RenderVB(BOOL bWireframe) {
+	if (_pLandVB == NULL) return;
 
-        if(pGroup->btLayer==0)
-        {
-            g_Render.EnableAlpha(FALSE);
+	g_Render.GetDevice()->SetStreamSource(0, _pLandVB, 0, sizeof(MPTileVertex));
+
+	int nStartVertex = 0;
+	for (int j = 0; j < nRenderGroupCnt; j++) {
+		STileGroup* pGroup = RenderGroup[j];
+		if (pGroup->sTileCnt == 0) continue;
+
+		if (pGroup->btLayer == 0) {
+			g_Render.EnableAlpha(FALSE);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-            g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_DISABLE);
-            if(!bWireframe) 
-            {
-                g_Render.SetTexture(0, GetTextureByID(GetTerrainTextureID(pGroup->btTextureID)));
-            }
-        }
-        else
-        {
-            if(bWireframe) continue;
-            g_Render.SetTexture(0, GetTextureByID(GetTerrainAlphaTextureID_I()));
-            g_Render.EnableAlpha(TRUE);
+			g_Render.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+			if (!bWireframe) {
+				g_Render.SetTexture(0, GetTextureByID(GetTerrainTextureID(pGroup->btTextureID)));
+			}
+		}
+		else {
+			if (bWireframe) continue;
+			g_Render.SetTexture(0, GetTextureByID(GetTerrainAlphaTextureID_I()));
+			g_Render.EnableAlpha(TRUE);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_MIRROR);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_MIRROR);
-            g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);
-            g_Render.SetTexture(1, GetTextureByID(GetTerrainTextureID(pGroup->btTextureID)));
-	    }
-        g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, nStartVertex, pGroup->sTileCnt * 2);
-        nStartVertex+=(pGroup->sTileCnt * 6);
+			g_Render.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+			g_Render.SetTexture(1, GetTextureByID(GetTerrainTextureID(pGroup->btTextureID)));
+		}
+		g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, nStartVertex, pGroup->sTileCnt * 2);
+		nStartVertex += (pGroup->sTileCnt * 6);
 
-        if(pGroup->btLayer && !bWireframe)
-        {
-            g_Render.SetTexture(1, NULL);
-        }
-    }
+		if (pGroup->btLayer && !bWireframe) {
+			g_Render.SetTexture(1, NULL);
+		}
+	}
 	g_Render.EnableAlpha(TRUE);
 }
 
 
-void MPMap::SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density)
-{
-    // Enable fog blending.
-    g_Render.GetDevice()->SetRenderState(D3DRS_FOGENABLE, TRUE);
- 
-    // Set the fog color.
-    g_Render.GetDevice()->SetRenderState(D3DRS_FOGCOLOR, Color);
-    
-    // Set fog parameters.
-    if(D3DFOG_LINEAR == Mode)
-    {
-        g_Render.GetDevice()->SetRenderState(D3DRS_FOGTABLEMODE, Mode);
-        g_Render.GetDevice()->SetRenderState(D3DRS_FOGSTART, *(DWORD *)(&Start));
-        g_Render.GetDevice()->SetRenderState(D3DRS_FOGEND,   *(DWORD *)(&End));
-    }
-    else
-    {
-        g_Render.GetDevice()->SetRenderState(D3DRS_FOGTABLEMODE, Mode);
-        g_Render.GetDevice()->SetRenderState(D3DRS_FOGDENSITY, *(DWORD *)(&Density));
-    }
+void MPMap::SetupPixelFog(DWORD Color, DWORD Mode, float Start, float End, float Density) {
+	// Enable fog blending.
+	g_Render.GetDevice()->SetRenderState(D3DRS_FOGENABLE, TRUE);
+
+	// Set the fog color.
+	g_Render.GetDevice()->SetRenderState(D3DRS_FOGCOLOR, Color);
+
+	// Set fog parameters.
+	if (D3DFOG_LINEAR == Mode) {
+		g_Render.GetDevice()->SetRenderState(D3DRS_FOGTABLEMODE, Mode);
+		g_Render.GetDevice()->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&Start));
+		g_Render.GetDevice()->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&End));
+	}
+	else {
+		g_Render.GetDevice()->SetRenderState(D3DRS_FOGTABLEMODE, Mode);
+		g_Render.GetDevice()->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&Density));
+	}
 }
 
-MPTile* MPMap::GetTile(int nX, int nY)
-{
-	if (nX >= _nWidth || nY >= _nHeight || nX < 0 || nY < 0)
-	{
+MPTile* MPMap::GetTile(int nX, int nY) {
+	if (nX >= _nWidth || nY >= _nHeight || nX < 0 || nY < 0) {
 		return _pDefaultTile;
 	}
 
@@ -1263,8 +1178,7 @@ MPTile* MPMap::GetTile(int nX, int nY)
 	int nSectionY = nY / _nSectionHeight;
 
 	MPActiveMapSection* pSection = GetActiveSection(nSectionX, nSectionY);
-	if (pSection && pSection->pTileData)
-	{
+	if (pSection && pSection->pTileData) {
 		int nOffX = nX % _nSectionWidth;
 		int nOffY = nY % _nSectionHeight;
 		return pSection->pTileData + nOffY * _nSectionWidth + nOffX;
@@ -1273,90 +1187,74 @@ MPTile* MPMap::GetTile(int nX, int nY)
 	return _pDefaultTile;
 }
 
-BOOL MPMap::IsPointVisible(float fX, float fY)
-{
+BOOL MPMap::IsPointVisible(float fX, float fY) {
 	float fStartX = _fShowCenterX - (float)_nShowWidth / 2;
 	float fStartY = _fShowCenterY - (float)_nShowHeight / 2;
 
 	float fEndX = fStartX + (float)_nShowWidth;
 	float fEndY = fStartY + (float)_nShowHeight;
 
-	if (fX >= fStartX && fY >= fStartY && fX <= fEndX && fY <= fEndY)
-	{
+	if (fX >= fStartX && fY >= fStartY && fX <= fEndX && fY <= fEndY) {
 		return TRUE;
 	}
 	return FALSE;
 }
 
-float MPMap::GetTileHeight(int x, int y)
-{
+float MPMap::GetTileHeight(int x, int y) {
 	int offx = x - _nLastTileStartX;
 	int offy = y - _nLastTileStartY;
 
-	if (offx < 0 || offx >= 100)
-	{
+	if (offx < 0 || offx >= 100) {
 		return 0.0f;
 	}
-	if (offy < 0 || offy >= 100)
-	{
+	if (offy < 0 || offy >= 100) {
 		return 0.0f;
 	}
 
 	return _fTileHeightBuffer[offy][offx];
 }
 
-short MPMap::GetTileRegionAttr(int x, int y)
-{
+short MPMap::GetTileRegionAttr(int x, int y) {
 	int offx = x - _nLastTileStartX;
 	int offy = y - _nLastTileStartY;
 
-	if (offx < 0 || offx >= 100)
-	{
+	if (offx < 0 || offx >= 100) {
 		return 0;
 	}
-	if (offy < 0 || offy >= 100)
-	{
+	if (offy < 0 || offy >= 100) {
 		return 0;
 	}
 
 	return _sTileRegionAttr[offy][offx];
 }
 
-float MPMap::GetGridHeight(int x, int y)
-{
-	try
-	{
+float MPMap::GetGridHeight(int x, int y) {
+	try {
 		int offx = x - _nLastGridStartX;
 		int offy = y - _nLastGridStartY;
 
-		if (offx < 0 || offx >= _nGridShowWidth)
-		{
+		if (offx < 0 || offx >= _nGridShowWidth) {
 			return 0.0f;
 		}
-		if (offy < 0 || offy >= _nGridShowHeight)
-		{
+		if (offy < 0 || offy >= _nGridShowHeight) {
 			return 0.0f;
 		}
 
 		return _fHeightBuffer[offy][offx];
 	}
-	catch (...)
-	{
+	catch (...) {
 	}
 	return 0.0f;
 }
 
-BYTE MPMap::IsGridBlock(int x, int y)
-{
+BYTE MPMap::IsGridBlock(int x, int y) {
 	int offx = x - _nLastGridStartX;
 	int offy = y - _nLastGridStartY;
 
-	if (offx < 0 || offx >= _nGridShowWidth)
-	{
+	if (offx < 0 || offx >= _nGridShowWidth) {
 		return 1;
 	}
-	if (offy < 0 || offy >= _nGridShowHeight)
-	{
+	if (offy < 0 || offy >= _nGridShowHeight) {
 		return 1;
 	}
 

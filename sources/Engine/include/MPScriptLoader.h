@@ -3,8 +3,7 @@
 
 #include "MPEffPrerequisites.h"
 
-class MPScriptLoader
-{
+class MPScriptLoader {
 public:
 	virtual ~ScriptLoader();
 
@@ -12,7 +11,7 @@ public:
 
 	virtual void parseScript(MPDataStreamPtr& stream, const string& groupName) = 0;
 
-	virtual float getLoadingOrder(void) const  = 0;
+	virtual float getLoadingOrder(void) const = 0;
 };
 
 #endif

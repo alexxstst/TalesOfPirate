@@ -37,4 +37,4 @@ LW_USING
 
 #include "MPMath.h"
 
-typedef MPMap  MPTerrain;
+typedef MPMap MPTerrain;

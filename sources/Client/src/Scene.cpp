@@ -921,6 +921,7 @@ int CGameScene::HitTestSceneObjChair(D3DXMATRIX* t_mat, int* h, const D3DXVECTOR
 #else
 		for (int i = 0; i < _nSceneObjCnt; i++) {
 
+
 #endif
 		pObj = &_pSceneObjArray[i];
 
@@ -981,6 +982,7 @@ int CGameScene::HitTestSceneObjWall(D3DXMATRIX* t_mat, const D3DXVECTOR3* nOrg, 
 		int i = (*it);
 #else
 		for (int i = 0; i < _nSceneObjCnt; i++) {
+
 
 #endif
 		pObj = &_pSceneObjArray[i];
@@ -1762,8 +1764,10 @@ bool CGameScene::_Init() {
 	g_pGameApp->GetCursor()->SceneInit(this);
 	ToLogService("common", "3d cursor init");
 
-	g_Render.SetDirectLightDir(GlobalAppConfig.GetLightDir()[0], GlobalAppConfig.GetLightDir()[1], GlobalAppConfig.GetLightDir()[2]);
-	g_Render.SetDirectLightColor(GlobalAppConfig.GetLightColor()[0], GlobalAppConfig.GetLightColor()[1], GlobalAppConfig.GetLightColor()[2], 1.0f);
+	g_Render.SetDirectLightDir(GlobalAppConfig.GetLightDir()[0], GlobalAppConfig.GetLightDir()[1],
+							   GlobalAppConfig.GetLightDir()[2]);
+	g_Render.SetDirectLightColor(GlobalAppConfig.GetLightColor()[0], GlobalAppConfig.GetLightColor()[1],
+								 GlobalAppConfig.GetLightColor()[2], 1.0f);
 
 
 	_IsShowItemName = false;

@@ -60,57 +60,54 @@
 using namespace std;
 
 
-static constexpr auto cha_per_page{ 3 };
+static constexpr auto cha_per_page{3};
 
 
-char autoLoginChar[32] ;
+char autoLoginChar[32];
 bool canAutoLoginChar = false;
 
 //~ Constructors ==============================================================
 CSelectChaScene::CSelectChaScene(stSceneInitParam& param)
 	: CGameScene(param), m_isInit(false), m_isCreateCha(false),
-	frmSelectCha(NULL), btnDel(NULL), btnYes(NULL), btnCreate(NULL), btnExit(NULL), btnChangePassConf(NULL)
-{
+	  frmSelectCha(NULL), btnDel(NULL), btnYes(NULL), btnCreate(NULL), btnExit(NULL), btnChangePassConf(NULL) {
 	ToLogService("common", "CSelectChaScene Create");
 
 	// distance between each char
-    m_XPositions.push_back(2164);           
-    m_XPositions.push_back(2410);           
-    m_XPositions.push_back(2614);  
+	m_XPositions.push_back(2164);
+	m_XPositions.push_back(2410);
+	m_XPositions.push_back(2614);
 
-    m_YPositions.push_back(1657);
-    m_YPositions.push_back(1389);
-    m_YPositions.push_back(1579);
+	m_YPositions.push_back(1657);
+	m_YPositions.push_back(1389);
+	m_YPositions.push_back(1579);
 
 	m_ZPositions.push_back(0);
 	m_ZPositions.push_back(0);
 	m_ZPositions.push_back(0);
 
 	// angle
-    m_Yaws.push_back(140);
-    m_Yaws.push_back(180);
-    m_Yaws.push_back(220);
+	m_Yaws.push_back(140);
+	m_Yaws.push_back(180);
+	m_Yaws.push_back(220);
 }
 
 //~ Destructors ===============================================================
-CSelectChaScene::~CSelectChaScene()
-{
+CSelectChaScene::~CSelectChaScene() {
 	ToLogService("common", "CSelectChaScene Destroy");
 }
 
 //~ Scene-related callbacks ===============================================================
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::_Init()
-{
-	if (!CGameScene::_Init())
-	{
+bool CSelectChaScene::_Init() {
+	if (!CGameScene::_Init()) {
 		// If parent _Init() fails, simply return false.
 		return false;
 	}
 
 
-	{ // save loading res mt flag, and resume these flags in _Clear() before this scene destoried.
+	{
+		// save loading res mt flag, and resume these flags in _Clear() before this scene destoried.
 		lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
 		_loadtex_flag = res_bs->GetValue(OPT_RESMGR_LOADTEXTURE_MT);
 		_loadmesh_flag = res_bs->GetValue(OPT_RESMGR_LOADMESH_MT);
@@ -123,23 +120,20 @@ bool CSelectChaScene::_Init()
 	tInit.Begin();
 
 	// Init Once
-	if (!m_isInit)
-	{
+	if (!m_isInit) {
 		m_isInit = true;
 
 		// Add background scene object
 		pObj = AddSceneObj(512);
 
-		if (pObj)
-		{
+		if (pObj) {
 			pObj->SetCullingFlag(0);
 			// position of the scene
 			pObj->setPos(0, 0);
 			pObj->setYaw(180);
 
 			DWORD num = pObj->GetPrimitiveNum();
-			for (DWORD i = 0; i < num; i++)
-			{
+			for (DWORD i = 0; i < num; i++) {
 				pObj->GetPrimitive(i)->SetState(STATE_TRANSPARENT, 0);
 				pObj->GetPrimitive(i)->SetState(STATE_UPDATETRANSPSTATE, 0);
 			}
@@ -150,12 +144,12 @@ bool CSelectChaScene::_Init()
 				const DWORD p_id_num = 6;
 				DWORD p_id[p_id_num][5] =
 				{
-					{ 0, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE },
-					{ 1, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE },
-					{ 2, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE },
-					{ 3, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE },
-					{ 4, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE },
-					{ 26, 0,  0, ANIM_CTRL_TYPE_TEXIMG, PLAY_LOOP },
+					{0, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE},
+					{1, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE},
+					{2, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE},
+					{3, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE},
+					{4, -1, -1, ANIM_CTRL_TYPE_BONE, PLAY_ONCE},
+					{26, 0, 0, ANIM_CTRL_TYPE_TEXIMG, PLAY_LOOP},
 				};
 
 				lwIPrimitive* p = 0;
@@ -170,14 +164,11 @@ bool CSelectChaScene::_Init()
 
 				lwAnimCtrlObjTypeInfo type_info;
 
-				for (DWORD i = 0; i < num; i++)
-				{
+				for (DWORD i = 0; i < num; i++) {
 					p = pObj->GetPrimitive(i);
 
-					for (DWORD j = 0; j < p_id_num; j++)
-					{
-						if (p->GetID() == p_id[j][0])
-						{
+					for (DWORD j = 0; j < p_id_num; j++) {
+						if (p->GetID() == p_id[j][0]) {
 							lwIAnimCtrlAgent* anim_agent = p->GetAnimAgent();
 							if (anim_agent == 0)
 								continue;
@@ -194,25 +185,21 @@ bool CSelectChaScene::_Init()
 						}
 					}
 				}
-
 			}
 
 			{
 				const DWORD id_num = 3;
 				const DWORD id_buf[id_num] =
-				{ 46, 47, 48 };
+					{46, 47, 48};
 
 				lwIPrimitive* pri;
 				DWORD pri_num = pObj->GetPrimitiveNum();
 
-				for (DWORD j = 0; j < pri_num; j++)
-				{
+				for (DWORD j = 0; j < pri_num; j++) {
 					pri = pObj->GetPrimitive(j);
 
-					for (DWORD i = 0; i < id_num; i++)
-					{
-						if (pri->GetID() == id_buf[i])
-						{
+					for (DWORD i = 0; i < id_num; i++) {
+						if (pri->GetID() == id_buf[i]) {
 							pAure[i] = pri;
 							pAure[i]->SetState(STATE_VISIBLE, 0);
 						}
@@ -226,17 +213,15 @@ bool CSelectChaScene::_Init()
 	g_Render.SetClip(GlobalAppConfig.GetNearClip(), GlobalAppConfig.GetFarClip());
 
 	CCameraCtrl* pCam = g_pGameApp->GetMainCam();
-	if (pCam)
-	{
+	if (pCam) {
 		g_pGameApp->EnableCameraFollow(TRUE);
-        pCam->m_EyePos.x = 23.749f;
-        pCam->m_EyePos.y = 20.923f;
-        pCam->m_EyePos.z = 1.982f;
+		pCam->m_EyePos.x = 23.749f;
+		pCam->m_EyePos.y = 20.923f;
+		pCam->m_EyePos.z = 1.982f;
 
-        pCam->m_RefPos.x = 20.034f;
-        pCam->m_RefPos.y = -194.137f;
-        pCam->m_RefPos.z = 0.868f;
-
+		pCam->m_RefPos.x = 20.034f;
+		pCam->m_RefPos.y = -194.137f;
+		pCam->m_RefPos.z = 0.868f;
 	}
 	g_Render.SetWorldViewFOV(Angle2Radian(70.0f));
 	g_Render.SetWorldViewAspect(1.33f);
@@ -252,8 +237,7 @@ bool CSelectChaScene::_Init()
 	g_Render.SetRenderState(D3DRS_AMBIENT, 0xffffffff);
 	m_iCurPage = 0;
 	//Initialize UI
-	if (!_InitUI())
-	{
+	if (!_InitUI()) {
 		return false;
 	}
 
@@ -266,39 +250,36 @@ bool CSelectChaScene::_Init()
 }
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::_Clear()
-{
+bool CSelectChaScene::_Clear() {
 	if (frmSelectCha)
 		frmSelectCha->SetIsShow(false);
 
-	if (!CGameScene::_Clear())
-	{
+	if (!CGameScene::_Clear()) {
 		// If Clear fails, simply return false.
 		return false;
 	}
 
-	{ // reset loading res mt flag
-		if (_loadtex_flag != 9 && _loadmesh_flag != 9)
-		{
+	{
+		// reset loading res mt flag
+		if (_loadtex_flag != 9 && _loadmesh_flag != 9) {
 			lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
 			res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, _loadtex_flag);
 			res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, _loadmesh_flag);
 		}
 	}
 
-	g_Render.SetClip(1.0f, 1000.0f);			//1000 ORIGINAL
+	g_Render.SetClip(1.0f, 1000.0f); //1000 ORIGINAL
 
 	return true;
-
 }
+
 //-----------------------------------------------------------------------
-void CSelectChaScene::_Render()
-{
+void CSelectChaScene::_Render() {
 	//CGameScene::_Render();
-/*
-	if(pObj == 0)
-		return;
-*/
+	/*
+		if(pObj == 0)
+			return;
+	*/
 	MPTimer mpt;
 	mpt.Begin();
 	//CGameScene::_Render();
@@ -340,23 +321,19 @@ void CSelectChaScene::_Render()
 		pAure[i]->SetState(STATE_VISIBLE, 0);
 	}*/
 
-	for (auto it = std::begin(m_CharactorPtrs); it != std::end(m_CharactorPtrs); ++it)
-	{
+	for (auto it = std::begin(m_CharactorPtrs); it != std::end(m_CharactorPtrs); ++it) {
 		auto& chaFont = *it;
-		if (!chaFont.pCha)
-		{
+		if (!chaFont.pCha) {
 			continue;
 		}
 
-		if (!chaFont.isOnCurPage)
-		{
+		if (!chaFont.isOnCurPage) {
 			continue;
 		}
 
 		dev_obj->SetRenderState(D3DRS_LIGHTING, 0);
 		if (const auto it_index = std::distance(std::begin(m_CharactorPtrs), it);
-			it_index == m_nCurChaIndex)
-		{
+			it_index == m_nCurChaIndex) {
 			dev_obj->SetRenderState(D3DRS_LIGHTING, 1);
 			//pAure[(*iter)->iPos]->SetState(STATE_VISIBLE, 1);
 			const auto index = static_cast<int>(m_nCurChaIndex % cha_per_page);
@@ -396,27 +373,20 @@ void CSelectChaScene::_Render()
 	rsm->EndScene();
 
 	dev_obj->SetRenderState(D3DRS_FOGENABLE, FALSE);
-
 }
 
-void CSelectChaScene::_RenderUI()
-{
-	for (auto& cha : m_CharactorPtrs)
-	{
-		if (!cha.pCha)
-		{
+void CSelectChaScene::_RenderUI() {
+	for (auto& cha : m_CharactorPtrs) {
+		if (!cha.pCha) {
 			continue;
 		}
 
-		if (!cha.isOnCurPage)
-		{
+		if (!cha.isOnCurPage) {
 			continue;
 		}
 
-		if (cha.iFontX == -1 || cha.iFontY == -1)
-		{
-			const auto [nScreenX, nScreenY] = [&]
-			{
+		if (cha.iFontX == -1 || cha.iFontY == -1) {
+			const auto [nScreenX, nScreenY] = [&] {
 				int nScreenX, nScreenY;
 
 				lwMatrix44 mat;
@@ -427,7 +397,7 @@ void CSelectChaScene::_RenderUI()
 				g_Render.WorldToScreen(pos.x, pos.y, pos.z, &nScreenX, &nScreenY);
 
 				nScreenY -= 80;
-				return std::tuple{ nScreenX, nScreenY };
+				return std::tuple{nScreenX, nScreenY};
 			}();
 			cha.iFontX = nScreenX;
 			cha.iFontY = nScreenY;
@@ -436,66 +406,57 @@ void CSelectChaScene::_RenderUI()
 		auto name = std::string(cha.pCha->getName());
 		auto description = std::format("Lv{} {}", cha.iLevel, cha.sProfession);
 
-		if (name.length() < description.length())
-		{
+		if (name.length() < description.length()) {
 			const auto blanks = (description.length() - name.length()) / 2;
 			name = std::string(blanks, ' ') + name;
 		}
-		else
-		{
+		else {
 			const auto blanks = (name.length() - description.length()) / 2;
 			name = std::string(blanks, ' ') + name;
 		}
 
 		ui::TipRender((name + "\n" + description).c_str(),
-			cha.iFontX, cha.iFontY);
+					  cha.iFontX, cha.iFontY);
 	}
 }
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::_FrameMove(DWORD dwTimeParam)
-{
+void CSelectChaScene::_FrameMove(DWORD dwTimeParam) {
 	CGameScene::_FrameMove(dwTimeParam);
 }
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::_MouseButtonDown(int nButton)
-{
+bool CSelectChaScene::_MouseButtonDown(int nButton) {
 	// Ignore mouse clicks when password dialog is shown  add by Philip.Wu  2006-07-20
-	if (g_stUIDoublePwd.GetIsShowCreateForm() || g_stUIDoublePwd.GetIsShowAlterForm() || g_stUIDoublePwd.GetIsShowDoublePwdForm())
-	{
+	if (g_stUIDoublePwd.GetIsShowCreateForm() || g_stUIDoublePwd.GetIsShowAlterForm() || g_stUIDoublePwd.
+		GetIsShowDoublePwdForm()) {
 		return false;
 	}
 	//Check whether a character was clicked
 	CCharacter* pCha = this->HitTestCharacter(g_pGameApp->GetMouseX(),
-		g_pGameApp->GetMouseY());
-	if (!pCha)
-	{
+											  g_pGameApp->GetMouseY());
+	if (!pCha) {
 		return false;
 	}
 	//Determine the clicked character position
 
-	const auto index = [&]
-	{
+	const auto index = [&] {
 		auto it = std::find_if(std::begin(m_CharactorPtrs), std::end(m_CharactorPtrs),
-			[&pCha](const ChaFont& cha)
-			{
-				return cha.pCha == pCha && cha.isOnCurPage;
-			});
+							   [&pCha](const ChaFont& cha) {
+								   return cha.pCha == pCha && cha.isOnCurPage;
+							   });
 
 		return std::distance(std::begin(m_CharactorPtrs), it);
 	}();
 
-	if (index >= m_CharactorPtrs.size())
-	{
+	if (index >= m_CharactorPtrs.size()) {
 		// The character selected was found out of bounds.
 		return false;
 	}
 
-	if (m_nCurChaIndex != index && m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1))
-	{
+	if (m_nCurChaIndex != index && m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1)) {
 		m_CharactorPtrs[m_nCurChaIndex].pCha->PlayPose(1, PLAY_LOOP, -1,
-			CGameApp::GetFrameFPS(), true);
+													   CGameApp::GetFrameFPS(), true);
 		SetChaDark(m_CharactorPtrs[m_nCurChaIndex].pCha);
 	}
 
@@ -503,7 +464,7 @@ bool CSelectChaScene::_MouseButtonDown(int nButton)
 
 
 	m_CharactorPtrs[m_nCurChaIndex].pCha->PlayPose(2, PLAY_LOOP, -1,
-		CGameApp::GetFrameFPS(), true);
+												   CGameApp::GetFrameFPS(), true);
 	//m_CharactorPtrs[m_nCurChaIndex]->pCha->SetColor(m_ChaColors[m_nCurChaIndex][0],
 	//    m_ChaColors[m_nCurChaIndex][1], m_ChaColors[m_nCurChaIndex][2]);
 	m_CharactorPtrs[m_nCurChaIndex].pCha->SetColor(255, 255, 255);
@@ -512,12 +473,10 @@ bool CSelectChaScene::_MouseButtonDown(int nButton)
 	UpdateButton();
 
 	return true;
-
 }
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::_MouseButtonDB(int nButton)
-{
+bool CSelectChaScene::_MouseButtonDB(int nButton) {
 	if (!_MouseButtonDown(nButton))
 		return false;
 
@@ -528,18 +487,14 @@ bool CSelectChaScene::_MouseButtonDB(int nButton)
 
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::_KeyDownEvent(int key)
-{
-
-	if (m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1))
-	{ /*A character is selected*/      
-		int iRotate = 0;		// left:-1	right:1
-		if (VK_LEFT == key)
-		{
+void CSelectChaScene::_KeyDownEvent(int key) {
+	if (m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1)) {
+		/*A character is selected*/
+		int iRotate = 0; // left:-1	right:1
+		if (VK_LEFT == key) {
 			iRotate = -1;
 		}
-		else if (VK_RIGHT == key)
-		{
+		else if (VK_RIGHT == key) {
 			iRotate = 1;
 		}
 
@@ -550,7 +505,7 @@ void CSelectChaScene::_KeyDownEvent(int key)
 }
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::LoadingCall()          // Called during loading, refresh
+void CSelectChaScene::LoadingCall() // Called during loading, refresh
 {
 	CGameScene::LoadingCall();
 
@@ -566,78 +521,71 @@ void CSelectChaScene::LoadingCall()          // Called during loading, refresh
 	NetPC_GUILD_START_END();
 
 	static bool bLoadRes2 = false;
-	if (!bLoadRes2)
-	{
+	if (!bLoadRes2) {
 		bLoadRes2 = true;
 		//g_pGameApp->LoadRes2();
 		g_pGameApp->LoadRes3();
 		//g_pGameApp->LoadRes4();
 	}
 
-	if (!GlobalAppConfig.IsDoublePwd())
-	{
+	if (!GlobalAppConfig.IsDoublePwd()) {
 		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
 
 		//CBoxMgr::ShowSelectBox(_evtCreateDoublePwdEvent, GetLanguageString(800), true);//"\n\n?"
 	}
-	else if (GetChaCount() == 0 && frmWelcomeNotice)
-	{
+	else if (GetChaCount() == 0 && frmWelcomeNotice) {
 		// No characters currently, show welcome notice
 		frmWelcomeNotice->ShowModal();
 	}
-	else if (m_isCreateCha)
-	{
+	else if (m_isCreateCha) {
 		m_isCreateCha = false;
 
-		if (GetChaCount() == 1 && frmCreateOKNotice)
-		{
+		if (GetChaCount() == 1 && frmCreateOKNotice) {
 			// Just created first character
 			frmCreateOKNotice->ShowModal();
 		}
 	}
 
-	if (g_dwCurMusicID != 1)	g_pGameApp->PlayMusic(1);
+	if (g_dwCurMusicID != 1) g_pGameApp->PlayMusic(1);
 
-	if(canAutoLoginChar){
+	if (canAutoLoginChar) {
 		int slot = atoi(autoLoginChar);
-		CS_BeginPlay( slot );
+		CS_BeginPlay(slot);
 		canAutoLoginChar = false;
 	}
 }
 
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::SetMainCha(int nChaID)
-{
+void CSelectChaScene::SetMainCha(int nChaID) {
 	CGameScene::SetMainCha(nChaID);
 }
 
 //~ UI-related functions =============================================================
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::_InitUI()
-{
+bool CSelectChaScene::_InitUI() {
 	//Character selection scene form
 	frmSelectCha = CFormMgr::s_Mgr.Find("frmSelect", GetInitParam()->nUITemplete);
-	if (!frmSelectCha)		return false;
+	if (!frmSelectCha) return false;
 
 	btnDel = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnDel"));
-	if (!btnDel)            return false;
+	if (!btnDel) return false;
 	btnYes = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnYes"));
-	if (!btnYes)            return false;
+	if (!btnYes) return false;
 	btnCreate = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnCreate"));
-	if (!btnCreate)         return false;
+	if (!btnCreate) return false;
 	btnExit = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnNo"));
-	if (!btnExit)            return false;
+	if (!btnExit) return false;
 	btnAlter = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnAlter"));
-	if (!btnAlter)           return false;
+	if (!btnAlter) return false;
 	btnPrevPage = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnPrevPage"));
-	if (!btnPrevPage)           return false;
+	if (!btnPrevPage) return false;
 	btnNextPage = dynamic_cast<CTextButton*>(frmSelectCha->Find("btnNextPage"));
-	if (!btnNextPage)           return false;
+	if (!btnNextPage) return false;
 	labPage = dynamic_cast<CLabel*>(frmSelectCha->Find("labPage"));
-	if (!labPage)           return false;
+	if (!labPage) return false;
 	labPage->SetCaption("1/2");
 
 	CForm* frmUpdPas = CFormMgr::s_Mgr.Find("frmUpdPas");
@@ -665,19 +613,19 @@ bool CSelectChaScene::_InitUI()
 
 	// Welcome notice form   Shown when current account has no characters
 	frmWelcomeNotice = CFormMgr::s_Mgr.Find("frmWelcomeNotice");
-	if (!frmWelcomeNotice)		return false;
+	if (!frmWelcomeNotice) return false;
 	frmWelcomeNotice->evtEntrustMouseEvent = _evtWelcomeNoticeEvent;
 
 	// First character creation success notice   Shown after first character is created for this account
 	frmCreateOKNotice = CFormMgr::s_Mgr.Find("frmCreateOKNotice");
-	if (!frmCreateOKNotice)		return false;
+	if (!frmCreateOKNotice) return false;
 	frmCreateOKNotice->evtEntrustMouseEvent = _evtCreateOKNoticeEvent;
 
 	// Update button enabled state
 	UpdateButton();
 
 	frmChaNameAlter = CFormMgr::s_Mgr.Find("frmChaNameAlter");
-	if (!frmChaNameAlter)       return false;
+	if (!frmChaNameAlter) return false;
 	frmChaNameAlter->evtEntrustMouseEvent = _evtChaNameAlterMouseEvent;
 
 	return true;
@@ -690,7 +638,8 @@ void CSelectChaScene::_OnClickUpdatePass(CGuiData* pSender, int x, int y, DWORD 
 	CEdit* edtPassword2 = dynamic_cast<CEdit*>(frmUpdPas->Find("edtPassword2"));
 	CEdit* confirmPIN = dynamic_cast<CEdit*>(frmUpdPas->Find("confirmPIN"));
 
-	if (strlen(edtPassword->GetCaption()) == 0 || strlen(edtPassword2->GetCaption()) == 0 || strlen(confirmPIN->GetCaption()) == 0) {
+	if (strlen(edtPassword->GetCaption()) == 0 || strlen(edtPassword2->GetCaption()) == 0 || strlen(
+		confirmPIN->GetCaption()) == 0) {
 		NetShowMapCrash("Please fill in all fields.");
 		return;
 	}
@@ -701,22 +650,18 @@ void CSelectChaScene::_OnClickUpdatePass(CGuiData* pSender, int x, int y, DWORD 
 	}
 
 	CS_ChangePass(edtPassword->GetCaption(), confirmPIN->GetCaption());
-
 }
 
 //-----------------------------------------------------------------------
 void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
-	int x, int y, DWORD dwKey)
-{
+										   int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 
-	if (stricmp("frmSelect", pSender->GetForm()->GetName()) != 0)
-	{
+	if (stricmp("frmSelect", pSender->GetForm()->GetName()) != 0) {
 		return;
 	}
 
-	if (strName == "btnCreate")
-	{
+	if (strName == "btnCreate") {
 		//Switch to character creation scene
 		stSceneInitParam param;
 		param.nTypeID = enumCreateChaScene;
@@ -736,72 +681,52 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 		g_pGameApp->GotoScene(pkScene, false);
 		pkScene->setLastScene(&rkSelectChaScene);
 	}
-	else if (strName == "btnYes")
-	{
+	else if (strName == "btnYes") {
 		//Enter game
 		//Send begin play message to server
 		GetCurrScene().SendBeginPlayToServer();
 		CGameApp::Waiting();
 	}
-	else if (strName == "btnDel")
-	{
-		if (GlobalAppConfig.IsDoublePwd())
-		{
+	else if (strName == "btnDel") {
+		if (GlobalAppConfig.IsDoublePwd()) {
 			// Deleting character requires password  modify by Philip.Wu  2006-07-19
 			g_stUIDoublePwd.SetType(CDoublePwdMgr::DELETE_CHARACTOR);
 			g_stUIDoublePwd.ShowDoublePwdForm();
 		}
-		else
-		{
+		else {
 			// Delete account
 			//CBoxMgr::ShowSelectBox(_CheckFrmMouseEvent, GetLanguageString(384), true);
 		}
 	}
-	else if (strName == "btnNo")
-	{
-
+	else if (strName == "btnNo") {
 		// Exit character selection scene
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);
 		g_pGameApp->LoadScriptScene(enumLoginScene);
 	}
-	else if (strName == "btnAlter")
-	{
+	else if (strName == "btnAlter") {
 		// Update double password
 		g_stUIDoublePwd.ShowAlterForm();
-
 	}
-	else if (strName == "btnChangePass")
-	{
-
+	else if (strName == "btnChangePass") {
 		CForm* frmUpdPas = CFormMgr::s_Mgr.Find("frmUpdPas");
 		if (frmUpdPas) {
 			frmUpdPas->Show();
 		}
-
-
-
 	}
-	else if (strName == "btnPrevPage")
-	{
-
+	else if (strName == "btnPrevPage") {
 		auto createChaScene = static_cast<CSelectChaScene*>(CGameApp::GetCurScene());
-		if (createChaScene->m_iCurPage <= 0)
-		{
+		if (createChaScene->m_iCurPage <= 0) {
 			return;
 		}
 		--createChaScene->m_iCurPage;
 		createChaScene->UpdatePageLabel();
 
 		createChaScene->UpdateCharacterPositions();
-
 	}
-	else if (strName == "btnNextPage")
-	{
-
+	else if (strName == "btnNextPage") {
 		auto createChaScene = static_cast<CSelectChaScene*>(CGameApp::GetCurScene());
-		if (createChaScene->m_iCurPage + 1 >= createChaScene->GetMaxPage())
-		{
+		if (createChaScene->m_iCurPage + 1 >= createChaScene->GetMaxPage()) {
 			return;
 		}
 		++createChaScene->m_iCurPage;
@@ -840,15 +765,12 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 
 
 // Ask whether to create double password  add by Philip.Wu  2006-07-20
-void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	if (nMsgType == CForm::mrYes)
-	{
+void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	if (nMsgType == CForm::mrYes) {
 		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
 	}
-	else
-	{
+	else {
 		// Exit character selection scene
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);
@@ -857,12 +779,10 @@ void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, 
 }
 
 
-
 //~ Logic-related functions ==========================================================
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::DelCurrentSelCha()
-{
+void CSelectChaScene::DelCurrentSelCha() {
 	//Remove character from scene
 	m_CharactorPtrs[m_nCurChaIndex].pCha->SetValid(false);
 
@@ -870,7 +790,7 @@ void CSelectChaScene::DelCurrentSelCha()
 	//Clear the slot
 	m_CharactorPtrs[m_nCurChaIndex].pCha = nullptr;
 
-	m_FreePositions[m_nCurChaIndex] = 0;    //Mark this slot as empty
+	m_FreePositions[m_nCurChaIndex] = 0; //Mark this slot as empty
 
 	m_nCurChaIndex = static_cast<decltype(m_nCurChaIndex)>(-1);
 	UpdateCharacterPositions();
@@ -882,10 +802,8 @@ void CSelectChaScene::DelCurrentSelCha()
 
 
 //-----------------------------------------------------------------------
-bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeChaPart* part)
-{
-	if (m_nCurChaIndex < m_CharactorPtrs.size())
-	{
+bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeChaPart* part) {
+	if (m_nCurChaIndex < m_CharactorPtrs.size()) {
 		SetChaDark(m_CharactorPtrs[m_nCurChaIndex].pCha);
 	}
 
@@ -898,8 +816,7 @@ bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeC
 	//Find next available slot
 
 	const auto it = std::find(std::cbegin(m_FreePositions), std::cend(m_FreePositions), 0);
-	if (it == std::cend(m_FreePositions))
-	{
+	if (it == std::cend(m_FreePositions)) {
 		return false;
 	}
 	m_nCurChaIndex = std::distance(std::cbegin(m_FreePositions), it);
@@ -909,8 +826,7 @@ bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeC
 	//pCha->GetColor(m_ChaColors[i]);
 	//SetChaDark(pCha);
 
-	if (m_nCurChaIndex >= m_CharactorPtrs.size())
-	{
+	if (m_nCurChaIndex >= m_CharactorPtrs.size()) {
 		m_CharactorPtrs.emplace_back();
 	}
 
@@ -930,24 +846,20 @@ bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeC
 }
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::SendDelChaToServer(const char szPassword2[])
-{
-	if (m_nCurChaIndex < m_MaxCharacters)
-	{
+void CSelectChaScene::SendDelChaToServer(const char szPassword2[]) {
+	if (m_nCurChaIndex < m_MaxCharacters) {
 		CS_DelCha(m_nCurChaIndex, szPassword2);
 	}
 }
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::SendBeginPlayToServer()
-{
-	if (m_nCurChaIndex >= m_CharactorPtrs.size())
-	{
+void CSelectChaScene::SendBeginPlayToServer() {
+	if (m_nCurChaIndex >= m_CharactorPtrs.size()) {
 		return;
 	}
 
 	const auto& chaFont = m_CharactorPtrs[m_nCurChaIndex];
-	if (!chaFont.pCha)  return;
+	if (!chaFont.pCha) return;
 
 	CS_BeginPlay(m_nCurChaIndex);
 
@@ -955,19 +867,16 @@ void CSelectChaScene::SendBeginPlayToServer()
 
 	//Debug output
 	ToLogService("ui", "Client Send:{},{},{},{},{},{}", pCha->getName(), pCha->GetPartID(0), pCha->GetPartID(1),
-		pCha->GetPartID(2), pCha->GetPartID(3), pCha->GetPartID(4));
+				 pCha->GetPartID(2), pCha->GetPartID(3), pCha->GetPartID(4));
 }
 
-bool CSelectChaScene::SelectCharacters(std::span<const NetChaBehave> characters)
-{
+bool CSelectChaScene::SelectCharacters(std::span<const NetChaBehave> characters) {
 	std::for_each_n(_pChaArray, _nChaCnt,
-		[](CCharacter& cha)
-		{
-			if (cha.IsValid())
-			{
-				cha.SetValid(false);
-			}
-		}
+					[](CCharacter& cha) {
+						if (cha.IsValid()) {
+							cha.SetValid(false);
+						}
+					}
 	);
 
 
@@ -976,14 +885,12 @@ bool CSelectChaScene::SelectCharacters(std::span<const NetChaBehave> characters)
 	m_CharactorPtrs.clear();
 	m_CharactorPtrs.reserve(characters.size());
 
-	for (auto i = 0; i < characters.size(); ++i)
-	{
+	for (auto i = 0; i < characters.size(); ++i) {
 		auto& chaFont = m_CharactorPtrs.emplace_back();
 		const auto& chaBehave = characters[i];
 
 		chaFont.pCha = AddCharacter(chaBehave.look_minimal.typeID);
-		if (!chaFont.pCha)
-		{
+		if (!chaFont.pCha) {
 			g_pGameApp->MsgBox("Could not create character, please contact the developers!");
 			return false;
 		}
@@ -995,10 +902,9 @@ bool CSelectChaScene::SelectCharacters(std::span<const NetChaBehave> characters)
 
 		stNetChangeChaPart part{};
 		part.sTypeID = chaBehave.look_minimal.typeID;
-		
+
 		//TODO(Ogge): static_asserting the size of SLink and equipIDs would be nice
-		for (auto i = 0; i < std::size(part.SLink); ++i)
-		{
+		for (auto i = 0; i < std::size(part.SLink); ++i) {
 			part.SLink[i].sID = chaBehave.look_minimal.equip_IDs[i];
 		}
 
@@ -1032,25 +938,21 @@ bool CSelectChaScene::SelectCharacters(std::span<const NetChaBehave> characters)
 	return true;
 }
 
-void CSelectChaScene::UpdateCharacterPositions()
-{
+void CSelectChaScene::UpdateCharacterPositions() {
 	std::stable_sort(m_CharactorPtrs.begin(), m_CharactorPtrs.end(),
-		[](const ChaFont& a, const ChaFont& b) {
-			return static_cast<bool>(a.pCha) > static_cast<bool>(b.pCha);
-		});
+					 [](const ChaFont& a, const ChaFont& b) {
+						 return static_cast<bool>(a.pCha) > static_cast<bool>(b.pCha);
+					 });
 
 
-	for (auto i = 0; i < m_CharactorPtrs.size(); ++i)
-	{
+	for (auto i = 0; i < m_CharactorPtrs.size(); ++i) {
 		auto& cha = m_CharactorPtrs[i];
 		const auto page = static_cast<int>(i / cha_per_page);
 		const auto active_page = m_iCurPage == page;
 
-		if (!active_page)
-		{
+		if (!active_page) {
 			cha.isOnCurPage = false;
-			if (cha.pCha)
-			{
+			if (cha.pCha) {
 				cha.pCha->SetHide(true);
 			}
 			continue;
@@ -1060,8 +962,7 @@ void CSelectChaScene::UpdateCharacterPositions()
 		cha.iFontX = -1;
 		cha.iFontY = -1;
 		m_FreePositions[i] = 0;
-		if (cha.pCha)
-		{
+		if (cha.pCha) {
 			cha.pCha->SetHide(false);
 			m_FreePositions[i] = 1;
 
@@ -1073,10 +974,8 @@ void CSelectChaScene::UpdateCharacterPositions()
 	}
 }
 
-void CSelectChaScene::UpdatePageLabel()
-{
-	if (!labPage)
-	{
+void CSelectChaScene::UpdatePageLabel() {
+	if (!labPage) {
 		return;
 	}
 
@@ -1085,35 +984,33 @@ void CSelectChaScene::UpdatePageLabel()
 	labPage->SetCaption(s.c_str());
 }
 
-int CSelectChaScene::GetMaxPage() const
-{
+int CSelectChaScene::GetMaxPage() const {
 	return m_MaxCharacters / cha_per_page;
 }
 
 //-----------------------------------------------------------------------
-CSelectChaScene& CSelectChaScene::GetCurrScene()
-{
+CSelectChaScene& CSelectChaScene::GetCurrScene() {
 	CSelectChaScene* pScene =
 		dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
 
-	if (!pScene) NULL;
+	if (!pScene)
+		NULL;
 
 	return *pScene;
 }
 
-void CSelectChaScene::SelectChaError(int error_no, const char* error_info)
-{
+void CSelectChaScene::SelectChaError(int error_no, const char* error_info) {
 	g_pGameApp->MsgBox("%s", g_GetServerError(error_no));
-	ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
+	ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no,
+				 g_GetServerError(error_no));
 	CGameApp::Waiting(false);
 }
-void CSelectChaScene::SetChaDark(CCharacter* pCha)
-{
+
+void CSelectChaScene::SetChaDark(CCharacter* pCha) {
 	pCha->SetColor(129, 121, 114);
 }
 
-void CSelectChaScene::UpdateButton()
-{
+void CSelectChaScene::UpdateButton() {
 	UpdatePageLabel();
 	btnCreate->SetIsEnabled(m_CharactorPtrs.size() < m_MaxCharacters);
 
@@ -1123,43 +1020,35 @@ void CSelectChaScene::UpdateButton()
 		btnYes->SetIsEnabled(v);
 	}
 
-	if (!GlobalAppConfig.IsDoublePwd())
-	{
+	if (!GlobalAppConfig.IsDoublePwd()) {
 		btnCreate->SetIsEnabled(false);
 		btnAlter->SetIsEnabled(false);
 	}
-	else
-	{
+	else {
 		btnAlter->SetIsEnabled(true);
 	}
 }
 
-int CSelectChaScene::GetChaCount()
-{
-	constexpr auto occupied_slot_value{ 1 };
+int CSelectChaScene::GetChaCount() {
+	constexpr auto occupied_slot_value{1};
 	return std::ranges::count(m_FreePositions, occupied_slot_value);
 }
 
 
-void CSelectChaScene::ShowWelcomeNotice(bool bShow)
-{
-	if (frmWelcomeNotice)
-	{
+void CSelectChaScene::ShowWelcomeNotice(bool bShow) {
+	if (frmWelcomeNotice) {
 		frmWelcomeNotice->ShowModal();
 	}
 }
 
 
 // Welcome notice event handler
-void CSelectChaScene::_evtWelcomeNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
+void CSelectChaScene::_evtWelcomeNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 	CSelectChaScene* pSelectChaScene = dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
 
-	if (pSelectChaScene)
-	{
-		if (strName == "btnYes")
-		{
+	if (pSelectChaScene) {
+		if (strName == "btnYes") {
 			pSelectChaScene->frmWelcomeNotice->Close();
 		}
 	}
@@ -1167,30 +1056,24 @@ void CSelectChaScene::_evtWelcomeNoticeEvent(CCompent* pSender, int nMsgType, in
 
 
 // First character creation success notice event handler
-void CSelectChaScene::_evtCreateOKNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
+void CSelectChaScene::_evtCreateOKNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 	CSelectChaScene* pSelectChaScene = dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
 
-	if (pSelectChaScene)
-	{
-		if (strName == "btnYes")
-		{
+	if (pSelectChaScene) {
+		if (strName == "btnYes") {
 			pSelectChaScene->frmCreateOKNotice->Close();
 		}
 	}
 }
 
 // Character name alter event handler
-void CSelectChaScene::_evtChaNameAlterMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
+void CSelectChaScene::_evtChaNameAlterMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 	CSelectChaScene* pSelectChaScene = dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
 
-	if (pSelectChaScene)
-	{
-		if (strName == "btnYes")
-		{
+	if (pSelectChaScene) {
+		if (strName == "btnYes") {
 			pSelectChaScene->frmCreateOKNotice->Close();
 		}
 	}

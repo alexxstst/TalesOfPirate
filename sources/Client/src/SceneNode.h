@@ -20,231 +20,328 @@
 #define	CHA3	  49
 #define	CHA4	  31
 
-enum NODE_TYPE
-{
-	NODE_CHA  = 0,
+enum NODE_TYPE {
+	NODE_CHA = 0,
 	NODE_ITEM = 1,
 	NODE_OBJ = 2,
 	NODE_EFF = 3,
 };
 
-struct SGameAttr
-{
-    long lAttr[MAX_ATTR_CLIENT];
-    SGameAttr()
-    {
-        clear();
-    }
-    void    set(short sType, long lValue) { lAttr[sType] = lValue; }
-    void    add(short sType, long lValue) { lAttr[sType] += lValue;}
-    long    get(short sType)              { return lAttr[sType];   }
-    void    clear()                       { memset(lAttr, 0, sizeof(lAttr)); }
+struct SGameAttr {
+	long lAttr[MAX_ATTR_CLIENT];
+
+	SGameAttr() {
+		clear();
+	}
+
+	void set(short sType, long lValue) {
+		lAttr[sType] = lValue;
+	}
+
+	void add(short sType, long lValue) {
+		lAttr[sType] += lValue;
+	}
+
+	long get(short sType) {
+		return lAttr[sType];
+	}
+
+	void clear() {
+		memset(lAttr, 0, sizeof(lAttr));
+	}
 };
 
 class CGameScene;
 class CEvent;
-class CSceneNode : public CScript
-{
+
+class CSceneNode : public CScript {
 public:
-	
-    virtual void	FrameMove(DWORD dwTimeParam) { _dwFrameCnt++;  }
-	virtual void	Render()					 { _dwRenderCnt++; }
-    virtual void    RefreshUI(int nParam = 0){}
+	virtual void FrameMove(DWORD dwTimeParam) {
+		_dwFrameCnt++;
+	}
 
-    virtual void    SetScene( CGameScene* scene )    { _pScene = scene;}
+	virtual void Render() {
+		_dwRenderCnt++;
+	}
 
-	virtual void	setEvent( CEvent* pEvent )		{}
+	virtual void RefreshUI(int nParam = 0) {
+	}
 
-	CGameScene*	GetScene()			{	return _pScene;			}
+	virtual void SetScene(CGameScene* scene) {
+		_pScene = scene;
+	}
 
-	DWORD	getID()					{   return _dwID;			}
-	void	setID(DWORD dwID)		{   _dwID = dwID;			}
+	virtual void setEvent(CEvent* pEvent) {
+	}
 
-	DWORD   getTypeID()				{   return _dwTypeID;		}
-	void	setTypeID(DWORD dwID)	{   _dwTypeID = dwID;		}
+	CGameScene* GetScene() {
+		return _pScene;
+	}
 
-	DWORD	getAttachID()			{	return _dwAttachID;		}
-	void	setAttachID(DWORD dwID)	{	_dwAttachID = dwID;		}
+	DWORD getID() {
+		return _dwID;
+	}
 
-	void	SetValid(BOOL bValid);
-	BOOL	IsValid()				{	return _bValid;			}
+	void setID(DWORD dwID) {
+		_dwID = dwID;
+	}
 
-    BOOL    IsHide()                {   return _bHide;          }
-    void    SetHide(BOOL bHide)     {   _bHide = bHide;         }
+	DWORD getTypeID() {
+		return _dwTypeID;
+	}
 
-	int		GetCurX()				{ return _nCurX;            }
-	int		GetCurY()				{ return _nCurY;            }
+	void setTypeID(DWORD dwID) {
+		_dwTypeID = dwID;
+	}
 
-	void	setYaw(int nYawAngle);
-	int		getYaw()				{ return _nYaw;             }
+	DWORD getAttachID() {
+		return _dwAttachID;
+	}
 
-	void	setPitch(int nPitchAngle);
-	int		getPitch()				{ return _nPitch;           }
+	void setAttachID(DWORD dwID) {
+		_dwAttachID = dwID;
+	}
 
-	void	setRoll(int nRollAngle);
-	int		getRoll()				{ return _nRoll;            }
+	void SetValid(BOOL bValid);
 
-    void    setHeightOff(int nHeightOff);
-    int     getHeightOff()          { return _nHeightOff;       }
+	BOOL IsValid() {
+		return _bValid;
+	}
 
-	void    setPoseHeightOff(int nHeightOff);
-	int     getPoseHeightOff()      { return _nPoseHeightOff;   }
+	BOOL IsHide() {
+		return _bHide;
+	}
 
-    void    setPos(int nX, int nY);
-    void    setSize(int nSize)      { _nSize = nSize;           }
-    int     getSize()               { return _nSize;            }
+	void SetHide(BOOL bHide) {
+		_bHide = bHide;
+	}
 
-	virtual	bool GetRunTimeMatrix(MPMatrix44* mat, DWORD dummy_id){ return false; }
+	int GetCurX() {
+		return _nCurX;
+	}
+
+	int GetCurY() {
+		return _nCurY;
+	}
+
+	void setYaw(int nYawAngle);
+
+	int getYaw() {
+		return _nYaw;
+	}
+
+	void setPitch(int nPitchAngle);
+
+	int getPitch() {
+		return _nPitch;
+	}
+
+	void setRoll(int nRollAngle);
+
+	int getRoll() {
+		return _nRoll;
+	}
+
+	void setHeightOff(int nHeightOff);
+
+	int getHeightOff() {
+		return _nHeightOff;
+	}
+
+	void setPoseHeightOff(int nHeightOff);
+
+	int getPoseHeightOff() {
+		return _nPoseHeightOff;
+	}
+
+	void setPos(int nX, int nY);
+
+	void setSize(int nSize) {
+		_nSize = nSize;
+	}
+
+	int getSize() {
+		return _nSize;
+	}
+
+	virtual bool GetRunTimeMatrix(MPMatrix44* mat, DWORD dummy_id) {
+		return false;
+	}
 
 	//lemon add@2004.9.27 for  bind effect;
-	int				GetEffectNum()						{ return _iEffNum;                              }
-	int				GetShadeNum()						{ return _iShadeNum;                            }
-	void			SetEffectID(int iIdx, int iID)		{ _iEffID[iIdx] = iID;                          }
-	void			SetShadeID(int iIdx, int iID)		{ _iShadeID[iIdx] = iID;                        }
-	int				GetEffectID(int iIdx)				{ return _iEffID[iIdx];                         }
-	int				GetShadeID(int iIdx)				{ return _iShadeID[iIdx];                       }
-	void			AddEffect(int iID)					{ _iEffID[_iEffNum] = iID; _iEffNum++;          }
-	void			AddShade(int iID)					{ _iShadeID[_iShadeNum] = iID; _iShadeNum++;    }
-	void			RemoveEffect();			
-	void			RemoveShade();
-    SGameAttr*      getGameAttr()                       { return &_Attr;                                }   
+	int GetEffectNum() {
+		return _iEffNum;
+	}
 
-	void			SetShadeShow(int iIdx,bool	bShow);
-	void			SetEffectShow(int iIdx,bool	bShow);
+	int GetShadeNum() {
+		return _iShadeNum;
+	}
 
-	D3DXVECTOR3&	GetPos()							{ return _vPos;									}
-	D3DXVECTOR3&	getPos()							{ return _vPos;									}
+	void SetEffectID(int iIdx, int iID) {
+		_iEffID[iIdx] = iID;
+	}
 
-    long            lTag;
+	void SetShadeID(int iIdx, int iID) {
+		_iShadeID[iIdx] = iID;
+	}
+
+	int GetEffectID(int iIdx) {
+		return _iEffID[iIdx];
+	}
+
+	int GetShadeID(int iIdx) {
+		return _iShadeID[iIdx];
+	}
+
+	void AddEffect(int iID) {
+		_iEffID[_iEffNum] = iID;
+		_iEffNum++;
+	}
+
+	void AddShade(int iID) {
+		_iShadeID[_iShadeNum] = iID;
+		_iShadeNum++;
+	}
+
+	void RemoveEffect();
+	void RemoveShade();
+
+	SGameAttr* getGameAttr() {
+		return &_Attr;
+	}
+
+	void SetShadeShow(int iIdx, bool bShow);
+	void SetEffectShow(int iIdx, bool bShow);
+
+	D3DXVECTOR3& GetPos() {
+		return _vPos;
+	}
+
+	D3DXVECTOR3& getPos() {
+		return _vPos;
+	}
+
+	long lTag;
 
 protected:
 	CSceneNode();
-	virtual ~CSceneNode(){}
 
-	virtual BOOL	_Create( int nID, int nType ) = 0;
+	virtual ~CSceneNode() {
+	}
 
-	virtual void	_UpdateYaw()              = 0;
-	virtual void	_UpdatePitch()            = 0;
-	virtual void	_UpdateRoll()             = 0;
-    virtual void    _UpdateHeight()           = 0;
-    virtual void    _UpdatePos()              = 0;
-    virtual void    _UpdateValid(BOOL bValid) {}
-    
-	DWORD		_dwID;
-	DWORD		_dwTypeID;
-	DWORD		_dwAttachID;
+	virtual BOOL _Create(int nID, int nType) = 0;
 
-	DWORD		_dwFrameCnt;
-	DWORD		_dwRenderCnt;
-	BOOL		_bValid;
+	virtual void _UpdateYaw() = 0;
+	virtual void _UpdatePitch() = 0;
+	virtual void _UpdateRoll() = 0;
+	virtual void _UpdateHeight() = 0;
+	virtual void _UpdatePos() = 0;
 
-	int			_nCurX;
-	int			_nCurY;
-	
-	int			_nYaw;
-	int			_nPitch;
-	int			_nRoll;
-    int         _nHeightOff;
-	int			_nPoseHeightOff;
-    
-    BOOL        _bHide; //  (, )
-    int         _nSize; // 
+	virtual void _UpdateValid(BOOL bValid) {
+	}
+
+	DWORD _dwID;
+	DWORD _dwTypeID;
+	DWORD _dwAttachID;
+
+	DWORD _dwFrameCnt;
+	DWORD _dwRenderCnt;
+	BOOL _bValid;
+
+	int _nCurX;
+	int _nCurY;
+
+	int _nYaw;
+	int _nPitch;
+	int _nRoll;
+	int _nHeightOff;
+	int _nPoseHeightOff;
+
+	BOOL _bHide; //  (, )
+	int _nSize; // 
 
 	//lemon add@2004.9.27 for  bind effect;
-	int						_iEffNum;
-	int						_iEffID[16];
-	int						_iShadeNum;
-	int						_iShadeID[16];
+	int _iEffNum;
+	int _iEffID[16];
+	int _iShadeNum;
+	int _iShadeID[16];
 
-    SGameAttr               _Attr;
+	SGameAttr _Attr;
 
-	D3DXVECTOR3		_vPos;				// 
+	D3DXVECTOR3 _vPos; // 
 
 protected:
-
-    CGameScene	*_pScene;
+	CGameScene* _pScene;
 
 private:
 	friend class CGameScene;
 
-	BOOL   _CreateNode( int nScriptID, int nType, CGameScene* pScene )
-    {
+	BOOL _CreateNode(int nScriptID, int nType, CGameScene* pScene) {
 		_pScene = pScene;
-        _dwTypeID = nScriptID;
+		_dwTypeID = nScriptID;
 
-        _nHeightOff = 0;
-        _nPoseHeightOff = 0;
-        _bHide = FALSE;
-        _dwAttachID = 0;
-        _nSize = 0;
-        _dwFrameCnt = 0;
-        _dwRenderCnt = 0;
-        _nCurX = 0;
-        _nCurY = 0;
-        _Attr.clear();
-		return _Create( nScriptID, nType );
+		_nHeightOff = 0;
+		_nPoseHeightOff = 0;
+		_bHide = FALSE;
+		_dwAttachID = 0;
+		_nSize = 0;
+		_dwFrameCnt = 0;
+		_dwRenderCnt = 0;
+		_nCurX = 0;
+		_nCurY = 0;
+		_Attr.clear();
+		return _Create(nScriptID, nType);
 	}
 };
 
-inline void CSceneNode::setYaw(int nYawAngle)
-{
- 	_nYaw = nYawAngle;
-	
+inline void CSceneNode::setYaw(int nYawAngle) {
+	_nYaw = nYawAngle;
+
 	_UpdateYaw();
 }
 
-inline void CSceneNode::setPitch(int nPitchAngle)
-{
+inline void CSceneNode::setPitch(int nPitchAngle) {
 	_nPitch = nPitchAngle;
 	_UpdatePitch();
 }
 
-inline void CSceneNode::setRoll(int nRollAngle)
-{
+inline void CSceneNode::setRoll(int nRollAngle) {
 	_nRoll = nRollAngle;
 	_UpdateRoll();
 }
 
-inline void CSceneNode::setHeightOff(int nHeightOff)
-{
-    _nHeightOff = nHeightOff;
-    _UpdateHeight();
+inline void CSceneNode::setHeightOff(int nHeightOff) {
+	_nHeightOff = nHeightOff;
+	_UpdateHeight();
 }
 
-inline void CSceneNode::setPoseHeightOff(int nHeightOff)
-{
+inline void CSceneNode::setPoseHeightOff(int nHeightOff) {
 	_nPoseHeightOff = nHeightOff;
 	_UpdateHeight();
 }
 
-inline void CSceneNode::setPos(int nX, int nY)
-{
-    _nCurX = nX;
-    _nCurY = nY;
-    _UpdatePos();
+inline void CSceneNode::setPos(int nX, int nY) {
+	_nCurX = nX;
+	_nCurY = nY;
+	_UpdatePos();
 }
 
-inline void	CSceneNode::SetValid(BOOL bValid)
-{	
-    _bValid	= bValid;	
-    _UpdateValid(bValid);
+inline void CSceneNode::SetValid(BOOL bValid) {
+	_bValid = bValid;
+	_UpdateValid(bValid);
 
-    if( !bValid ) _dwAttachID=0;
+	if (!bValid) _dwAttachID = 0;
 }
 
-inline void CSceneNode::RemoveEffect()				
-{ 
-	for (int n = 0; n < 16; ++n)
-	{
+inline void CSceneNode::RemoveEffect() {
+	for (int n = 0; n < 16; ++n) {
 		_iEffID[n] = -1;
 	}
 	_iEffNum = 0;
 }
 
-inline void CSceneNode::RemoveShade()
-{ 
-	for (int n = 0; n < 16; ++n)
-	{
+inline void CSceneNode::RemoveShade() {
+	for (int n = 0; n < 16; ++n) {
 		_iShadeID[n] = -1;
 	}
 	_iShadeNum = 0;

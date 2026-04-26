@@ -38,12 +38,12 @@ namespace {
 	};
 
 	constexpr std::array kFamilyAliases{
-		FamilyAlias{ "PTSans",      "PT Sans"       },
-		FamilyAlias{ "OpenSans",    "Open Sans"     },
-		FamilyAlias{ "Roboto",      "Roboto"        },
-		FamilyAlias{ "NotoSans",    "Noto Sans"     },
-		FamilyAlias{ "SourceSans3", "Source Sans 3" },
-		FamilyAlias{ "Inter",       "Inter"         },
+		FamilyAlias{"PTSans", "PT Sans"},
+		FamilyAlias{"OpenSans", "Open Sans"},
+		FamilyAlias{"Roboto", "Roboto"},
+		FamilyAlias{"NotoSans", "Noto Sans"},
+		FamilyAlias{"SourceSans3", "Source Sans 3"},
+		FamilyAlias{"Inter", "Inter"},
 	};
 
 	std::string ResolveGdiFamily(const std::string& iniValue) {
@@ -172,8 +172,8 @@ FONScontext* FontManager::GetFonsContext() {
 	// достаточно валидного g_Render. Effect/Technique оставлены в структуре
 	// как задел, но на рендер не влияют.
 	_fonsBackend = std::make_unique<fons::Dx9Backend>();
-	_fonsBackend->Dev       = &g_Render;
-	_fonsBackend->Effect    = nullptr;
+	_fonsBackend->Dev = &g_Render;
+	_fonsBackend->Effect = nullptr;
 	_fonsBackend->Technique = 0;
 	// Стартовый размер атласа. fontstash сам расширяет при переполнении через
 	// fonsExpandAtlas → renderResize.
@@ -319,11 +319,11 @@ int FontManager::CreateFont(std::string name, const std::string& family,
 	// и регистрируем его в общем fontstash → FontRender рисует через fonsDrawText.
 	// Иначе — пустой путь + FONS_INVALID, FontRender откатится на прямой FreeType
 	// или GDI-путь.
-	const std::string* ttfPath    = GetFontFilePath(family);
-	const std::string  path       = ttfPath ? *ttfPath : std::string{};
-	FONScontext*       fons       = path.empty() ? nullptr : GetFonsContext();
-	const int          fonsFontId = path.empty() ? -1 : GetOrRegisterFonsFont(path);
-	const float        sizeScale  = GetFonsSizeScale(fonsFontId);
+	const std::string* ttfPath = GetFontFilePath(family);
+	const std::string path = ttfPath ? *ttfPath : std::string{};
+	FONScontext* fons = path.empty() ? nullptr : GetFonsContext();
+	const int fonsFontId = path.empty() ? -1 : GetOrRegisterFonsFont(path);
+	const float sizeScale = GetFonsSizeScale(fonsFontId);
 	const bool ok = font->CreateFont(&g_Render,
 									 const_cast<char*>(family.c_str()),
 									 size, level, static_cast<DWORD>(flags),
@@ -399,11 +399,11 @@ CMPFont* FontManager::Get(FontSlot slot) {
 
 std::string_view FontManager::SlotName(FontSlot slot) {
 	switch (slot) {
-	case FontSlot::TipText:      return "TipText";
-	case FontSlot::MidAnnounce:  return "MidAnnounce";
+	case FontSlot::TipText: return "TipText";
+	case FontSlot::MidAnnounce: return "MidAnnounce";
 	case FontSlot::BottomShadow: return "BottomShadow";
-	case FontSlot::Console:      return "Console";
-	default:                     return "Unknown";
+	case FontSlot::Console: return "Console";
+	default: return "Unknown";
 	}
 }
 
@@ -420,7 +420,9 @@ void FontManager::DumpAllSlots(const std::filesystem::path& dir) {
 		sanitized.reserve(_fontNames[i].size());
 		for (char c : _fontNames[i]) {
 			sanitized += (std::isalnum(static_cast<unsigned char>(c))
-						  || c == '-' || c == '_') ? c : '_';
+							 || c == '-' || c == '_')
+							 ? c
+							 : '_';
 		}
 		const fs::path path = dir / std::format("font_dump_{}.bmp", sanitized);
 		if (!_fonts[i]->DumpGlyphPreview(path.string())) {
@@ -443,7 +445,9 @@ void FontManager::DumpAllAtlases(const std::filesystem::path& dir) {
 		sanitized.reserve(_fontNames[i].size());
 		for (char c : _fontNames[i]) {
 			sanitized += (std::isalnum(static_cast<unsigned char>(c))
-						  || c == '-' || c == '_') ? c : '_';
+							 || c == '-' || c == '_')
+							 ? c
+							 : '_';
 		}
 		const fs::path path = dir / std::format("atlas_{}.bmp", sanitized);
 		if (!_fonts[i]->DumpAtlas(path.string())) {

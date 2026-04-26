@@ -845,8 +845,9 @@ BOOL SC_ItemCreate(LPRPACKET pk) {
 		return FALSE;
 
 	// log
-	ToLogService("common", "CreateType = {}, WorldID:{}, ItemID = {}, Pos = [{},{}], SrcID = {}", static_cast<int>(SCreateInfo.chAppeType),
-	   SCreateInfo.lWorldID, SCreateInfo.lID, SCreateInfo.SPos.x, SCreateInfo.SPos.y, SCreateInfo.lFromID);
+	ToLogService("common", "CreateType = {}, WorldID:{}, ItemID = {}, Pos = [{},{}], SrcID = {}",
+				 static_cast<int>(SCreateInfo.chAppeType),
+				 SCreateInfo.lWorldID, SCreateInfo.lID, SCreateInfo.SPos.x, SCreateInfo.SPos.y, SCreateInfo.lFromID);
 	//
 	return TRUE;
 }
@@ -875,8 +876,10 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 		if (SynAState.State[chValidNum].chID == 0)
 			continue;
 		SynAState.State[chValidNum].chLv = static_cast<decltype(SynAState.State[0].chLv)>(msg.states[j].stateLv);
-		SynAState.State[chValidNum].lWorldID = static_cast<decltype(SynAState.State[0].lWorldID)>(msg.states[j].worldId);
-		SynAState.State[chValidNum].uchFightID = static_cast<decltype(SynAState.State[0].uchFightID)>(msg.states[j].fightId);
+		SynAState.State[chValidNum].lWorldID = static_cast<decltype(SynAState.State[0].lWorldID)>(msg.states[j].
+			worldId);
+		SynAState.State[chValidNum].uchFightID = static_cast<decltype(SynAState.State[0].uchFightID)>(msg.states[j].
+			fightId);
 		chValidNum++;
 	}
 	SynAState.chStateNum = chValidNum;
@@ -885,9 +888,13 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 
 	//   
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY,
+											 SynAState.chStateNum));
 		for (char j = 0; j < SynAState.chStateNum; j++) {
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}\t{}", static_cast<int>(SynAState.State[j].chID), static_cast<int>(SynAState.State[j].chLv)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("\t{}\t{}", static_cast<int>(SynAState.State[j].chID),
+												 static_cast<int>(SynAState.State[j].chLv)));
 		}
 	}
 	//
@@ -907,7 +914,8 @@ BOOL SC_AStateEndSee(LPRPACKET pk) {
 	NetAreaStateEndSee(&SynAState);
 
 	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY, 0));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY, 0));
 	//
 
 	return TRUE;
@@ -990,7 +998,8 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 			// log
 			long lDistX, lDistY, lDist = 0;
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Move):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("===Recieve(Move):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", SMoveInfo.nPointNum));
 			// :     (  )
 			CCharacter* pMainDbg = CGameScene::GetMainCha();
@@ -1010,10 +1019,12 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 					lDistY = SMoveInfo.SPos[i].y - SMoveInfo.SPos[i - 1].y;
 					lDist = (long)sqrt((double)lDistX * lDistX + lDistY * lDistY);
 				}
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}, {}\t{}", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("\t{}, {}\t{}", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist));
 			}
 			if (SMoveInfo.sState)
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("@@@End Move\tState:0x{:x}", SMoveInfo.sState));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("@@@End Move\tState:0x{:x}", SMoveInfo.sState));
 
 
 			if (SMoveInfo.sState & enumMSTATE_CANCEL) {
@@ -1024,7 +1035,8 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 							SMoveInfo.SPos[SMoveInfo.nPointNum - 1].x)
 						+ (pCMainCha->GetCurY() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y) * (pCMainCha->GetCurY() -
 							SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y);
-					g_logManager.InternalLog(LogLevel::Debug, "common", std::format("++++++++++++++Distance: {}", (long)sqrt(double(lDist))));
+					g_logManager.InternalLog(LogLevel::Debug, "common",
+											 std::format("++++++++++++++Distance: {}", (long)sqrt(double(lDist))));
 				}
 			}
 			//
@@ -1078,19 +1090,31 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			}
 
 			// log
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Skill Represent):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle:\t{}\tFightID:{}", SSkillInfo.sAngle, static_cast<int>(SSkillInfo.byFightID)));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SkillID:\t{}\tSkillSpeed:{}", SSkillInfo.lSkillID, SSkillInfo.lSkillSpeed));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TargetInfo(ID, PosX, PosY):\t{}, {}, {}", SSkillInfo.lTargetID, SSkillInfo.STargetPoint.x, SSkillInfo.STargetPoint.y));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("===Recieve(Skill Represent):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Angle:\t{}\tFightID:{}", SSkillInfo.sAngle,
+												 static_cast<int>(SSkillInfo.byFightID)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("SkillID:\t{}\tSkillSpeed:{}", SSkillInfo.lSkillID,
+												 SSkillInfo.lSkillSpeed));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("TargetInfo(ID, PosX, PosY):\t{}, {}, {}", SSkillInfo.lTargetID,
+												 SSkillInfo.STargetPoint.x, SSkillInfo.STargetPoint.y));
 			g_logManager.InternalLog(LogLevel::Debug, "common", "Effect:[ID, Value]");
 			for (DWORD i = 0; i < SSkillInfo.SEffect.GetCount(); i++)
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{},\t{}", SSkillInfo.SEffect[i].lAttrID, SSkillInfo.SEffect[i].lVal));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("\t{},\t{}", SSkillInfo.SEffect[i].lAttrID,
+													 SSkillInfo.SEffect[i].lVal));
 			if (SSkillInfo.SState.GetCount() > 0)
 				g_logManager.InternalLog(LogLevel::Debug, "common", "Skill State:[ID, LV]");
 			for (DWORD chNum = 0; chNum < SSkillInfo.SState.GetCount(); chNum++)
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}, {}", static_cast<int>(SSkillInfo.SState[chNum].chID), static_cast<int>(SSkillInfo.SState[chNum].chLv)));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("\t{}, {}", static_cast<int>(SSkillInfo.SState[chNum].chID),
+													 static_cast<int>(SSkillInfo.SState[chNum].chLv)));
 			if (SSkillInfo.sState)
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("@@@End Skill\tState:0x{:x}", SSkillInfo.sState));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("@@@End Skill\tState:0x{:x}", SSkillInfo.sState));
 			//
 
 			NetActorSkillRep(l_id, SSkillInfo);
@@ -1183,9 +1207,11 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			}
 
 			// log
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Lean):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("===Recieve(Lean):\tTick:[{}]", GetTickCount()));
 			if (SLean.chState)
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("@@@End Lean\tState:{}", static_cast<int>(SLean.chState)));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("@@@End Lean\tState:{}", static_cast<int>(SLean.chState)));
 			//
 
 			NetActorLean(l_id, SLean);
@@ -1212,9 +1238,12 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 				SChaPart.sEngine = static_cast<short>(lk.boatParts.engine);
 				SChaPart.sCannon = static_cast<short>(lk.boatParts.cannon);
 				SChaPart.sEquipment = static_cast<short>(lk.boatParts.equipment);
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look):\tTick:[{}]", GetTickCount()));
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, PoseID:{}", SChaPart.sTypeID, SChaPart.sPosID));
-			} else {
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("===Recieve(Look):\tTick:[{}]", GetTickCount()));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("TypeID:{}, PoseID:{}", SChaPart.sTypeID, SChaPart.sPosID));
+			}
+			else {
 				SChaPart.sHairID = static_cast<short>(lk.hairId);
 				for (int i = 0; i < enumEQUIP_NUM; i++) {
 					SItemGrid* pItem = &SChaPart.SLink[i];
@@ -1232,7 +1261,8 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 						pItem->SetValid(eq.valid != 0);
 						pItem->bItemTradable = static_cast<int>(eq.tradable);
 						pItem->expiration = static_cast<long>(eq.expiration);
-					} else {
+					}
+					else {
 						pItem->sNum = static_cast<short>(eq.num);
 						pItem->sEndure[0] = static_cast<short>(eq.endure0);
 						pItem->sEndure[1] = static_cast<short>(eq.endure1);
@@ -1254,10 +1284,13 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 						}
 					}
 				}
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look)\tTick:[{}]", GetTickCount()));
-				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, HairID:{}", SChaPart.sTypeID, SChaPart.sHairID));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("===Recieve(Look)\tTick:[{}]", GetTickCount()));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 std::format("TypeID:{}, HairID:{}", SChaPart.sTypeID, SChaPart.sHairID));
 				for (int i = 0; i < enumEQUIP_NUM; i++)
-					g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tLink: {}", SChaPart.SLink[i].sID));
+					g_logManager.InternalLog(LogLevel::Debug, "common",
+											 std::format("\tLink: {}", SChaPart.SLink[i].sID));
 			}
 
 			CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(l_id);
@@ -1307,8 +1340,10 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			SNetFace.sPose = static_cast<short>(face.pose);
 			NetFace(l_id, SNetFace, enumACTION_FACE);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Face):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("===Recieve(Face):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
 		}
 		else if (msg.actionType == ActionType::SKILL_POSE) {
 			auto& face = std::get<ActionFaceData>(msg.data);
@@ -1317,8 +1352,10 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			SNetFace.sPose = static_cast<short>(face.pose);
 			NetFace(l_id, SNetFace, enumACTION_SKILL_POSE);
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Skill Pos):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("===Recieve(Skill Pos):\tTick:[{}]", GetTickCount()));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
 		}
 		else if (msg.actionType == ActionType::PK_CTRL) {
 			//  : PK-  std::variant
@@ -1385,10 +1422,13 @@ BOOL SC_SynAttribute(LPRPACKET pk) {
 	}
 
 	//   
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum, static_cast<int>(SChaAttr.chType), GetTickCount()));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum,
+										 static_cast<int>(SChaAttr.chType), GetTickCount()));
 	g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(312));
 	for (short i = 0; i < SChaAttr.sNum; i++) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}\t{}", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 std::format("\t{}\t{}", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal));
 	}
 
 	NetSynAttr(l_id, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff);
@@ -1431,7 +1471,9 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 		}
 
 		// log
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill Bag, Type:{},\tTick:[{}]", static_cast<int>(SCurSkill.chType), GetTickCount()));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 std::format("Syn Skill Bag, Type:{},\tTick:[{}]", static_cast<int>(SCurSkill.chType),
+											 GetTickCount()));
 		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(310));
 		char szRange[256];
 		for (short i = 0; i < sSkillNum; i++) {
@@ -1439,8 +1481,11 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 			if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
 				for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
 					sprintf(szRange + strlen(szRange), ",%d", pSBag[i].sRange[j]);
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{:4}\t{:4}\t{:4}\t{:6}\t{:6}\t{:6}\t{:18}\t{}", pSBag[i].sID, static_cast<int>(pSBag[i].chState), static_cast<int>(pSBag[i].chLv),
-			   pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy, pSBag[i].lResumeTime, szRange));
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format(
+										 "\t{:4}\t{:4}\t{:4}\t{:6}\t{:6}\t{:6}\t{:18}\t{}", pSBag[i].sID,
+										 static_cast<int>(pSBag[i].chState), static_cast<int>(pSBag[i].chLv),
+										 pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy,
+										 pSBag[i].lResumeTime, szRange));
 		}
 	}
 
@@ -1477,8 +1522,10 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 	if (sNum > 0) {
 		SCurSState.SState.Resize(sNum);
 		for (int nNum = 0; nNum < sNum; nNum++) {
-			SCurSState.SState[nNum].chID = static_cast<decltype(SCurSState.SState[nNum].chID)>(msg.skillState.states[nNum].stateId);
-			SCurSState.SState[nNum].chLv = static_cast<decltype(SCurSState.SState[nNum].chLv)>(msg.skillState.states[nNum].stateLv);
+			SCurSState.SState[nNum].chID = static_cast<decltype(SCurSState.SState[nNum].chID)>(msg.skillState.states[
+				nNum].stateId);
+			SCurSState.SState[nNum].chLv = static_cast<decltype(SCurSState.SState[nNum].chLv)>(msg.skillState.states[
+				nNum].stateLv);
 
 			unsigned long duration = static_cast<unsigned long>(msg.skillState.states[nNum].duration);
 			unsigned long start = static_cast<unsigned long>(msg.skillState.states[nNum].startTime) / 1000;
@@ -1491,10 +1538,13 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 	}
 
 	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill State: Num[{}]\tTick[{}]", sNum, GetTickCount()));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("Syn Skill State: Num[{}]\tTick[{}]", sNum, GetTickCount()));
 	g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(311));
 	for (char i = 0; i < sNum; i++)
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{:8}\t{:4}", static_cast<int>(SCurSState.SState[i].chID), static_cast<int>(SCurSState.SState[i].chLv)));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 std::format("\t{:8}\t{:4}", static_cast<int>(SCurSState.SState[i].chID),
+											 static_cast<int>(SCurSState.SState[i].chLv)));
 
 	NetSynSkillState(l_id, &SCurSState);
 
@@ -1514,8 +1564,9 @@ BOOL SC_SynTeam(LPRPACKET pk) {
 	STeamState.lMaxSP = static_cast<decltype(STeamState.lMaxSP)>(msg.maxSP);
 	STeamState.lLV = static_cast<decltype(STeamState.lLV)>(msg.level);
 
-	ToLogService("players", "Refresh, ID[{}], HP[{}], MaxHP[{}], SP[{}], MaxSP[{}], LV[{}]", STeamState.ulID, STeamState.lHP,
-	   STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV);
+	ToLogService("players", "Refresh, ID[{}], HP[{}], MaxHP[{}], SP[{}], MaxSP[{}], LV[{}]", STeamState.ulID,
+				 STeamState.lHP,
+				 STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV);
 
 	//  ChaLookInfo  stNetChangeChaPart  
 	STeamState.SFace.sTypeID = static_cast<short>(msg.look.typeId);
@@ -1624,8 +1675,8 @@ BOOL SC_TradeData(LPRPACKET packet) {
 	net::msg::deserialize(packet, msg);
 
 	NetUpdateTradeData(static_cast<DWORD>(msg.npcId), static_cast<BYTE>(msg.page),
-		static_cast<BYTE>(msg.index), static_cast<USHORT>(msg.itemId),
-		static_cast<USHORT>(msg.count), static_cast<DWORD>(msg.price));
+					   static_cast<BYTE>(msg.index), static_cast<USHORT>(msg.itemId),
+					   static_cast<USHORT>(msg.count), static_cast<DWORD>(msg.price));
 	return TRUE;
 }
 
@@ -1656,7 +1707,8 @@ BOOL SC_TradeAllData(LPRPACKET packet) {
 
 	NET_TRADEINFO Info;
 	convertTradeMsg(msg, Info);
-	NetUpdateTradeAllData(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId), static_cast<DWORD>(msg.param));
+	NetUpdateTradeAllData(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId),
+						  static_cast<DWORD>(msg.param));
 	return TRUE;
 }
 
@@ -1680,7 +1732,8 @@ BOOL SC_TradeUpdate(LPRPACKET packet) {
 	convertTradeMsg(msg, Info);
 
 	if (g_stUINpcTrade.GetIsShow()) {
-		NetShowTrade(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId), static_cast<DWORD>(msg.param));
+		NetShowTrade(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId),
+					 static_cast<DWORD>(msg.param));
 	}
 
 	return TRUE;
@@ -1694,7 +1747,8 @@ BOOL SC_TradeResult(LPRPACKET packet) {
 	BYTE byCount = static_cast<BYTE>(msg.count);
 	USHORT sItemID = static_cast<USHORT>(msg.itemId);
 	DWORD dwMoney = static_cast<DWORD>(msg.money);
-	g_logManager.InternalLog(LogLevel::Debug, "trade", SafeVFormat(GetLanguageString(301), byType, byIndex, byCount, sItemID, dwMoney));
+	g_logManager.InternalLog(LogLevel::Debug, "trade",
+							 SafeVFormat(GetLanguageString(301), byType, byIndex, byCount, sItemID, dwMoney));
 	NetTradeResult(byType, byIndex, byCount, sItemID, dwMoney);
 	g_logManager.InternalLog(LogLevel::Debug, "trade", GetLanguageString(302));
 	return TRUE;
@@ -1737,8 +1791,8 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 			NET_CHARTRADE_ITEMDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
 			NetTradeAddItem(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType), 0,
-				static_cast<BYTE>(remove->tradeIndex), static_cast<BYTE>(remove->count),
-				static_cast<BYTE>(remove->bagIndex), Data);
+							static_cast<BYTE>(remove->tradeIndex), static_cast<BYTE>(remove->count),
+							static_cast<BYTE>(remove->bagIndex), Data);
 		}
 		else if (auto* add = std::get_if<net::msg::McCharTradeItemAddData>(&msg.data)) {
 			bool isBoat = (add->itemType == enumItemTypeBoat);
@@ -1752,16 +1806,21 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 					Data.sBoatID = static_cast<decltype(Data.sBoatID)>(boatPtr->ship);
 					Data.sLevel = static_cast<decltype(Data.sLevel)>(boatPtr->lv);
 					Data.dwExp = static_cast<DWORD>(boatPtr->cexp);
-					Data.dwHp = static_cast<DWORD>(boatPtr->hp); Data.dwMaxHp = static_cast<DWORD>(boatPtr->mxhp);
-					Data.dwSp = static_cast<DWORD>(boatPtr->sp); Data.dwMaxSp = static_cast<DWORD>(boatPtr->mxsp);
-					Data.dwMinAttack = static_cast<DWORD>(boatPtr->mnatk); Data.dwMaxAttack = static_cast<DWORD>(boatPtr->mxatk);
-					Data.dwDef = static_cast<DWORD>(boatPtr->def); Data.dwSpeed = static_cast<DWORD>(boatPtr->mspd);
+					Data.dwHp = static_cast<DWORD>(boatPtr->hp);
+					Data.dwMaxHp = static_cast<DWORD>(boatPtr->mxhp);
+					Data.dwSp = static_cast<DWORD>(boatPtr->sp);
+					Data.dwMaxSp = static_cast<DWORD>(boatPtr->mxsp);
+					Data.dwMinAttack = static_cast<DWORD>(boatPtr->mnatk);
+					Data.dwMaxAttack = static_cast<DWORD>(boatPtr->mxatk);
+					Data.dwDef = static_cast<DWORD>(boatPtr->def);
+					Data.dwSpeed = static_cast<DWORD>(boatPtr->mspd);
 					Data.dwShootSpeed = static_cast<DWORD>(boatPtr->aspd);
-					Data.byHasItem = static_cast<BYTE>(boatPtr->useGridNum); Data.byCapacity = static_cast<BYTE>(boatPtr->capacity);
+					Data.byHasItem = static_cast<BYTE>(boatPtr->useGridNum);
+					Data.byCapacity = static_cast<BYTE>(boatPtr->capacity);
 					Data.dwPrice = static_cast<DWORD>(boatPtr->price);
 					NetTradeAddBoat(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType),
-						static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
-						static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
+									static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
+									static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
 				}
 			}
 			else {
@@ -1770,10 +1829,13 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 				if (itemPtr) {
 					NET_CHARTRADE_ITEMDATA Data;
 					memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
-					Data.sEndure[0] = static_cast<short>(itemPtr->endure0); Data.sEndure[1] = static_cast<short>(itemPtr->endure1);
-					Data.sEnergy[0] = static_cast<short>(itemPtr->energy0); Data.sEnergy[1] = static_cast<short>(itemPtr->energy1);
+					Data.sEndure[0] = static_cast<short>(itemPtr->endure0);
+					Data.sEndure[1] = static_cast<short>(itemPtr->endure1);
+					Data.sEnergy[0] = static_cast<short>(itemPtr->energy0);
+					Data.sEnergy[1] = static_cast<short>(itemPtr->energy1);
 					Data.byForgeLv = static_cast<BYTE>(itemPtr->forgeLv);
-					Data.bValid = itemPtr->valid != 0; Data.bItemTradable = static_cast<int>(itemPtr->tradable);
+					Data.bValid = itemPtr->valid != 0;
+					Data.bItemTradable = static_cast<int>(itemPtr->tradable);
 					Data.expiration = static_cast<long>(itemPtr->expiration);
 					Data.lDBParam[enumITEMDBP_FORGE] = static_cast<long>(itemPtr->forgeParam);
 					Data.lDBParam[enumITEMDBP_INST_ID] = static_cast<long>(itemPtr->instId);
@@ -1785,8 +1847,8 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 						}
 					}
 					NetTradeAddItem(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType),
-						static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
-						static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
+									static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
+									static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
 				}
 			}
 		}
@@ -1799,7 +1861,8 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 	case CMD_MC_CHARTRADE_PAGE: {
 		net::msg::McCharTradePageMessage msg;
 		net::msg::deserialize(packet, msg);
-		NetShowCharTradeInfo(static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.mainChaId), static_cast<DWORD>(msg.otherChaId));
+		NetShowCharTradeInfo(static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.mainChaId),
+							 static_cast<DWORD>(msg.otherChaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_VALIDATEDATA: {
@@ -2245,12 +2308,17 @@ BOOL SC_StallInfo(LPRPACKET packet) {
 				Data.sBoatID = static_cast<decltype(Data.sBoatID)>(g.boat.ship);
 				Data.sLevel = static_cast<decltype(Data.sLevel)>(g.boat.lv);
 				Data.dwExp = static_cast<DWORD>(g.boat.cexp);
-				Data.dwHp = static_cast<DWORD>(g.boat.hp); Data.dwMaxHp = static_cast<DWORD>(g.boat.mxhp);
-				Data.dwSp = static_cast<DWORD>(g.boat.sp); Data.dwMaxSp = static_cast<DWORD>(g.boat.mxsp);
-				Data.dwMinAttack = static_cast<DWORD>(g.boat.mnatk); Data.dwMaxAttack = static_cast<DWORD>(g.boat.mxatk);
-				Data.dwDef = static_cast<DWORD>(g.boat.def); Data.dwSpeed = static_cast<DWORD>(g.boat.mspd);
+				Data.dwHp = static_cast<DWORD>(g.boat.hp);
+				Data.dwMaxHp = static_cast<DWORD>(g.boat.mxhp);
+				Data.dwSp = static_cast<DWORD>(g.boat.sp);
+				Data.dwMaxSp = static_cast<DWORD>(g.boat.mxsp);
+				Data.dwMinAttack = static_cast<DWORD>(g.boat.mnatk);
+				Data.dwMaxAttack = static_cast<DWORD>(g.boat.mxatk);
+				Data.dwDef = static_cast<DWORD>(g.boat.def);
+				Data.dwSpeed = static_cast<DWORD>(g.boat.mspd);
 				Data.dwShootSpeed = static_cast<DWORD>(g.boat.aspd);
-				Data.byHasItem = static_cast<BYTE>(g.boat.useGridNum); Data.byCapacity = static_cast<BYTE>(g.boat.capacity);
+				Data.byHasItem = static_cast<BYTE>(g.boat.useGridNum);
+				Data.byCapacity = static_cast<BYTE>(g.boat.capacity);
 				Data.dwPrice = static_cast<DWORD>(g.boat.price);
 				NetStallAddBoat(byGrid, sItemID, byCount, dwMoney, Data);
 			}
@@ -2258,10 +2326,13 @@ BOOL SC_StallInfo(LPRPACKET packet) {
 		else {
 			NET_CHARTRADE_ITEMDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
-			Data.sEndure[0] = static_cast<short>(g.item.endure0); Data.sEndure[1] = static_cast<short>(g.item.endure1);
-			Data.sEnergy[0] = static_cast<short>(g.item.energy0); Data.sEnergy[1] = static_cast<short>(g.item.energy1);
+			Data.sEndure[0] = static_cast<short>(g.item.endure0);
+			Data.sEndure[1] = static_cast<short>(g.item.endure1);
+			Data.sEnergy[0] = static_cast<short>(g.item.energy0);
+			Data.sEnergy[1] = static_cast<short>(g.item.energy1);
 			Data.byForgeLv = static_cast<BYTE>(g.item.forgeLv);
-			Data.bValid = g.item.valid != 0; Data.bItemTradable = static_cast<int>(g.item.tradable);
+			Data.bValid = g.item.valid != 0;
+			Data.bItemTradable = static_cast<int>(g.item.tradable);
 			Data.expiration = static_cast<long>(g.item.expiration);
 			Data.lDBParam[enumITEMDBP_FORGE] = static_cast<long>(g.item.forgeParam);
 			Data.lDBParam[enumITEMDBP_INST_ID] = static_cast<long>(g.item.instId);
@@ -2348,15 +2419,19 @@ BOOL SC_TeamFightAsk(LPRPACKET packet) {
 	stNetTeamFightAsk SFightAsk;
 	SFightAsk.chSideNum1 = static_cast<char>(msg.srcCount);
 	SFightAsk.chSideNum2 = static_cast<char>(msg.tarCount);
-	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(306), static_cast<int>(SFightAsk.chSideNum1), static_cast<int>(SFightAsk.chSideNum2)));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 SafeVFormat(GetLanguageString(306), static_cast<int>(SFightAsk.chSideNum1),
+										 static_cast<int>(SFightAsk.chSideNum2)));
 	for (size_t i = 0; i < msg.players.size(); i++) {
 		SFightAsk.Info[i].szName = msg.players[i].name;
 		SFightAsk.Info[i].chLv = static_cast<char>(msg.players[i].lv);
 		SFightAsk.Info[i].szJob = msg.players[i].job;
 		SFightAsk.Info[i].usFightNum = static_cast<unsigned short>(msg.players[i].fightNum);
 		SFightAsk.Info[i].usVictoryNum = static_cast<unsigned short>(msg.players[i].victoryNum);
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(307), SFightAsk.Info[i].szName.c_str(), static_cast<int>(SFightAsk.Info[i].chLv),
-		   SFightAsk.Info[i].szJob.c_str()));
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(307),
+																		SFightAsk.Info[i].szName.c_str(),
+																		static_cast<int>(SFightAsk.Info[i].chLv),
+																		SFightAsk.Info[i].szJob.c_str()));
 	}
 	SFightAsk.Exec();
 	return TRUE;
@@ -2429,8 +2504,10 @@ BOOL SC_EspeItem(LPRPACKET packet) {
 		SEspItem.SContent[i].sPos = static_cast<decltype(SEspItem.SContent[0].sPos)>(msg.items[i].position);
 		SEspItem.SContent[i].sEndure = static_cast<decltype(SEspItem.SContent[0].sEndure)>(msg.items[i].endure);
 		SEspItem.SContent[i].sEnergy = static_cast<decltype(SEspItem.SContent[0].sEnergy)>(msg.items[i].energy);
-		SEspItem.SContent[i].bItemTradable = static_cast<decltype(SEspItem.SContent[0].bItemTradable)>(msg.items[i].tradable);
-		SEspItem.SContent[i].expiration = static_cast<decltype(SEspItem.SContent[0].expiration)>(msg.items[i].expiration);
+		SEspItem.SContent[i].bItemTradable = static_cast<decltype(SEspItem.SContent[0].bItemTradable)>(msg.items[i].
+			tradable);
+		SEspItem.SContent[i].expiration = static_cast<decltype(SEspItem.SContent[0].expiration)>(msg.items[i].
+			expiration);
 	}
 
 	NetEspeItem(nChaID, SEspItem);
@@ -2463,7 +2540,7 @@ BOOL SC_QueryCha(LPRPACKET pk) {
 
 	stNetSysInfo SShowInfo;
 	SShowInfo.m_sysinfo = SafeVFormat(GetLanguageString(308), msg.name.c_str(), static_cast<long>(msg.chaId2),
-		msg.mapName.c_str(), static_cast<long>(msg.posX), static_cast<long>(msg.posY));
+									  msg.mapName.c_str(), static_cast<long>(msg.posX), static_cast<long>(msg.posY));
 	NetSysInfo(SShowInfo);
 
 	return TRUE;
@@ -2545,7 +2622,8 @@ BOOL SC_SynSideInfo(LPRPACKET pk) {
 
 	// log
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(SideInfo)\tTick:[{}]", GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tSideID: {}", static_cast<int>(SNetSideInfo.chSideID)));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("\tSideID: {}", static_cast<int>(SNetSideInfo.chSideID)));
 
 	NetChaSideInfo(l_id, SNetSideInfo);
 
@@ -2625,18 +2703,21 @@ BOOL SC_StoreListAnswer(LPRPACKET packet) {
 	for (long i = 0; i < static_cast<long>(msg.products.size()); i++) {
 		const auto& p = msg.products[i];
 		g_stUIStore.AddStoreItemInfo(i, static_cast<long>(p.comId), p.comName.c_str(),
-			static_cast<long>(p.price), p.remark.c_str(), p.isHot,
-			static_cast<long>(p.time), static_cast<long>(p.quantity), static_cast<long>(p.expire));
+									 static_cast<long>(p.price), p.remark.c_str(), p.isHot,
+									 static_cast<long>(p.time), static_cast<long>(p.quantity),
+									 static_cast<long>(p.expire));
 
 		for (int j = 0; j < static_cast<int>(p.variants.size()); j++) {
 			const auto& v = p.variants[j];
-			short pItemAttrID[5]; short pItemAttrVal[5];
+			short pItemAttrID[5];
+			short pItemAttrVal[5];
 			for (int k = 0; k < 5; k++) {
 				pItemAttrID[k] = static_cast<short>(v.attrs[k].attrId);
 				pItemAttrVal[k] = static_cast<short>(v.attrs[k].attrVal);
 			}
 			g_stUIStore.AddStoreItemDetail(i, j, static_cast<short>(v.itemId),
-				static_cast<short>(v.itemNum), static_cast<short>(v.flute), pItemAttrID, pItemAttrVal);
+										   static_cast<short>(v.itemNum), static_cast<short>(v.flute), pItemAttrID,
+										   pItemAttrVal);
 		}
 	}
 
@@ -2811,7 +2892,8 @@ BOOL SC_TigerItemID(LPRPACKET packet) {
 	net::msg::deserialize(packet, msg);
 
 	short sNum = static_cast<short>(msg.num);
-	g_stUISpirit.UpdateErnieNumber(sNum, static_cast<short>(msg.itemId0), static_cast<short>(msg.itemId1), static_cast<short>(msg.itemId2));
+	g_stUISpirit.UpdateErnieNumber(sNum, static_cast<short>(msg.itemId0), static_cast<short>(msg.itemId1),
+								   static_cast<short>(msg.itemId2));
 
 	if (sNum == 3) {
 		g_stUISpirit.ShowErnieHighLight();
@@ -2832,9 +2914,9 @@ BOOL SC_VolunteerList(LPRPACKET packet) {
 
 	for (int i = 0; i < static_cast<int>(msg.volunteers.size()); i++) {
 		g_stUIFindTeam.AddFindTeamInfo(i, msg.volunteers[i].name.c_str(),
-			static_cast<long>(msg.volunteers[i].level),
-			static_cast<long>(msg.volunteers[i].job),
-			msg.volunteers[i].map.c_str());
+									   static_cast<long>(msg.volunteers[i].level),
+									   static_cast<long>(msg.volunteers[i].job),
+									   msg.volunteers[i].map.c_str());
 	}
 
 	return TRUE;
@@ -2862,9 +2944,9 @@ BOOL SC_VolunteerOpen(LPRPACKET packet) {
 
 	for (int i = 0; i < static_cast<int>(msg.volunteers.size()); i++) {
 		g_stUIFindTeam.AddFindTeamInfo(i, msg.volunteers[i].name.c_str(),
-			static_cast<long>(msg.volunteers[i].level),
-			static_cast<long>(msg.volunteers[i].job),
-			msg.volunteers[i].map.c_str());
+									   static_cast<long>(msg.volunteers[i].level),
+									   static_cast<long>(msg.volunteers[i].job),
+									   msg.volunteers[i].map.c_str());
 	}
 
 	g_stUIFindTeam.ShowFindTeamForm();
@@ -2938,8 +3020,10 @@ BOOL PC_MasterRefresh(LPRPACKET packet) {
 		else NetPrenticeDel(static_cast<uLong>(msg.chaId));
 	}
 	else if (localType == MSG_MASTER_REFRESH_ADD) {
-		if (isMaster) NetMasterAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(), static_cast<uShort>(msg.icon), msg.group.c_str());
-		else NetPrenticeAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(), static_cast<uShort>(msg.icon), msg.group.c_str());
+		if (isMaster) NetMasterAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(),
+								   static_cast<uShort>(msg.icon), msg.group.c_str());
+		else NetPrenticeAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(),
+							static_cast<uShort>(msg.icon), msg.group.c_str());
 	}
 	else if (localType == MSG_MASTER_REFRESH_START) {
 		stNetFrndStart l_self;
@@ -2978,8 +3062,8 @@ BOOL PC_MasterRefreshInfo(LPRPACKET packet) {
 	net::msg::PcMasterRefreshInfoFullMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetMasterRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
-		static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
-		msg.job.c_str(), msg.guild.c_str());
+						 static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
+						 msg.job.c_str(), msg.guild.c_str());
 	return TRUE;
 }
 
@@ -2988,8 +3072,8 @@ BOOL PC_PrenticeRefreshInfo(LPRPACKET packet) {
 	net::msg::PcMasterRefreshInfoFullMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetPrenticeRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
-		static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
-		msg.job.c_str(), msg.guild.c_str());
+						   static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
+						   msg.job.c_str(), msg.guild.c_str());
 	return TRUE;
 }
 
@@ -3129,8 +3213,10 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 	if (SKitbag.chType == enumSYN_KITBAG_INIT) {
 		SKitbag.nKeybagNum = static_cast<int>(info.capacity);
 	}
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Update Kitbag):\tGridNum:{}\tType:{}\tTick:[{}]", SKitbag.nKeybagNum, static_cast<int>(SKitbag.chType),
-	   GetTickCount()));
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format(
+								 "===Recieve(Update Kitbag):\tGridNum:{}\tType:{}\tTick:[{}]", SKitbag.nKeybagNum,
+								 static_cast<int>(SKitbag.chType),
+								 GetTickCount()));
 	stNetKitbag::stGrid* Grid = SKitbag.Grid;
 	SItemGrid* pItem;
 	CItemRecord* pItemRec;
@@ -3140,7 +3226,8 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 		Grid[nGridNum].sGridID = static_cast<short>(it.gridId);
 		pItem = &Grid[nGridNum].SGridContent;
 		pItem->sID = static_cast<short>(it.itemId);
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(313), Grid[nGridNum].sGridID, pItem->sID));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 SafeVFormat(GetLanguageString(313), Grid[nGridNum].sGridID, pItem->sID));
 		if (pItem->sID > 0) {
 			pItem->dwDBID = static_cast<DWORD>(it.dbId);
 			pItem->sNeedLv = static_cast<short>(it.needLv);
@@ -3149,8 +3236,9 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 			pItem->sEndure[1] = static_cast<short>(it.endure1);
 			pItem->sEnergy[0] = static_cast<short>(it.energy0);
 			pItem->sEnergy[1] = static_cast<short>(it.energy1);
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1],
-			   pItem->sEnergy[0], pItem->sEnergy[1]));
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(
+										 GetLanguageString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1],
+										 pItem->sEnergy[0], pItem->sEnergy[1]));
 			pItem->chForgeLv = static_cast<char>(it.forgeLv);
 			pItem->SetValid(it.valid != 0);
 			pItem->bItemTradable = static_cast<int>(it.tradable);
@@ -3179,18 +3267,22 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 				pItem->SetDBParam(enumITEMDBP_INST_ID, static_cast<long>(it.instId));
 			}
 
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(316), pItem->GetDBParam(enumITEMDBP_FORGE)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(316), pItem->GetDBParam(enumITEMDBP_FORGE)));
 			if (it.hasInstAttr) {
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++) {
 					pItem->sInstAttr[j][0] = static_cast<short>(it.instAttr[j][0]);
 					pItem->sInstAttr[j][1] = static_cast<short>(it.instAttr[j][1]);
-					g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]));
+					g_logManager.InternalLog(LogLevel::Debug, "common",
+											 SafeVFormat(GetLanguageString(317), pItem->sInstAttr[j][0],
+														 pItem->sInstAttr[j][1]));
 				}
 			}
 		}
 		nGridNum++;
 		if (nGridNum > defMAX_KBITEM_NUM_PER_TYPE) {
-			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE));
+			g_logManager.InternalLog(LogLevel::Error, "errors",
+									 SafeVFormat(GetLanguageString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE));
 			break;
 		}
 	}
@@ -3201,14 +3293,16 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 //  msg.shortcut (ChaShortcutInfo) -> stNetShortCut (   pk)
 void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut& SShortcut) {
 	memset(&SShortcut, 0, sizeof(SShortcut));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Update Shortcut):\tTick:[{}]", GetTickCount()));
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 std::format("===Recieve(Update Shortcut):\tTick:[{}]", GetTickCount()));
 	for (int i = 0; i < SHORT_CUT_NUM; i++) {
 		SShortcut.chType[i] = static_cast<char>(info.entries[i].type);
 		SShortcut.byGridID[i] = static_cast<BYTE>(info.entries[i].gridId);
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(321), static_cast<int>(SShortcut.chType[i]), static_cast<int>(SShortcut.byGridID[i])));
+		g_logManager.InternalLog(LogLevel::Debug, "common",
+								 SafeVFormat(GetLanguageString(321), static_cast<int>(SShortcut.chType[i]),
+											 static_cast<int>(SShortcut.byGridID[i])));
 	}
 }
-
 
 
 BOOL PC_PKSilver(LPRPACKET packet) {
@@ -3218,8 +3312,8 @@ BOOL PC_PKSilver(LPRPACKET packet) {
 
 	for (int i = 0; i < MAX_PKSILVER_PLAYER; i++) {
 		g_stUIPKSilver.AddFormAttribute(i, msg.players[i].name,
-			static_cast<long>(msg.players[i].level), msg.players[i].profession,
-			static_cast<long>(msg.players[i].pkVal));
+										static_cast<long>(msg.players[i].level), msg.players[i].profession,
+										static_cast<long>(msg.players[i].pkVal));
 	}
 
 	g_stUIPKSilver.ShowPKSilverForm();

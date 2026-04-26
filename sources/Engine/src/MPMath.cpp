@@ -5,9 +5,9 @@ using namespace std;
 
 BOOL EdgeIntersectsFace(D3DXVECTOR3* pEdges, D3DXVECTOR3* pFacePoints, D3DXPLANE* pPlane) {
 	FLOAT fDist1 = pPlane->a * pEdges[0].x + pPlane->b * pEdges[0].y +
-				   pPlane->c * pEdges[0].z + pPlane->d;
+		pPlane->c * pEdges[0].z + pPlane->d;
 	FLOAT fDist2 = pPlane->a * pEdges[1].x + pPlane->b * pEdges[1].y +
-				   pPlane->c * pEdges[1].z + pPlane->d;
+		pPlane->c * pEdges[1].z + pPlane->d;
 	if ((fDist1 > 0 && fDist2 > 0) || (fDist1 < 0 && fDist2 < 0)) {
 		return FALSE;
 	}
@@ -78,128 +78,117 @@ BOOL EdgeIntersectsFace(D3DXVECTOR3* pEdges, D3DXVECTOR3* pFacePoints, D3DXPLANE
 	return TRUE;
 }
 
-D3DXVECTOR3 ComputeNormalVector( D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3 )
-{
+D3DXVECTOR3 ComputeNormalVector(D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3) {
 	D3DXVECTOR3 vResult;
-	D3DXVECTOR3 vec1 = ( v2 - v1 );
-	D3DXVECTOR3 vec2 = ( v3 - v1 );
-	
-	D3DXVec3Cross( &vResult, &vec1, &vec2 );	
+	D3DXVECTOR3 vec1 = (v2 - v1);
+	D3DXVECTOR3 vec2 = (v3 - v1);
+
+	D3DXVec3Cross(&vResult, &vec1, &vec2);
 	vResult = vResult / D3DXVec3Length(&vResult);
 	return vResult;
 }
 
-BOOL Get2DLineIntersection(float *pv1,float *pv2, float *pv3, float *pv4, float *pv0, BOOL bline)
-{
-    float t1, t2;
- 
-    float a1, a2, b1, b2, c1, c2, d1, d2;
+BOOL Get2DLineIntersection(float* pv1, float* pv2, float* pv3, float* pv4, float* pv0, BOOL bline) {
+	float t1, t2;
 
-    a1 = *(pv2)  - *(pv1);
-    b1 = *(pv1);
-    c1 = *(pv2+1)- *(pv1+1);
-    d1 = *(pv1+1);
- 
-    a2 = *(pv4)  - *(pv3);
-    b2 = *(pv3);
-    c2 = *(pv4+1)- *(pv3+1);
-    d2 = *(pv3+1);
- 
-    // t1, t2 range [0,1]
- 
-    if(a1*c2 == a2*c1)          return FALSE;
- 
+	float a1, a2, b1, b2, c1, c2, d1, d2;
 
-    t2 = (b1*c1 + a1*d2 - a1*d1 - b2*c1) / (a2*c1 - a1*c2);
- 
-    if(a1)
-        t1 = (a2*t2 + b2 - b1) / a1;
-    else if(c1)
-        t1 = (c2*t2 + d2 - d1) / c1;
-    else
-        return FALSE;
- 
-    if(bline) {
- 
-        if(pv0) {
-            *(pv0)  = a1*t1 + b1;
-            *(pv0+1)= c1*t1 + d1;
-        }
-        
-        return TRUE;
-    }
-    else {
-        if( t1>=0&&t1<=1 && t2>=0&&t2<=1 ) {
- 
-            if(pv0) {
-                *(pv0)  = a1*t1 + b1;
-                *(pv0+1)= c1*t1 + d1;
-            }
-            
-            return TRUE;
-        }
-        else 
-            return FALSE;
-    }
- 
+	a1 = *(pv2) - *(pv1);
+	b1 = *(pv1);
+	c1 = *(pv2 + 1) - *(pv1 + 1);
+	d1 = *(pv1 + 1);
+
+	a2 = *(pv4) - *(pv3);
+	b2 = *(pv3);
+	c2 = *(pv4 + 1) - *(pv3 + 1);
+	d2 = *(pv3 + 1);
+
+	// t1, t2 range [0,1]
+
+	if (a1 * c2 == a2 * c1) return FALSE;
+
+
+	t2 = (b1 * c1 + a1 * d2 - a1 * d1 - b2 * c1) / (a2 * c1 - a1 * c2);
+
+	if (a1)
+		t1 = (a2 * t2 + b2 - b1) / a1;
+	else if (c1)
+		t1 = (c2 * t2 + d2 - d1) / c1;
+	else
+		return FALSE;
+
+	if (bline) {
+		if (pv0) {
+			*(pv0) = a1 * t1 + b1;
+			*(pv0 + 1) = c1 * t1 + d1;
+		}
+
+		return TRUE;
+	}
+	else {
+		if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
+			if (pv0) {
+				*(pv0) = a1 * t1 + b1;
+				*(pv0 + 1) = c1 * t1 + d1;
+			}
+
+			return TRUE;
+		}
+		else
+			return FALSE;
+	}
 }
 
 
+VOID RNNormalizeVector(float* pfVector) {
+	float m = (float)sqrt(pfVector[0] * pfVector[0] +
+		pfVector[1] * pfVector[1] +
+		pfVector[2] * pfVector[2]);
 
-VOID RNNormalizeVector(float *pfVector)
-{
-	float m = (float)sqrt(pfVector[0] * pfVector[0] + 
-		                  pfVector[1] * pfVector[1] + 
-						  pfVector[2] * pfVector[2]);
-	
 	pfVector[0] = pfVector[0] / m;
 	pfVector[1] = pfVector[1] / m;
 	pfVector[2] = pfVector[2] / m;
 }
 
 
-int GetVectorRelativeDirection(float *fSrcDir , float *fDestDir , float *pfAngleOff)
-{
+int GetVectorRelativeDirection(float* fSrcDir, float* fDestDir, float* pfAngleOff) {
 	float x1 = fSrcDir[0];
 	float y1 = fSrcDir[1];
 	float x2 = fDestDir[0];
 	float y2 = fDestDir[1];
 
-    float a1 = (float)Radian2Angle( (float)(atan(fabs(y1 / x1))) );
-	float a2 = (float)Radian2Angle( (float)(atan(fabs(y2 / x2))) );
-	float p1 = Angle2Quadrant(a1 , x1 , y1);
-	float p2 = Angle2Quadrant(a2 , x2 , y2);
+	float a1 = (float)Radian2Angle((float)(atan(fabs(y1 / x1))));
+	float a2 = (float)Radian2Angle((float)(atan(fabs(y2 / x2))));
+	float p1 = Angle2Quadrant(a1, x1, y1);
+	float p2 = Angle2Quadrant(a2, x2, y2);
 
 	float fAngleOff = (float)fabs(p1 - p2);
-	
+
 	int nDestDir;
-	if(fAngleOff < 180.0f)
-	{
-		if(p1 > p2) nDestDir = 1;
-		else		nDestDir = 0;
+	if (fAngleOff < 180.0f) {
+		if (p1 > p2) nDestDir = 1;
+		else nDestDir = 0;
 	}
-	else
-	{
-		if(p1 > p2) nDestDir = 0;
-		else		nDestDir = 1;
+	else {
+		if (p1 > p2) nDestDir = 0;
+		else nDestDir = 1;
 		fAngleOff = 360.0f - fAngleOff;
 	}
-	
-	if(pfAngleOff) 
-	{
+
+	if (pfAngleOff) {
 		*pfAngleOff = fAngleOff;
 	}
 	return nDestDir;
 }
 
-int		BSplineCurveCV(int numCV, D3DXVECTOR3* vCtrl, D3DXVECTOR3* pVertices, int *numVert, int nPrecise, int nStrideInFloat)
-{
+int BSplineCurveCV(int numCV, D3DXVECTOR3* vCtrl, D3DXVECTOR3* pVertices, int* numVert, int nPrecise,
+				   int nStrideInFloat) {
 	// number of CV must lager than 4, precision must lager than 1
 	if (numCV < 4 || nPrecise < 1)
 		return -1;
 
 	// calculate span number
-	int nSpan = numCV - 3;	
+	int nSpan = numCV - 3;
 	if (numVert) *numVert = nSpan * (nPrecise - 1);
 
 	// return if vertex buffer is empty
@@ -207,97 +196,93 @@ int		BSplineCurveCV(int numCV, D3DXVECTOR3* vCtrl, D3DXVECTOR3* pVertices, int *
 		return 1;
 
 	// Bezier equation matrix 
-	float		M16[] = { -1, 3, -3, 1, 3, -6, 3, 0, -3, 0, 3, 0, 1, 4, 1, 0 } ; 
-	D3DXMATRIXA16	MBSpline(M16), MCtrl;
-	D3DXMATRIXA16	M12;
+	float M16[] = {-1, 3, -3, 1, 3, -6, 3, 0, -3, 0, 3, 0, 1, 4, 1, 0};
+	D3DXMATRIXA16 MBSpline(M16), MCtrl;
+	D3DXMATRIXA16 M12;
 
-	D3DXVECTOR3 *pCV = vCtrl;
-	float *pOutV = (float*)pVertices;
-	float *pV = (float*)pVertices;
+	D3DXVECTOR3* pCV = vCtrl;
+	float* pOutV = (float*)pVertices;
+	float* pV = (float*)pVertices;
 
 	float h, h2, h3;
-	h	= 1.f / (float)(nPrecise - 1);
-	h2	= h * h;
-	h3  = h2 * h;
+	h = 1.f / (float)(nPrecise - 1);
+	h2 = h * h;
+	h3 = h2 * h;
 
-	for (int span = 0;span < nSpan;span ++)
-	{
+	for (int span = 0; span < nSpan; span++) {
 		// set CV
-		for (int idx = 0;idx < 4;idx ++)
+		for (int idx = 0; idx < 4; idx++)
 			memcpy(MCtrl.m[idx], pCV + idx, sizeof(D3DXVECTOR3));
-		
+
 		pCV += 1;
-		
+
 		// calculate the coefficient equation
 		M12 = 0.166667f * MBSpline * MCtrl;
-		
+
 		// use difference to calculate dynamic part of equation
-		float ah3, bh2, ch, r, p, q, S;		
+		float ah3, bh2, ch, r, p, q, S;
 
 		// x, y, z
-		for (int j = 0;j < 3;j ++)
-		{			
-			pV	  = (float*)pOutV + j;
+		for (int j = 0; j < 3; j++) {
+			pV = (float*)pOutV + j;
 
 			ah3 = M12.m[0][j] * h3;
 			bh2 = M12.m[1][j] * h2;
-			ch  = M12.m[2][j] * h;
-			
-			S   = 6 * ah3;
-			r   = S + 2 * bh2;
-			q   = ah3 + bh2 + ch;
-			p   = M12.m[3][j];
-			
-			for (int i = 0;i < nPrecise - 1;i ++)
-			{
+			ch = M12.m[2][j] * h;
+
+			S = 6 * ah3;
+			r = S + 2 * bh2;
+			q = ah3 + bh2 + ch;
+			p = M12.m[3][j];
+
+			for (int i = 0; i < nPrecise - 1; i++) {
 				// save to output array
 				*pV = p;
 				pV += nStrideInFloat;
-				
+
 				// move forward to next difference
 				p += q;
 				q += r;
-				r += S;								
+				r += S;
 			}
 		}
 
 		// move to next span
 		pOutV += (nPrecise - 1) * nStrideInFloat;
-		pV	  = pOutV;
-
+		pV = pOutV;
 	}
 	return 0;
 }
 
-int GetSamplePointList(float fStartX, float fStartY, float fEndX, float fEndY, float fStep, float fStepShift, list<D3DXVECTOR3> &PointList)
-{
-    D3DXVECTOR3 vecStart(fStartX, fStartY, 0.0f);
-    D3DXVECTOR3 vecEnd(fEndX, fEndY, 0.0f);
+int GetSamplePointList(float fStartX, float fStartY, float fEndX, float fEndY, float fStep, float fStepShift,
+					   list<D3DXVECTOR3>& PointList) {
+	D3DXVECTOR3 vecStart(fStartX, fStartY, 0.0f);
+	D3DXVECTOR3 vecEnd(fEndX, fEndY, 0.0f);
 
-    D3DXVECTOR3 vecTmp = vecEnd - vecStart;
-    
-    D3DXVECTOR3 vecDir; D3DXVec3Normalize(&vecDir, &vecTmp);
+	D3DXVECTOR3 vecTmp = vecEnd - vecStart;
 
-    D3DXVECTOR3 vM = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	D3DXVECTOR3 vecDir;
+	D3DXVec3Normalize(&vecDir, &vecTmp);
+
+	D3DXVECTOR3 vM = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	D3DXVECTOR3 vShift;
 	D3DXVec3Cross(&vShift, &vecDir, &vM); // 
 	D3DXVec3Normalize(&vShift, &vShift);
-			
-    float fDis = DistanceFrom(vecStart, vecEnd);
 
-    int nStep = (int)(fDis / fStep);
-    
-    D3DXVECTOR3 vecShift1 = (vShift * fStepShift);
-    D3DXVECTOR3 vecShift2 = (vShift * fStepShift * -1.0f);
-    
-    for(int i = 0; i < nStep; i++)
-    {
-        D3DXVECTOR3 v  = vecStart + vecDir * (float)i * fStep;
-        D3DXVECTOR3 v1 = v + vecShift1;
-        D3DXVECTOR3 v2 = v + vecShift2;
-        
-        PointList.push_back(v1); 
-        PointList.push_back(v2);        
-  	}
-    return nStep;
+	float fDis = DistanceFrom(vecStart, vecEnd);
+
+	int nStep = (int)(fDis / fStep);
+
+	D3DXVECTOR3 vecShift1 = (vShift * fStepShift);
+	D3DXVECTOR3 vecShift2 = (vShift * fStepShift * -1.0f);
+
+	for (int i = 0; i < nStep; i++) {
+		D3DXVECTOR3 v = vecStart + vecDir * (float)i * fStep;
+		D3DXVECTOR3 v1 = v + vecShift1;
+		D3DXVECTOR3 v2 = v + vecShift2;
+
+		PointList.push_back(v1);
+		PointList.push_back(v2);
+	}
+	return nStep;
 }

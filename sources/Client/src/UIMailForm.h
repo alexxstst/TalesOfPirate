@@ -8,11 +8,8 @@
 #include "uimemo.h"
 
 
-namespace GUI
-{
-
-	class CMailMgr : public CUIInterface
-	{
+namespace GUI {
+	class CMailMgr : public CUIInterface {
 	public:
 		CMailMgr(void);
 		~CMailMgr(void);
@@ -22,22 +19,20 @@ namespace GUI
 
 		void SubmitQuestion();
 
-    protected:
-        virtual bool Init();
-        virtual void CloseForm();
+	protected:
+		virtual bool Init();
+		virtual void CloseForm();
 		virtual void FrameMove(DWORD dwTime);
 
 	private:
+		// 
+		CForm* frmQuestion;
+		CEdit* edtQuestionTitle;
+		CMemo* memCentent;
+		static void _evtQuestionFormEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 		// 
-		CForm*		frmQuestion;
-		CEdit*		edtQuestionTitle;
-		CMemo*		memCentent;
-		static void _evtQuestionFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-
-		// 
-		CForm*		frmAnswer;
-		CMemo*		memMiss;
+		CForm* frmAnswer;
+		CMemo* memMiss;
 	};
-
 }

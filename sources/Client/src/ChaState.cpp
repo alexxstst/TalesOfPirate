@@ -20,7 +20,9 @@ CChaStateMgr::CChaStateMgr(CCharacter* pCha)
 void CChaStateMgr::ChaDestroy() {
 	for (const auto& _state : _states) {
 		if (_state->pEffect) {
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(29), _state->pEffect->getIdxID(), (void*)_state->pEffect));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(29), _state->pEffect->getIdxID(),
+												 (void*)_state->pEffect));
 
 			_state->pEffect->SetValid(FALSE);
 			_state->pEffect = nullptr;
@@ -92,11 +94,15 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	for (unsigned int i = 0; i < nTmpCount; i++) {
 		pChaState = stTmp[i];
 		if (pChaState->IsDel) {
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(30), pChaState->pInfo->Id, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(30), pChaState->pInfo->Id, pChaState->pInfo->szName,
+												 static_cast<int>(pChaState->pInfo->sEffect)));
 
 			// Existing delete
 			if (pChaState->pEffect) {
-				g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(31), pChaState->pEffect->getIdxID(), (void*)pChaState->pEffect));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 SafeVFormat(GetLanguageString(31), pChaState->pEffect->getIdxID(),
+													 (void*)pChaState->pEffect));
 
 				pChaState->pEffect->SetValid(FALSE);
 				pChaState->pEffect = nullptr;
@@ -106,7 +112,9 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 		else {
 			// increase
 			_states.push_back(pChaState);
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(32), pChaState->pInfo->Id, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(32), pChaState->pInfo->Id, pChaState->pInfo->szName,
+												 static_cast<int>(pChaState->pInfo->sEffect)));
 
 			pInfo = pChaState->pInfo;
 			if (pInfo->sBitEffect > 0) {
@@ -207,7 +215,9 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 
 			if (pInfo->sEffect > 0 && !pChaState->pEffect) {
 				pChaState->pEffect = _pCha->SelfEffect(pInfo->sEffect, pInfo->sDummy1, true);
-				g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(33), static_cast<int>(pInfo->sEffect), static_cast<int>(pInfo->sDummy1), (void*)pChaState->pEffect));
+				g_logManager.InternalLog(LogLevel::Debug, "common",
+										 SafeVFormat(GetLanguageString(33), static_cast<int>(pInfo->sEffect),
+													 static_cast<int>(pInfo->sDummy1), (void*)pChaState->pEffect));
 			}
 		}
 	}

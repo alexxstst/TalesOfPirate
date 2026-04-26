@@ -54,35 +54,34 @@ using namespace GUI;
 
 //  :   UI-   false   return
 inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
-	char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
+	char _buf[512];
+	snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
 	g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
 	return false;
 }
 
-static CForm* frmSelectOriginRelive	= NULL;
+static CForm* frmSelectOriginRelive = NULL;
 
 //---------------------------------------------------------------------------
 // class CStartMgr
 //---------------------------------------------------------------------------
-CMenu*	      CStartMgr::mainMouseRight = NULL;
-CTextButton*  CStartMgr::btnQQ			= NULL;
-CCharacter2D* CStartMgr::pMainCha		= NULL;
-CCharacter2D* CStartMgr::pTarget		= NULL;
-CCharacter*   CStartMgr::pLastTarget 	= nullptr;		
-CCharacter*   CStartMgr::pChaPointer 	= nullptr;
+CMenu* CStartMgr::mainMouseRight = NULL;
+CTextButton* CStartMgr::btnQQ = NULL;
+CCharacter2D* CStartMgr::pMainCha = NULL;
+CCharacter2D* CStartMgr::pTarget = NULL;
+CCharacter* CStartMgr::pLastTarget = nullptr;
+CCharacter* CStartMgr::pChaPointer = nullptr;
 
 static char szBuf[32] = {0};
 
-float g_ExpBonus	= 1.0;
-float g_DropBonus	= 1.0;
+float g_ExpBonus = 1.0;
+float g_DropBonus = 1.0;
 
-static bool sortcol(const vector<int>& v1, const vector<int>& v2)
-{
-    return v1[1] < v2[1];
+static bool sortcol(const vector<int>& v1, const vector<int>& v2) {
+	return v1[1] < v2[1];
 }
 
-void CStartMgr::CleanDropListForm()
-{
+void CStartMgr::CleanDropListForm() {
 	for (int i = 0; i < defCHA_INIT_ITEM_NUM - 1; i++) {
 		if (listMobDrops[i]) {
 			listMobDrops[i]->DelCommand();
@@ -96,11 +95,9 @@ void CStartMgr::CleanDropListForm()
 	}
 }
 
-void CStartMgr::SetMonsterInfo() 
-{
+void CStartMgr::SetMonsterInfo() {
 	CleanDropListForm();
-	if (!pChaPointer)
-	{
+	if (!pChaPointer) {
 		return;
 	}
 	//hide drop info from player list
@@ -112,7 +109,7 @@ void CStartMgr::SetMonsterInfo()
 	CItemRecord* tInfo = nullptr;
 	CItemRow* pRow(NULL);
 	CItem* content = nullptr;
-	std::vector<std::vector<int>>vect(defCHA_INIT_ITEM_NUM, vector<int>(2, 0));
+	std::vector<std::vector<int>> vect(defCHA_INIT_ITEM_NUM, vector<int>(2, 0));
 
 	int max = 15;
 	for (int i = 0; i < defCHA_INIT_ITEM_NUM; i++) {
@@ -123,16 +120,16 @@ void CStartMgr::SetMonsterInfo()
 			break;
 		}
 	}
-	
+
 	sort(vect.begin(), vect.end() - (15 - max), sortcol);
 	for (int i = 0; i < max; i++) {
 		CItemRecord* rInfo = GetItemRecordInfo(vect[i][0]);
-		if (!rInfo) 
+		if (!rInfo)
 			continue;
 
 		CItemCommand* rItem = new CItemCommand(rInfo);
-		if (!rItem) 
-			continue;	
+		if (!rItem)
+			continue;
 
 		listMobDrops[i]->AddCommand(rItem);
 		listMobDrops[i]->SetIsEnabled(false);
@@ -150,8 +147,8 @@ void CStartMgr::SetMonsterInfo()
 		char item_rate[25];
 		sprintf(item_rate, "%0.2f%%", calcuDrop);
 		LabMobRates[i]->SetCaption(item_rate);
-		
-		if (!rInfo) 
+
+		if (!rInfo)
 			return;
 
 		if (checkDropFilter[i]) {
@@ -199,12 +196,11 @@ void CStartMgr::SetMonsterInfo()
 	frmMonsterInfo->Refresh();
 }
 
-void CStartMgr::SetTargetInfo(CCharacter* pTargetCha) 
-{
+void CStartMgr::SetTargetInfo(CCharacter* pTargetCha) {
 	if (!pTargetCha) {
 		return;
 	}
-	
+
 	char chaLv[5];
 	sprintf(chaLv, "%d", pTargetCha->getLv());
 	labTargetInfoName->SetCaption(pTargetCha->getName());
@@ -212,12 +208,12 @@ void CStartMgr::SetTargetInfo(CCharacter* pTargetCha)
 	RefreshTargetLifeNum(pTargetCha->getHP(), pTargetCha->getHPMax());
 	labTargetLevel->SetCaption(chaLv);
 	frmTargetInfo->Show();
-	
-	if(pTargetCha->IsPlayer())
+
+	if (pTargetCha->IsPlayer())
 		btnMonsterInfo->SetIsShow(false);
 	else
 		btnMonsterInfo->SetIsShow(true);
-	
+
 	if (pChaPointer && pTargetCha) {
 		if (pChaPointer->getMobID() != pTargetCha->getMobID()) {
 			frmMonsterInfo->Close();
@@ -225,164 +221,155 @@ void CStartMgr::SetTargetInfo(CCharacter* pTargetCha)
 	}
 
 	pChaPointer = pTargetCha;
-    RefreshTargetModel(pChaPointer);
+	RefreshTargetModel(pChaPointer);
 }
 
-void CStartMgr::RefreshTargetModel(CCharacter* pChaPointer) 
-{
-    if (pTarget && pChaPointer) {
-        static stNetTeamChaPart stTeamPart;
-        stTeamPart.Convert(pChaPointer->GetPart());
+void CStartMgr::RefreshTargetModel(CCharacter* pChaPointer) {
+	if (pTarget && pChaPointer) {
+		static stNetTeamChaPart stTeamPart;
+		stTeamPart.Convert(pChaPointer->GetPart());
 
-        if (!pChaPointer->IsPlayer()) {
-            pTarget->LoadCha(pChaPointer->getMobID());
-        }
-        if (pChaPointer->IsPlayer()) {
-            pTarget->UpdataFace(stTeamPart);
-		} else {
+		if (!pChaPointer->IsPlayer()) {
+			pTarget->LoadCha(pChaPointer->getMobID());
+		}
+		if (pChaPointer->IsPlayer()) {
+			pTarget->UpdataFace(stTeamPart);
+		}
+		else {
 			pTarget->UpdataFace(stTeamPart, false);
 		}
-    }
+	}
 }
 
 
-void CStartMgr::RemoveTarget() 
-{
-    frmTargetInfo->Hide();
+void CStartMgr::RemoveTarget() {
+	frmTargetInfo->Hide();
 	pChaPointer = NULL;
-    targetInfoID = 0;
+	targetInfoID = 0;
 }
 
-void CStartMgr::UpdateBackDrop() 
-{
-    CCharacter* pMain = CGameScene::GetMainCha();
+void CStartMgr::UpdateBackDrop() {
+	CCharacter* pMain = CGameScene::GetMainCha();
 	if (!pMain)
 		return;
-    int nArea = CGameApp::GetCurScene()->GetTerrain()->GetTile(pMain->GetCurX() / 100, pMain->GetCurY() / 100)->getIsland();
-    CWorldScene * world = dynamic_cast <CWorldScene*> (CGameApp::GetCurScene());
+	int nArea = CGameApp::GetCurScene()->GetTerrain()->GetTile(pMain->GetCurX() / 100, pMain->GetCurY() / 100)->
+										 getIsland();
+	CWorldScene* world = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
 	if (!world)
 		return;
-    if (nArea == world->GetOldMainChaInArea()) {
-        return;
-    }
+	if (nArea == world->GetOldMainChaInArea()) {
+		return;
+	}
 
-    world->SetOldMainChaInArea(nArea);
+	world->SetOldMainChaInArea(nArea);
 
-    char buf[64];
+	char buf[64];
 
-    if (nArea) {
-        sprintf(buf, "texture/ui/corsairs/npcBackdrop/%d.tga", nArea);
-    } else {
-        sprintf(buf, "texture/ui/corsairs/npcBackdrop/sea.tga");
-    }
-   CCompent*imgBackDropPlayer = dynamic_cast<CCompent*>(g_stUIStart.frmDetail->Find("imgBackDropPlayer"));
-   CCompent*imgBackDropTarget = dynamic_cast<CCompent*>(g_stUIStart.frmTargetInfo->Find("imgBackDropTarget"));
-   CCompent* teamBackDrops[4]{};
-   if (!imgBackDropPlayer)
-   {
-	   ToLogService("common", "imgBackDropPlayer null not found ");
-	   return;
-   }
-   if ( !imgBackDropTarget)
-   {
-	   ToLogService("common", "imgBackDropTarget null not found ");
-	   return;
-   }
-    for (int i = 0; i < 4; i++) {
-        char formName[32];
-        char imgName[32];
-        sprintf(formName, "frmTeamMenber%d", i + 1);
-        sprintf(imgName, "imgBackDropTeam%d", i + 1);
-        teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName)->Find(imgName));
-		if (!teamBackDrops[i])
-		{
+	if (nArea) {
+		sprintf(buf, "texture/ui/corsairs/npcBackdrop/%d.tga", nArea);
+	}
+	else {
+		sprintf(buf, "texture/ui/corsairs/npcBackdrop/sea.tga");
+	}
+	CCompent* imgBackDropPlayer = dynamic_cast<CCompent*>(g_stUIStart.frmDetail->Find("imgBackDropPlayer"));
+	CCompent* imgBackDropTarget = dynamic_cast<CCompent*>(g_stUIStart.frmTargetInfo->Find("imgBackDropTarget"));
+	CCompent* teamBackDrops[4]{};
+	if (!imgBackDropPlayer) {
+		ToLogService("common", "imgBackDropPlayer null not found ");
+		return;
+	}
+	if (!imgBackDropTarget) {
+		ToLogService("common", "imgBackDropTarget null not found ");
+		return;
+	}
+	for (int i = 0; i < 4; i++) {
+		char formName[32];
+		char imgName[32];
+		sprintf(formName, "frmTeamMenber%d", i + 1);
+		sprintf(imgName, "imgBackDropTeam%d", i + 1);
+		teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName)->Find(imgName));
+		if (!teamBackDrops[i]) {
 			ToLogService("common", "teamBackDrops null not found {}", imgName);
 			return;
 		}
-    }
+	}
 
-    //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c/25450408#25450408 # 3
-    if (GetFileAttributes(buf) == INVALID_FILE_ATTRIBUTES) {
-
-        imgBackDropPlayer->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
-        imgBackDropTarget->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
-        for (int i = 0; i < 4; i++) {
-            teamBackDrops[i]->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
-        }
-    } else {
-        imgBackDropPlayer->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
-        imgBackDropTarget->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
-        for (int i = 0; i < 4; i++) {
-            teamBackDrops[i]->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
-        }
-    }
+	//https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c/25450408#25450408 # 3
+	if (GetFileAttributes(buf) == INVALID_FILE_ATTRIBUTES) {
+		imgBackDropPlayer->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
+		imgBackDropTarget->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
+		for (int i = 0; i < 4; i++) {
+			teamBackDrops[i]->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
+		}
+	}
+	else {
+		imgBackDropPlayer->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
+		imgBackDropTarget->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
+		for (int i = 0; i < 4; i++) {
+			teamBackDrops[i]->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
+		}
+	}
 }
 
-void CStartMgr::RefreshTargetLifeNum(long num, long max) 
-{
-    if (num < 0) {
-        num = 0;
-    }
-    if (num > max) {
-        num = max;
-    }
-    if (max == 0) {
-        max = 1;
-        num = 0;
-    }
-    proTargetInfoHP->SetRange(0.0f, (float) max);
-    proTargetInfoHP->SetPosition((float) num);
-    if (num == 0) {
-        RemoveTarget();
-    }
+void CStartMgr::RefreshTargetLifeNum(long num, long max) {
+	if (num < 0) {
+		num = 0;
+	}
+	if (num > max) {
+		num = max;
+	}
+	if (max == 0) {
+		max = 1;
+		num = 0;
+	}
+	proTargetInfoHP->SetRange(0.0f, (float)max);
+	proTargetInfoHP->SetPosition((float)num);
+	if (num == 0) {
+		RemoveTarget();
+	}
 }
 
-void CStartMgr::_TargetRenderEvent(C3DCompent* pSender, int x, int y) 
-{
-    pTarget->Render();
+void CStartMgr::_TargetRenderEvent(C3DCompent* pSender, int x, int y) {
+	pTarget->Render();
 }
 
-bool CStartMgr::Init()
-{
+bool CStartMgr::Init() {
 	_IsNewer = false;
 	_IsCanTeam = true;
 
 	{
 		frmTargetInfo = _FindForm("frmTargetInfo");
-		if(frmTargetInfo) 
-		{
+		if (frmTargetInfo) {
 			frmTargetInfo->Refresh();
-			proTargetInfoHP = dynamic_cast<CProgressBar *>( frmTargetInfo->Find("frmTargetInfoHP") );
+			proTargetInfoHP = dynamic_cast<CProgressBar*>(frmTargetInfo->Find("frmTargetInfoHP"));
 			proTargetInfoHP->SetPosition(100.0f);
-			
-			labTargetInfoName = dynamic_cast<CLabel*>( frmTargetInfo->Find("frmTargetInfoName") );
-			
-			labTargetLevel = dynamic_cast<CLabel*>( frmTargetInfo->Find("labTargetLv"));
+
+			labTargetInfoName = dynamic_cast<CLabel*>(frmTargetInfo->Find("frmTargetInfoName"));
+
+			labTargetLevel = dynamic_cast<CLabel*>(frmTargetInfo->Find("labTargetLv"));
 
 			btnMonsterInfo = dynamic_cast<CTextButton*>(frmTargetInfo->Find("btnMonsterInfo"));
 			if (!btnMonsterInfo) return false;
 			btnMonsterInfo->evtMouseClick = _evtShowMonsterInfo;
 
-			C3DCompent* p3D = dynamic_cast<C3DCompent*>( frmTargetInfo->Find("d3dTarget") );
-			if (!p3D) return Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dTarget" );
+			C3DCompent* p3D = dynamic_cast<C3DCompent*>(frmTargetInfo->Find("d3dTarget"));
+			if (!p3D) return Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dTarget");
 
 			p3D->SetRenderEvent(_TargetRenderEvent);
-			
+
 			RECT rt;
 			rt.left = p3D->GetX();
 			rt.right = p3D->GetX2();
 			rt.top = p3D->GetY();
 			rt.bottom = p3D->GetY2();
-            
+
 			pTarget = new CCharacter2D;
 			pTarget->Create(rt);
 		}
 	}
 
 	{
-		
-		if (frmMonsterInfo = _FindForm("frmMonsterInfo"); frmMonsterInfo)
-		{
+		if (frmMonsterInfo = _FindForm("frmMonsterInfo"); frmMonsterInfo) {
 			//frmMonsterInfo->Refresh();
 
 			listInfo = dynamic_cast<CPage*>(frmMonsterInfo->Find("pgeSkill"));
@@ -429,64 +416,61 @@ bool CStartMgr::Init()
 
 	{
 		frmDetail = _FindForm("frmDetail");
-		if( frmDetail ) 
-		{
+		if (frmDetail) {
 			frmDetail->Refresh();
-			proMainHP = dynamic_cast<CProgressBar *>( frmDetail->Find("proMainHP1") );
-			if( !proMainHP ) return Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainHP1" );   
+			proMainHP = dynamic_cast<CProgressBar*>(frmDetail->Find("proMainHP1"));
+			if (!proMainHP) return Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainHP1");
 			proMainHP->SetPosition(0.0f);
 
-			proMainSP = dynamic_cast<CProgressBar *>( frmDetail->Find("proMainSP") );
-			if( !proMainSP ) return Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainSP" );   
+			proMainSP = dynamic_cast<CProgressBar*>(frmDetail->Find("proMainSP"));
+			if (!proMainSP) return Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainSP");
 			proMainSP->SetPosition(0.0f);
 
-			proMainExp = dynamic_cast<CProgressBar *>( frmDetail->Find("proMainEXP") );
-			if( !proMainExp ) 
-			{
-				Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainEXP" );   
+			proMainExp = dynamic_cast<CProgressBar*>(frmDetail->Find("proMainEXP"));
+			if (!proMainExp) {
+				Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "proMainEXP");
 			}
-			else
-			{
+			else {
 				proMainExp->SetPosition(0.0f);
 			}
 
-			labMainName = dynamic_cast<CLabel *>( frmDetail->Find("labMainID") );
-			if ( !labMainName ) Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "labMainID");
+			labMainName = dynamic_cast<CLabel*>(frmDetail->Find("labMainID"));
+			if (!labMainName) Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "labMainID");
 
-			labMainLevel = dynamic_cast<CLabel *>( frmDetail->Find("labMainLv"));
-			if ( !labMainLevel ) Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "labMainLv");
+			labMainLevel = dynamic_cast<CLabel*>(frmDetail->Find("labMainLv"));
+			if (!labMainLevel) Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "labMainLv");
 
-			imgLeader = dynamic_cast<CImage*>( frmDetail->Find("imgLeader"));
-			if ( !imgLeader ) Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "imgLeader");
+			imgLeader = dynamic_cast<CImage*>(frmDetail->Find("imgLeader"));
+			if (!imgLeader) Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "imgLeader");
 
-			C3DCompent* d3dSelfDown = dynamic_cast<C3DCompent*>( frmDetail->Find("d3dSelfDown") );
-			if (!d3dSelfDown) return Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dSelfDown" );
+			C3DCompent* d3dSelfDown = dynamic_cast<C3DCompent*>(frmDetail->Find("d3dSelfDown"));
+			if (!d3dSelfDown) return Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dSelfDown");
 			//d3dSelfDown->SetRenderEvent( _MainChaRenderEvent );
 			d3dSelfDown->evtMouseDown = _evtSelfMouseDown;
-			d3dSelfDown->SetMouseAction( enumMA_Skill );
-			
+			d3dSelfDown->SetMouseAction(enumMA_Skill);
 
-			C3DCompent* p3D = dynamic_cast<C3DCompent*>( frmDetail->Find("d3dSelf") );
-			if (!p3D) return Error( GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dSelf" );
-            
-			p3D->SetRenderEvent( _MainChaRenderEvent );
+
+			C3DCompent* p3D = dynamic_cast<C3DCompent*>(frmDetail->Find("d3dSelf"));
+			if (!p3D) return Error(GetLanguageString(473).c_str(), frmDetail->GetName(), "d3dSelf");
+
+			p3D->SetRenderEvent(_MainChaRenderEvent);
 			//p3D->evtMouseDown = _evtSelfMouseDown;
 			//p3D->SetMouseAction( enumMA_Skill );	
-            
+
 			RECT rt;
 			rt.left = p3D->GetX();
 			rt.right = p3D->GetX2();
 			rt.top = p3D->GetY();
 			rt.bottom = p3D->GetY2();
-            
+
 			pMainCha = new CCharacter2D;
-			pMainCha->Create( rt );
+			pMainCha->Create(rt);
 		}
 
 		// 
 		mnuSelf = CMenu::FindMenu("selfMouseRight");
-		if (!mnuSelf)  return Error( GetLanguageString(45).c_str(), frmMain800->GetName(), "selfMouseRight" );
-		mnuSelf->evtListMouseDown=_OnSelfMenu;
+		if (!mnuSelf) return Error(GetLanguageString(45).c_str(), frmMain800->GetName(), "selfMouseRight");
+		mnuSelf->evtListMouseDown = _OnSelfMenu;
 	}
 
 	// frmMain800
@@ -507,7 +491,6 @@ bool CStartMgr::Init()
 	}
 
 
-
 	// 
 	//proMainHP1 =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainHP1") );
 	//if( !proMainHP1 ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainHP1" );   
@@ -523,7 +506,7 @@ bool CStartMgr::Init()
 
 	//proMainSP =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainSP") );
 	//if( !proMainSP ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainSP" );
- //  	proMainSP->SetPosition (10.0f );
+	//  	proMainSP->SetPosition (10.0f );
 
 	//_pShowExp = dynamic_cast<CLabel*>(frmMain800->Find( "labMainEXP" ) );
 	//_pShowLevel = dynamic_cast<CLabel*>(frmMain800->Find( "labMainLV" ) );
@@ -531,7 +514,7 @@ bool CStartMgr::Init()
 	//frmMainFun
 	{
 		frmMainFun = _FindForm("frmMainFun");
-		if(!frmMainFun) return false;
+		if (!frmMainFun) return false;
 
 		frmMainFun->evtEntrustMouseEvent = _evtStartFormMouseEvent;
 
@@ -542,36 +525,35 @@ bool CStartMgr::Init()
 		// 
 		btnLevelUpHelp = dynamic_cast<CTextButton*>(frmMainFun->Find("btnLevelUpHelp"));
 		//FORM_CONTROL_LOADING_CHECK(btnLevelUpHelp, frmMainFun, CTextButton, "msgui.clu", "btnLevelUpHelp");
-		if(btnLevelUpHelp)	btnLevelUpHelp->SetFlashCycle();
+		if (btnLevelUpHelp) btnLevelUpHelp->SetFlashCycle();
 	}
 
-	
+
 	// 
-	mainMouseRight=CMenu::FindMenu("mainMouseRight");
-	if (!mainMouseRight)
-	{
-		return Error( GetLanguageString(45).c_str(), frmMain800->GetName(), "mainMouseRight" );
+	mainMouseRight = CMenu::FindMenu("mainMouseRight");
+	if (!mainMouseRight) {
+		return Error(GetLanguageString(45).c_str(), frmMain800->GetName(), "mainMouseRight");
 	}
-	mainMouseRight->evtListMouseDown=_evtPopMenu;
+	mainMouseRight->evtListMouseDown = _evtPopMenu;
 
 	// 
 	frmMainChaRelive = _FindForm("frmRelive");
-	if(!frmMainChaRelive) return false;
+	if (!frmMainChaRelive) return false;
 	frmMainChaRelive->evtEntrustMouseEvent = _evtReliveFormMouseEvent;
 
 	//
-	frmShipSail = _FindForm("frmShipsail");  // 
-	if( !frmShipSail )		return false;
+	frmShipSail = _FindForm("frmShipsail"); // 
+	if (!frmShipSail) return false;
 
-	labCanonShow	 =	(CLabelEx*)frmShipSail->Find("labCanonShow1");
-	labSailorShow	 =	(CLabelEx*)frmShipSail->Find("labSailorShow1");
-	labLevelShow	 =  (CLabelEx*)frmShipSail->Find("labLvship");
-	labExpShow		 =  (CLabelEx*)frmShipSail->Find("labExpship");
+	labCanonShow = (CLabelEx*)frmShipSail->Find("labCanonShow1");
+	labSailorShow = (CLabelEx*)frmShipSail->Find("labSailorShow1");
+	labLevelShow = (CLabelEx*)frmShipSail->Find("labLvship");
+	labExpShow = (CLabelEx*)frmShipSail->Find("labExpship");
 
-	proSailor		 =	(CProgressBar*)frmShipSail->Find("proSailor");				//
-	proCanon		 =	(CProgressBar*)frmShipSail->Find("proCanon");				//
+	proSailor = (CProgressBar*)frmShipSail->Find("proSailor"); //
+	proCanon = (CProgressBar*)frmShipSail->Find("proCanon"); //
 	frmShipSail->SetIsShow(false);
-	
+
 	//	Modify by alfred.shi 20080828
 	CTextButton* btn1 = (CTextButton*)frmShipSail->Find("btnShip");
 	if (!btn1) return false;
@@ -579,69 +561,66 @@ bool CStartMgr::Init()
 
 	// 
 	frmFollow = _FindForm("frmFollow");
-	if( !frmFollow ) return false;
+	if (!frmFollow) return false;
 
-	labFollow = dynamic_cast<CLabel*>( frmFollow->Find("labFollow") );
-	if( !labFollow ) return Error( GetLanguageString(45).c_str(), frmFollow->GetName(), "labFollow" );
+	labFollow = dynamic_cast<CLabel*>(frmFollow->Find("labFollow"));
+	if (!labFollow) return Error(GetLanguageString(45).c_str(), frmFollow->GetName(), "labFollow");
 
 	// 
 	frmMainPet = _FindForm("frmMainPet");
-	if( !frmMainPet )		return false;
+	if (!frmMainPet) return false;
 
 	frmMainPet->Hide();
 
-	labPetLv = dynamic_cast<CLabel*>( frmMainPet->Find("labPetLv") );
-	if( !labPetLv ) return Error( GetLanguageString(45).c_str(), frmMainPet->GetName(), "labPetLv" );
+	labPetLv = dynamic_cast<CLabel*>(frmMainPet->Find("labPetLv"));
+	if (!labPetLv) return Error(GetLanguageString(45).c_str(), frmMainPet->GetName(), "labPetLv");
 
-	imgPetHead = dynamic_cast<CImage*>( frmMainPet->Find("imgPetHead") );
-	if( !imgPetHead ) return Error( GetLanguageString(45).c_str(), frmMainPet->GetName(), "imgPetHead" );
+	imgPetHead = dynamic_cast<CImage*>(frmMainPet->Find("imgPetHead"));
+	if (!imgPetHead) return Error(GetLanguageString(45).c_str(), frmMainPet->GetName(), "imgPetHead");
 
-	proPetHP = dynamic_cast<CProgressBar*>( frmMainPet->Find("proPetHP") );
-	if( !proPetHP ) return Error( GetLanguageString(45).c_str(), frmMainPet->GetName(), "proPetHP" );
+	proPetHP = dynamic_cast<CProgressBar*>(frmMainPet->Find("proPetHP"));
+	if (!proPetHP) return Error(GetLanguageString(45).c_str(), frmMainPet->GetName(), "proPetHP");
 
-	proPetSP = dynamic_cast<CProgressBar*>( frmMainPet->Find("proPetSP") );
-	if( !proPetSP ) return Error( GetLanguageString(45).c_str(), frmMainPet->GetName(), "proPetSP" );
+	proPetSP = dynamic_cast<CProgressBar*>(frmMainPet->Find("proPetSP"));
+	if (!proPetSP) return Error(GetLanguageString(45).c_str(), frmMainPet->GetName(), "proPetSP");
 
 	//
 	// 
 	//
 	frmHelpSystem = CFormMgr::s_Mgr.Find("frmHelpSystem");
-	if( !frmHelpSystem ) return Error( GetLanguageString(45).c_str(), "frmHelpSystem", "frmHelpSystem" );
+	if (!frmHelpSystem) return Error(GetLanguageString(45).c_str(), "frmHelpSystem", "frmHelpSystem");
 
-	lstHelpList   = dynamic_cast<CList*>(frmHelpSystem->Find("lstHelpList"));
-	if(! lstHelpList) return Error( GetLanguageString(45).c_str(), frmHelpSystem->GetName(), "lstHelpList" );
-	lstHelpList->evtSelectChange =  _evtHelpListChange;
+	lstHelpList = dynamic_cast<CList*>(frmHelpSystem->Find("lstHelpList"));
+	if (!lstHelpList) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), "lstHelpList");
+	lstHelpList->evtSelectChange = _evtHelpListChange;
 
 	frmHelpSystem->evtEntrustMouseEvent = _evtStartFormMouseEvent;
 
 	char szName[64] = {0};
-	for(int i = 0; i < HELP_PICTURE_COUNT; ++i)
-	{
+	for (int i = 0; i < HELP_PICTURE_COUNT; ++i) {
 		sprintf(szName, "imgHelpShow%d_1", i + 1);
 		imgHelpShow1[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if(! imgHelpShow1[i]) return Error( GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName );
+		if (!imgHelpShow1[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
 
 		sprintf(szName, "imgHelpShow%d_2", i + 1);
 		imgHelpShow2[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if(! imgHelpShow2[i]) return Error( GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName );
+		if (!imgHelpShow2[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
 
 		sprintf(szName, "imgHelpShow%d_3", i + 1);
 		imgHelpShow3[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if(! imgHelpShow3[i]) return Error( GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName );
+		if (!imgHelpShow3[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
 
 		sprintf(szName, "imgHelpShow%d_4", i + 1);
 		imgHelpShow4[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if(! imgHelpShow4[i]) return Error( GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName );
+		if (!imgHelpShow4[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
 
-		if(i > 0)
-		{
+		if (i > 0) {
 			imgHelpShow1[i]->SetIsShow(false);
 			imgHelpShow2[i]->SetIsShow(false);
 			imgHelpShow3[i]->SetIsShow(false);
 			imgHelpShow4[i]->SetIsShow(false);
 		}
-		else
-		{
+		else {
 			imgHelpShow1[i]->SetIsShow(true);
 			imgHelpShow2[i]->SetIsShow(true);
 			imgHelpShow3[i]->SetIsShow(true);
@@ -653,36 +632,36 @@ bool CStartMgr::Init()
 	// 
 	//
 	frmBag = CFormMgr::s_Mgr.Find("frmBag");
-	if(! frmBag) return Error(GetLanguageString(45).c_str(), "frmBag", "frmBag");
+	if (!frmBag) return Error(GetLanguageString(45).c_str(), "frmBag", "frmBag");
 	frmBag->evtEntrustMouseEvent = _evtStartFormMouseEvent;
 
 	//
 	// 
 	//
 	frmSociliaty = CFormMgr::s_Mgr.Find("frmSociliaty");
-	if(! frmSociliaty) return Error(GetLanguageString(45).c_str(), "frmSociliaty", "frmSociliaty");
+	if (!frmSociliaty) return Error(GetLanguageString(45).c_str(), "frmSociliaty", "frmSociliaty");
 	frmSociliaty->evtEntrustMouseEvent = _evtStartFormMouseEvent;
-	
+
 	strMapName = "";
 	//NPC form by Mdr
 
 	frmNpcShow = CFormMgr::s_Mgr.Find("frmNpcShow");
-	if(! frmNpcShow) return Error(GetLanguageString(45).c_str(), "frmNpcShow", "frmNpcShow");
+	if (!frmNpcShow) return Error(GetLanguageString(45).c_str(), "frmNpcShow", "frmNpcShow");
 
 	lstNpcList = dynamic_cast<CList*>(frmNpcShow->Find("lstNpcList"));
-	assert(lstNpcList != NULL);	
+	assert(lstNpcList != NULL);
 	lstMonsterList = dynamic_cast<CList*>(frmNpcShow->Find("lstMonsterList"));
 	assert(lstMonsterList != NULL);
 
-	chkID  =( CCheckBox *)frmNpcShow->Find( "chkID" );
+	chkID = (CCheckBox*)frmNpcShow->Find("chkID");
 	chkID->SetIsChecked(true);
 	//lstBOSSList = dynamic_cast<CList*>(frmNpcShow->Find("lstBOSSList"));
 	//assert(lstBOSSList != NULL);
 
-	lstNpcList->evtSelectChange =  _evtNPCListChange;
-	lstMonsterList->evtSelectChange =  _evtNPCListChange;
+	lstNpcList->evtSelectChange = _evtNPCListChange;
+	lstMonsterList->evtSelectChange = _evtNPCListChange;
 	//lstBOSSList->evtSelectChange =  _evtNPCListChange;
-	
+
 	lstCurrList = lstNpcList;
 
 	listPage = dynamic_cast<CPage*>(frmNpcShow->Find("pgeSkill"));
@@ -691,15 +670,14 @@ bool CStartMgr::Init()
 	return true;
 }
 
-void CStartMgr::ShowShipSailForm(bool isShow /* = true  */)
-{
+void CStartMgr::ShowShipSailForm(bool isShow /* = true  */) {
 	UpdateShipSailForm();
 	frmShipSail->SetIsShow(isShow);
 }
-void CStartMgr::UpdateShipSailForm()
-{
+
+void CStartMgr::UpdateShipSailForm() {
 	CCharacter* pMain = CGameScene::GetMainCha();
-	if(!pMain || !pMain->IsBoat())
+	if (!pMain || !pMain->IsBoat())
 		return;
 
 	SGameAttr* pAttr = pMain->getGameAttr();
@@ -715,83 +693,69 @@ void CStartMgr::UpdateShipSailForm()
 	labCanonShow->SetCaption(buf);
 	proCanon->SetRange((float)0, (float)(pAttr->get(ATTR_MXSP)));
 	proCanon->SetPosition((float)(pAttr->get(ATTR_SP)));
-	
+
 	labLevelShow->SetCaption(itoa(pAttr->get(ATTR_LV), buf, 10));
 	labExpShow->SetCaption(itoa(pAttr->get(ATTR_CEXP), buf, 10));
-	
 }
 
-void CStartMgr::End()
-{
+void CStartMgr::End() {
 	//delete pMainCha;
 	//pMainCha = NULL;
 	SAFE_DELETE(pMainCha); // UI
 	SAFE_DELETE(pTarget); // UI
 }
 
-void CStartMgr::ShowQueryReliveForm( int nType, const char* str )
-{
-	stSelectBox* pOriginRelive = g_stUIBox.ShowSelectBox( _evtOriginReliveFormMouseEvent, str, false );
+void CStartMgr::ShowQueryReliveForm(int nType, const char* str) {
+	stSelectBox* pOriginRelive = g_stUIBox.ShowSelectBox(_evtOriginReliveFormMouseEvent, str, false);
 	frmSelectOriginRelive = pOriginRelive->frmDialog;
 	frmSelectOriginRelive->nTag = nType;
 }
 
-void CStartMgr::_evtOriginReliveFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
+void CStartMgr::_evtOriginReliveFormMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	frmSelectOriginRelive = NULL;
-	if( pSender->GetForm()->nTag==enumEPLAYER_RELIVE_ORIGIN )
-	{
-		if( nMsgType==CForm::mrYes )
-		{
-			CS_DieReturn(enumEPLAYER_RELIVE_ORIGIN);		
+	if (pSender->GetForm()->nTag == enumEPLAYER_RELIVE_ORIGIN) {
+		if (nMsgType == CForm::mrYes) {
+			CS_DieReturn(enumEPLAYER_RELIVE_ORIGIN);
 			g_stUIStart.frmMainChaRelive->SetIsShow(false);
 		}
-		else
-		{
-			CS_DieReturn(enumEPLAYER_RELIVE_NORIGIN);		
+		else {
+			CS_DieReturn(enumEPLAYER_RELIVE_NORIGIN);
 		}
 	}
-	else
-	{
-		if( nMsgType==CForm::mrYes )
-		{
-			CS_DieReturn(enumEPLAYER_RELIVE_MAP);		
+	else {
+		if (nMsgType == CForm::mrYes) {
+			CS_DieReturn(enumEPLAYER_RELIVE_MAP);
 			g_stUIStart.frmMainChaRelive->SetIsShow(false);
 		}
-		else
-		{
-			CS_DieReturn(enumEPLAYER_RELIVE_NOMAP);		
+		else {
+			CS_DieReturn(enumEPLAYER_RELIVE_NOMAP);
 		}
 	}
 }
 
-void CStartMgr::_evtReliveFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
+void CStartMgr::_evtReliveFormMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	//if( name=="btnReCity" )
 	{
 		CS_DieReturn(enumEPLAYER_RELIVE_CITY);
 		pSender->GetForm()->SetIsShow(false);
-		if( frmSelectOriginRelive )
-		{
+		if (frmSelectOriginRelive) {
 			frmSelectOriginRelive->SetIsShow(false);
 			frmSelectOriginRelive = NULL;
 		}
 	}
 }
 
-void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	string name=pSender->GetName();
+void CStartMgr::_evtStartFormMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	string name = pSender->GetName();
 
-	if( name=="btnState" )	// e
+	if (name == "btnState") // e
 	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmState" );
-		if( f ) 
-		{
-			f->SetIsShow( !f->GetIsShow() );
+		CForm* f = CFormMgr::s_Mgr.Find("frmState");
+		if (f) {
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
-	}	
+	}
 	//else if( name=="btnItem" )	// 
 	//{
 	//	CForm* f = CFormMgr::s_Mgr.Find( "frmItem" );
@@ -801,21 +765,19 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//	}
 	//	return;
 	//}		
-	else if( name=="btnSkill" )	// 
+	else if (name == "btnSkill") // 
 	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmSkill" );
-		if( f ) 
-		{
-			f->SetIsShow( !f->GetIsShow() );
+		CForm* f = CFormMgr::s_Mgr.Find("frmSkill");
+		if (f) {
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
 	}
-	else if( name=="btnMission" )	// 
+	else if (name == "btnMission") // 
 	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmMission" );
-		if( f ) 
-		{
-			f->SetIsShow( !f->GetIsShow() );	
+		CForm* f = CFormMgr::s_Mgr.Find("frmMission");
+		if (f) {
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
 	}
@@ -828,28 +790,24 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//	}		
 	//	return;
 	//}
-	else if( name=="btnHelp" )		
-	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmHelpSystem" );
-		if( f ) 
-		{
+	else if (name == "btnHelp") {
+		CForm* f = CFormMgr::s_Mgr.Find("frmHelpSystem");
+		if (f) {
 			f->evtEntrustMouseEvent = _HelpFrmMainMouseEvent;
-			f->SetIsShow( !f->GetIsShow() );
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
 	}
 
 	// 		Add by alfred.shi 20080822	beign
-	else if( name=="btnShip1" )	
-	{
-        CForm* f = CFormMgr::s_Mgr.Find("frmStartHelp");
-		if( f ) 
-		{
+	else if (name == "btnShip1") {
+		CForm* f = CFormMgr::s_Mgr.Find("frmStartHelp");
+		if (f) {
 			f->evtEntrustMouseEvent = _HelpFrmMainMouseEvent;
-			f->SetIsShow( !f->GetIsShow() );
+			f->SetIsShow(!f->GetIsShow());
 		}
 
-        return;
+		return;
 	}
 	//	End
 
@@ -866,11 +824,9 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//}
 
 	//	Add by alfred.shi 20080822	begin
-	if( name=="btnShip2" )		
-	{	
-		CForm * frm = CFormMgr::s_Mgr.Find("frmVHelp");
-		if( frm ) 
-		{
+	if (name == "btnShip2") {
+		CForm* frm = CFormMgr::s_Mgr.Find("frmVHelp");
+		if (frm) {
 			frm->evtEntrustMouseEvent = _NewFrmMainMouseEvent;
 			frm->nTag = 0;
 			frm->ShowModal();
@@ -879,22 +835,20 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	}
 	//	End
 
-	else if( name=="btnSystem" )	// 
+	else if (name == "btnSystem") // 
 	{
 		CForm* f = CFormMgr::s_Mgr.Find("frmSystem");
-		if(f)		f->SetIsShow(!f->GetIsShow());			
+		if (f) f->SetIsShow(!f->GetIsShow());
 		return;
 	}
-	else if( name=="btnQQ" )	
-	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmQQ" );
-		if( f ) 
-		{
-			f->SetIsShow( !f->GetIsShow() );
+	else if (name == "btnQQ") {
+		CForm* f = CFormMgr::s_Mgr.Find("frmQQ");
+		if (f) {
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
 	}
-	else if( name == "btnLevelUpHelp" )	// 
+	else if (name == "btnLevelUpHelp") // 
 	{
 		SGameAttr* pAttr = CGameScene::GetMainCha()->getGameAttr();
 
@@ -903,45 +857,40 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 
 		g_stUIStart.ShowLevelUpHelpButton(false);
 	}
-	else if( name == "btnInfoCenter" )	// 
+	else if (name == "btnInfoCenter") // 
 	{
 		bool bShow = g_stUIStart.frmHelpSystem->GetIsShow();
 		g_stUIStart.ShowHelpSystem(!bShow);
 	}
-	else if( name == "btnOpenBag" )	// 
+	else if (name == "btnOpenBag") // 
 	{
 		g_stUIEquip.GetItemForm()->SetIsShow(!g_stUIEquip.GetItemForm()->GetIsShow());
 		//g_stUIStart.ShowBagButtonForm(! g_stUIStart.frmBag->GetIsShow());
 		//g_stUIStart.ShowSociliatyButtonForm(false);
-		
+
 		//g_stUIStart.frmBag->SetIsShow(! g_stUIStart.frmBag->GetIsShow());
 		//g_stUIStart.frmSociliaty->SetIsShow(false);
 	}
-	else if( name == "btnGuild" ) // 
+	else if (name == "btnGuild") // 
 	{
 		//g_stUIStart.ShowSociliatyButtonForm(! g_stUIStart.frmSociliaty->GetIsShow());
 		//g_stUIStart.ShowBagButtonForm(false);
 
 		//g_stUIStart.frmSociliaty->SetIsShow(! g_stUIStart.frmSociliaty->GetIsShow());
 		//g_stUIStart.frmBag->SetIsShow(false);
-		
-		CForm* f = CFormMgr::s_Mgr.Find( "frmManage" );
-		if( f ) 
-		{
-			bool a =f->GetIsShow();
-			f->SetIsShow( !a );
-		//	Add by alfred.shi 20080905	begin
-		CCharacter* pMainCha = CGameScene::GetMainCha();
-		if(pMainCha->getGuildID()<=0)
-		{
-			g_pGameApp->MsgBox("You are not in a guild.");
+
+		CForm* f = CFormMgr::s_Mgr.Find("frmManage");
+		if (f) {
+			bool a = f->GetIsShow();
+			f->SetIsShow(!a);
+			//	Add by alfred.shi 20080905	begin
+			CCharacter* pMainCha = CGameScene::GetMainCha();
+			if (pMainCha->getGuildID() <= 0) {
+				g_pGameApp->MsgBox("You are not in a guild.");
+			}
+			//	End.
 		}
-		//	End.
-		}		
 		return;
-		
-		
-		
 	}
 	//else if( name == "btnOpenItem")	// 
 	//{
@@ -952,11 +901,11 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//	}
 	//	return;
 	//}
-	else if( name == "btnOpenTempBag" ) // 
+	else if (name == "btnOpenTempBag") // 
 	{
 		//g_stUIStore.ShowTempKitbag();
 	}
-	else if( name == "btnOpenStore" )	// 
+	else if (name == "btnOpenStore") // 
 	{
 		// ,
 		//g_stUIStore.ShowStoreWebPage();
@@ -965,45 +914,38 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		g_stUIDoublePwd.SetType(CDoublePwdMgr::STORE_OPEN_ASK);
 		g_stUIDoublePwd.ShowDoublePwdForm();
 	}
-	else if( name == "btnOpenGuild" )	// 
+	else if (name == "btnOpenGuild") // 
 	{
-	
-		CForm* f = CFormMgr::s_Mgr.Find( "frmManage" );
-		if( f ) 
-		{
-			bool a =f->GetIsShow();
-			f->SetIsShow( !a );
-		//	Add by alfred.shi 20080905	begin
-		CCharacter* pMainCha = CGameScene::GetMainCha();
-		if(pMainCha->getGuildID()<=0)
-		{
-			g_pGameApp->MsgBox("You are not in a guild.");
+		CForm* f = CFormMgr::s_Mgr.Find("frmManage");
+		if (f) {
+			bool a = f->GetIsShow();
+			f->SetIsShow(!a);
+			//	Add by alfred.shi 20080905	begin
+			CCharacter* pMainCha = CGameScene::GetMainCha();
+			if (pMainCha->getGuildID() <= 0) {
+				g_pGameApp->MsgBox("You are not in a guild.");
+			}
+			//	End.
 		}
-		//	End.
-		}		
 		return;
 	}
-	else if( name == "btnOpenTeam" )	// 
+	else if (name == "btnOpenTeam") // 
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 
 		//  8 	Modify by alfred.shi 20080902	begin
-		if(g_stUIFindTeam.IsShowFom())
+		if (g_stUIFindTeam.IsShowFom())
 			g_stUIFindTeam.ShowFindTeamForm(false);
-		else if(pMainCha && !pMainCha->IsBoat() && pMainCha->getGameAttr()->get(ATTR_LV) >= 8)
-		{
-			CS_VolunteerOpen((short) CFindTeamMgr::FINDTEAM_PAGE_SIZE);
-		}	//	End
-		else
-		{
-			if(pMainCha->IsBoat())
-			{
+		else if (pMainCha && !pMainCha->IsBoat() && pMainCha->getGameAttr()->get(ATTR_LV) >= 8) {
+			CS_VolunteerOpen((short)CFindTeamMgr::FINDTEAM_PAGE_SIZE);
+		} //	End
+		else {
+			if (pMainCha->IsBoat()) {
 				g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
 			}
-			else
-			{
+			else {
 				g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
-				g_pGameApp->MsgBox("%s", GetLanguageString(866).c_str());	//	Add by alfred.shi 20080905
+				g_pGameApp->MsgBox("%s", GetLanguageString(866).c_str()); //	Add by alfred.shi 20080905
 			}
 		}
 	}
@@ -1011,59 +953,50 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	return;
 }
 
-void CStartMgr::_evtSelfMouseDown(CGuiData *pSender,int x,int y ,DWORD key)
-{
+void CStartMgr::_evtSelfMouseDown(CGuiData* pSender, int x, int y, DWORD key) {
 	CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
-	if( !pScene ) return;
+	if (!pScene) return;
 
 	CCharacter* pMain = CGameScene::GetMainCha();
-	if( !pMain ) return;
+	if (!pMain) return;
 
-	if( key & Mouse_LDown )
-	{
+	if (key & Mouse_LDown) {
 		CSkillRecord* pSkill = pMain->GetReadySkillInfo();
-		if( pSkill && g_SkillUse.IsUse( pSkill, pMain, pMain ) )
-		{
-			pScene->GetMouseDown().ActAttackCha( pMain, pSkill, pMain );
+		if (pSkill && g_SkillUse.IsUse(pSkill, pMain, pMain)) {
+			pScene->GetMouseDown().ActAttackCha(pMain, pSkill, pMain);
 		}
 	}
-	else if( (key & Mouse_RDown) && (pMain->GetTeamLeaderID()!=0) )
-	{		
-		pSender->GetForm()->PopMenu( g_stUIStart.mnuSelf, x, y );
+	else if ((key & Mouse_RDown) && (pMain->GetTeamLeaderID() != 0)) {
+		pSender->GetForm()->PopMenu(g_stUIStart.mnuSelf, x, y);
 	}
 }
 
-void CStartMgr::MainChaDied()
-{
-	if( frmMainChaRelive )
-	{
-		int nLeft = ( g_pGameApp->GetWindowHeight() - frmMainChaRelive->GetWidth() ) / 2;
-		int nTop = ( g_pGameApp->GetWindowHeight() - frmMainChaRelive->GetHeight() ) / 2;
-		nTop-=80;
-		frmMainChaRelive->SetPos( nLeft, nTop );
+void CStartMgr::MainChaDied() {
+	if (frmMainChaRelive) {
+		int nLeft = (g_pGameApp->GetWindowHeight() - frmMainChaRelive->GetWidth()) / 2;
+		int nTop = (g_pGameApp->GetWindowHeight() - frmMainChaRelive->GetHeight()) / 2;
+		nTop -= 80;
+		frmMainChaRelive->SetPos(nLeft, nTop);
 		frmMainChaRelive->Refresh();
-		
-		static CLabel* pInfo = dynamic_cast<CLabel*>( frmMainChaRelive->Find( "labReCity" ) );	
+
+		static CLabel* pInfo = dynamic_cast<CLabel*>(frmMainChaRelive->Find("labReCity"));
 		CCharacter* pCha = CGameScene::GetMainCha();
 		bool IsShow = true;
-		if( pInfo && pCha )
-		{
-			if( pCha->IsBoat() )
-			{
-				pInfo->SetCaption( GetLanguageString(761).c_str() );				
+		if (pInfo && pCha) {
+			if (pCha->IsBoat()) {
+				pInfo->SetCaption(GetLanguageString(761).c_str());
 			}
-			else
-			{
-				pInfo->SetCaption( GetLanguageString(762).c_str() );
+			else {
+				pInfo->SetCaption(GetLanguageString(762).c_str());
 
-				if( CGameScene* pScene = CGameApp::GetCurScene() )
-				{
-					if( CMapInfo *pInfo = pScene->GetCurMapInfo() )
-					{
+				if (CGameScene* pScene = CGameApp::GetCurScene()) {
+					if (CMapInfo* pInfo = pScene->GetCurMapInfo()) {
 						// Modify by lark.li 20080719 begin
 						//if( stricmp( pInfo->DataName.c_str(), "teampk" )==0 )
-						if( stricmp( pInfo->DataName.c_str(), "teampk" )==0 || stricmp( pInfo->DataName.c_str(),"starena1") == 0 
-							|| stricmp( pInfo->DataName.c_str(),"starena2") == 0 || stricmp( pInfo->DataName.c_str(),"starena3") == 0)
+						if (stricmp(pInfo->DataName.c_str(), "teampk") == 0 || stricmp(
+								pInfo->DataName.c_str(), "starena1") == 0
+							|| stricmp(pInfo->DataName.c_str(), "starena2") == 0 || stricmp(
+								pInfo->DataName.c_str(), "starena3") == 0)
 							IsShow = false;
 						// End
 					}
@@ -1079,18 +1012,16 @@ void CStartMgr::MainChaDied()
 		g_stUITrade.CloseAllForm();
 		// add by Philip.Wu  2006-07-12  
 		CWorldScene* pWorldScene = dynamic_cast<CWorldScene*>(g_pGameApp->GetCurScene());
-		if(pWorldScene && pWorldScene->GetShipMgr())
-		{
+		if (pWorldScene && pWorldScene->GetShipMgr()) {
 			pWorldScene->GetShipMgr()->CloseForm();
 		}
 
 
-		if( IsShow ) frmMainChaRelive->Show();
+		if (IsShow) frmMainChaRelive->Show();
 	}
 }
 
-void CStartMgr::CheckMouseDown( int x, int y  )
-{
+void CStartMgr::CheckMouseDown(int x, int y) {
 	//if( frmMainFun->GetIsShow() )
 	//{
 	//	if( !frmMainFun->InRect(x,y) )
@@ -1118,19 +1049,16 @@ void CStartMgr::CheckMouseDown( int x, int y  )
 	//}
 }
 
-void CStartMgr::_evtTaskMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	string name=pSender->GetName();
+void CStartMgr::_evtTaskMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	string name = pSender->GetName();
 
-	if( name=="btnStart" )
-	{
-		CForm* f = CFormMgr::s_Mgr.Find( "frmMainFun" );
-		if( f ) 
-		{
-			f->SetIsShow( !f->GetIsShow() );			
+	if (name == "btnStart") {
+		CForm* f = CFormMgr::s_Mgr.Find("frmMainFun");
+		if (f) {
+			f->SetIsShow(!f->GetIsShow());
 		}
 		return;
-	}	
+	}
 	//else if( name=="btnAction" )
 	//{
 	//	g_stUIStart.grdHeart->SetIsShow( false );
@@ -1154,59 +1082,51 @@ void CStartMgr::_evtTaskMouseEvent(CCompent *pSender, int nMsgType, int x, int y
 	//}
 
 	//  
-	if( pSender->nTag > 10 )
-	{
+	if (pSender->nTag > 10) {
 		CCharacter* c = CGameScene::GetMainCha();
-        if( !c )		return;
+		if (!c) return;
 
-		c->ChangeReadySkill( pSender->nTag );
+		c->ChangeReadySkill(pSender->nTag);
 	}
 	return;
 }
 
-void  CStartMgr::_evtChaActionChange(CGuiData *pSender)
-{
+void CStartMgr::_evtChaActionChange(CGuiData* pSender) {
 	CCharacter* pCha = g_pGameApp->GetCurScene()->GetMainCha();
-	if( !pCha ) return;
-	
-	pSender->SetIsShow( false );
+	if (!pCha) return;
 
-	CGrid *p = dynamic_cast<CGrid*>(pSender);
-	if( !p ) return;
-	CGraph * r = p->GetSelect();
+	pSender->SetIsShow(false);
+
+	CGrid* p = dynamic_cast<CGrid*>(pSender);
+	if (!p) return;
+	CGraph* r = p->GetSelect();
 	int nIndex = p->GetSelectIndex();
-    if( r )
-	{		
-		pCha->GetActor()->PlayPose( r->nTag, true, true);
-	}	
-}
-
-void  CStartMgr::_evtChaHeartChange(CGuiData *pSender)
-{
-	CCharacter* pCha = CGameScene::GetMainCha();
-	if( !pCha ) return;  
-	pSender->SetIsShow( false );
-
-	CGrid *p = dynamic_cast<CGrid*>(pSender);
-	if( !p ) return;
-	CGraph * r = p->GetSelect();
-	int nIndex = p->GetSelectIndex();
-    if( r )
-	{
-		pCha->GetHeadSay()->SetFaceID(nIndex);
-		char szFaceID[10] = {0} ;
-		sprintf( szFaceID , "***%d" ,nIndex);	
-		CS_Say( szFaceID);		
+	if (r) {
+		pCha->GetActor()->PlayPose(r->nTag, true, true);
 	}
 }
 
-void GUI::CStartMgr::_evtMobPageIndexChange(CGuiData* pSender)
-{
+void CStartMgr::_evtChaHeartChange(CGuiData* pSender) {
+	CCharacter* pCha = CGameScene::GetMainCha();
+	if (!pCha) return;
+	pSender->SetIsShow(false);
 
+	CGrid* p = dynamic_cast<CGrid*>(pSender);
+	if (!p) return;
+	CGraph* r = p->GetSelect();
+	int nIndex = p->GetSelectIndex();
+	if (r) {
+		pCha->GetHeadSay()->SetFaceID(nIndex);
+		char szFaceID[10] = {0};
+		sprintf(szFaceID, "***%d", nIndex);
+		CS_Say(szFaceID);
+	}
 }
 
-void CStartMgr::RefreshMainLifeNum( long num, long max )
-{	
+void GUI::CStartMgr::_evtMobPageIndexChange(CGuiData* pSender) {
+}
+
+void CStartMgr::RefreshMainLifeNum(long num, long max) {
 	////HP
 	//char szHP[32] = { 0 };
 	//if ( num < 0 )	num = 0;
@@ -1236,17 +1156,17 @@ void CStartMgr::RefreshMainLifeNum( long num, long max )
 	//pBar->SetIsShow(true);
 	//pBar->SetPosition( 10.0f * f ) ;
 
-	if (proMainHP)
-	{
+	if (proMainHP) {
 		proMainHP->SetRange(0.0f, (float)max);
 		proMainHP->SetPosition((float)num);
 	}
 }
 
-void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
-{
-	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev)));
-	
+void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev) {
+	g_logManager.InternalLog(LogLevel::Debug, "common",
+							 SafeVFormat(GetLanguageString(763), num, curlev, nextlev,
+										 100.0f * (float)(num - curlev) / (float)(nextlev - curlev)));
+
 	//// EXP
 	//long max = nextlev - curlev;
 	//num = num - curlev;
@@ -1257,20 +1177,18 @@ void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 	//szBuf[sizeof(szBuf)-1] = '\0';
 
 	//_pShowExp->SetCaption( szBuf );
-	if ( proMainExp )
-	{
-		
+	if (proMainExp) {
 		proMainExp->SetRange(0, nextlev - curlev);
 		proMainExp->SetPosition(num - curlev);
 	}
-/*
-	if ( proMainExp )
-	{
-		
-		proMainExp->SetRange(0, nextlev - curlev);
-		proMainExp->SetPosition((float)(num - curlev) / (float)(nextlev - curlev));
-	}
-	*/
+	/*
+		if ( proMainExp )
+		{
+			
+			proMainExp->SetRange(0, nextlev - curlev);
+			proMainExp->SetPosition((float)(num - curlev) / (float)(nextlev - curlev));
+		}
+		*/
 }
 
 //void CStartMgr::RefreshLifeExperience(long num, long curlev, long nextlev)
@@ -1284,424 +1202,391 @@ void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 //}
 
 
-
-
-
-void CStartMgr::RefreshMainName(const std::string& szName )
-{
-	if ( labMainName )
-	{
+void CStartMgr::RefreshMainName(const std::string& szName) {
+	if (labMainName) {
 		labMainName->SetCaption(szName);
 	}
 }
 
 
-void CStartMgr::RefreshLv( long l )
-{
-	if (labMainLevel)
-	{
-		sprintf( szBuf, "%d", l );
-		labMainLevel->SetCaption( szBuf );
+void CStartMgr::RefreshLv(long l) {
+	if (labMainLevel) {
+		sprintf(szBuf, "%d", l);
+		labMainLevel->SetCaption(szBuf);
 	}
 }
 
-void CStartMgr::RefreshMainSP( long num , long max )
-{
+void CStartMgr::RefreshMainSP(long num, long max) {
 	//SP
-	if ( proMainSP )
-	{
+	if (proMainSP) {
 		proMainSP->SetRange(0.0f, (float)max);
-		proMainSP->SetPosition( (float)num );  
+		proMainSP->SetPosition((float)num);
 	}
 }
 
 // 
-void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
-{
+void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	mainMouseRight->SetIsShow(false);
-	CMenuItem* pItem=mainMouseRight->GetSelectMenu();
+	CMenuItem* pItem = mainMouseRight->GetSelectMenu();
 	if (!pItem) return;
-	string str=pItem->GetString();
-	if (str==GetLanguageString(764))	// 
+	string str = pItem->GetString();
+	if (str == GetLanguageString(764)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if( pCha && pMain && pCha!=pMain && pCha->IsEnabled() && pMain->IsEnabled() 
-			&& ( ( !pCha->IsBoat() && !pMain->IsBoat() )
-				|| ( pCha->IsBoat() && pMain->IsBoat() ) ) )
-		{
-			if(pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 6)
-			{
-				CS_RequestTrade( mission::TRADE_CHAR, mainMouseRight->nTag );
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (pCha && pMain && pCha != pMain && pCha->IsEnabled() && pMain->IsEnabled()
+			&& ((!pCha->IsBoat() && !pMain->IsBoat())
+				|| (pCha->IsBoat() && pMain->IsBoat()))) {
+			if (pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 6) {
+				CS_RequestTrade(mission::TRADE_CHAR, mainMouseRight->nTag);
 			}
-			else
-			{
+			else {
 				// 6
 				g_pGameApp->SysInfo("%s", GetLanguageString(864).c_str());
 			}
 		}
-		else
-		{
-			g_pGameApp->SysInfo("%s", GetLanguageString(765).c_str());	//
+		else {
+			g_pGameApp->SysInfo("%s", GetLanguageString(765).c_str()); //
 		}
 	}
-	else if (str==GetLanguageString(482))	// 
+	else if (str == GetLanguageString(482)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if(!pCha || !pMain)  return;
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (!pCha || !pMain) return;
 
-		if(pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 7)
-		{
-			CS_Frnd_Invite( pCha->getHumanName());
+		if (pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 7) {
+			CS_Frnd_Invite(pCha->getHumanName());
 		}
-		else
-		{
+		else {
 			// 7
 			g_pGameApp->SysInfo("%s", GetLanguageString(865).c_str());
-			
 		}
 	}
-	else if (str==GetLanguageString(484))	// 
+	else if (str == GetLanguageString(484)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if(!pCha || !pMain)  return;
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (!pCha || !pMain) return;
 
-		if( (pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 8) &&
-			 (pCha->IsBoat() ||  pCha->getGameAttr()->get(ATTR_LV) >= 8))
-		{
-			CS_Team_Invite( pCha->getHumanName());
+		if ((pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 8) &&
+			(pCha->IsBoat() || pCha->getGameAttr()->get(ATTR_LV) >= 8)) {
+			CS_Team_Invite(pCha->getHumanName());
 		}
-		else
-		{
+		else {
 			// 8
 			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
 		}
 
-		return;	
+		return;
 	}
-	else if (str==GetLanguageString(483))	// 
+	else if (str == GetLanguageString(483)) // 
 	{
 		CS_Team_Leave();
 		return;
 	}
-	else if (str==GetLanguageString(481))	// 
+	else if (str == GetLanguageString(481)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		if(pCha)
-		{
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		if (pCha) {
 			CCozeForm::GetInstance()->OnPrivateNameSet(pCha->getHumanName());
 		}
 		return;
 	}
-	else if (str==GetLanguageString(766))	// 
+	else if (str == GetLanguageString(766)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if( pCha && pMain && pCha->IsBoat() && pMain->IsBoat() )
-		{
-			CS_RequestTrade( mission::TRADE_BOAT, mainMouseRight->nTag );
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (pCha && pMain && pCha->IsBoat() && pMain->IsBoat()) {
+			CS_RequestTrade(mission::TRADE_BOAT, mainMouseRight->nTag);
 		}
-		else
-		{
+		else {
 			g_pGameApp->SysInfo("%s", GetLanguageString(767).c_str());
 		}
 		return;
 	}
-	else if( str==GetLanguageString(768) )	// 
+	else if (str == GetLanguageString(768)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		if( pCha && !pCha->IsMainCha() )
-		{
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		if (pCha && !pCha->IsMainCha()) {
 			CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
-			if( pScene )
-			{
-				pScene->GetMouseDown().ActShop( CGameScene::GetMainCha(), pCha );
+			if (pScene) {
+				pScene->GetMouseDown().ActShop(CGameScene::GetMainCha(), pCha);
 			}
 		}
 		return;
 	}
-	else if( str==GetLanguageString(769) )	// 
+	else if (str == GetLanguageString(769)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		if( pCha ) CS_TeamFightAsk( pCha->getAttachID(), pCha->lTag, enumFIGHT_TEAM );
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		if (pCha) CS_TeamFightAsk(pCha->getAttachID(), pCha->lTag, enumFIGHT_TEAM);
 		return;
 	}
-	else if( str==GetLanguageString(770) )	// 
+	else if (str == GetLanguageString(770)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		if( pCha ) CS_TeamFightAsk( pCha->getAttachID(), pCha->lTag, enumFIGHT_MONOMER );
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		if (pCha) CS_TeamFightAsk(pCha->getAttachID(), pCha->lTag, enumFIGHT_MONOMER);
 		return;
 	}
-	else if(str == GetLanguageString(855))	// 
+	else if (str == GetLanguageString(855)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if( pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat() )
-		{
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat()) {
 			const char* szName = pCha->getHumanName();
 			CS_MasterInvite(pCha->getHumanName(), mainMouseRight->nTag);
 		}
-		else
-		{
+		else {
 			// 
 			g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
 		}
 	}
-	else if(str == GetLanguageString(859))	// 
+	else if (str == GetLanguageString(859)) // 
 	{
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if( pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat() )
-		{
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat()) {
 			const char* szName = pCha->getHumanName();
 			CS_PrenticeInvite(pCha->getHumanName(), mainMouseRight->nTag);
 		}
-		else
-		{
+		else {
 			// 
 			g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
 		}
-	}else if (str=="Check Eq"){
+	}
+	else if (str == "Check Eq") {
 		//TODO  - Move this to a different form ?.
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		CCharacter * pMain = CGameScene::GetMainCha();
-		g_stUIEquip.UpdataEquipSpy( pCha->GetPart(), pCha );
-	}else if (str=="Follow")
-	{
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		CCharacter* pMain = CGameScene::GetMainCha();
+		g_stUIEquip.UpdataEquipSpy(pCha->GetPart(), pCha);
+	}
+	else if (str == "Follow") {
 		CWorldScene* pScene = dynamic_cast<CWorldScene*>(g_pGameApp->GetCurScene());
-		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
-		if(pCha){ 
-		pScene->GetMouseDown().GetAutoAttack()->Follow(g_pGameApp->GetCurScene()->GetMainCha(), pCha);
+		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
+		if (pCha) {
+			pScene->GetMouseDown().GetAutoAttack()->Follow(g_pGameApp->GetCurScene()->GetMainCha(), pCha);
 		}
 	}
-	else if(str == "Block")
-	{
+	else if (str == "Block") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CTeam* pTeam = g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked);
-		if(!pTeam->FindByName(pCha->getHumanName()))
+		if (!pTeam->FindByName(pCha->getHumanName()))
 			pTeam->Add(-1, pCha->getHumanName(), "", 9);
 	}
-	else if(str == "Unblock")
-	{
+	else if (str == "Unblock") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
 		g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->DelByName(pCha->getHumanName());
-	}else if(str == "Manage"){
+	}
+	else if (str == "Manage") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
-	CS_RequestTalk( pCha->getAttachID(), 0 );
+		CS_RequestTalk(pCha->getAttachID(), 0);
 	}
 
 	g_stUIStart.frmMain800->Refresh();
 }
 
-void CStartMgr::AskTeamFight( const char* str )
-{
-	g_stUIBox.ShowSelectBox( _evtAskTeamFightMouseEvent, str, false );
+void CStartMgr::AskTeamFight(const char* str) {
+	g_stUIBox.ShowSelectBox(_evtAskTeamFightMouseEvent, str, false);
 }
 
-void CStartMgr::_evtAskTeamFightMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	CS_TeamFightAnswer( nMsgType==CForm::mrYes );
+void CStartMgr::_evtAskTeamFightMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	CS_TeamFightAnswer(nMsgType == CForm::mrYes);
 }
 
 // 
-void  CStartMgr::PopMenu( CCharacter* pCha )
-{
+void CStartMgr::PopMenu(CCharacter* pCha) {
 	//g_pGameApp->GetCurScene()->GetTerrainName();
 
 	if (pCha->IsPlayer() && !g_stUIStart.IsCanTeam())
 		return;
 
-	if( g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())		// 
+	if (g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow()) // 
 		return;
 
-	if( g_stUIBooth.GetBoothItemsGrid()->GetForm()->GetIsShow())	// 
-        return;
-
-	if( g_stUITrade.IsTrading())// 
+	if (g_stUIBooth.GetBoothItemsGrid()->GetForm()->GetIsShow()) // 
 		return;
 
-	if ( mainMouseRight && pCha && pCha->IsValid() && !pCha->IsHide() && (pCha->IsPlayer() || pCha->IsMonster()) ) // && (pCha->IsPlayer() || pCha->IsMonster())
+	if (g_stUITrade.IsTrading()) // 
+		return;
+
+	if (mainMouseRight && pCha && pCha->IsValid() && !pCha->IsHide() && (pCha->IsPlayer() || pCha->IsMonster()))
+	// && (pCha->IsPlayer() || pCha->IsMonster())
 	{
 		mainMouseRight->nTag = pCha->getAttachID();
-		mainMouseRight->SetPointer( pCha );
+		mainMouseRight->SetPointer(pCha);
 
-		CCharacter * pMain = CGameScene::GetMainCha();
-		if( !pMain ) return;
+		CCharacter* pMain = CGameScene::GetMainCha();
+		if (!pMain) return;
 
-		if( !pMain->IsValid() || pMain->IsHide() ) return;
+		if (!pMain->IsValid() || pMain->IsHide()) return;
 
-		if( pCha->GetIsPet()) return;	// 
+		if (pCha->GetIsPet()) return; // 
 
 		int nMainGuildID = pMain->getGuildID();
-		int nChaGuildID  = pCha->getGuildID();
-		if( nMainGuildID > 0 && nChaGuildID > 0)
-		{
-			if(g_stUIMap.IsGuildWar() && ((nMainGuildID <= 100 && nChaGuildID > 100) || (nMainGuildID > 100 && nChaGuildID <= 100))) return;	// 
+		int nChaGuildID = pCha->getGuildID();
+		if (nMainGuildID > 0 && nChaGuildID > 0) {
+			if (g_stUIMap.IsGuildWar() && ((nMainGuildID <= 100 && nChaGuildID > 100) || (nMainGuildID > 100 &&
+				nChaGuildID <= 100))) return; // 
 		}
 
-		mainMouseRight->SetAllEnabled( false );
+		mainMouseRight->SetAllEnabled(false);
 		const int nCount = mainMouseRight->GetCount();
 		CMenuItem* pItem = NULL;
-		const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  Add by ning.yan 20080715
+		const char* MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  Add by ning.yan 20080715
 		//Add by sunny.sun20080820
 		//Begin
-		if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
+		if (stricmp(MapName, "starena1") == 0 || stricmp(MapName, "starena2") == 0 || stricmp(MapName, "starena3") == 0)
 			return;
-		for( int i=0; i<nCount; i++ )
-		{
-			pItem = mainMouseRight->GetMenuItem( i );
-			
-			
-			if( stricmp( pItem->GetString(), "Manage" )==0 ){
-				if(!pCha->getIsPlayerCha() && !pCha->IsMonster()){
-					pItem->SetIsHide( false );
-					pItem->SetIsEnabled( true );
-				}else{
-					pItem->SetIsHide( true );
-					pItem->SetIsEnabled( false );
+		for (int i = 0; i < nCount; i++) {
+			pItem = mainMouseRight->GetMenuItem(i);
+
+
+			if (stricmp(pItem->GetString(), "Manage") == 0) {
+				if (!pCha->getIsPlayerCha() && !pCha->IsMonster()) {
+					pItem->SetIsHide(false);
+					pItem->SetIsEnabled(true);
+				}
+				else {
+					pItem->SetIsHide(true);
+					pItem->SetIsEnabled(false);
 				}
 			}
-			
+
 			//if(!pCha->getIsPlayerCha()){
 			//	continue;
 			//}
-			
-			if( stricmp( pItem->GetString(), GetLanguageString(764).c_str() )==0 )
-			{
-				if(pMain!=pCha && pMain->IsEnabled() && pCha->IsEnabled() && ((pMain->IsBoat() && pCha->IsBoat()) || (!pMain->IsBoat() && !pCha->IsBoat())) && !pCha->IsMonster())
-				{
-					pItem->SetIsEnabled( true );
+
+			if (stricmp(pItem->GetString(), GetLanguageString(764).c_str()) == 0) {
+				if (pMain != pCha && pMain->IsEnabled() && pCha->IsEnabled() && ((pMain->IsBoat() && pCha->IsBoat()) ||
+					(!pMain->IsBoat() && !pCha->IsBoat())) && !pCha->IsMonster()) {
+					pItem->SetIsEnabled(true);
 					pItem->SetIsHide(false);
 				}
-				else
-				{
+				else {
 					pItem->SetIsHide(pCha->IsMonster());
-					pItem->SetIsEnabled( false );
+					pItem->SetIsEnabled(false);
 				}
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(482).c_str() )==0 )
-			{
+			else if (stricmp(pItem->GetString(), GetLanguageString(482).c_str()) == 0) {
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha );
+				pItem->SetIsEnabled(pMain != pCha);
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(484).c_str() )==0 )
-			{	//  Add by ning.yan  20080715 Begin
+			else if (stricmp(pItem->GetString(), GetLanguageString(484).c_str()) == 0) {
+				//  Add by ning.yan  20080715 Begin
 				//if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
 				//	pItem->SetIsEnabled( false );
 				//// End
 				//else			
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain!=pCha && ( pMain->GetTeamLeaderID()==0 || ( pMain->IsTeamLeader() && pCha->GetTeamLeaderID()!=pMain->GetTeamLeaderID() ) ) );
+				pItem->SetIsEnabled(
+					g_stUIStart.IsCanTeam() && pMain != pCha && (pMain->GetTeamLeaderID() == 0 || (pMain->IsTeamLeader()
+						&& pCha->GetTeamLeaderID() != pMain->GetTeamLeaderID())));
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(483).c_str() )==0 )
-			{	//   Add by ning.yan  20080715 Begin
+			else if (stricmp(pItem->GetString(), GetLanguageString(483).c_str()) == 0) {
+				//   Add by ning.yan  20080715 Begin
 				//if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
 				//	pItem->SetIsEnabled( false );
 				//// End
 				//else
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain->GetTeamLeaderID()!=0 && pCha->GetTeamLeaderID()==pMain->GetTeamLeaderID() );
+				pItem->SetIsEnabled(
+					g_stUIStart.IsCanTeam() && pMain->GetTeamLeaderID() != 0 && pCha->GetTeamLeaderID() == pMain->
+					GetTeamLeaderID());
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(481).c_str() )==0 )
+			else if (stricmp(pItem->GetString(), GetLanguageString(481).c_str()) == 0) {
+				pItem->SetIsHide(pCha->IsMonster());
+				pItem->SetIsEnabled(pMain != pCha);
+			}
+			else if (stricmp(pItem->GetString(), GetLanguageString(766).c_str()) == 0) {
+				pItem->SetIsHide(pCha->IsMonster());
+				pItem->SetIsEnabled(
+					pMain != pCha && pMain->IsBoat() && pMain->IsEnabled() && pCha->IsBoat() && pCha->IsEnabled());
+			}
+			else if (stricmp(pItem->GetString(), GetLanguageString(768).c_str()) == 0) {
+				pItem->SetIsHide(pCha->IsMonster());
+				pItem->SetIsEnabled(
+					pMain != pCha && pMain->IsEnabled() && !pMain->IsShop() && pCha->IsEnabled() && pCha->IsShop());
+			}
+			else if (stricmp(pItem->GetString(), GetLanguageString(769).c_str()) == 0) {
+				pItem->SetIsHide(pCha->IsMonster());
+				pItem->SetIsEnabled(
+					g_stUIStart.IsCanTeam() && pMain != pCha && pMain->IsEnabled() && pMain->IsTeamLeader() && !pMain->
+					IsShop()
+					&& pCha->IsEnabled() && pCha->IsTeamLeader() && !pCha->IsShop());
+			}
+			else if (stricmp(pItem->GetString(), GetLanguageString(770).c_str()) == 0) {
+				pItem->SetIsHide(pCha->IsMonster());
+				pItem->SetIsEnabled(g_stUIStart.IsCanTeam() && pMain != pCha && pCha->IsPlayer());
+			}
+			else if (stricmp(pItem->GetString(), GetLanguageString(855).c_str()) == 0) // 
 			{
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha );
+				pItem->SetIsEnabled(
+					pMain != pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) <=
+					40);
+				//&& pCha->getGameAttr()  && pCha->getGameAttr()->get(ATTR_LV) > 40 );
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(766).c_str() )==0 )
+			else if (stricmp(pItem->GetString(), GetLanguageString(859).c_str()) == 0) // 
 			{
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha && pMain->IsBoat() && pMain->IsEnabled() && pCha->IsBoat() && pCha->IsEnabled() );
+				pItem->SetIsEnabled(
+					pMain != pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) >
+					40);
+				//&& pCha->getGameAttr()  && pCha->getGameAttr()->get(ATTR_LV) <= 40 );
 			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(768).c_str() )==0 )
-			{
-				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha && pMain->IsEnabled() && !pMain->IsShop() && pCha->IsEnabled() && pCha->IsShop() );
-			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(769).c_str() )==0 )
-			{
-				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain!=pCha && pMain->IsEnabled() && pMain->IsTeamLeader() && !pMain->IsShop()
-					&& pCha->IsEnabled() && pCha->IsTeamLeader() && !pCha->IsShop()	);
-			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(770).c_str() )==0 )
-			{
-				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain!=pCha && pCha->IsPlayer() );
-			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(855).c_str() )==0 )	// 
-			{
-				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) <= 40 );
-							//&& pCha->getGameAttr()  && pCha->getGameAttr()->get(ATTR_LV) > 40 );
-			}
-			else if( stricmp( pItem->GetString(), GetLanguageString(859).c_str() )==0 )	// 
-			{
-				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled( pMain!=pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) > 40 );
-							//&& pCha->getGameAttr()  && pCha->getGameAttr()->get(ATTR_LV) <= 40 );
-			}else if( stricmp( pItem->GetString(), "Check Eq" )==0 ){
-				if (pCha->IsPlayer()){ // pMain->getGMLv()	 == 99  Enabling for Non-GMs Mdr.st May 2020 - FPO Alpha
-					pItem->SetIsEnabled( pMain!=pCha );
+			else if (stricmp(pItem->GetString(), "Check Eq") == 0) {
+				if (pCha->IsPlayer()) {
+					// pMain->getGMLv()	 == 99  Enabling for Non-GMs Mdr.st May 2020 - FPO Alpha
+					pItem->SetIsEnabled(pMain != pCha);
 					pItem->SetIsHide(false);
-				}else{
-					pItem->SetIsHide( true );
+				}
+				else {
+					pItem->SetIsHide(true);
 					pItem->SetIsEnabled(false);
 				}
-				
 			}
-			else if( stricmp( pItem->GetString(), "Follow") == 0){
+			else if (stricmp(pItem->GetString(), "Follow") == 0) {
 				pItem->SetIsHide(pCha->IsMonster());
-				pItem->SetIsEnabled(pMain!=pCha && pCha->IsPlayer());
+				pItem->SetIsEnabled(pMain != pCha && pCha->IsPlayer());
 			}
-			else if( stricmp( pItem->GetString(), "Block" )==0 )
-			{
-				
-				if ((!g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName())) && !pCha->IsMonster()) 
-				{
-
-					pItem->SetIsHide( false );
-					pItem->SetIsEnabled( pMain!=pCha );
+			else if (stricmp(pItem->GetString(), "Block") == 0) {
+				if ((!g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName())) && !pCha->
+					IsMonster()) {
+					pItem->SetIsHide(false);
+					pItem->SetIsEnabled(pMain != pCha);
 				}
-				else
-				{
-					pItem->SetIsHide( true );
-					
+				else {
+					pItem->SetIsHide(true);
 				}
 			}
-			else if( stricmp( pItem->GetString(), "Unblock" )==0 )
-			{
-				if (g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName()) && !pCha->IsMonster())
-				{
-					pItem->SetIsHide( false );
-					pItem->SetIsEnabled( pMain!=pCha );
+			else if (stricmp(pItem->GetString(), "Unblock") == 0) {
+				if (g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName()) && !pCha->
+					IsMonster()) {
+					pItem->SetIsHide(false);
+					pItem->SetIsEnabled(pMain != pCha);
 				}
-				else
-				{
-					pItem->SetIsHide( true );
+				else {
+					pItem->SetIsHide(true);
 				}
 			}
 		}
 
-		if( mainMouseRight->IsAllDisabled() )
-		{
-			mainMouseRight->SetIsShow( false );
+		if (mainMouseRight->IsAllDisabled()) {
+			mainMouseRight->SetIsShow(false);
 			return;
 		}
 
-		int x=0, y=0;
-		g_Render.WorldToScreen(pCha->GetPos().x , pCha->GetPos().y, pCha->GetPos().z, &x, &y );
+		int x = 0, y = 0;
+		g_Render.WorldToScreen(pCha->GetPos().x, pCha->GetPos().y, pCha->GetPos().z, &x, &y);
 
-		if( CForm::GetActive() && CForm::GetActive()->IsNormal() )
-			CForm::GetActive()->PopMenu(mainMouseRight,x,y);
+		if (CForm::GetActive() && CForm::GetActive()->IsNormal())
+			CForm::GetActive()->PopMenu(mainMouseRight, x, y);
 		else
-			frmMain800->PopMenu(mainMouseRight,x,y);
+			frmMain800->PopMenu(mainMouseRight, x, y);
 	}
 }
 
-void CStartMgr::CloseForm()
-{
+void CStartMgr::CloseForm() {
 	//if( frmMainFun->GetIsShow() )
 	//	frmMainFun->Close();
 
@@ -1710,125 +1595,111 @@ void CStartMgr::CloseForm()
 	//g_stUICoze.GetFaceGrid()->SetIsShow( false );
 }
 
-CTextButton* CStartMgr::GetShowQQButton()
-{
+CTextButton* CStartMgr::GetShowQQButton() {
 	return btnQQ;
 }
 
-void CStartMgr::ShowBigText( const char* str )
-{
+void CStartMgr::ShowBigText(const char* str) {
 	int nType = 0;
 	CCharacter* pMain = CGameScene::GetMainCha();
-	if( pMain && CGameApp::GetCurScene() && CGameApp::GetCurScene()->GetTerrain() )
-	{
-		int nArea = CGameApp::GetCurScene()->GetTerrain()->GetTile( pMain->GetCurX()/100, pMain->GetCurY()/100 )->getIsland();
-		CAreaInfo* pArea = GetAreaInfo( nArea );
-		if( pArea )
-		{
+	if (pMain && CGameApp::GetCurScene() && CGameApp::GetCurScene()->GetTerrain()) {
+		int nArea = CGameApp::GetCurScene()->GetTerrain()->GetTile(pMain->GetCurX() / 100, pMain->GetCurY() / 100)->
+											 getIsland();
+		CAreaInfo* pArea = GetAreaInfo(nArea);
+		if (pArea) {
 			nType = pArea->chType;
 		}
 	}
 
-	if( nType )
-	{
-		if( tlCity ) tlCity->SetIsShow( false );
+	if (nType) {
+		if (tlCity) tlCity->SetIsShow(false);
 
-		if( tlField )
-		{
-			tlField->SetCaption( str );
+		if (tlField) {
+			tlField->SetCaption(str);
 			//tlField->SetFont(15);
-			tlField->SetIsShow( true );
+			tlField->SetIsShow(true);
 		}
 	}
-	else
-	{
-		if( tlField ) tlField->SetIsShow( false );
+	else {
+		if (tlField) tlField->SetIsShow(false);
 
-		if( tlCity )
-		{
-
-			tlCity->SetCaption( str );
-			tlCity->SetIsShow( true );
+		if (tlCity) {
+			tlCity->SetCaption(str);
+			tlCity->SetIsShow(true);
 		}
 	}
 }
 
-void CStartMgr::FrameMove(DWORD dwTime)
-{
+void CStartMgr::FrameMove(DWORD dwTime) {
 	static CTimeWork time(100);
-	if( time.IsTimeOut( dwTime ) )
-	{
-		if (frmShipSail->GetIsShow())
-		{
-			UpdateShipSailForm();		
-		}		
+	if (time.IsTimeOut(dwTime)) {
+		if (frmShipSail->GetIsShow()) {
+			UpdateShipSailForm();
+		}
 	}
 
 	static CTimeWork pet_time(300);
-	
-	if( pet_time.IsTimeOut( dwTime ) ){
-		if(g_stUIBoat.GetHuman()){
+
+	if (pet_time.IsTimeOut(dwTime)) {
+		if (g_stUIBoat.GetHuman()) {
 			SItemGrid Data = g_stUIBoat.GetHuman()->GetPart().SLink[enumEQUIP_FAIRY];
-			if(Data.IsValid() && CGameScene::GetMainCha() ){
-				CItemRecord* pItemInfo = GetItemRecordInfo( Data.sID );
-				if( !pItemInfo || pItemInfo->sType!=enumItemTypePet){
-					if( frmMainPet->GetIsShow() ){			
+			if (Data.IsValid() && CGameScene::GetMainCha()) {
+				CItemRecord* pItemInfo = GetItemRecordInfo(Data.sID);
+				if (!pItemInfo || pItemInfo->sType != enumItemTypePet) {
+					if (frmMainPet->GetIsShow()) {
 						frmMainPet->Hide();
 					}
-				}else{
-					proPetHP->SetRange( 0, float(Data.sEndure[1] / 50) );
-					proPetHP->SetPosition( float(Data.sEndure[0] / 50) );
-		
-					proPetSP->SetRange( 0, Data.sEnergy[1] );
-					proPetSP->SetPosition( Data.sEnergy[0] );
-		
+				}
+				else {
+					proPetHP->SetRange(0, float(Data.sEndure[1] / 50));
+					proPetHP->SetPosition(float(Data.sEndure[0] / 50));
+
+					proPetSP->SetRange(0, Data.sEnergy[1]);
+					proPetSP->SetPosition(Data.sEnergy[0]);
+
 					static bool IsFlash;
 					IsFlash = !IsFlash;
-					if( IsFlash && Data.sEnergy[1]==Data.sEnergy[0] ){
-						proPetSP->GetImage()->SetColor( 0xff00ff00 );
+					if (IsFlash && Data.sEnergy[1] == Data.sEnergy[0]) {
+						proPetSP->GetImage()->SetColor(0xff00ff00);
 					}
-					else{
-						proPetSP->GetImage()->SetColor( 0xFFFFFFFF );
+					else {
+						proPetSP->GetImage()->SetColor(0xFFFFFFFF);
 					}
-					if( !frmMainPet->GetIsShow() ){
+					if (!frmMainPet->GetIsShow()) {
 						frmMainPet->Show();
 					}
 				}
-			}else if( frmMainPet->GetIsShow() ){			
+			}
+			else if (frmMainPet->GetIsShow()) {
 				frmMainPet->Hide();
 			}
-		}else if( frmMainPet->GetIsShow() ){			
+		}
+		else if (frmMainPet->GetIsShow()) {
 			frmMainPet->Hide();
 		}
 	}
-	
-
 }
 
-void CStartMgr::_evtShowBoatAttr(CGuiData *pSender,int x,int y ,DWORD key)	// 
+void CStartMgr::_evtShowBoatAttr(CGuiData* pSender, int x, int y, DWORD key) // 
 {
 	xShipFactory* pkShip = ((CWorldScene*)g_pGameApp->GetCurScene())->GetShipMgr()->_factory;
-	if (pkShip && pkShip->sbf.wnd->GetIsShow())
-	{
+	if (pkShip && pkShip->sbf.wnd->GetIsShow()) {
 		pkShip->sbf.wnd->SetIsShow(false);
 	}
-	else
-	{
+	else {
 		CS_GetBoatInfo();
 	}
 }
 
-void CStartMgr::SwitchMap()
-{
+void CStartMgr::SwitchMap() {
 	frmMainChaRelive->Close();
 	CMenu::CloseAll();
-	if( !(dynamic_cast<CWorldScene*>( CGameApp::GetCurScene() )) ) return;
+	if (!(dynamic_cast<CWorldScene*>(CGameApp::GetCurScene()))) return;
 
-	if( !_IsNewer ) return;
+	if (!_IsNewer) return;
 
-	CForm * frm = CFormMgr::s_Mgr.Find("frmVHelp");
-	if( frm ) 
-	{
+	CForm* frm = CFormMgr::s_Mgr.Find("frmVHelp");
+	if (frm) {
 		frm->evtEntrustMouseEvent = _NewFrmMainMouseEvent;
 		frm->nTag = 1;
 		frm->ShowModal();
@@ -1836,27 +1707,22 @@ void CStartMgr::SwitchMap()
 }
 
 //~  =================================================================
-void CStartMgr::_NewFrmMainMouseEvent(CCompent *pSender, int nMsgType, 
-									  int x, int y, DWORD dwKey)
-{
+void CStartMgr::_NewFrmMainMouseEvent(CCompent* pSender, int nMsgType,
+									  int x, int y, DWORD dwKey) {
 	string name = pSender->GetName();
-	if( name=="btnNo"  || name == "btnClose" )  
-	{	
+	if (name == "btnNo" || name == "btnClose") {
 		if (pSender->GetForm()->nTag == 1)
-			CBoxMgr::ShowMsgBox( _CloseEvent, GetLanguageString(771).c_str() );
+			CBoxMgr::ShowMsgBox(_CloseEvent, GetLanguageString(771).c_str());
 		else
 			pSender->GetForm()->Close();
 	}
 }
 
-void CStartMgr::_HelpFrmMainMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	string name = pSender->GetName();  
-	if( name=="btnOpenHelp" )
-	{	
-		CForm * frm = CFormMgr::s_Mgr.Find("frmVHelp");
-		if( frm ) 
-		{
+void CStartMgr::_HelpFrmMainMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	string name = pSender->GetName();
+	if (name == "btnOpenHelp") {
+		CForm* frm = CFormMgr::s_Mgr.Find("frmVHelp");
+		if (frm) {
 			frm->evtEntrustMouseEvent = _NewFrmMainMouseEvent;
 			frm->nTag = 0;
 			frm->ShowModal();
@@ -1865,192 +1731,171 @@ void CStartMgr::_HelpFrmMainMouseEvent(CCompent *pSender, int nMsgType, int x, i
 	}
 }
 
-void CStartMgr::_CloseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-{
-	CForm * frm = CFormMgr::s_Mgr.Find("frmVHelp");
-	if( frm ) 
-	{
+void CStartMgr::_CloseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+	CForm* frm = CFormMgr::s_Mgr.Find("frmVHelp");
+	if (frm) {
 		frm->Close();
 	}
 }
 
-void CStartMgr::SysLabel( const char *pszFormat, ... )
-{
-	char szBuf[2048] = { 0 };
+void CStartMgr::SysLabel(const char* pszFormat, ...) {
+	char szBuf[2048] = {0};
 
 	va_list list;
-	va_start(list, pszFormat);           
+	va_start(list, pszFormat);
 	vsprintf(szBuf, pszFormat, list);
 	va_end(list);
 
-	labFollow->SetCaption( szBuf );
+	labFollow->SetCaption(szBuf);
 	frmFollow->Show();
 }
 
-void CStartMgr::SysHide()
-{
-	if( frmFollow->GetIsShow() ) 
+void CStartMgr::SysHide() {
+	if (frmFollow->GetIsShow())
 		frmFollow->Hide();
 }
 
-void CStartMgr::_MainChaRenderEvent(C3DCompent *pSender, int x, int y)
-{
+void CStartMgr::_MainChaRenderEvent(C3DCompent* pSender, int x, int y) {
 	pMainCha->Render();
 	//pTarget->Render();
 }
 
-void CStartMgr::RefreshMainFace( stNetChangeChaPart& stPart )
-{
-	if( pMainCha )
-	{
-		static stNetTeamChaPart stTeamPart;	
-		stTeamPart.Convert( stPart );
-		pMainCha->UpdataFace( stTeamPart );
+void CStartMgr::RefreshMainFace(stNetChangeChaPart& stPart) {
+	if (pMainCha) {
+		static stNetTeamChaPart stTeamPart;
+		stTeamPart.Convert(stPart);
+		pMainCha->UpdataFace(stTeamPart);
 	}
-	
-	
 }
 
-void CStartMgr::_OnSelfMenu(CGuiData *pSender, int x, int y, DWORD key)
-{
-	CMenu* pMenu = dynamic_cast<CMenu*>( pSender );
-	if( !pMenu ) return;
+void CStartMgr::_OnSelfMenu(CGuiData* pSender, int x, int y, DWORD key) {
+	CMenu* pMenu = dynamic_cast<CMenu*>(pSender);
+	if (!pMenu) return;
 
-	pMenu->SetIsShow( false );
+	pMenu->SetIsShow(false);
 
-	CMenuItem* pItem= pMenu->GetSelectMenu();
+	CMenuItem* pItem = pMenu->GetSelectMenu();
 	if (!pItem) return;
 
 	string str = pItem->GetString();
 	//Modify by sunny.sun20080820
 	//Begin
-	const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  
-	if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
-	{
-		pItem->SetIsEnabled( false );
+	const char* MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  
+	if (stricmp(MapName, "starena1") == 0 || stricmp(MapName, "starena2") == 0 || stricmp(MapName, "starena3") == 0) {
+		pItem->SetIsEnabled(false);
 	}
-	else
-	{
-		pItem->SetIsEnabled( true );
-		if (str==GetLanguageString(483) )
-		{
+	else {
+		pItem->SetIsEnabled(true);
+		if (str == GetLanguageString(483)) {
 			CS_Team_Leave();
 		}
 	}
 	//End
 }
 
-void CStartMgr::SetIsLeader( bool v )
-{
-	imgLeader->SetIsShow( v );
+void CStartMgr::SetIsLeader(bool v) {
+	imgLeader->SetIsShow(v);
 }
 
-bool CStartMgr::GetIsLeader()
-{
+bool CStartMgr::GetIsLeader() {
 	return imgLeader->GetIsShow();
 }
 
-bool CStartMgr::IsCanTeamAndInfo() const
-{
-	if( !_IsCanTeam ) 	g_pGameApp->SysInfo("%s", GetLanguageString(772).c_str());
+bool CStartMgr::IsCanTeamAndInfo() const {
+	if (!_IsCanTeam) g_pGameApp->SysInfo("%s", GetLanguageString(772).c_str());
 	return _IsCanTeam;
 }
 
-void CStartMgr::RefreshPet(){
-	if(g_stUIBoat.GetHuman()){
+void CStartMgr::RefreshPet() {
+	if (g_stUIBoat.GetHuman()) {
 		SItemGrid pGrid = g_stUIBoat.GetHuman()->GetPart().SLink[enumEQUIP_FAIRY];
 		SItemGrid pApp = g_stUIBoat.GetHuman()->GetPart().SLink[enumEQUIP_FAIRYAPP];
-	
+
 		int ID = pGrid.sID;
-		if(ID == 0){
+		if (ID == 0) {
 			return;
 		}
-		if(g_stUIBoat.GetHuman()->GetIsShowApparel() && pApp.sID!=0){
+		if (g_stUIBoat.GetHuman()->GetIsShowApparel() && pApp.sID != 0) {
 			ID = pApp.sID;
 		}
-		CItemRecord* pInfo = GetItemRecordInfo( ID );
+		CItemRecord* pInfo = GetItemRecordInfo(ID);
 		int nLevel = pGrid.GetInstAttr(ITEMATTR_VAL_STR)
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_AGI) 
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_DEX) 
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON) 
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_AGI)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_DEX)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON)
 			+ pGrid.GetInstAttr(ITEMATTR_VAL_STA);
-	
-		sprintf( szBuf, "%d", nLevel );
-		labPetLv->SetCaption( szBuf );
-	
+
+		sprintf(szBuf, "%d", nLevel);
+		labPetLv->SetCaption(szBuf);
+
 		static CGuiPic* Pic = imgPetHead->GetImage();
-		Pic->LoadImage( pInfo->GetIconFile().c_str(), 
-			imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
-			0, 
-			4, 4 );
-	
-	}
-}
-void CStartMgr::RefreshPet( SItemGrid pGrid,SItemGrid pApp )
-{
-	int ID = pGrid.sID;
-	if(g_stUIBoat.GetHuman()->GetIsShowApparel() && pApp.sID!=0){
-		ID = pApp.sID;
-	}
-	CItemRecord* pInfo = GetItemRecordInfo( ID );
-	if(pInfo){
-		int nLevel = pGrid.GetInstAttr(ITEMATTR_VAL_STR)
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_AGI) 
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_DEX) 
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON) 
-			+ pGrid.GetInstAttr(ITEMATTR_VAL_STA);
-	
-		sprintf( szBuf, "%d", nLevel );
-		labPetLv->SetCaption( szBuf );
-	
-		static CGuiPic* Pic = imgPetHead->GetImage();
-		Pic->LoadImage( pInfo->GetIconFile().c_str(), 
-			imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
-			0, 
-			4, 4 );
+		Pic->LoadImage(pInfo->GetIconFile().c_str(),
+					   imgPetHead->GetWidth(), imgPetHead->GetHeight(),
+					   0,
+					   4, 4);
 	}
 }
 
-void CStartMgr::RefreshPet( CItemCommand* pItem )
-{
+void CStartMgr::RefreshPet(SItemGrid pGrid, SItemGrid pApp) {
+	int ID = pGrid.sID;
+	if (g_stUIBoat.GetHuman()->GetIsShowApparel() && pApp.sID != 0) {
+		ID = pApp.sID;
+	}
+	CItemRecord* pInfo = GetItemRecordInfo(ID);
+	if (pInfo) {
+		int nLevel = pGrid.GetInstAttr(ITEMATTR_VAL_STR)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_AGI)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_DEX)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON)
+			+ pGrid.GetInstAttr(ITEMATTR_VAL_STA);
+
+		sprintf(szBuf, "%d", nLevel);
+		labPetLv->SetCaption(szBuf);
+
+		static CGuiPic* Pic = imgPetHead->GetImage();
+		Pic->LoadImage(pInfo->GetIconFile().c_str(),
+					   imgPetHead->GetWidth(), imgPetHead->GetHeight(),
+					   0,
+					   4, 4);
+	}
+}
+
+void CStartMgr::RefreshPet(CItemCommand* pItem) {
 	static CItemRecord* pInfo = NULL;
 	pInfo = pItem->GetItemInfo();
 
 	static SItemHint s_item;
-	memset( &s_item, 0, sizeof(SItemHint) );
-	s_item.Convert( pItem->GetData(), pInfo );
+	memset(&s_item, 0, sizeof(SItemHint));
+	s_item.Convert(pItem->GetData(), pInfo);
 
 	// ,
 	int nLevel = s_item.sInstAttr[ITEMATTR_VAL_STR]
-				+ s_item.sInstAttr[ITEMATTR_VAL_AGI] 
-				+ s_item.sInstAttr[ITEMATTR_VAL_DEX] 
-				+ s_item.sInstAttr[ITEMATTR_VAL_CON] 
-				+ s_item.sInstAttr[ITEMATTR_VAL_STA];
+		+ s_item.sInstAttr[ITEMATTR_VAL_AGI]
+		+ s_item.sInstAttr[ITEMATTR_VAL_DEX]
+		+ s_item.sInstAttr[ITEMATTR_VAL_CON]
+		+ s_item.sInstAttr[ITEMATTR_VAL_STA];
 
-	sprintf( szBuf, "%d", nLevel );
-	labPetLv->SetCaption( szBuf );
+	sprintf(szBuf, "%d", nLevel);
+	labPetLv->SetCaption(szBuf);
 
 	static CGuiPic* Pic = imgPetHead->GetImage();
-	Pic->LoadImage( pInfo->GetIconFile().c_str(), 
-		imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
-		0, 
-		4, 4 );
+	Pic->LoadImage(pInfo->GetIconFile().c_str(),
+				   imgPetHead->GetWidth(), imgPetHead->GetHeight(),
+				   0,
+				   4, 4);
 }
 
 
-void CStartMgr::ShowHelpSystem(bool bShow, int nIndex)
-{
+void CStartMgr::ShowHelpSystem(bool bShow, int nIndex) {
 	int nCount = g_stUIStart.lstHelpList->GetItems()->GetCount();
 
-	if(0 > nIndex || nCount <= nIndex)
-	{
+	if (0 > nIndex || nCount <= nIndex) {
 		// 
 		frmHelpSystem->SetIsShow(bShow);
 		return;
 	}
 
-	for(int i = 0; i < nCount; ++i)
-	{
+	for (int i = 0; i < nCount; ++i) {
 		imgHelpShow1[i]->SetIsShow(nIndex == i);
 		imgHelpShow2[i]->SetIsShow(nIndex == i);
 		imgHelpShow3[i]->SetIsShow(nIndex == i);
@@ -2061,25 +1906,20 @@ void CStartMgr::ShowHelpSystem(bool bShow, int nIndex)
 }
 
 
-void CStartMgr::ShowLevelUpHelpButton(bool bShow)
-{
-	if(btnLevelUpHelp)
-	{
+void CStartMgr::ShowLevelUpHelpButton(bool bShow) {
+	if (btnLevelUpHelp) {
 		btnLevelUpHelp->SetIsShow(bShow);
 	}
 }
 
-void CStartMgr::ShowInfoCenterButton(bool bShow)
-{
+void CStartMgr::ShowInfoCenterButton(bool bShow) {
 	CTextButton* btnInfoCenter = dynamic_cast<CTextButton*>(frmMainFun->Find("btnInfoCenter"));
-	if(btnInfoCenter)
-	{
+	if (btnInfoCenter) {
 		btnInfoCenter->SetIsShow(bShow);
 	}
 }
 
-void CStartMgr::_evtHelpListChange(CGuiData *pSender)
-{
+void CStartMgr::_evtHelpListChange(CGuiData* pSender) {
 	//g_pGameApp->MsgBox("Index: %d\nName:  %s", nIndex, pSender->GetName());//g_stUIStart.lstHelpList->GetSelectItem()->
 	CListItems* pItems = g_stUIStart.lstHelpList->GetItems();
 	int nIndex = pItems->GetIndex(g_stUIStart.lstHelpList->GetSelectItem());
@@ -2088,31 +1928,26 @@ void CStartMgr::_evtHelpListChange(CGuiData *pSender)
 	g_stUIStart.ShowHelpSystem(true, nIndex);
 }
 
-void CStartMgr::ShowBagButtonForm(bool bShow)
-{
-	if(frmBag)
-	{
-		frmBag->SetPos(frmMainFun->GetX2() - frmBag->GetWidth()-109, frmMainFun->GetY() - frmBag->GetHeight()+41);
+void CStartMgr::ShowBagButtonForm(bool bShow) {
+	if (frmBag) {
+		frmBag->SetPos(frmMainFun->GetX2() - frmBag->GetWidth() - 109, frmMainFun->GetY() - frmBag->GetHeight() + 41);
 		frmBag->Refresh();
 
 		frmBag->SetIsShow(bShow);
 	}
 }
 
-void CStartMgr::ShowSociliatyButtonForm(bool bShow)
-{
-	if(frmSociliaty)
-	{
-		frmSociliaty->SetPos(frmMainFun->GetX2() - frmSociliaty->GetWidth()-67, frmMainFun->GetY() - frmSociliaty->GetHeight()+39);
+void CStartMgr::ShowSociliatyButtonForm(bool bShow) {
+	if (frmSociliaty) {
+		frmSociliaty->SetPos(frmMainFun->GetX2() - frmSociliaty->GetWidth() - 67,
+							 frmMainFun->GetY() - frmSociliaty->GetHeight() + 39);
 		frmSociliaty->Refresh();
 
 		frmSociliaty->SetIsShow(bShow);
 	}
 }
 
-void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
-{
-
+void CStartMgr::ShowNPCHelper(const char* mapName,bool isShow) {
 	//if(strMapName == mapName) 
 	//{
 	//	frmNpcShow->SetIsShow(isShow);
@@ -2121,19 +1956,19 @@ void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
 
 	string strCurMap = g_pGameApp->GetCurScene()->GetTerrainName();
 
-    if(strCurMap == "garner")
+	if (strCurMap == "garner")
 		strCurMap = GetLanguageString(56);
-    else if(strCurMap == "magicsea")
-        strCurMap = GetLanguageString(57);
-	else if(strCurMap == "darkblue")
+	else if (strCurMap == "magicsea")
+		strCurMap = GetLanguageString(57);
+	else if (strCurMap == "darkblue")
 		strCurMap = GetLanguageString(58);
-	else  if(strCurMap == "winterland")
+	else if (strCurMap == "winterland")
 		strCurMap = GetLanguageString(59);
-	else  if(strCurMap == "jialebi")
+	else if (strCurMap == "jialebi")
 		strCurMap = "Pirate\'s Base";
 
 
-	strMapName =  strCurMap.c_str();
+	strMapName = strCurMap.c_str();
 	//if(isShow)
 	{
 		CListItems* items = lstCurrList->GetItems();
@@ -2141,30 +1976,23 @@ void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
 		lstCurrList->Refresh();
 
 		int nTotalIndex = GetNPCMaxId(npcHelperType) + 1;
-		for(int i = 1; i < nTotalIndex ; ++ i)
-		{
-
-			NPCData * p = GetNPCDataInfo(i, npcHelperType);
-			if(p == NULL) continue;
-			if(p && strcmp(p->szMapName,strMapName) == 0) 
-			{
-				
+		for (int i = 1; i < nTotalIndex; ++i) {
+			NPCData* p = GetNPCDataInfo(i, npcHelperType);
+			if (p == NULL) continue;
+			if (p && strcmp(p->szMapName, strMapName) == 0) {
 				char buff[1024];
-				
+
 				std::string strName = p->szName;
-				while (strName.length() < 32)
-				{
+				while (strName.length() < 32) {
 					strName += " ";
 				}
 				std::string strAreaName = std::string("") + std::string(p->szArea) + std::string("");
-				while (strAreaName.length() < 16)
-				{
+				while (strAreaName.length() < 16) {
 					strAreaName += " ";
 				}
-				sprintf( buff, "%s%s(%d,%d)",strName.c_str(),strAreaName.c_str(),p->dwxPos0,p->dwyPos0);
+				sprintf(buff, "%s%s(%d,%d)", strName.c_str(), strAreaName.c_str(), p->dwxPos0, p->dwyPos0);
 				lstCurrList->Add(buff);
 				lstCurrList->Refresh();
-				
 			}
 		}
 	}
@@ -2172,23 +2000,21 @@ void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
 	frmNpcShow->SetIsShow(isShow);
 }
 
-void CStartMgr::_evtPageIndexChange(CGuiData *pSender)
-{
+void CStartMgr::_evtPageIndexChange(CGuiData* pSender) {
 	int index = g_stUIStart.listPage->GetIndex();
-	if(index == 0) //npc
+	if (index == 0) //npc
 	{
 		g_stUIStart.npcHelperType = NPCHelperType::NPCList;
 		g_stUIStart.lstCurrList = g_stUIStart.lstNpcList;
 	}
-	else if(index == 1)
-	{
+	else if (index == 1) {
 		g_stUIStart.npcHelperType = NPCHelperType::MonsterList;
 		g_stUIStart.lstCurrList = g_stUIStart.lstMonsterList;
 	}
 	g_stUIStart.ShowNPCHelper(g_stUIStart.GetCurrMapName(),true);
 }
-void CStartMgr::_evtNPCListChange(CGuiData *pSender)
-{
+
+void CStartMgr::_evtNPCListChange(CGuiData* pSender) {
 	CListItems* pItems = g_stUIStart.lstCurrList->GetItems();
 	int nIndex = pItems->GetIndex(g_stUIStart.lstCurrList->GetSelectItem());
 
@@ -2197,32 +2023,28 @@ void CStartMgr::_evtNPCListChange(CGuiData *pSender)
 
 	std::string itemstring(itemobj->GetString());
 
-	int pos = (int)itemstring.find("(") -1;
-	int pos1 = (int)itemstring.find("(",pos);
-	int pos2 = (int)itemstring.find(",",pos);
-	int pos3 = (int)itemstring.find(")",pos);
+	int pos = (int)itemstring.find("(") - 1;
+	int pos1 = (int)itemstring.find("(", pos);
+	int pos2 = (int)itemstring.find(",", pos);
+	int pos3 = (int)itemstring.find(")", pos);
 
-	if(pos1 >= 0 && pos2 > pos1 && pos3 > pos2 && pos3 <= (int)itemstring.length())
-	{
-		string xStr = itemstring.substr(pos1 + 1,pos2 - pos1 - 1);
-		string yStr = itemstring.substr(pos2 + 1,pos3 - pos2 - 1);
+	if (pos1 >= 0 && pos2 > pos1 && pos3 > pos2 && pos3 <= (int)itemstring.length()) {
+		string xStr = itemstring.substr(pos1 + 1, pos2 - pos1 - 1);
+		string yStr = itemstring.substr(pos2 + 1, pos3 - pos2 - 1);
 
-		g_stUIMap.ShowRadar(xStr.c_str(),yStr.c_str());
+		g_stUIMap.ShowRadar(xStr.c_str(), yStr.c_str());
 	}
 	g_stUIStart.ShowNPCHelper(g_stUIStart.GetCurrMapName(),false);
 }
 
-void CStartMgr::FetchRates()
-{
+void CStartMgr::FetchRates() {
 	CS_RequestDropRate();
 	CS_RequestExpRate();
 }
 
-void CStartMgr::_evtShowMonsterInfo(CGuiData* pSender, int x, int y, DWORD key)
-{
+void CStartMgr::_evtShowMonsterInfo(CGuiData* pSender, int x, int y, DWORD key) {
 	CForm* frm = CFormMgr::s_Mgr.Find("frmMonsterInfo");
-	if(frm->GetIsShow())
-	{
+	if (frm->GetIsShow()) {
 		frm->SetIsShow(false);
 		return;
 	}
@@ -2230,26 +2052,26 @@ void CStartMgr::_evtShowMonsterInfo(CGuiData* pSender, int x, int y, DWORD key)
 	g_pGameApp->Waiting(true);
 }
 
-void CStartMgr::_evtCheckLootFilter(CGuiData* pSender) 
-{
-    CCheckBox* chkDrop = dynamic_cast<CCheckBox*>(pSender);
-    if (!chkDrop) return;
+void CStartMgr::_evtCheckLootFilter(CGuiData* pSender) {
+	CCheckBox* chkDrop = dynamic_cast<CCheckBox*>(pSender);
+	if (!chkDrop) return;
 
-    CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
-    if (!pScene) return;
+	CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
+	if (!pScene) return;
 
 	int itemId = chkDrop->nTag;
-    CItemRecord* pInfo = GetItemRecordInfo(itemId);
-    if (!pInfo) return;
+	CItemRecord* pInfo = GetItemRecordInfo(itemId);
+	if (!pInfo) return;
 
-    bool bCheck = chkDrop->GetIsChecked();
+	bool bCheck = chkDrop->GetIsChecked();
 
-    if (bCheck) {
-        g_pGameApp->SysInfo("Loot Filter: %s is now visible", pInfo->szName);
-    } else {
-        g_pGameApp->SysInfo("Loot Filter: %s is now hidden", pInfo->szName);
-    }
-    pScene->FilterItemsByItemID(itemId, !bCheck);
+	if (bCheck) {
+		g_pGameApp->SysInfo("Loot Filter: %s is now visible", pInfo->szName);
+	}
+	else {
+		g_pGameApp->SysInfo("Loot Filter: %s is now hidden", pInfo->szName);
+	}
+	pScene->FilterItemsByItemID(itemId, !bCheck);
 }
 
 //end

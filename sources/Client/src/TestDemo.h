@@ -10,19 +10,18 @@
 #ifdef TESTDEMO
 
 
-class CTestDemo
-{
+class CTestDemo {
 private:
-    lwIResourceMgr* _res_mgr;
-    lwIModel* _skybox;
+	lwIResourceMgr* _res_mgr;
+	lwIModel* _skybox;
 
 public:
-    CTestDemo();
-    ~CTestDemo();
+	CTestDemo();
+	~CTestDemo();
 
-    BOOL Init();
-    void FrameMove();
-    void Render();
+	BOOL Init();
+	void FrameMove();
+	void Render();
 };
 
 extern CTestDemo* g_pTestDemo;

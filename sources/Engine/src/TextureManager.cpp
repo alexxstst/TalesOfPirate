@@ -178,7 +178,7 @@ std::string TextureManager::ResolveTexturePath(const char* filename) {
 	std::string path(filename);
 
 	size_t len = path.length();
-	if (len > 3 && path[len-1] == 'd' && path[len-2] == 's' && path[len-3] == 'w') {
+	if (len > 3 && path[len - 1] == 'd' && path[len - 2] == 's' && path[len - 3] == 'w') {
 		const char* exts[] = {"tga", "png", "bmp", "dds"};
 		for (auto ext : exts) {
 			std::string origPath = path.substr(0, len - 3) + ext;
@@ -191,8 +191,12 @@ std::string TextureManager::ResolveTexturePath(const char* filename) {
 			return decPath;
 
 		if (stat(path.c_str(), &st) == 0) {
-			const unsigned char key[] = {0x48,0x73,0x29,0xCA,0xBB,0x54,0xCF,0xB0,0xF4,0xBF,0x70,0xA0,0xAA,0x4B,0x12,0xF5};
-			const unsigned char iv[]  = {0x43,0x2a,0x46,0x29,0x4a,0x40,0x4e,0x63,0x52,0x66,0x55,0x6a,0x58,0x6e,0x32,0x72};
+			const unsigned char key[] = {
+				0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5
+			};
+			const unsigned char iv[] = {
+				0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72
+			};
 			if (crypto::AesGcmDecryptFile(path, decPath, key, iv)) {
 				remove(path.c_str());
 				return decPath;
@@ -220,19 +224,21 @@ lwITex* TextureManager::LoadTexture(Entry& entry) {
 	_tcscpy(tex_info.file_name, resolved.c_str());
 	_tcslwr(tex_info.file_name);
 
-	tex_info.pool  = D3DPOOL_MANAGED;
+	tex_info.pool = D3DPOOL_MANAGED;
 	tex_info.usage = 0;
 	tex_info.level = D3DX_DEFAULT;
-	tex_info.type  = TEX_TYPE_FILE;
+	tex_info.type = TEX_TYPE_FILE;
 
 	D3DFORMAT tex_fmt[2];
 	tex_fmt[0] = g_Render.GetTexSetFormat(0);
 	tex_fmt[1] = g_Render.GetTexSetFormat(1);
 
 	size_t l = _tcslen(tex_info.file_name);
-	if (l > 3 && tex_info.file_name[l-1] == 'a' && tex_info.file_name[l-2] == 'g' && tex_info.file_name[l-3] == 't') {
+	if (l > 3 && tex_info.file_name[l - 1] == 'a' && tex_info.file_name[l - 2] == 'g' && tex_info.file_name[l - 3] ==
+		't') {
 		tex_info.format = tex_fmt[1];
-	} else {
+	}
+	else {
 		tex_info.format = tex_fmt[0];
 	}
 
@@ -246,22 +252,20 @@ lwITex* TextureManager::LoadTexture(Entry& entry) {
 		}
 	}
 
-	if (LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r))
-	{
+	if (LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] tex->LoadTexInfo failed: file={}, ret={}",
-		             __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
+					 "[{}] tex->LoadTexInfo failed: file={}, ret={}",
+					 __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
 	}
-	if (LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r))
-	{
+	if (LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] tex->LoadVideoMemory failed: file={}, ret={}",
-		             __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
+					 "[{}] tex->LoadVideoMemory failed: file={}, ret={}",
+					 __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
 	}
 
 	tex->GetTexInfo(&tex_info);
 
-	entry.sWidth  = static_cast<short>(tex_info.width);
+	entry.sWidth = static_cast<short>(tex_info.width);
 	entry.sHeight = static_cast<short>(tex_info.height);
 
 	ToLogService("common", "Load Texture [{}] size = {} {}", entry.path, entry.sWidth, entry.sHeight);

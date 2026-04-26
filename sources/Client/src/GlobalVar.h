@@ -28,6 +28,3 @@ extern dbc::IniFile g_SystemIni;
 #define CLIENT_NAME "Tales of Pirates "
 #define VERSION_NAME "The Frozen Relics"
 #define VERSION_NUM "v2.00"
-
-
-

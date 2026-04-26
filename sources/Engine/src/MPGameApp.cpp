@@ -173,9 +173,6 @@ void MPGameApp::Render() {
 	lwISceneMgr* sm = g_Render.GetInterfaceMgr()->sys_graphics->GetSceneMgr();
 
 
-
-
-
 	if (!g_Render.BeginRender(true)) return;
 
 
@@ -190,14 +187,17 @@ void MPGameApp::Render() {
 		const float w = static_cast<float>(_pConsole->GetWidth());
 		const float h = static_cast<float>(_pConsole->GetHeight() + 14);
 
-		struct CV { float x, y, z, rhw; DWORD color; };
+		struct CV {
+			float x, y, z, rhw;
+			DWORD color;
+		};
 		const CV verts[6] = {
-			{ 0.0f, 0.0f, 0.0f, 1.0f, argb },
-			{    w, 0.0f, 0.0f, 1.0f, argb },
-			{ 0.0f,    h, 0.0f, 1.0f, argb },
-			{    w, 0.0f, 0.0f, 1.0f, argb },
-			{    w,    h, 0.0f, 1.0f, argb },
-			{ 0.0f,    h, 0.0f, 1.0f, argb },
+			{0.0f, 0.0f, 0.0f, 1.0f, argb},
+			{w, 0.0f, 0.0f, 1.0f, argb},
+			{0.0f, h, 0.0f, 1.0f, argb},
+			{w, 0.0f, 0.0f, 1.0f, argb},
+			{w, h, 0.0f, 1.0f, argb},
+			{0.0f, h, 0.0f, 1.0f, argb},
 		};
 
 		auto* dev = g_Render.GetDevice();
@@ -212,9 +212,9 @@ void MPGameApp::Render() {
 			dev->SetRenderState(D3DRS_LIGHTING, FALSE);
 			dev->SetRenderState(D3DRS_ZENABLE, FALSE);
 			dev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-			dev->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1);
+			dev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 			dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			dev->SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1);
+			dev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 			dev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 			dev->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, verts, sizeof(CV));
 		}
@@ -223,7 +223,6 @@ void MPGameApp::Render() {
 	_Render(); //
 
 	sm->EndRender();
-
 
 
 	// INFO_CMD / INFO_FPS текст рисует клиент напрямую (через FontManager
@@ -326,10 +325,10 @@ void MPGameApp::_ReadKeyboardInput() {
 
 	const int nOffsetX = input.GetMouseDeltaX();
 	const int nOffsetY = input.GetMouseDeltaY();
-	const int nScroll  = input.GetMouseWheelDelta();
+	const int nScroll = input.GetMouseWheelDelta();
 
-	_btButtonState[0] = input.IsMouseButtonDown(MouseButton::Left)   ? 0x80 : 0;
-	_btButtonState[1] = input.IsMouseButtonDown(MouseButton::Right)  ? 0x80 : 0;
+	_btButtonState[0] = input.IsMouseButtonDown(MouseButton::Left) ? 0x80 : 0;
+	_btButtonState[1] = input.IsMouseButtonDown(MouseButton::Right) ? 0x80 : 0;
 	_btButtonState[2] = input.IsMouseButtonDown(MouseButton::Middle) ? 0x80 : 0;
 
 	if (nOffsetX || nOffsetY) //

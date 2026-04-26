@@ -27,30 +27,26 @@
 #include "uistartform.h"
 
 
-
 extern MPEditor g_Editor;
 
 static D3DXVECTOR3 vPos;
 static int nScrX, nScrY;
 
 const DWORD DELAY_TIME = 100;
-int	  MOVE_LENGTH = -1;
-int   ATTACT_DIS = 200;
+int MOVE_LENGTH = -1;
+int ATTACT_DIS = 200;
 
-CMouseDown::CMouseDown()
-{
+CMouseDown::CMouseDown() {
 	_pAutoAttack = new CAutoAttack(this);
 
 	Reset();
 }
 
-CMouseDown::~CMouseDown()
-{
+CMouseDown::~CMouseDown() {
 	delete _pAutoAttack;
 }
 
-void CMouseDown::Reset()
-{
+void CMouseDown::Reset() {
 	_pAutoAttack->Reset();
 
 	_eLastType = eLastNone;
@@ -68,234 +64,205 @@ void CMouseDown::Reset()
 	_IsEnabled = true;
 }
 
-bool CMouseDown::_AttackCha( CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::_AttackCha(CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget) {
+	if (!_IsEnabled) return false;
 
-	if( !pSkill ) return false;
+	if (!pSkill) return false;
 
-	if( pSkill->IsAutoAttack() && g_pGameApp->IsShiftPress() )
-	{
-		if( _pAutoAttack->AttackStart( pMain, pSkill, pTarget ) )
+	if (pSkill->IsAutoAttack() && g_pGameApp->IsShiftPress()) {
+		if (_pAutoAttack->AttackStart(pMain, pSkill, pTarget))
 			return true;
 	}
 
 	bool IsForce = false;
-	if( g_pGameApp->IsCtrlPress() && pMain!=pTarget )
-	{
-		 if( !pSkill->IsAttackTime( CGameApp::GetCurTick() ) )
-			 return false;
+	if (g_pGameApp->IsCtrlPress() && pMain != pTarget) {
+		if (!pSkill->IsAttackTime(CGameApp::GetCurTick()))
+			return false;
 
 		IsForce = true;
 	}
 
-	if( !IsForce && !g_SkillUse.IsUse( pSkill, pMain, pTarget ) )
-	{
+	if (!IsForce && !g_SkillUse.IsUse(pSkill, pMain, pTarget)) {
 		return false;
 	}
 
-	return ActAttackCha( pMain, pSkill, pTarget, true, IsForce );
+	return ActAttackCha(pMain, pSkill, pTarget, true, IsForce);
 }
 
-bool CMouseDown::_AttackArea( CCharacter* pMain, CSkillRecord* pSkill, int nScrX, int nScrY )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::_AttackArea(CCharacter* pMain, CSkillRecord* pSkill, int nScrX, int nScrY) {
+	if (!_IsEnabled) return false;
 
-	if( !pSkill ) return false;
+	if (!pSkill) return false;
 
-	if( pSkill->IsAutoAttack() && g_pGameApp->IsShiftPress() )
-	{
-		if( _pAutoAttack->AttackStart( pMain, pSkill, nScrX, nScrY ) )
+	if (pSkill->IsAutoAttack() && g_pGameApp->IsShiftPress()) {
+		if (_pAutoAttack->AttackStart(pMain, pSkill, nScrX, nScrY))
 			return true;
 	}
 
 	bool IsForce = false;
-	if( g_pGameApp->IsCtrlPress() )
-	{
-		 if( !pSkill->IsAttackTime( CGameApp::GetCurTick() ) )
-			 return false;
+	if (g_pGameApp->IsCtrlPress()) {
+		if (!pSkill->IsAttackTime(CGameApp::GetCurTick()))
+			return false;
 
 		IsForce = true;
 	}
 
-	if( !IsForce && !g_SkillUse.IsUse( pSkill, pMain, NULL ) )
-	{
+	if (!IsForce && !g_SkillUse.IsUse(pSkill, pMain, NULL)) {
 		return false;
 	}
 
-	return ActAttackArea( pMain, pSkill, nScrX, nScrY, IsForce );
+	return ActAttackArea(pMain, pSkill, nScrX, nScrY, IsForce);
 }
 
-bool CMouseDown::PickItem( CCharacter* pMain )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::PickItem(CCharacter* pMain) {
+	if (!_IsEnabled) return false;
 
 	int nCount = _pScene->PickItem();
-	if( nCount > 0 )
-	{
+	if (nCount > 0) {
 		_pAutoAttack->Cancel();
-		g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(195), nCount).c_str() );
+		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(195), nCount).c_str());
 		return true;
 	}
 	return false;
 }
 
-void CMouseDown::MouseButtonDown()
-{
-	CCharacter*	 pMain = CGameScene::GetMainCha();
-	if( !pMain ) return;
-		
-	if( !_IsEnabled ) return;
+void CMouseDown::MouseButtonDown() {
+	CCharacter* pMain = CGameScene::GetMainCha();
+	if (!pMain) return;
+
+	if (!_IsEnabled) return;
 
 	_pScene->GetSign()->Hide();
 
-	_pScene->GetPickPos( g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY(), vPos );
+	_pScene->GetPickPos(g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY(), vPos);
 	nScrX = (int)(vPos.x * 100.0f);
 	nScrY = (int)(vPos.y * 100.0f);
 
-	CInsertState *seat = dynamic_cast<CInsertState*>(pMain->GetActor()->GetCurState());
-	if( seat && !seat->GetIsCancel() )
-	{
-		seat->SetFaceTo( nScrX, nScrY );
+	CInsertState* seat = dynamic_cast<CInsertState*>(pMain->GetActor()->GetCurState());
+	if (seat && !seat->GetIsCancel()) {
+		seat->SetFaceTo(nScrX, nScrY);
 		seat->Start();
 		return;
 	}
 
-	CIsStart start( _pAutoAttack );
-	if( g_pGameApp->IsCtrlPress() )
-	{
+	CIsStart start(_pAutoAttack);
+	if (g_pGameApp->IsCtrlPress()) {
 		CSkillRecord* pSkill = pMain->GetReadySkillInfo();
-		if( !pSkill ) pSkill = pMain->GetDefaultSkillInfo();
-	
-		if( pSkill && pSkill->IsAttackArea() )
-		{
-			_AttackArea( pMain, pSkill, nScrX, nScrY );
+		if (!pSkill) pSkill = pMain->GetDefaultSkillInfo();
+
+		if (pSkill && pSkill->IsAttackArea()) {
+			_AttackArea(pMain, pSkill, nScrX, nScrY);
 			return;
 		}
 	}
 
-	switch( _eLastType )
-	{
+	switch (_eLastType) {
 	case eLastAttack:
-		_AttackCha( pMain, _pAttackSkill, _pAttackCha );
+		_AttackCha(pMain, _pAttackSkill, _pAttackCha);
 		break;
 	case eLastPick:
-		ActPickItem( pMain, _pPickItem );
+		ActPickItem(pMain, _pPickItem);
 		break;
 	case eLastEvent:
-		ActEvent( pMain, _pEventNode, _pEvent );
+		ActEvent(pMain, _pEventNode, _pEvent);
 		break;
 	case eLastNpc:
-		ActTalkNpc( pMain, _pNpcCha );
+		ActTalkNpc(pMain, _pNpcCha);
 		break;
 	case eLastArea:
-		_AttackArea( pMain, _pAreaSkill, nScrX, nScrY );
+		_AttackArea(pMain, _pAreaSkill, nScrX, nScrY);
 		break;
 	case eLastDummy:
-        ActDummyObj( pMain, _nDummyX, _nDummyY, _nDummyH, _nDummyAngle, _nDummyAction );
+		ActDummyObj(pMain, _nDummyX, _nDummyY, _nDummyH, _nDummyAngle, _nDummyAction);
 		break;
 	case eLastFollow:
-		_pAutoAttack->Follow( pMain, _pFollow );
+		_pAutoAttack->Follow(pMain, _pFollow);
 		break;
 	default:
 		// lemon
-		_pScene->GetPickPos( g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY() + 25, vPos );
+		_pScene->GetPickPos(g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY() + 25, vPos);
 		int nAreaX = (int)(vPos.x * 100.0f);
 		int nAreaY = (int)(vPos.y * 100.0f);
 
-		if( CGameApp::GetCurTick() <= _dwAttackTime + 500 )
-		{
+		if (CGameApp::GetCurTick() <= _dwAttackTime + 500) {
 			CSkillRecord* pSkill = pMain->GetReadySkillInfo();
-			if( !pSkill ) pSkill = pMain->GetDefaultSkillInfo();
+			if (!pSkill) pSkill = pMain->GetDefaultSkillInfo();
 
-			if( _pAttackSkill==pSkill && _pAttackCha->IsValid() ) 
-			{				
-				if( GetDistance( nAreaX, nAreaY, _pAttackCha->GetCurX(), _pAttackCha->GetCurY() )<=230 && _AttackCha( pMain, _pAttackSkill, _pAttackCha ) )
-				{
+			if (_pAttackSkill == pSkill && _pAttackCha->IsValid()) {
+				if (GetDistance(nAreaX, nAreaY, _pAttackCha->GetCurX(), _pAttackCha->GetCurY()) <= 230 && _AttackCha(
+					pMain, _pAttackSkill, _pAttackCha)) {
 					return;
 				}
 			}
 		}
 
-		if( CGameApp::GetCurTick() <= _dwPickTime + 500 )
-		{
-			if( !pMain->GetReadySkillInfo() && _pPickItem->IsValid()  )
-				if( GetDistance( nAreaX, nAreaY, _pPickItem->GetCurX(), _pPickItem->GetCurY() )<=150 )
-					if( ActPickItem( pMain, _pPickItem ) )
+		if (CGameApp::GetCurTick() <= _dwPickTime + 500) {
+			if (!pMain->GetReadySkillInfo() && _pPickItem->IsValid())
+				if (GetDistance(nAreaX, nAreaY, _pPickItem->GetCurX(), _pPickItem->GetCurY()) <= 150)
+					if (ActPickItem(pMain, _pPickItem))
 						return;
 		}
 
-		if( eLastMove==_eLastType )	
-		{
-			if( !_pAutoAttack->AttackMoveTo( nScrX, nScrY ) )
-			{
-					ActMove( pMain, nScrX, nScrY, g_pGameApp->IsAltPress() ? true : false );
+		if (eLastMove == _eLastType) {
+			if (!_pAutoAttack->AttackMoveTo(nScrX, nScrY)) {
+				ActMove(pMain, nScrX, nScrY, g_pGameApp->IsAltPress() ? true : false);
 			}
 		}
 		break;
 	}
 }
 
-void CMouseDown::CheckWalkContinue()
-{
-    static DWORD dwAddTime = 0;
-    if( CGameApp::GetCurTick() >= dwAddTime )
-    {
-        dwAddTime = CGameApp::GetCurTick() + 500;
+void CMouseDown::CheckWalkContinue() {
+	static DWORD dwAddTime = 0;
+	if (CGameApp::GetCurTick() >= dwAddTime) {
+		dwAddTime = CGameApp::GetCurTick() + 500;
 		CCharacter* pMain = CGameScene::GetMainCha();
-		if( _IsEnabled && pMain && !g_Editor.IsEnable() && CGameApp::IsMouseInScene() )
-        {
+		if (_IsEnabled && pMain && !g_Editor.IsEnable() && CGameApp::IsMouseInScene()) {
 			CUIInterface::MainChaMove();
 
-			CInsertState *seat = dynamic_cast<CInsertState*>(pMain->GetActor()->GetCurState());
-			if( seat ) return;
+			CInsertState* seat = dynamic_cast<CInsertState*>(pMain->GetActor()->GetCurState());
+			if (seat) return;
 
 			_pScene->GetSign()->Hide();
 
-			_pScene->GetPickPos( g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY(), vPos );
+			_pScene->GetPickPos(g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY(), vPos);
 			nScrX = (int)(vPos.x * 100.0f);
 			nScrY = (int)(vPos.y * 100.0f);
-			if ( pMain->getMoveSpeed() > 0 )
-			{
+			if (pMain->getMoveSpeed() > 0) {
 				int len = pMain->getMoveSpeed();
-				len += GetDistance( pMain->GetCurX(), pMain->GetCurY(), pMain->GetServerX(), pMain->GetServerY() );
-				if( GetDistance( pMain->GetCurX(), pMain->GetCurY(), nScrX, nScrY ) < len )
-					GetDistancePos( pMain->GetCurX(), pMain->GetCurY(), nScrX, nScrY, len, nScrX, nScrY );
+				len += GetDistance(pMain->GetCurX(), pMain->GetCurY(), pMain->GetServerX(), pMain->GetServerY());
+				if (GetDistance(pMain->GetCurX(), pMain->GetCurY(), nScrX, nScrY) < len)
+					GetDistancePos(pMain->GetCurX(), pMain->GetCurY(), nScrX, nScrY, len, nScrX, nScrY);
 			}
-		
-					ActMove( CGameScene::GetMainCha(), nScrX, nScrY, false, true );
-					
-        }
-    }
+
+			ActMove(CGameScene::GetMainCha(), nScrX, nScrY, false, true);
+		}
+	}
 }
 
-bool CMouseDown::ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bool isLine, bool IsCompart )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActMove(CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bool isLine, bool IsCompart) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha ) return false;
+	if (!pCha) return false;
 
-	if( GlobalAppConfig.IsEditor() )
-	{
-		pCha->SetServerPos( pCha->GetCurX(), pCha->GetCurY() );
+	if (GlobalAppConfig.IsEditor()) {
+		pCha->SetServerPos(pCha->GetCurX(), pCha->GetCurY());
 	}
 
-    if( !isLine )
-    {
-		if(!g_cFindPathEx.HaveTarget())
-		_pScene->GetSign()->Show( nScrX, nScrY );
-    }
+	if (!isLine) {
+		if (!g_cFindPathEx.HaveTarget())
+			_pScene->GetSign()->Show(nScrX, nScrY);
+	}
 
-	static CCharacter* pLastCha=NULL;
-	static int nLastScrX=0, nLastScrY=0;
-	static bool isLastAdd=false, isLastLine=false;
+	static CCharacter* pLastCha = NULL;
+	static int nLastScrX = 0, nLastScrY = 0;
+	static bool isLastAdd = false, isLastLine = false;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha 
-		&& nLastScrX==nScrX && nLastScrY==nScrY 
-		&& isLastAdd==isAdd && isLastLine==isLine )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha
+		&& nLastScrX == nScrX && nLastScrY == nScrY
+		&& isLastAdd == isAdd && isLastLine == isLine) {
 		return true;
 	}
 
@@ -306,97 +273,85 @@ bool CMouseDown::ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bo
 	isLastAdd = isAdd;
 	isLastLine = isLine;
 
-	if( !GlobalAppConfig.IsMoveClient() )
-	{
-		CServerMoveState * move = new CServerMoveState(pCha->GetActor());
-		move->SetWalkLine( isLine );
-		move->SetMoveTo( nScrX, nScrY );
+	if (!GlobalAppConfig.IsMoveClient()) {
+		CServerMoveState* move = new CServerMoveState(pCha->GetActor());
+		move->SetWalkLine(isLine);
+		move->SetMoveTo(nScrX, nScrY);
 		return pCha->GetActor()->SwitchState(move);
 
 		// 
 		bool isOK = false;
-		if( !isLine && MOVE_LENGTH>0 )
-		{
-			isOK = g_cFindPath.GetPathFindingState()/*g_cFindPath.Find( pCha->GetScene(), pCha, pCha->GetCurX(), pCha->GetCurY(), nScrX, nScrY, isLine )*/;
+		if (!isLine && MOVE_LENGTH > 0) {
+			isOK = g_cFindPath.GetPathFindingState()
+				/*g_cFindPath.Find( pCha->GetScene(), pCha, pCha->GetCurX(), pCha->GetCurY(), nScrX, nScrY, isLine )*/;
 		}
-		if( isOK )
-		{
+		if (isOK) {
 			CMoveList cLocalList;
-			COneMoveState::CompartMoveList( cLocalList, g_cFindPath.GetResultPath(), MOVE_LENGTH );
+			COneMoveState::CompartMoveList(cLocalList, g_cFindPath.GetResultPath(), MOVE_LENGTH);
 			POINT& pt = cLocalList.GetBack();
 			pt.x = nScrX;
 			pt.y = nScrY;
 
 			int nCount = 0;
-			while( !cLocalList.IsEmpty() )
-			{
+			while (!cLocalList.IsEmpty()) {
 				POINT pt = cLocalList.GetFront();
 				cLocalList.PopFront();
 
-				CServerMoveState * move = new CServerMoveState(pCha->GetActor());
-				move->SetWalkLine( isLine );
-				move->SetMoveTo( pt.x, pt.y );
-				if( nCount==0 )
+				CServerMoveState* move = new CServerMoveState(pCha->GetActor());
+				move->SetWalkLine(isLine);
+				move->SetMoveTo(pt.x, pt.y);
+				if (nCount == 0)
 					pCha->GetActor()->SwitchState(move);
 				else
-					pCha->GetActor()->AddState( move );
+					pCha->GetActor()->AddState(move);
 				nCount++;
 			}
 			return true;
 		}
-		else
-		{
-			CServerMoveState * move = new CServerMoveState(pCha->GetActor());
-			move->SetWalkLine( isLine );
-			move->SetMoveTo( nScrX, nScrY );
+		else {
+			CServerMoveState* move = new CServerMoveState(pCha->GetActor());
+			move->SetWalkLine(isLine);
+			move->SetMoveTo(nScrX, nScrY);
 			return pCha->GetActor()->SwitchState(move);
 		}
 	}
 
-	if( IsCompart )
-	{
-		
-		COneMoveState* pMoveState = dynamic_cast<COneMoveState*>( pCha->GetActor()->GetCurState() );
-		if( pMoveState )
-		{
-			if( isAdd )
-			{
-				return pMoveState->AddPath( nScrX, nScrY, isLine );
+	if (IsCompart) {
+		COneMoveState* pMoveState = dynamic_cast<COneMoveState*>(pCha->GetActor()->GetCurState());
+		if (pMoveState) {
+			if (isAdd) {
+				return pMoveState->AddPath(nScrX, nScrY, isLine);
 			}
-			else
-			{
+			else {
 				pCha->GetActor()->ClearQueueState();
-				return pMoveState->ContinueMove( nScrX, nScrY, isLine, true );
+				return pMoveState->ContinueMove(nScrX, nScrY, isLine, true);
 			}
 		}
-		else
-		{
-			COneMoveState * move = new COneMoveState(pCha->GetActor());
-			move->SetWalkLine( isLine );
-			move->SetMoveTo( nScrX, nScrY );
+		else {
+			COneMoveState* move = new COneMoveState(pCha->GetActor());
+			move->SetWalkLine(isLine);
+			move->SetMoveTo(nScrX, nScrY);
 			return pCha->GetActor()->SwitchState(move);
 		}
 	}
-	else
-	{
-		CServerMoveState * move = new CServerMoveState(pCha->GetActor());
-		move->SetWalkLine( isLine );
-		move->SetMoveTo( nScrX, nScrY );
+	else {
+		CServerMoveState* move = new CServerMoveState(pCha->GetActor());
+		move->SetWalkLine(isLine);
+		move->SetMoveTo(nScrX, nScrY);
 		return pCha->GetActor()->SwitchState(move);
 	}
 }
 
-bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacter* pTarget, bool isTrace, bool IsForce, bool IsCompart )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActAttackCha(CCharacter* pCha, CSkillRecord* pSkill, CCharacter* pTarget, bool isTrace, bool IsForce,
+							  bool IsCompart) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pSkill || !pTarget )
-	{
+	if (!pCha || !pSkill || !pTarget) {
 		return false;
 	}
 
 	//  by lh
-    if( !g_NetIF->IsConnected() ) return false;
+	if (!g_NetIF->IsConnected()) return false;
 
 	static CCharacter* pLastCha = NULL;
 	static CCharacter* pLastTarget = NULL;
@@ -404,26 +359,25 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 	static DWORD dwLastTime = 0;
 
 	g_stUIStart.SetTargetInfo(pTarget);
-	
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha && pLastTarget==pTarget
-		&& pLastSkill==pSkill )
-	{
+
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha && pLastTarget == pTarget
+		&& pLastSkill == pSkill) {
 		return true;
 	}
-	
-	
-	
 
-	ToLogService("common", "actattackcha: self:{}, target:{}, pos[{}, {}], skill:{}\ttick:{}", pCha->getName().c_str(), pTarget->getName().c_str(), pTarget->GetCurX(), pTarget->GetCurY(), pSkill->szName, CGameApp::GetCurTick());
-	
+
+	ToLogService("common", "actattackcha: self:{}, target:{}, pos[{}, {}], skill:{}\ttick:{}", pCha->getName().c_str(),
+				 pTarget->getName().c_str(), pTarget->GetCurX(), pTarget->GetCurY(), pSkill->szName,
+				 CGameApp::GetCurTick());
+
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
 	pLastTarget = pTarget;
 	pLastSkill = pSkill;
 
-	_pScene->GetSign()->Show( pTarget );
-	g_pGameApp->AddTipText( pSkill->szName.c_str() );
+	_pScene->GetSign()->Show(pTarget);
+	g_pGameApp->AddTipText(pSkill->szName.c_str());
 
 	//// 
 	//if( g_Config.m_IsMoveClient && IsCompart && pSkill->GetDistance() )
@@ -465,22 +419,21 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 	//	}
 	//}
 
-	CAttackState *attack = isTrace ? new CTraceAttackState(pCha->GetActor()) : new CAttackState(pCha->GetActor());
-	attack->SetIsForce( IsForce );
-	attack->SetSkill( pSkill );
-	attack->SetTarget( pTarget );
-	attack->SetCommand( CCommandObj::GetReadyCommand() );
-    return pCha->GetActor()->SwitchState(attack);
+	CAttackState* attack = isTrace ? new CTraceAttackState(pCha->GetActor()) : new CAttackState(pCha->GetActor());
+	attack->SetIsForce(IsForce);
+	attack->SetSkill(pSkill);
+	attack->SetTarget(pTarget);
+	attack->SetCommand(CCommandObj::GetReadyCommand());
+	return pCha->GetActor()->SwitchState(attack);
 }
 
-bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScrX, int nScrY, bool IsForce, bool IsCompart )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActAttackArea(CCharacter* pCha, CSkillRecord* pSkill, int nScrX, int nScrY, bool IsForce,
+							   bool IsCompart) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pSkill ) return false;
+	if (!pCha || !pSkill) return false;
 
-	if( !pSkill->IsAttackArea() ) 
-	{
+	if (!pSkill->IsAttackArea()) {
 		g_pGameApp->SysInfo("%s", GetLanguageString(196).c_str());
 		return false;
 	}
@@ -490,15 +443,15 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 	static int nLastScrX = 0, nLastScrY = 0;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha 
-		&& pLastSkill==pSkill 
-		&& nLastScrX==nScrX && nLastScrY==nScrY )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha
+		&& pLastSkill == pSkill
+		&& nLastScrX == nScrX && nLastScrY == nScrY) {
 		return true;
 	}
 
-	ToLogService("common", "actattackarea: self:{}, skill:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pSkill->szName, nScrX, nScrY, CGameApp::GetCurTick());
+	ToLogService("common", "actattackarea: self:{}, skill:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(),
+				 pSkill->szName, nScrX, nScrY, CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -547,22 +500,20 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 	//}
 
 	// 
-	CAttackState *attack = new CAttackState(pCha->GetActor());
-	attack->SetIsForce( IsForce );
-    attack->SetSkill( pSkill );
-	attack->SetAttackPoint( nScrX, nScrY );
-	attack->SetCommand( CCommandObj::GetReadyCommand() );
+	CAttackState* attack = new CAttackState(pCha->GetActor());
+	attack->SetIsForce(IsForce);
+	attack->SetSkill(pSkill);
+	attack->SetAttackPoint(nScrX, nScrY);
+	attack->SetCommand(CCommandObj::GetReadyCommand());
 
-    g_pGameApp->AddTipText( "AttackPoint: %s", pSkill->szName.c_str() );
-    return pCha->GetActor()->SwitchState(attack);
+	g_pGameApp->AddTipText("AttackPoint: %s", pSkill->szName.c_str());
+	return pCha->GetActor()->SwitchState(attack);
 }
 
-bool CMouseDown::ActTalkNpc( CCharacter* pCha, CCharacter* pNpc )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActTalkNpc(CCharacter* pCha, CCharacter* pNpc) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pNpc )
-	{
+	if (!pCha || !pNpc) {
 		return false;
 	}
 
@@ -570,240 +521,224 @@ bool CMouseDown::ActTalkNpc( CCharacter* pCha, CCharacter* pNpc )
 	static CCharacter* pLastTarget = NULL;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha && pLastTarget==pNpc )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha && pLastTarget == pNpc) {
 		return true;
 	}
 
-	ToLogService("common", "acttalknpc: self:{}, npc:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pNpc->getName().c_str(), pNpc->GetCurX(), pNpc->GetCurY(), CGameApp::GetCurTick());
+	ToLogService("common", "acttalknpc: self:{}, npc:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(),
+				 pNpc->getName().c_str(), pNpc->GetCurX(), pNpc->GetCurY(), CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
 	pLastTarget = pNpc;
 
 
-	if( pNpc->DistanceFrom( pCha ) > 300 )
-	{
+	if (pNpc->DistanceFrom(pCha) > 300) {
 		int x = 0;
 		int y = 0;
-		GetDistancePos( pNpc->GetCurX(), pNpc->GetCurY(), pCha->GetCurX(), pCha->GetCurY(), 200, x, y );
-		ActMove( pCha, x, y );
+		GetDistancePos(pNpc->GetCurX(), pNpc->GetCurY(), pCha->GetCurX(), pCha->GetCurY(), 200, x, y);
+		ActMove(pCha, x, y);
 	}
 
 	CNpcState* npc = new CNpcState(pCha->GetActor());
-	npc->SetNpc( pNpc );
-	return pCha->GetActor()->AddState( npc );
+	npc->SetNpc(pNpc);
+	return pCha->GetActor()->AddState(npc);
 }
 
-bool CMouseDown::ActPickItem( CCharacter* pCha, CSceneItem* pItem, bool IsMove )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActPickItem(CCharacter* pCha, CSceneItem* pItem, bool IsMove) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pItem )
-	{
+	if (!pCha || !pItem) {
 		return false;
 	}
 
-    if( !pItem->IsPick() ) return false;
+	if (!pItem->IsPick()) return false;
 
 	static CCharacter* pLastCha = NULL;
 	static CSceneItem* pLastItem = NULL;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha && pLastItem==pItem )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha && pLastItem == pItem) {
 		return true;
 	}
 
-	ToLogService("common", "actpicktime: self:{}, item:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pItem->GetItemInfo()->szName, pItem->GetCurX(), pItem->GetCurY(), CGameApp::GetCurTick());
+	ToLogService("common", "actpicktime: self:{}, item:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(),
+				 pItem->GetItemInfo()->szName, pItem->GetCurX(), pItem->GetCurY(), CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
 	pLastItem = pItem;
 
-	if( IsMove ) ActMove( pCha, pItem->GetCurX(), pItem->GetCurY() );
+	if (IsMove) ActMove(pCha, pItem->GetCurX(), pItem->GetCurY());
 
-    float h = 0.8f;
-    pItem->GetItemHeight(&h);   
-	_pScene->GetSign()->Show( pItem->GetCurX(), pItem->GetCurY(), (int)(h*100.0f) );
+	float h = 0.8f;
+	pItem->GetItemHeight(&h);
+	_pScene->GetSign()->Show(pItem->GetCurX(), pItem->GetCurY(), (int)(h * 100.0f));
 
-	CPickState *pState = new CPickState( pCha->GetActor() );
-	pState->SetItem( pItem );
-	return pCha->GetActor()->AddState( pState );
+	CPickState* pState = new CPickState(pCha->GetActor());
+	pState->SetItem(pItem);
+	return pCha->GetActor()->AddState(pState);
 }
 
-bool CMouseDown::ActEvent( CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActEvent(CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pNode || !pEvent ) return false;
+	if (!pCha || !pNode || !pEvent) return false;
 
-	if( pEvent->IsNormal()
-		&& pEvent->GetInfo()->IsValid( pCha->GetMainType()) 
-		&& pEvent->GetInfo()->sArouseType==enumEVENT_AROUSE_CLICK )
-    {
-
+	if (pEvent->IsNormal()
+		&& pEvent->GetInfo()->IsValid(pCha->GetMainType())
+		&& pEvent->GetInfo()->sArouseType == enumEVENT_AROUSE_CLICK) {
 		static CCharacter* pLastCha = NULL;
 		static CSceneNode* pLastNode = NULL;
 		static CEvent* pLastEvent = NULL;
 		static DWORD dwLastTime = 0;
 
-		if( CGameApp::GetCurTick()<=dwLastTime 
-			&& pLastCha==pCha && pLastNode==pNode && pLastEvent==pEvent )
-		{
+		if (CGameApp::GetCurTick() <= dwLastTime
+			&& pLastCha == pCha && pLastNode == pNode && pLastEvent == pEvent) {
 			return true;
 		}
 
-		ToLogService("common", "actevent: self:{}, nodeid:{}, pos[{}, {}], event:{}\ttick:{}", pCha->getName().c_str(), pNode->getAttachID(), pNode->GetCurX(), pNode->GetCurY(), pEvent->GetInfo()->szName, CGameApp::GetCurTick());
+		ToLogService("common", "actevent: self:{}, nodeid:{}, pos[{}, {}], event:{}\ttick:{}", pCha->getName().c_str(),
+					 pNode->getAttachID(), pNode->GetCurX(), pNode->GetCurY(), pEvent->GetInfo()->szName,
+					 CGameApp::GetCurTick());
 
 		dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 		pLastCha = pCha;
 		pLastNode = pNode;
 		pLastEvent = pEvent;
-		
+
 
 		pCha->GetActor()->CancelState();
 
-		ActMove( pCha, pNode->GetCurX(), pNode->GetCurY() );
+		ActMove(pCha, pNode->GetCurX(), pNode->GetCurY());
 
-		CEventState* pState = new CEventState( pCha->GetActor() );
-		pState->SetEvent( pEvent );
-		pState->SetNode( pNode );
-		return pCha->GetActor()->AddState( pState );
-    }
+		CEventState* pState = new CEventState(pCha->GetActor());
+		pState->SetEvent(pEvent);
+		pState->SetNode(pNode);
+		return pCha->GetActor()->AddState(pState);
+	}
 	return false;
 }
 
-bool CMouseDown::ActDummyObj( CCharacter* pCha, int x, int y, int h, int t_angle, int action )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActDummyObj(CCharacter* pCha, int x, int y, int h, int t_angle, int action) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha ) return false;
+	if (!pCha) return false;
 
-	if( pCha->IsBoat() ) return false;
+	if (pCha->IsBoat()) return false;
 
 	static CCharacter* pLastCha = NULL;
-	static int nLastX=0, nLastY=0, nLastH=0, nLastAngle=0, nLastAction=0;
+	static int nLastX = 0, nLastY = 0, nLastH = 0, nLastAngle = 0, nLastAction = 0;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha 
-		&& nLastX==x && nLastY==y 
-		&& nLastH==h && nLastAngle==t_angle 
-		&& nLastAction==action )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha
+		&& nLastX == x && nLastY == y
+		&& nLastH == h && nLastAngle == t_angle
+		&& nLastAction == action) {
 		return true;
 	}
 
-	ToLogService("common", "actdummyobj: self:{}, x:{}, y:{}, h:{}, angle:{}, action:{}\ttick:{}", pCha->getName().c_str(), x, y, h, t_angle, action, CGameApp::GetCurTick());
+	ToLogService("common", "actdummyobj: self:{}, x:{}, y:{}, h:{}, angle:{}, action:{}\ttick:{}",
+				 pCha->getName().c_str(), x, y, h, t_angle, action, CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
-	nLastX=x, nLastY=y;
-	nLastH=h, nLastAngle=t_angle;
-	nLastAction=action;
+	nLastX = x, nLastY = y;
+	nLastH = h, nLastAngle = t_angle;
+	nLastAction = action;
 
-    CSeatState *seat = dynamic_cast<CSeatState*>( pCha->GetActor()->FindStateClass( typeid(CSeatState)) );
-    if( seat )
-    {
-        if( seat->GetAngle()==t_angle
-            && seat->GetPosX()==x
-            && seat->GetPosY()==y
-            && seat->GetHeight()==h
-            && seat->GetPose()==action )
-        {
-            return true;
-        }
-    }
+	CSeatState* seat = dynamic_cast<CSeatState*>(pCha->GetActor()->FindStateClass(typeid(CSeatState)));
+	if (seat) {
+		if (seat->GetAngle() == t_angle
+			&& seat->GetPosX() == x
+			&& seat->GetPosY() == y
+			&& seat->GetHeight() == h
+			&& seat->GetPose() == action) {
+			return true;
+		}
+	}
 
 	int dx, dy;
-	GetAnglePos( x, y, pCha->GetDefaultChaInfo()->sRadii, t_angle, dx, dy );
+	GetAnglePos(x, y, pCha->GetDefaultChaInfo()->sRadii, t_angle, dx, dy);
 
-	ActMove( pCha, dx, dy );
+	ActMove(pCha, dx, dy);
 
 	seat = new CSeatState(pCha->GetActor());
-	seat->SetPos( x, y );
-	seat->SetAngle( t_angle );
-	seat->SetPose( action );
-    seat->SetHeight( h );
-    return pCha->GetActor()->AddState( seat );
+	seat->SetPos(x, y);
+	seat->SetAngle(t_angle);
+	seat->SetPose(action);
+	seat->SetHeight(h);
+	return pCha->GetActor()->AddState(seat);
 }
 
-bool CMouseDown::ActCha( CCharacter* pCha, CCharacter* pTarget )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActCha(CCharacter* pCha, CCharacter* pTarget) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pTarget ) return false;
+	if (!pCha || !pTarget) return false;
 
 	static CCharacter* pLastCha = NULL;
 	static CCharacter* pLastTarget = NULL;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha && pLastTarget==pTarget )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha && pLastTarget == pTarget) {
 		return true;
 	}
 
-	ToLogService("common", "actcha: self:{}, target:{}\ttick:{}", pCha->getName().c_str(), pTarget->getName().c_str(), CGameApp::GetCurTick());
+	ToLogService("common", "actcha: self:{}, target:{}\ttick:{}", pCha->getName().c_str(), pTarget->getName().c_str(),
+				 CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
 	pLastTarget = pTarget;
-	
-	if( pTarget->getEvent() )
-	{
-		return ActEvent( pCha, pTarget, pTarget->getEvent() );
+
+	if (pTarget->getEvent()) {
+		return ActEvent(pCha, pTarget, pTarget->getEvent());
 	}
 
-	if( pTarget->IsNPC() )
-	{
-		return ActTalkNpc( pCha, pTarget );
+	if (pTarget->IsNPC()) {
+		return ActTalkNpc(pCha, pTarget);
 	}
 
 	CSkillRecord* pSkill = pCha->GetReadySkillInfo();
-	if( !pSkill ) pSkill = pCha->GetDefaultSkillInfo();
+	if (!pSkill) pSkill = pCha->GetDefaultSkillInfo();
 
-	return ActAttackCha( pCha, pSkill, pTarget );
+	return ActAttackCha(pCha, pSkill, pTarget);
 }
 
-bool CMouseDown::ActBackMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd )
-{
+bool CMouseDown::ActBackMove(CCharacter* pCha, int nScrX, int nScrY, bool isAdd) {
 	CBackMoveState* move = new CBackMoveState(pCha->GetActor());
-	move->SetMoveTo( nScrX, nScrY );
+	move->SetMoveTo(nScrX, nScrY);
 
-    if( isAdd ) 
-    {
-        return pCha->GetActor()->AddState( move );
-    }
-    return pCha->GetActor()->SwitchState(move);
+	if (isAdd) {
+		return pCha->GetActor()->AddState(move);
+	}
+	return pCha->GetActor()->SwitchState(move);
 }
 
 bool g_HaveGameMender = false;
-void CMouseDown::FrameMove()
-{
+
+void CMouseDown::FrameMove() {
 	_pAutoAttack->FrameMove();
 	return;
 
-	static DWORD dwTime = CGameApp::GetCurTick() + ( rand() % 300 ) * 1000 + 30 * 1000;
-	if( !g_HaveGameMender && CGameApp::GetCurTick() > dwTime )
-	{
+	static DWORD dwTime = CGameApp::GetCurTick() + (rand() % 300) * 1000 + 30 * 1000;
+	if (!g_HaveGameMender && CGameApp::GetCurTick() > dwTime) {
 		dwTime = CGameApp::GetCurTick() + (rand() % 120 + 30) * 1000;
-		EnumWindows( _EnumWindowsProc, NULL );
+		EnumWindows(_EnumWindowsProc, NULL);
 	}
 }
 
-BOOL CALLBACK CMouseDown::_EnumWindowsProc( HWND hWnd, LPARAM lParam )
-{
+BOOL CALLBACK CMouseDown::_EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 	return TRUE;
 
-	static char szBuf[1024] = { 0 };
-	GetWindowText( hWnd, szBuf, sizeof(szBuf) );
-	if( strlen(szBuf)>0 && strstr( szBuf, GetLanguageString(197).c_str()) != nullptr )
-	{
-		extern void	CS_Logout();
+	static char szBuf[1024] = {0};
+	GetWindowText(hWnd, szBuf, sizeof(szBuf));
+	if (strlen(szBuf) > 0 && strstr(szBuf, GetLanguageString(197).c_str()) != nullptr) {
+		extern void CS_Logout();
 		CS_Logout();
 		g_HaveGameMender = true;
 		return FALSE;
@@ -811,43 +746,39 @@ BOOL CALLBACK CMouseDown::_EnumWindowsProc( HWND hWnd, LPARAM lParam )
 	return TRUE;
 }
 
-bool CMouseDown::ActShop( CCharacter* pCha, CCharacter* pTarget )
-{
-	if( !_IsEnabled ) return false;
+bool CMouseDown::ActShop(CCharacter* pCha, CCharacter* pTarget) {
+	if (!_IsEnabled) return false;
 
-	if( !pCha || !pTarget ) return false;
+	if (!pCha || !pTarget) return false;
 
-	if( pCha==pTarget ) return false;
+	if (pCha == pTarget) return false;
 
-	if( pCha->IsShop() || !pTarget->IsShop() ) return false;
+	if (pCha->IsShop() || !pTarget->IsShop()) return false;
 
 	static CCharacter* pLastCha = NULL;
 	static CCharacter* pLastTarget = NULL;
 	static DWORD dwLastTime = 0;
 
-	if( CGameApp::GetCurTick()<=dwLastTime 
-		&& pLastCha==pCha && pLastTarget==pTarget )
-	{
+	if (CGameApp::GetCurTick() <= dwLastTime
+		&& pLastCha == pCha && pLastTarget == pTarget) {
 		return true;
 	}
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
 	pLastTarget = pTarget;
 
-	if( pCha->DistanceFrom( pTarget ) > 300 )
-	{
+	if (pCha->DistanceFrom(pTarget) > 300) {
 		int x = 0;
 		int y = 0;
-		
-		GetAnglePos( pTarget->GetCurX(), pTarget->GetCurY(), 380, pTarget->getYaw(), x, y );
-		ActMove( pCha, x, y );
 
-		GetDistancePos( pTarget->GetCurX(), pTarget->GetCurY(), x, y, 250, x, y );
-		ActMove( pCha, x, y, true );
+		GetAnglePos(pTarget->GetCurX(), pTarget->GetCurY(), 380, pTarget->getYaw(), x, y);
+		ActMove(pCha, x, y);
+
+		GetDistancePos(pTarget->GetCurX(), pTarget->GetCurY(), x, y, 250, x, y);
+		ActMove(pCha, x, y, true);
 	}
 
 	CShopState* shop = new CShopState(pCha->GetActor());
-	shop->SetShop( pTarget );
-	return pCha->GetActor()->AddState( shop );
+	shop->SetShop(pTarget);
+	return pCha->GetActor()->AddState(shop);
 }
-

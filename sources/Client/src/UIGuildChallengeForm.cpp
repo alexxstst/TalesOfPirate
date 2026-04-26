@@ -28,19 +28,15 @@
 #include "UIEdit.h"
 
 
-
-namespace GUI
-{
+namespace GUI {
 	const int CGuildChallengeMgr::FIRST_CHARGE_MONEY[NUM] = {5000000, 3000000, 1000000};
 
 	//-------------------------------------------------------------------------
-	bool CGuildChallengeMgr::Init()
-	{
-		CFormMgr &mgr = CFormMgr::s_Mgr;
+	bool CGuildChallengeMgr::Init() {
+		CFormMgr& mgr = CFormMgr::s_Mgr;
 		//npc
-		frmGuildPK  = mgr.Find("frmGuildPK" );
-		if ( !frmGuildPK )
-		{	
+		frmGuildPK = mgr.Find("frmGuildPK");
+		if (!frmGuildPK) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(560).c_str());
 			return false;
 		}
@@ -53,36 +49,34 @@ namespace GUI
 		//				 frmGuildPK->GetName(), 
 		//				 "lstGuildPK");
 		char szBuf[32];
-		for (int i(0); i<NUM; i++)
-		{
+		for (int i(0); i < NUM; i++) {
 			sprintf(szBuf, "labGuildName%d", i);
 			labGuildName[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
 			if (!labGuildName[i])
 				return Error(GetLanguageString(561).c_str(),
-				frmGuildPK->GetName(),
-				szBuf);
+							 frmGuildPK->GetName(),
+							 szBuf);
 
 			sprintf(szBuf, "labChallenger%d", i);
 			labChallenger[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
 			if (!labChallenger[i])
 				return Error(GetLanguageString(561).c_str(),
-				frmGuildPK->GetName(),
-				szBuf);
+							 frmGuildPK->GetName(),
+							 szBuf);
 
 			sprintf(szBuf, "labMoney%d", i);
 			labMoney[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
 			if (!labMoney[i])
 				return Error(GetLanguageString(561).c_str(),
-				frmGuildPK->GetName(),
-				szBuf);
+							 frmGuildPK->GetName(),
+							 szBuf);
 
 			sprintf(szBuf, "btnCharge%d", i);
 			btnCharge[i] = dynamic_cast<CTextButton*>(frmGuildPK->Find(szBuf));
 			if (!btnCharge[i])
 				return Error(GetLanguageString(561).c_str(),
-				frmGuildPK->GetName(),
-				szBuf);
-
+							 frmGuildPK->GetName(),
+							 szBuf);
 		}
 		btnCharge[FIRST]->evtMouseClick = _FirstChallengeButtonDown;
 		btnCharge[SECOND]->evtMouseClick = _SecondChallengeButtonDown;
@@ -90,113 +84,105 @@ namespace GUI
 
 		return true;
 	}
+
 	//-------------------------------------------------------------------------
-	bool CGuildChallengeMgr::SendChallegeProtocol(int iIndex, long lMoney)
-	{		
-		if (m_lChargeMoney[iIndex] == -1)
-		{
-			CM_GUILD_LEIZHU(iIndex+1, (DWORD)lMoney);
+	bool CGuildChallengeMgr::SendChallegeProtocol(int iIndex, long lMoney) {
+		if (m_lChargeMoney[iIndex] == -1) {
+			CM_GUILD_LEIZHU(iIndex + 1, (DWORD)lMoney);
 		}
-		else
-		{
-			CM_GUILD_CHALL(iIndex+1, (DWORD)lMoney);
+		else {
+			CM_GUILD_CHALL(iIndex + 1, (DWORD)lMoney);
 		}
 		return true;
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::Show(bool bShow)
-	{
+	void CGuildChallengeMgr::Show(bool bShow) {
 		frmGuildPK->SetIsShow(bShow);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::SetContent(const NET_GUILD_CHALLINFO& Info)
-	{
-		for (int i(0); i<NUM; ++i)
-		{
+	void CGuildChallengeMgr::SetContent(const NET_GUILD_CHALLINFO& Info) {
+		for (int i(0); i < NUM; ++i) {
 			btnCharge[i]->SetIsEnabled(Info.byIsLeader == 1);
 
-			if (Info.byLevel[i] == 0)
-			{
+			if (Info.byLevel[i] == 0) {
 				labGuildName[i]->SetCaption("");
 				labChallenger[i]->SetCaption("");
 				labMoney[i]->SetCaption("");
 				m_lChargeMoney[i] = -1;
-				m_bStart[i] = false ;
-
+				m_bStart[i] = false;
 			}
-			else
-			{
+			else {
 				labGuildName[i]->SetCaption(Info.szGuild[i]);
 				labChallenger[i]->SetCaption(Info.szChall[i]);
 				labMoney[i]->SetCaption(StringSplitNum(Info.dwMoney[i]));
 				m_lChargeMoney[i] = Info.dwMoney[i];
-				m_bStart[i] = Info.byStart[i] == 1 ? true : false ;
+				m_bStart[i] = Info.byStart[i] == 1 ? true : false;
 			}
 		}
 
 		return;
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::ChallegeSuccess(long lChaID)
-	{
+	void CGuildChallengeMgr::ChallegeSuccess(long lChaID) {
 		return;
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::ChallegeFailed(long lChaID)
-	{
+	void CGuildChallengeMgr::ChallegeFailed(long lChaID) {
 		return;
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::ChallegeOther(long lChaID)
-	{
+	void CGuildChallengeMgr::ChallegeOther(long lChaID) {
 		return;
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::_FirstChallengeButtonDown(CGuiData *pSender, int x, int y, DWORD key)
-	{
+	void CGuildChallengeMgr::_FirstChallengeButtonDown(CGuiData* pSender, int x, int y, DWORD key) {
 		g_stGuildChallenge.ChargeMoney(CGuildChallengeMgr::FIRST);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::_SecondChallengeButtonDown(CGuiData *pSender, int x, int y, DWORD key)
-	{
+	void CGuildChallengeMgr::_SecondChallengeButtonDown(CGuiData* pSender, int x, int y, DWORD key) {
 		g_stGuildChallenge.ChargeMoney(CGuildChallengeMgr::SECOND);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::_ThirdChallengeButtonDown(CGuiData *pSender, int x, int y, DWORD key)
-	{
+	void CGuildChallengeMgr::_ThirdChallengeButtonDown(CGuiData* pSender, int x, int y, DWORD key) {
 		g_stGuildChallenge.ChargeMoney(CGuildChallengeMgr::THIRD);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::_enterChargeMoney(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-	{
-		if( nMsgType!=CForm::mrYes ) 
-		{
+	void CGuildChallengeMgr::_enterChargeMoney(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+		if (nMsgType != CForm::mrYes) {
 			g_stGuildChallenge.m_iSelIndex = -1;
 			return;
 		}
 
-		if (g_stGuildChallenge.m_iSelIndex < 0 && 
-			g_stGuildChallenge.m_iSelIndex >= CGuildChallengeMgr::NUM )
+		if (g_stGuildChallenge.m_iSelIndex < 0 &&
+			g_stGuildChallenge.m_iSelIndex >= CGuildChallengeMgr::NUM)
 			return;
 
 		stNumBox* kItemPriceBox = (stNumBox*)pSender->GetForm()->GetPointer();
 		if (!kItemPriceBox) return;
 
 		int iChargeMoney = kItemPriceBox->GetNumber();
-		if (!g_stGuildChallenge.IsValid(g_stGuildChallenge.m_iSelIndex, iChargeMoney))
-		{
+		if (!g_stGuildChallenge.IsValid(g_stGuildChallenge.m_iSelIndex, iChargeMoney)) {
 			return;
 		}
 		g_stGuildChallenge.m_iChangeMoney = iChargeMoney;
 
-		char buf[256] = { 0 };
+		char buf[256] = {0};
 		FmtLang(buf, sizeof(buf), GetLanguageString(583), StringSplitNum(iChargeMoney));
 		g_stUIBox.ShowSelectBox(_ChargeEvent, buf, true);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::_ChargeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
-	{
-		if( nMsgType!=CForm::mrYes )	//  BUG  add by Philip.Wu  2006-07-25
+	void CGuildChallengeMgr::_ChargeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
+		if (nMsgType != CForm::mrYes) //  BUG  add by Philip.Wu  2006-07-25
 		{
 			g_stGuildChallenge.m_iSelIndex = -1;
 			return;
@@ -208,61 +194,49 @@ namespace GUI
 
 		g_stGuildChallenge.m_iSelIndex = -1;
 		g_stGuildChallenge.m_iChangeMoney = -1;
-
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::ChargeMoney(int iIndex)
-	{
+	void CGuildChallengeMgr::ChargeMoney(int iIndex) {
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if (!pMainCha)
 			return;
 
-		if (m_bStart[iIndex])
-		{
+		if (m_bStart[iIndex]) {
 			g_pGameApp->MsgBox("%s", GetLanguageString(584).c_str());
 			return;
 		}
 
-		if (m_lChargeMoney[iIndex] == -1)
-		{
-			if (GetChallengeMasterIndex(pMainCha->getGuildName()) != -1)
-			{
+		if (m_lChargeMoney[iIndex] == -1) {
+			if (GetChallengeMasterIndex(pMainCha->getGuildName()) != -1) {
 				g_pGameApp->MsgBox("%s", GetLanguageString(585).c_str());
 				return;
 			}
 		}
-		else
-		{
+		else {
 			int iMasterIndex = GetChallengeMasterIndex(pMainCha->getGuildName());
-			if ( iMasterIndex != -1 )
-			{
-				if (iIndex == iMasterIndex)
-				{
+			if (iMasterIndex != -1) {
+				if (iIndex == iMasterIndex) {
 					g_pGameApp->MsgBox("%s", GetLanguageString(586).c_str());
 					return;
 				}
-				if (iIndex > iMasterIndex)
-				{
+				if (iIndex > iMasterIndex) {
 					g_pGameApp->MsgBox("%s", GetLanguageString(587).c_str());
 					return;
 				}
 			}
-
 		}
 
-		if (strcmp(labChallenger[iIndex]->GetCaption(), pMainCha->getGuildName()) == 0 )
-		{
+		if (strcmp(labChallenger[iIndex]->GetCaption(), pMainCha->getGuildName()) == 0) {
 			g_pGameApp->MsgBox("%s", GetLanguageString(588).c_str());
 			return;
 		}
 		m_iSelIndex = iIndex;
 		long iNextCharge(0);
-		if (m_lChargeMoney[iIndex] == -1)
-		{
+		if (m_lChargeMoney[iIndex] == -1) {
 			iNextCharge = FIRST_CHARGE_MONEY[iIndex];
 		}
-		else
-		{
+		else {
 			iNextCharge = m_lChargeMoney[iIndex] + CHARGE_MONEY;
 		}
 
@@ -271,11 +245,10 @@ namespace GUI
 		sprintf(szBuf, "%d", iNextCharge);
 		numBox->edtNumber->SetCaption(szBuf);
 	}
+
 	//-------------------------------------------------------------------------
-	void CGuildChallengeMgr::ClearUI()
-	{
-		for (int i(0); i<NUM; i++)
-		{
+	void CGuildChallengeMgr::ClearUI() {
+		for (int i(0); i < NUM; i++) {
 			labGuildName[i]->SetCaption("");
 			labChallenger[i]->SetCaption("");
 			labMoney[i]->SetCaption("");
@@ -283,47 +256,37 @@ namespace GUI
 		}
 		return;
 	}
+
 	//-------------------------------------------------------------------------
-	bool CGuildChallengeMgr::IsValid(int iIndex, long lMoney)
-	{
-		if (m_lChargeMoney[iIndex] == -1)
-		{
-			if (lMoney < FIRST_CHARGE_MONEY[iIndex])
-			{
-				g_pGameApp->MsgBox("%s", GetLanguageString(590).c_str() );
+	bool CGuildChallengeMgr::IsValid(int iIndex, long lMoney) {
+		if (m_lChargeMoney[iIndex] == -1) {
+			if (lMoney < FIRST_CHARGE_MONEY[iIndex]) {
+				g_pGameApp->MsgBox("%s", GetLanguageString(590).c_str());
 				return false;
 			}
 		}
-		else
-		{
+		else {
 			long lMinMoney = m_lChargeMoney[iIndex] + CGuildChallengeMgr::CHARGE_MONEY;
-			if( lMoney < lMinMoney ) 
-			{
-				g_pGameApp->MsgBox("%s", GetLanguageString(591).c_str() );
+			if (lMoney < lMinMoney) {
+				g_pGameApp->MsgBox("%s", GetLanguageString(591).c_str());
 				return false;
 			}
 		}
 
-		if (lMoney >= 2000000000)
-		{
-			g_pGameApp->MsgBox("%s", GetLanguageString(592).c_str() );
+		if (lMoney >= 2000000000) {
+			g_pGameApp->MsgBox("%s", GetLanguageString(592).c_str());
 			return false;
 		}
 		return true;
 	}
+
 	//-------------------------------------------------------------------------
-	int CGuildChallengeMgr::GetChallengeMasterIndex(const char * szName)
-	{
-		for (int i(0); i<NUM; i++)
-		{
-			if (strcmp(labGuildName[i]->GetCaption(), szName) == 0 )
-			{
+	int CGuildChallengeMgr::GetChallengeMasterIndex(const char* szName) {
+		for (int i(0); i < NUM; i++) {
+			if (strcmp(labGuildName[i]->GetCaption(), szName) == 0) {
 				return i;
 			}
 		}
 		return -1;
 	}
-
-
 }
-

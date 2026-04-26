@@ -22,10 +22,10 @@ ParticleSystemManageraddAffectorFactory,
 .,
 ,.
 */
-class MPParticleAffector
-{
+class MPParticleAffector {
 public:
-	MPParticleAffector(MPParticleSystem* mParticleSystem): m_ParticleSystem(mParticleSystem) {}
+	MPParticleAffector(MPParticleSystem* mParticleSystem) : m_ParticleSystem(mParticleSystem) {
+	}
 
 	virtual ~MPParticleAffector();
 
@@ -36,7 +36,9 @@ public:
 	@param
 	pParticle .
 	*/
-	virtual void _initParticle(MPParticle* pParticle) { /* by default do nothing */ }
+	virtual void _initParticle(MPParticle* pParticle) {
+		/* by default do nothing */
+	}
 
 	/** 
 	@remarks
@@ -54,7 +56,10 @@ public:
 	,
 	
 	*/
-	const String &getType(void) const { return m_Type; }
+	const String& getType(void) const {
+		return m_Type;
+	}
+
 protected:
 	/** 
 	@remarks
@@ -65,13 +70,14 @@ protected:
 	createParamDictionary
 	
 	*/
-	void addBaseParameters(void) { /*  -  */ }
+	void addBaseParameters(void) {
+		/*  -  */
+	}
 
 protected:
 	/// , 
 	string m_Type;
 
 	MPParticleSystem* m_ParticleSystem;
-
 };
 #endif

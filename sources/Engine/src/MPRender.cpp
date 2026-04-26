@@ -13,81 +13,77 @@ using namespace std;
 bool bUsePixelShader = true;
 
 MPRender::MPRender()
-:_hWnd(0),
- _pD3D(NULL),
- _pD3DDevice(NULL),
- _p2DSprite(NULL),
- _dwBackgroundColor(0),
- _bClearTarget(true), 
- _bClearZBuffer(true),
- _bClearStencil(false),
- _dwFPS(0),
- _dwLastTick(0),
- _dwFrameCnt(0),
- _bEnableCaptureAVI(FALSE),
- _bCaptureScreen(FALSE)
-{
+	: _hWnd(0),
+	  _pD3D(NULL),
+	  _pD3DDevice(NULL),
+	  _p2DSprite(NULL),
+	  _dwBackgroundColor(0),
+	  _bClearTarget(true),
+	  _bClearZBuffer(true),
+	  _bClearStencil(false),
+	  _dwFPS(0),
+	  _dwLastTick(0),
+	  _dwFrameCnt(0),
+	  _bEnableCaptureAVI(FALSE),
+	  _bCaptureScreen(FALSE) {
 	_nCurViewType = -1;
-    SetWorldViewFOV(D3DX_PI /4.0f * 0.90f);
+	SetWorldViewFOV(D3DX_PI / 4.0f * 0.90f);
 	_dwBackgroundColor = D3DCOLOR_XRGB(128, 128, 128);
 	_fNearClip = 1.0f;
-	_fFarClip  = 1000.0f;	// Original 1000f
+	_fFarClip = 1000.0f; // Original 1000f
 
-    _d3dCPAdjustInfo.multi_sample_type = D3DMULTISAMPLE_NONE;
+	_d3dCPAdjustInfo.multi_sample_type = D3DMULTISAMPLE_NONE;
 
-	ZeroMemory(&_Light, sizeof(_Light));	
+	ZeroMemory(&_Light, sizeof(_Light));
 }
 
-MPRender::~MPRender()
-{
+MPRender::~MPRender() {
 }
 
-void MPRender::End()
-{
+void MPRender::End() {
 	SAFE_RELEASE(_p2DSprite);
 
 	// _pFont убран: шрифт не хранится в MPRender (см. FontManager в клиенте).
-    ResMgr.ReleaseTotalRes();
+	ResMgr.ReleaseTotalRes();
 
 
-    ToLogService("common", "begin release mesh lib");
+	ToLogService("common", "begin release mesh lib");
 
-    lwReleaseMeshLibSystem();
+	lwReleaseMeshLibSystem();
 
-    ToLogService("common", "end release mesh lib");
+	ToLogService("common", "end release mesh lib");
 
-    // by lsh has been released in mesh lib
+	// by lsh has been released in mesh lib
 }
 
-BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOOL bFullScreen)
-{
-
+BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOOL bFullScreen) {
 	_hWnd = hWnd;
 
-    g_bBinaryTable = TRUE;
-    ::GetClientRect(::GetDesktopWindow(), &_rcDeskTop);
+	g_bBinaryTable = TRUE;
+	::GetClientRect(::GetDesktopWindow(), &_rcDeskTop);
 
 
-    lwD3DCreateParam d3dcp;
-    memset(&d3dcp, 0, sizeof(d3dcp));
-    d3dcp.hwnd = hWnd;
-    d3dcp.adapter = D3DADAPTER_DEFAULT;
-    d3dcp.behavior_flag = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-    d3dcp.dev_type = D3DDEVTYPE_HAL;
+	lwD3DCreateParam d3dcp;
+	memset(&d3dcp, 0, sizeof(d3dcp));
+	d3dcp.hwnd = hWnd;
+	d3dcp.adapter = D3DADAPTER_DEFAULT;
+	d3dcp.behavior_flag = D3DCREATE_HARDWARE_VERTEXPROCESSING;
+	d3dcp.dev_type = D3DDEVTYPE_HAL;
 
-    IDirect3DX* d3d = Direct3DCreateX(D3D_SDK_VERSION);
-    D3DDISPLAYMODE d3ddm;
-    d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
-    d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &_d3dCaps);
- 
-    d3dcp.present_param.hDeviceWindow = hWnd;
-    d3dcp.present_param.Windowed = !bFullScreen;
-    d3dcp.present_param.SwapEffect = D3DSWAPEFFECT_DISCARD;//bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY_VSYNC ;
+	IDirect3DX* d3d = Direct3DCreateX(D3D_SDK_VERSION);
+	D3DDISPLAYMODE d3ddm;
+	d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
+	d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &_d3dCaps);
+
+	d3dcp.present_param.hDeviceWindow = hWnd;
+	d3dcp.present_param.Windowed = !bFullScreen;
+	d3dcp.present_param.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	//bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY_VSYNC ;
 	// Modified by clp 2
 	d3dcp.present_param.BackBufferCount = 2;
-    d3dcp.present_param.BackBufferFormat = d3ddm.Format;//D3DFMT_UNKNOWN;
-    d3dcp.present_param.BackBufferWidth = nScrWidth;
-    d3dcp.present_param.BackBufferHeight = nScrHeight;
+	d3dcp.present_param.BackBufferFormat = d3ddm.Format; //D3DFMT_UNKNOWN;
+	d3dcp.present_param.BackBufferWidth = nScrWidth;
+	d3dcp.present_param.BackBufferHeight = nScrHeight;
 	d3dcp.present_param.EnableAutoDepthStencil = 1;
 
 	//	D3DDEVTYPE_HAL,
@@ -100,141 +96,127 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
 
 	// Modified by clp 
 	d3dcp.present_param.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-    // vsd3d
-    if(_d3dCaps.VertexShaderVersion < D3DVS_VERSION(1,0))
-    {
-        d3dcp.behavior_flag = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
+	// vsd3d
+	if (_d3dCaps.VertexShaderVersion < D3DVS_VERSION(1, 0)) {
+		d3dcp.behavior_flag = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		d3dcp.present_param.SwapEffect = bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY;
 		d3dcp.present_param.BackBufferCount = 1; //
-
-    }
+	}
 
 	//	add by	jze	begin!
-	bUsePixelShader	=	_d3dCaps.PixelShaderVersion >= D3DPS_VERSION(1,4) ? true : false;
+	bUsePixelShader = _d3dCaps.PixelShaderVersion >= D3DPS_VERSION(1, 4) ? true : false;
 	//	add	by	jze	end!
 
-    if(bFullScreen)
-    {
-    }
+	if (bFullScreen) {
+	}
 
-    d3dcp.behavior_flag |= D3DCREATE_MULTITHREADED;
-    d3d->Release();
+	d3dcp.behavior_flag |= D3DCREATE_MULTITHREADED;
+	d3d->Release();
 
 
 	// Init Mesh Lib
-    LW_RESULT ret;
+	LW_RESULT ret;
 	lwISystem* sys;
-    lwISysGraphics* sys_graphics;
-    ret = lwInitMeshLibSystem(&sys, &sys_graphics, &d3dcp, &_d3dCPAdjustInfo);
-    if(LW_FAILED(ret))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] lwInitMeshLibSystem failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(ret));
-        char err_str[260];
+	lwISysGraphics* sys_graphics;
+	ret = lwInitMeshLibSystem(&sys, &sys_graphics, &d3dcp, &_d3dCPAdjustInfo);
+	if (LW_FAILED(ret)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] lwInitMeshLibSystem failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(ret));
+		char err_str[260];
 
-        switch(ret)
-        {
-        case INIT_ERR_CREATE_D3D:
-            _tcscpy(err_str, "Create DirectX error");
-            break;
-        case INIT_ERR_CREATE_DEVICE:
-            ToLogService("common", LogLevel::Error, "");
-            _tcscpy(err_str, "Create DirectX Device error");
-            break;
-        case INIT_ERR_DX_VERSION:
-            _tcscpy(err_str, "Invalid Installed Directx Version");
-            break;
-        default:
-            _tcscpy(err_str, "Unknown Internal Error");
-
-        }
-        ToLogService("common", LogLevel::Error, "{}", err_str);
-        return FALSE;
-    }
+		switch (ret) {
+		case INIT_ERR_CREATE_D3D:
+			_tcscpy(err_str, "Create DirectX error");
+			break;
+		case INIT_ERR_CREATE_DEVICE:
+			ToLogService("common", LogLevel::Error, "");
+			_tcscpy(err_str, "Create DirectX Device error");
+			break;
+		case INIT_ERR_DX_VERSION:
+			_tcscpy(err_str, "Invalid Installed Directx Version");
+			break;
+		default:
+			_tcscpy(err_str, "Unknown Internal Error");
+		}
+		ToLogService("common", LogLevel::Error, "{}", err_str);
+		return FALSE;
+	}
 
 
-    lwIDeviceObject* dev_obj = sys_graphics->GetDeviceObject();
-    _pD3D = dev_obj->GetDirect3D();
-    _pD3DDevice = dev_obj->GetDevice();
-    _IMgr.sys = sys;
-    _IMgr.sys_graphics = sys_graphics;
-    _IMgr.dev_obj = sys_graphics->GetDeviceObject();
-    _IMgr.res_mgr = sys_graphics->GetResourceMgr();
-    _IMgr.tp_loadres = _IMgr.res_mgr->GetThreadPoolMgr()->GetThreadPool(THREAD_POOL_LOADRES);
+	lwIDeviceObject* dev_obj = sys_graphics->GetDeviceObject();
+	_pD3D = dev_obj->GetDirect3D();
+	_pD3DDevice = dev_obj->GetDevice();
+	_IMgr.sys = sys;
+	_IMgr.sys_graphics = sys_graphics;
+	_IMgr.dev_obj = sys_graphics->GetDeviceObject();
+	_IMgr.res_mgr = sys_graphics->GetResourceMgr();
+	_IMgr.tp_loadres = _IMgr.res_mgr->GetThreadPoolMgr()->GetThreadPool(THREAD_POOL_LOADRES);
 
-    if (LW_RESULT r = LoadShader0(sys_graphics); LW_FAILED(r))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] LoadShader0 failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(r));
-    }
-    if (LW_RESULT r = LoadShader1(sys_graphics); LW_FAILED(r))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] LoadShader1 failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(r));
-    }
+	if (LW_RESULT r = LoadShader0(sys_graphics); LW_FAILED(r)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] LoadShader0 failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
+	}
+	if (LW_RESULT r = LoadShader1(sys_graphics); LW_FAILED(r)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] LoadShader1 failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
+	}
 
-    ToggleFullScreen();
+	ToggleFullScreen();
 
-    ResMgr.m_pSys = sys;
+	ResMgr.m_pSys = sys;
 	ResMgr.m_pSysGraphics = sys_graphics;
 	ResMgr.LoadTotalVShader(sys_graphics);
 
 	D3DXCreateSprite(_pD3DDevice, &_p2DSprite);
-	D3DUtil_InitLight( _Light, D3DLIGHT_DIRECTIONAL, -1.0f, -1.0f, -1.0f );
-    SetDirectLIghtAmbient(0.0f, 0.0f, 0.0f, 0.0f);
+	D3DUtil_InitLight(_Light, D3DLIGHT_DIRECTIONAL, -1.0f, -1.0f, -1.0f);
+	SetDirectLIghtAmbient(0.0f, 0.0f, 0.0f, 0.0f);
 	SetLight(0, &_Light);
 	LightEnable(0, TRUE);
 
-	if(!_LoadStateFromFile())
-	{
+	if (!_LoadStateFromFile()) {
 		return FALSE;
 	}
 
-    // begin by lsh
-    D3DXVECTOR3	up = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
-    D3DXVECTOR3	eye = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
-    D3DXVECTOR3	target = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-	D3DXMatrixLookAtLH( &_mat3DUIView, &eye, &target, &up );	  
+	// begin by lsh
+	D3DXVECTOR3 up = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	D3DXVECTOR3 eye = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXVECTOR3 target = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXMatrixLookAtLH(&_mat3DUIView, &eye, &target, &up);
 
-    _fAspect = (float)_nWorldViewWidth / ((float)(_nWorldViewHeight));
-    D3DXMatrixPerspectiveFovLH(&_mat3DUIProj, D3DX_PI * 0.12f, _fAspect, _fNearClip, _fFarClip);
-    SetRenderState( D3DRS_ZENABLE  , TRUE );
-	SetRenderState( D3DRS_AMBIENT, 0xffffffff );
-	SetRenderState(D3DRS_CULLMODE , D3DCULL_NONE);
+	_fAspect = (float)_nWorldViewWidth / ((float)(_nWorldViewHeight));
+	D3DXMatrixPerspectiveFovLH(&_mat3DUIProj, D3DX_PI * 0.12f, _fAspect, _fNearClip, _fFarClip);
+	SetRenderState(D3DRS_ZENABLE, TRUE);
+	SetRenderState(D3DRS_AMBIENT, 0xffffffff);
+	SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    if(InitMPTextureSetFormat() == 0)
-        return FALSE;
+	if (InitMPTextureSetFormat() == 0)
+		return FALSE;
 
 	return TRUE;
 }
+
 //-----------------------------------------------------------------------------
-BOOL MPRender::InitResource()
-{
-	if(!ResMgr.InitRes(this,(D3DXMATRIX*)_IMgr.dev_obj->GetMatView(),(D3DXMATRIX*)_IMgr.dev_obj->GetMatViewProj()))
-	{
+BOOL MPRender::InitResource() {
+	if (!ResMgr.InitRes(this, (D3DXMATRIX*)_IMgr.dev_obj->GetMatView(), (D3DXMATRIX*)_IMgr.dev_obj->GetMatViewProj())) {
 		ToLogService("errors", LogLevel::Error, "ResMgr,!");
 		return FALSE;
 	}
 	return TRUE;
 }
 
-BOOL MPRender::InitRes2()
-{
-	if(!ResMgr.InitRes2())
-	{
+BOOL MPRender::InitRes2() {
+	if (!ResMgr.InitRes2()) {
 		ToLogService("errors", LogLevel::Error, "ResMgr 2,!");
 		return FALSE;
 	}
 	return TRUE;
 }
 
-BOOL MPRender::InitRes3()
-{
-	if(!ResMgr.InitRes3())
-	{
+BOOL MPRender::InitRes3() {
+	if (!ResMgr.InitRes3()) {
 		ToLogService("errors", LogLevel::Error, "ResMgr 3,!");
 		return FALSE;
 	}
@@ -244,274 +226,273 @@ BOOL MPRender::InitRes3()
 //-----------------------------------------------------------------------------
 
 
-int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL be_windowed)
-{
+int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL be_windowed) {
 	lwIResourceMgr* res_mgr = _IMgr.res_mgr;
 	lwIDeviceObject* dev_obj = _IMgr.dev_obj;
-    IDirect3DX* dev = dev_obj->GetDirect3D();
+	IDirect3DX* dev = dev_obj->GetDirect3D();
 
 	HWND hwnd = _hWnd;
 
-	RECT wnd_rc = { 0, 0, width, height };
+	RECT wnd_rc = {0, 0, width, height};
 	DWORD style;
 
-	if(be_windowed)
-	{
-		if(wnd_rc.right == _rcDeskTop.right && wnd_rc.bottom == _rcDeskTop.bottom)
-		{
+	if (be_windowed) {
+		if (wnd_rc.right == _rcDeskTop.right && wnd_rc.bottom == _rcDeskTop.bottom) {
 			style = WS_POPUP;
 		}
-		else
-		{
-			style = WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_VISIBLE;
+		else {
+			style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
 			::AdjustWindowRectEx(&wnd_rc, style, 0, 0);
 		}
 	}
-    else
-	{
-        style = WS_POPUP;
+	else {
+		style = WS_POPUP;
 	}
 
 	lwWndInfo wnd_info;
 	wnd_info.hwnd = hwnd;
 	wnd_info.left = 0;
 	wnd_info.top = 0;
-	wnd_info.width =  wnd_rc.right - wnd_rc.left;
+	wnd_info.width = wnd_rc.right - wnd_rc.left;
 	wnd_info.height = wnd_rc.bottom - wnd_rc.top;
 	wnd_info.windowed_style = style;
 
-    lwD3DCreateParam d3dcp = *dev_obj->GetD3DCreateParam();
-    d3dcp.present_param.Windowed = be_windowed;
-    d3dcp.present_param.BackBufferWidth = width;
-    d3dcp.present_param.BackBufferHeight = height;
-    d3dcp.present_param.AutoDepthStencilFormat = depth_fmt;
+	lwD3DCreateParam d3dcp = *dev_obj->GetD3DCreateParam();
+	d3dcp.present_param.Windowed = be_windowed;
+	d3dcp.present_param.BackBufferWidth = width;
+	d3dcp.present_param.BackBufferHeight = height;
+	d3dcp.present_param.AutoDepthStencilFormat = depth_fmt;
 
 
-    if(LW_RESULT r = lwAdjustD3DCreateParam(dev, &d3dcp, &_d3dCPAdjustInfo); LW_FAILED(r))
-    {
+	if (LW_RESULT r = lwAdjustD3DCreateParam(dev, &d3dcp, &_d3dCPAdjustInfo); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] lwAdjustD3DCreateParam failed: width={}, height={}, ret={}",
-		             __FUNCTION__, width, height, static_cast<long long>(r));
-        return 0;
-    }
+					 "[{}] lwAdjustD3DCreateParam failed: width={}, height={}, ret={}",
+					 __FUNCTION__, width, height, static_cast<long long>(r));
+		return 0;
+	}
 
-    if(ToggleFullScreen(&d3dcp.present_param, &wnd_info) == 0)
-	{
+	if (ToggleFullScreen(&d3dcp.present_param, &wnd_info) == 0) {
 		ToLogService("errors", LogLevel::Error, "ToggleFullScreen error");
 		return 0;
 	}
 
-    return 1;
-
-}
-int MPRender::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInfo* wnd_info)
-{
-    SAFE_RELEASE(_p2DSprite);
-    if(LW_RESULT r = _IMgr.sys_graphics->ToggleFullScreen(d3dpp, wnd_info); LW_FAILED(r))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] sys_graphics->ToggleFullScreen failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(r));
-        return 0;
-    }
-
-    D3DXCreateSprite(_pD3DDevice, &_p2DSprite);
-    return ToggleFullScreen();
-}
-int MPRender::ToggleFullScreen()
-{
-    lwD3DCreateParam* d3dcp = _IMgr.dev_obj->GetD3DCreateParam();
-
-    _bFullScreen    = !d3dcp->present_param.Windowed;
-	
-    RECT rc;
-    GetClientRect(d3dcp->present_param.hDeviceWindow, &rc);
-    _nScrWidth  = rc.right  - rc.left;
-    _nScrHeight = rc.bottom - rc.top;
-
-    SetWorldView(0, 0, _nScrWidth, _nScrHeight);
-
-    SetViewport(0, 0, d3dcp->present_param.BackBufferWidth, d3dcp->present_param.BackBufferHeight);
-
-
-    if(InitMPTextureSetFormat() == 0)
-        return 0;
-
-    return 1;
+	return 1;
 }
 
-int MPRender::InitMPTextureSetFormat()
-{
-    // Форматы текстур для TextureManager:
-    //   _TexSetFmt[0] — без альфы (сцена/мир, .tga без альфа-канала)
-    //   _TexSetFmt[1] — с альфой (UI, .tga с альфой)
-    // На всех современных GPU A8R8G8B8/X8R8G8B8 поддерживаются нативно.
-    // Раньше был fallback на A4R4G4B4/R5G6B5 для старых видеокарт —
-    // удалён, так как 16-bit форматы дают ступенчатую альфу и, как правило,
-    // всё равно эмулируются через 32-bit драйвером.
-    if(LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_A8R8G8B8); LW_FAILED(r))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] CheckCurrentDeviceFormat(A8R8G8B8) failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(r));
-        return 0;
-    }
-    if(LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_X8R8G8B8); LW_FAILED(r))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] CheckCurrentDeviceFormat(X8R8G8B8) failed: ret={}",
-                     __FUNCTION__, static_cast<long long>(r));
-        return 0;
-    }
-
-    _TexSetFmt[0] = D3DFMT_X8R8G8B8; // 32-bit без альфы
-    _TexSetFmt[1] = D3DFMT_A8R8G8B8; // 32-bit с альфой
-    return 1;
-}
-
-void MPRender::SetViewport(int nStartX, int nStartY, int nWidth, int nHeight)
-{
-    _view.X	     = nStartX;
-	_view.Y	     = nStartY;
-	_view.Width  = nWidth;
-	_view.Height = nHeight;
-	_view.MinZ	 = 0.0f;
-	_view.MaxZ	 = 1.0f;
-    HRESULT hr = _pD3DDevice->SetViewport(&_view);
-	if (FAILED(hr))
-	{
+int MPRender::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInfo* wnd_info) {
+	SAFE_RELEASE(_p2DSprite);
+	if (LW_RESULT r = _IMgr.sys_graphics->ToggleFullScreen(d3dpp, wnd_info); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] SetViewport failed: x={}, y={}, w={}, h={}, hr=0x{:08X}",
-		             __FUNCTION__, nStartX, nStartY, nWidth, nHeight, static_cast<std::uint32_t>(hr));
+					 "[{}] sys_graphics->ToggleFullScreen failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
+		return 0;
+	}
+
+	D3DXCreateSprite(_pD3DDevice, &_p2DSprite);
+	return ToggleFullScreen();
+}
+
+int MPRender::ToggleFullScreen() {
+	lwD3DCreateParam* d3dcp = _IMgr.dev_obj->GetD3DCreateParam();
+
+	_bFullScreen = !d3dcp->present_param.Windowed;
+
+	RECT rc;
+	GetClientRect(d3dcp->present_param.hDeviceWindow, &rc);
+	_nScrWidth = rc.right - rc.left;
+	_nScrHeight = rc.bottom - rc.top;
+
+	SetWorldView(0, 0, _nScrWidth, _nScrHeight);
+
+	SetViewport(0, 0, d3dcp->present_param.BackBufferWidth, d3dcp->present_param.BackBufferHeight);
+
+
+	if (InitMPTextureSetFormat() == 0)
+		return 0;
+
+	return 1;
+}
+
+int MPRender::InitMPTextureSetFormat() {
+	// Форматы текстур для TextureManager:
+	//   _TexSetFmt[0] — без альфы (сцена/мир, .tga без альфа-канала)
+	//   _TexSetFmt[1] — с альфой (UI, .tga с альфой)
+	// На всех современных GPU A8R8G8B8/X8R8G8B8 поддерживаются нативно.
+	// Раньше был fallback на A4R4G4B4/R5G6B5 для старых видеокарт —
+	// удалён, так как 16-bit форматы дают ступенчатую альфу и, как правило,
+	// всё равно эмулируются через 32-bit драйвером.
+	if (LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_A8R8G8B8); LW_FAILED(r)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] CheckCurrentDeviceFormat(A8R8G8B8) failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
+		return 0;
+	}
+	if (LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_X8R8G8B8); LW_FAILED(r)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] CheckCurrentDeviceFormat(X8R8G8B8) failed: ret={}",
+					 __FUNCTION__, static_cast<long long>(r));
+		return 0;
+	}
+
+	_TexSetFmt[0] = D3DFMT_X8R8G8B8; // 32-bit без альфы
+	_TexSetFmt[1] = D3DFMT_A8R8G8B8; // 32-bit с альфой
+	return 1;
+}
+
+void MPRender::SetViewport(int nStartX, int nStartY, int nWidth, int nHeight) {
+	_view.X = nStartX;
+	_view.Y = nStartY;
+	_view.Width = nWidth;
+	_view.Height = nHeight;
+	_view.MinZ = 0.0f;
+	_view.MaxZ = 1.0f;
+	HRESULT hr = _pD3DDevice->SetViewport(&_view);
+	if (FAILED(hr)) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] SetViewport failed: x={}, y={}, w={}, h={}, hr=0x{:08X}",
+					 __FUNCTION__, nStartX, nStartY, nWidth, nHeight, static_cast<std::uint32_t>(hr));
 	}
 }
 
-BOOL MPRender::IsLineInWorldView(float fX1, float fY1, float fX2, float fY2)
-{
-    float v1[2] = { fX1, fY1 };
-    float v2[2] = { fX2, fY2 };
-    float v0[2];
-    float x1 = (float)_nWorldViewStartX;
-    float y1 = (float)_nWorldViewStartY;
-    float x2 = (float)(_nWorldViewStartX + _nWorldViewWidth);
-    float y2 = (float)(_nWorldViewStartY + _nWorldViewHeight);
-    for(int i = 0; i < 4; i++)
-    {
-        float v3[2], v4[2];
-        switch(i)
-        {
-            case 0:
-            {   
-                v3[0] = x1; v3[1] = y1;
-                v4[0] = x2; v4[1] = y1;
-                break;
-            }
-            case 1:
-            {   
-                v3[0] = x2; v3[1] = y1;
-                v4[0] = x2; v4[1] = y2;
-                break;
-            }
-            case 2:
-            {
-                v3[0] = x1; v3[1] = y2;
-                v4[0] = x2; v4[1] = y2;
-                break;
-            }
-            case 3:
-            {
-                v3[0] = x1; v3[1] = y1;
-                v4[0] = x1; v4[1] = y2;
-                break;
-            }
-        }
-        if(Get2DLineIntersection(v1, v2, v3, v4, v0, FALSE)) return TRUE;
-    }
-    return FALSE;
+BOOL MPRender::IsLineInWorldView(float fX1, float fY1, float fX2, float fY2) {
+	float v1[2] = {fX1, fY1};
+	float v2[2] = {fX2, fY2};
+	float v0[2];
+	float x1 = (float)_nWorldViewStartX;
+	float y1 = (float)_nWorldViewStartY;
+	float x2 = (float)(_nWorldViewStartX + _nWorldViewWidth);
+	float y2 = (float)(_nWorldViewStartY + _nWorldViewHeight);
+	for (int i = 0; i < 4; i++) {
+		float v3[2], v4[2];
+		switch (i) {
+		case 0: {
+			v3[0] = x1;
+			v3[1] = y1;
+			v4[0] = x2;
+			v4[1] = y1;
+			break;
+		}
+		case 1: {
+			v3[0] = x2;
+			v3[1] = y1;
+			v4[0] = x2;
+			v4[1] = y2;
+			break;
+		}
+		case 2: {
+			v3[0] = x1;
+			v3[1] = y2;
+			v4[0] = x2;
+			v4[1] = y2;
+			break;
+		}
+		case 3: {
+			v3[0] = x1;
+			v3[1] = y1;
+			v4[0] = x1;
+			v4[1] = y2;
+			break;
+		}
+		}
+		if (Get2DLineIntersection(v1, v2, v3, v4, v0, FALSE)) return TRUE;
+	}
+	return FALSE;
 }
 
-BOOL MPRender::IsRectIntersectWorldView(int *pnPosX, int *pnPosY)
-{
-    int x1, y1, x2, y2;
-    for(int i = 0; i < 4; i++)
-    {
-        switch(i)
-        {
-            case 0: { x1 = *(pnPosX + 0); y1 = *(pnPosY + 0); x2 = *(pnPosX + 1); y2 = *(pnPosY + 1); break; }
-            case 1: { x1 = *(pnPosX + 1); y1 = *(pnPosY + 1); x2 = *(pnPosX + 2); y2 = *(pnPosY + 2); break; }
-            case 2: { x1 = *(pnPosX + 2); y1 = *(pnPosY + 2); x2 = *(pnPosX + 3); y2 = *(pnPosY + 3); break; }
-            case 3: { x1 = *(pnPosX + 3); y1 = *(pnPosY + 3); x2 = *(pnPosX + 0); y2 = *(pnPosY + 0); break; }
-        }
-        if(IsLineInWorldView((float)x1, (float)y1, (float)x2, (float)y2))
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
+BOOL MPRender::IsRectIntersectWorldView(int* pnPosX, int* pnPosY) {
+	int x1, y1, x2, y2;
+	for (int i = 0; i < 4; i++) {
+		switch (i) {
+		case 0: {
+			x1 = *(pnPosX + 0);
+			y1 = *(pnPosY + 0);
+			x2 = *(pnPosX + 1);
+			y2 = *(pnPosY + 1);
+			break;
+		}
+		case 1: {
+			x1 = *(pnPosX + 1);
+			y1 = *(pnPosY + 1);
+			x2 = *(pnPosX + 2);
+			y2 = *(pnPosY + 2);
+			break;
+		}
+		case 2: {
+			x1 = *(pnPosX + 2);
+			y1 = *(pnPosY + 2);
+			x2 = *(pnPosX + 3);
+			y2 = *(pnPosY + 3);
+			break;
+		}
+		case 3: {
+			x1 = *(pnPosX + 3);
+			y1 = *(pnPosY + 3);
+			x2 = *(pnPosX + 0);
+			y2 = *(pnPosY + 0);
+			break;
+		}
+		}
+		if (IsLineInWorldView((float)x1, (float)y1, (float)x2, (float)y2)) {
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
-void MPRender::SetCurrentView(int nType, BOOL bReset)
-{
-	if(nType==_nCurViewType && !bReset) return;
+void MPRender::SetCurrentView(int nType, BOOL bReset) {
+	if (nType == _nCurViewType && !bReset) return;
 
 
-	
-    switch(nType)
-	{
-	    case VIEW_WORLD:
-        {
-			D3DXMatrixIdentity(&_matProjWorld);
-			D3DXMatrixPerspectiveFovLH(&_matProjWorld, _fWorldViewFOV, _fAspect, _fNearClip, _fFarClip);
+	switch (nType) {
+	case VIEW_WORLD: {
+		D3DXMatrixIdentity(&_matProjWorld);
+		D3DXMatrixPerspectiveFovLH(&_matProjWorld, _fWorldViewFOV, _fAspect, _fNearClip, _fFarClip);
 
-            SetTransformProj(&_matProjWorld);
-            _matViewProj = _matViewWorld * _matProjWorld;
-			break;
-        }
-	 case VIEW_UI:
-        {
-            D3DXMatrixIdentity(&_matUIView);
-			D3DXMatrixIdentity(&_matUIProj);
+		SetTransformProj(&_matProjWorld);
+		_matViewProj = _matViewWorld * _matProjWorld;
+		break;
+	}
+	case VIEW_UI: {
+		D3DXMatrixIdentity(&_matUIView);
+		D3DXMatrixIdentity(&_matUIProj);
 
-			D3DXMatrixPerspectiveFovLH(&_matUIProj, 0.1f, _fAspect, 10, 100);
+		D3DXMatrixPerspectiveFovLH(&_matUIProj, 0.1f, _fAspect, 10, 100);
 
-            SetTransformProj(&_matUIProj);
+		SetTransformProj(&_matUIProj);
 
-	        D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
-	        D3DXVECTOR3	vecCam(0, 0, -50);
-	        D3DXVECTOR3	vecLookAt(0, 0, 0);
-	        D3DXMatrixLookAtLH( &_matUIView, &vecCam, &vecLookAt, &upVector );
-            SetTransformView(&_matUIView);
-			break;
-        }
-        case VIEW_SCREEN:
-            break;
-        case VIEW_3DUI:
-            SetTransformProj(&_mat3DUIProj);
-            SetTransformView(&_mat3DUIView);
-            _matViewProj = _mat3DUIView * _mat3DUIProj;
-            break;
-        default:
-        {
-            break;
-        }
-    }
+		D3DXVECTOR3 upVector = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		D3DXVECTOR3 vecCam(0, 0, -50);
+		D3DXVECTOR3 vecLookAt(0, 0, 0);
+		D3DXMatrixLookAtLH(&_matUIView, &vecCam, &vecLookAt, &upVector);
+		SetTransformView(&_matUIView);
+		break;
+	}
+	case VIEW_SCREEN:
+		break;
+	case VIEW_3DUI:
+		SetTransformProj(&_mat3DUIProj);
+		SetTransformView(&_mat3DUIView);
+		_matViewProj = _mat3DUIView * _mat3DUIProj;
+		break;
+	default: {
+		break;
+	}
+	}
 }
 
 // VIM END
 
 
 //transform 3d world position into screen space
-void MPRender::GetScreenPos(int &nOutX, int &nOutY, D3DXVECTOR3 &vWorldPos)
-{
+void MPRender::GetScreenPos(int& nOutX, int& nOutY, D3DXVECTOR3& vWorldPos) {
 	D3DXVECTOR4 vOut;
 	D3DXVec3Transform(&vOut, &vWorldPos, &_matViewProj);
-	nOutX = _nWorldViewStartX + int((float)_nWorldViewWidth * (vOut.x / vOut.w*0.5f+0.5f));
-	nOutY = _nWorldViewStartY + int(((float)(_nWorldViewHeight))*(0.5f - vOut.y / vOut.w * 0.5f));
+	nOutX = _nWorldViewStartX + int((float)_nWorldViewWidth * (vOut.x / vOut.w * 0.5f + 0.5f));
+	nOutY = _nWorldViewStartY + int(((float)(_nWorldViewHeight)) * (0.5f - vOut.y / vOut.w * 0.5f));
 }
 
 
-void MPRender::GetRay(int nScreenX, int nScreenY, D3DXVECTOR3 &vRayStart, D3DXVECTOR3 &vRayEnd)
-{
+void MPRender::GetRay(int nScreenX, int nScreenY, D3DXVECTOR3& vRayStart, D3DXVECTOR3& vRayEnd) {
 	D3DXMATRIX matInverse;
 
 	D3DXMatrixInverse(&matInverse, NULL, &_matViewProj);
@@ -519,91 +500,82 @@ void MPRender::GetRay(int nScreenX, int nScreenY, D3DXVECTOR3 &vRayStart, D3DXVE
 	D3DXVECTOR4 vOut;
 	D3DXVECTOR3 v;
 	v.x = float(nScreenX - _nWorldViewStartX) / (float)_nWorldViewWidth - 0.5f;
-	v.x+= v.x;
-	v.y = 0.5f - float(nScreenY - _nWorldViewStartY)/((float)(_nWorldViewHeight));
-	v.y+= v.y;
+	v.x += v.x;
+	v.y = 0.5f - float(nScreenY - _nWorldViewStartY) / ((float)(_nWorldViewHeight));
+	v.y += v.y;
 	v.z = 0.0f;
 	D3DXVec3Transform(&vOut, &v, &matInverse);
-	vRayStart = D3DXVECTOR3(vOut.x/vOut.w, vOut.y/vOut.w, vOut.z/vOut.w);
+	vRayStart = D3DXVECTOR3(vOut.x / vOut.w, vOut.y / vOut.w, vOut.z / vOut.w);
 	v.z = 1.0f;
-	D3DXVec3Transform(&vOut,&v, &matInverse);
-	vRayEnd = D3DXVECTOR3(vOut.x/vOut.w, vOut.y/vOut.w, vOut.z/vOut.w);
+	D3DXVec3Transform(&vOut, &v, &matInverse);
+	vRayEnd = D3DXVECTOR3(vOut.x / vOut.w, vOut.y / vOut.w, vOut.z / vOut.w);
 }
 
-void MPRender::GetPickRayVector(int nScrPosX, int nScrPosY, D3DXVECTOR3* pPickRayOrig, D3DXVECTOR3* pPickRayDir)
-{	
+void MPRender::GetPickRayVector(int nScrPosX, int nScrPosY, D3DXVECTOR3* pPickRayOrig, D3DXVECTOR3* pPickRayDir) {
 	GetRay(nScrPosX, nScrPosY, *pPickRayOrig, *pPickRayDir);
 	(*pPickRayDir) = (*pPickRayDir) - (*pPickRayOrig);
 	D3DXVec3Normalize(pPickRayDir, pPickRayDir);
 }
 
-void MPRender::LookAt(D3DXVECTOR3 vecPos, D3DXVECTOR3 vecLookAt,DWORD dwViewType)
-{
-    D3DXMATRIX* mat = NULL;
+void MPRender::LookAt(D3DXVECTOR3 vecPos, D3DXVECTOR3 vecLookAt, DWORD dwViewType) {
+	D3DXMATRIX* mat = NULL;
 
-	switch( dwViewType)
-	{
-    case VIEW_WORLD:
-        mat = &_matViewWorld;
-        break;
-    case VIEW_3DUI:
-        mat = &_mat3DUIView;
-        break;
-    default:
-        return;
-    }
+	switch (dwViewType) {
+	case VIEW_WORLD:
+		mat = &_matViewWorld;
+		break;
+	case VIEW_3DUI:
+		mat = &_mat3DUIView;
+		break;
+	default:
+		return;
+	}
 
-    D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
-	D3DXMatrixLookAtLH( mat, &vecPos, &vecLookAt, &upVector );
+	D3DXVECTOR3 upVector = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	D3DXMatrixLookAtLH(mat, &vecPos, &vecLookAt, &upVector);
 
-    SetTransformView(mat);
-
-
-
+	SetTransformView(mat);
 }
 
-BOOL MPRender::BeginRender(bool clear)//vim
+BOOL MPRender::BeginRender(bool clear) //vim
 {
-
 	HRESULT hr;
-    if(FAILED(hr = _IMgr.sys_graphics->TestCooperativeLevel()))
-    {
-        ToLogService("errors", LogLevel::Error,
-                     "[{}] sys_graphics->TestCooperativeLevel failed: hr=0x{:08X}",
-                     __FUNCTION__, static_cast<std::uint32_t>(hr));
-        return 0;
-    }
-    if(hr == LW_RET_OK_1)
-    {
-        LightEnable(0, TRUE);
-        UpdateLight();
-    }
+	if (FAILED(hr = _IMgr.sys_graphics->TestCooperativeLevel())) {
+		ToLogService("errors", LogLevel::Error,
+					 "[{}] sys_graphics->TestCooperativeLevel failed: hr=0x{:08X}",
+					 __FUNCTION__, static_cast<std::uint32_t>(hr));
+		return 0;
+	}
+	if (hr == LW_RET_OK_1) {
+		LightEnable(0, TRUE);
+		UpdateLight();
+	}
 
-    _dwClearFlag = 0;
-    if(_bClearTarget)	_dwClearFlag|=D3DCLEAR_TARGET;
-    if(_bClearZBuffer)  _dwClearFlag|=D3DCLEAR_ZBUFFER;
-    if(_bClearStencil)  _dwClearFlag|=D3DCLEAR_STENCIL;
-    
-    
-    if(clear)//vim
+	_dwClearFlag = 0;
+	if (_bClearTarget) _dwClearFlag |= D3DCLEAR_TARGET;
+	if (_bClearZBuffer) _dwClearFlag |= D3DCLEAR_ZBUFFER;
+	if (_bClearStencil) _dwClearFlag |= D3DCLEAR_STENCIL;
+
+
+	if (clear) //vim
 	{
-		if(HRESULT hrClear = _pD3DDevice->Clear( 0L, NULL, _dwClearFlag, _dwBackgroundColor, 1.0f, 0L ); FAILED(hrClear))
-		{
+		if (HRESULT hrClear = _pD3DDevice->Clear(0L, NULL, _dwClearFlag, _dwBackgroundColor, 1.0f, 0L);
+			FAILED(hrClear)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] _pD3DDevice->Clear failed: clear_flag={}, color=0x{:08X}, hr=0x{:08X}",
-			             __FUNCTION__, _dwClearFlag, static_cast<std::uint32_t>(_dwBackgroundColor), static_cast<std::uint32_t>(hrClear));
+						 "[{}] _pD3DDevice->Clear failed: clear_flag={}, color=0x{:08X}, hr=0x{:08X}",
+						 __FUNCTION__, _dwClearFlag, static_cast<std::uint32_t>(_dwBackgroundColor),
+						 static_cast<std::uint32_t>(hrClear));
 			return false;
 		}
 	}
-    
-	if ( HRESULT hrScene = _pD3DDevice->BeginScene(); FAILED( hrScene ) )
-    {
+
+	if (HRESULT hrScene = _pD3DDevice->BeginScene(); FAILED(hrScene)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _pD3DDevice->BeginScene failed: hr=0x{:08X}",
-		             __FUNCTION__, static_cast<std::uint32_t>(hrScene));
+					 "[{}] _pD3DDevice->BeginScene failed: hr=0x{:08X}",
+					 __FUNCTION__, static_cast<std::uint32_t>(hrScene));
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -611,17 +583,15 @@ void MPRender::EndRender(const bool present) // vim
 {
 	if (HRESULT hrEnd = _pD3DDevice->EndScene(); FAILED(hrEnd)) {
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] _pD3DDevice->EndScene failed: hr=0x{:08X}",
-		             __FUNCTION__, static_cast<std::uint32_t>(hrEnd));
+					 "[{}] _pD3DDevice->EndScene failed: hr=0x{:08X}",
+					 __FUNCTION__, static_cast<std::uint32_t>(hrEnd));
 		return;
 	}
 
-	if(present)
-	{
+	if (present) {
 		DWORD dwTick = GetTickCount();
-		if((dwTick - _dwLastTick) >= 1000)
-		{
-			_dwFPS      = _dwFrameCnt;
+		if ((dwTick - _dwLastTick) >= 1000) {
+			_dwFPS = _dwFrameCnt;
 			_dwFrameCnt = 0;
 			_dwLastTick = dwTick;
 
@@ -633,7 +603,7 @@ void MPRender::EndRender(const bool present) // vim
 		static int g_nAviCnt = 0;
 		static int g_nCapCnt = 0;
 
-		if(_bCaptureScreen) // 
+		if (_bCaptureScreen) // 
 		{
 			static int g_nScreenCap = 0;
 			char fileName[64];
@@ -641,15 +611,16 @@ void MPRender::EndRender(const bool present) // vim
 
 			char pszName[64];
 
-			struct tm *newtime;
+			struct tm* newtime;
 			__int64 ltime;
 			char buff[80];
-			_time64( &ltime );
-			newtime = _gmtime64( &ltime );
-			sprintf(pszName, "screenshot/%04d-%02d-%02d/",newtime->tm_year+1900,newtime->tm_mon+1,newtime->tm_mday);
+			_time64(&ltime);
+			newtime = _gmtime64(&ltime);
+			sprintf(pszName, "screenshot/%04d-%02d-%02d/", newtime->tm_year + 1900, newtime->tm_mon + 1,
+					newtime->tm_mday);
 			Util_MakeDir(pszName);
-			
-			sprintf(fileName,"%scap%05d.png",pszName, g_nScreenCap);
+
+			sprintf(fileName, "%scap%05d.png", pszName, g_nScreenCap);
 			g_Render.CaptureScreen(fileName);
 			g_nScreenCap++;
 			_bCaptureScreen = FALSE;
@@ -680,11 +651,9 @@ void MPRender::EndRender(const bool present) // vim
 }
 
 
-void MPRender::RenderAllLines()
-{
-	for(vector<MPLine*>::iterator it = _LineList.begin(); it!=_LineList.end(); it++)
-	{
-		MPLine *pLine = (*it);
+void MPRender::RenderAllLines() {
+	for (vector<MPLine*>::iterator it = _LineList.begin(); it != _LineList.end(); it++) {
+		MPLine* pLine = (*it);
 		RenderLine(pLine->v1.x, pLine->v1.y, pLine->v1.z, pLine->v2.x, pLine->v2.y, pLine->v2.z, pLine->dwColor);
 		delete pLine;
 	}
@@ -692,50 +661,45 @@ void MPRender::RenderAllLines()
 }
 
 
-void MPRender::RenderDebugInfo()
-{
-    // No-op. Ранее метод рисовал накопленный INFO_* текст через _pFont,
-    // но _pFont никогда не инициализировался и вызывал AV. Шрифт хранить
-    // в поле MPRender некорректно — owner это FontManager в клиенте.
-    // можно вернуть аналогично — в клиенте, если понадобится.
-    // Метод оставлен для обратной совместимости: внешний код может
-    // продолжать вызывать Print(INFO_*) — данные накапливаются в _InfoIdx
-    // без отрисовки.
+void MPRender::RenderDebugInfo() {
+	// No-op. Ранее метод рисовал накопленный INFO_* текст через _pFont,
+	// но _pFont никогда не инициализировался и вызывал AV. Шрифт хранить
+	// в поле MPRender некорректно — owner это FontManager в клиенте.
+	// можно вернуть аналогично — в клиенте, если понадобится.
+	// Метод оставлен для обратной совместимости: внешний код может
+	// продолжать вызывать Print(INFO_*) — данные накапливаются в _InfoIdx
+	// без отрисовки.
 }
 
-void MPRender::Print(int nInfoType, int x, int y, const char *szFormat, ...)
-{           
-    va_list list;
-	va_start(list, szFormat);           
+void MPRender::Print(int nInfoType, int x, int y, const char* szFormat, ...) {
+	va_list list;
+	va_start(list, szFormat);
 	vsprintf(_szInfo, szFormat, list);
-	va_end( list );
+	va_end(list);
 
-    int nIdx = y * 2000 + x; // 
-    _InfoIdx[nInfoType][nIdx] = _szInfo;
+	int nIdx = y * 2000 + x; // 
+	_InfoIdx[nInfoType][nIdx] = _szInfo;
 }
 
 // Render States Routines
-void MPRender::EnableMipmap(BOOL bEnable)
-{
-    if(bEnable)
-    {
-        SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    }
-    else // mipmap
-    {
-		SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE );
-    }
+void MPRender::EnableMipmap(BOOL bEnable) {
+	if (bEnable) {
+		SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+	}
+	else // mipmap
+	{
+		SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	}
 }
 
-void MPRender::RenderTextureRect(int nX, int nY, MPTexRect *pRect)
-{
+void MPRender::RenderTextureRect(int nX, int nY, MPTexRect* pRect) {
 	VECTOR3 vecDest((float)nX, (float)nY, 0.0f);
 	LPTEXTURE pTexture = GetTextureByID(pRect->nTextureNo);
-	if(!pTexture) return;
-	
-	RECT *pTexRect = NULL;
-	RECT TexRect = { pRect->nTexSX, pRect->nTexSY, pRect->nTexSX + pRect->nTexW, pRect->nTexSY + pRect->nTexH };
-	if(pRect->nTexW!=0) pTexRect = &TexRect;
+	if (!pTexture) return;
+
+	RECT* pTexRect = NULL;
+	RECT TexRect = {pRect->nTexSX, pRect->nTexSY, pRect->nTexSX + pRect->nTexW, pRect->nTexSY + pRect->nTexH};
+	if (pRect->nTexW != 0) pTexRect = &TexRect;
 	_p2DSprite->Begin(D3DXSPRITE_ALPHABLEND);
 	D3DXMATRIX scaleMat;
 	D3DXMatrixIdentity(&scaleMat);
@@ -745,49 +709,44 @@ void MPRender::RenderTextureRect(int nX, int nY, MPTexRect *pRect)
 	_p2DSprite->End();
 }
 
-void MPRender::RenderLine(float x1, float y1, float z1, float x2, float y2, float z2, DWORD dwColor)
-{
-    D3DXMATRIXA16 mat;
+void MPRender::RenderLine(float x1, float y1, float z1, float x2, float y2, float z2, DWORD dwColor) {
+	D3DXMATRIXA16 mat;
 	D3DXMatrixIdentity(&mat);
-	
+
 	D3DXMatrixTranslation(&mat, 0.0f, 0.0f, 0.0f);
-    SetTransformWorld(&mat);
+	SetTransformWorld(&mat);
 
-	struct TMP_VERTEX
-    {
-	    D3DVECTOR pos;
-	    DWORD diffuse;
-    };
+	struct TMP_VERTEX {
+		D3DVECTOR pos;
+		DWORD diffuse;
+	};
 
-    TMP_VERTEX pVertices[2];
+	TMP_VERTEX pVertices[2];
 
 	// line 1
-	pVertices[0].pos = D3DXVECTOR3(x1 , y1 , z1);
-	pVertices[1].pos = D3DXVECTOR3(x2 , y2 , z2);
+	pVertices[0].pos = D3DXVECTOR3(x1, y1, z1);
+	pVertices[1].pos = D3DXVECTOR3(x2, y2, z2);
 	pVertices[0].diffuse = dwColor;
 	pVertices[1].diffuse = dwColor;
 
-	SetRenderState( D3DRS_LIGHTING, FALSE );
+	SetRenderState(D3DRS_LIGHTING, FALSE);
 	SetTexture(0, 0);
 	SetVertexShader(NULL);
-	SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
-	_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, 1 , pVertices , sizeof(TMP_VERTEX));
-	SetRenderState( D3DRS_LIGHTING, TRUE );
+	SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+	_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, 1, pVertices, sizeof(TMP_VERTEX));
+	SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
-void MPRender::AddLine(const D3DXVECTOR3 &v1, const D3DXVECTOR3& v2,DWORD dwColor)
-{
-	MPLine *pLine = new MPLine;
-	pLine->v1		= v1;
-	pLine->v2		= v2;
-	pLine->dwColor	= dwColor;
+void MPRender::AddLine(const D3DXVECTOR3& v1, const D3DXVECTOR3& v2, DWORD dwColor) {
+	MPLine* pLine = new MPLine;
+	pLine->v1 = v1;
+	pLine->v2 = v2;
+	pLine->dwColor = dwColor;
 
 	_LineList.push_back(pLine);
 }
 
-void MPRender::_AddText(const char *pszText, DWORD dwColor)
-{
-
+void MPRender::_AddText(const char* pszText, DWORD dwColor) {
 }
 
 MPRender g_Render;
@@ -796,15 +755,14 @@ int g_nTemp = 0;
 /************************************************************************/
 /* state*/
 /************************************************************************/
-bool	MPRender::_LoadStateFromFile()
-{
+bool MPRender::_LoadStateFromFile() {
 	return true;
 }
-void	MPRender::BeginState(int iIdx)
-{
+
+void MPRender::BeginState(int iIdx) {
 }
-void	MPRender::EndState()
-{
+
+void MPRender::EndState() {
 }
 
 ////////rework screenshot to remove asm and use smart pointer @mothannakh///////////
@@ -823,7 +781,8 @@ bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 		return false;
 	}
 	//somehow we need wider buffer if screen reso is 2k so we add buffer *4
-	const auto pbtTmp = std::make_unique<BYTE[]>(sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + nPitch * Desc.Height * 4);
+	const auto pbtTmp = std::make_unique<BYTE[]>(
+		sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + nPitch * Desc.Height * 4);
 	BYTE* pbtTmpRaw = pbtTmp.get();
 
 	BITMAPFILEHEADER bithead;
@@ -888,7 +847,8 @@ void MPRender::CaptureScreen(const char* szFilename) const {
 	pBackBuffer->GetDesc(&sDesc);
 
 	IDirect3DSurfaceX* pCapSurface;
-	_pD3DDevice->CreateOffscreenPlainSurface(sDesc.Width, sDesc.Height, sDesc.Format, D3DPOOL_SYSTEMMEM, &pCapSurface, nullptr);
+	_pD3DDevice->CreateOffscreenPlainSurface(sDesc.Width, sDesc.Height, sDesc.Format, D3DPOOL_SYSTEMMEM, &pCapSurface,
+											 nullptr);
 	_pD3DDevice->GetRenderTargetData(pBackBuffer, pCapSurface);
 	SurfaceToBMP(pCapSurface, szFilename);
 
@@ -896,43 +856,36 @@ void MPRender::CaptureScreen(const char* szFilename) const {
 	pCapSurface->Release();
 }
 
-void MPRender::IgnoreModelTexture(BOOL bIgnore)
-{
-     lwHelperSetForceIgnoreTexFlag(bIgnore);
+void MPRender::IgnoreModelTexture(BOOL bIgnore) {
+	lwHelperSetForceIgnoreTexFlag(bIgnore);
 }
 
-BOOL MPRender::WorldToScreen(float fX, float fY, float fZ, int* pnX, int* pnY)
-{
+BOOL MPRender::WorldToScreen(float fX, float fY, float fZ, int* pnX, int* pnY) {
 	D3DXVECTOR3 vTemp, vPosTrans, vecPos;
 	vecPos.x = fX;
 	vecPos.y = fY;
 	vecPos.z = fZ;
 	D3DXVec3TransformCoord(&vTemp, &vecPos, &_matViewWorld);
 	D3DXVec3TransformCoord(&vPosTrans, &vTemp, &_matProjWorld);
-	if (vPosTrans.z >= 0.0f && vPosTrans.z < 1.0f)
-	{
+	if (vPosTrans.z >= 0.0f && vPosTrans.z < 1.0f) {
 		int nPosX = (INT)((vPosTrans.x + 1) * (float)(_nWorldViewWidth) / 2.0f + 0.5f);
 		int nPosY = (INT)((-vPosTrans.y + 1) * (float)(_nWorldViewHeight) / 2.0f + 0.5f);
 
-		if (pnX)
-		{
+		if (pnX) {
 			*pnX = nPosX - _nWorldViewStartX;
 		}
-		if (pnY)
-		{
+		if (pnY) {
 			*pnY = nPosY - _nWorldViewStartY;
 		}
 
-		if (nPosX >= 0 && nPosX < _nWorldViewWidth && nPosY >= 0 && nPosY < _nWorldViewHeight)
-		{
+		if (nPosX >= 0 && nPosX < _nWorldViewWidth && nPosY >= 0 && nPosY < _nWorldViewHeight) {
 			return TRUE;
 		}
 	}
 	return FALSE;
 }
 
-void MPRender::UpdateCullInfo()
-{
+void MPRender::UpdateCullInfo() {
 	D3DXMATRIX mat;
 	D3DXMatrixMultiply(&mat, &_matViewWorld, &_matProjWorld);
 	D3DXMatrixInverse(&mat, NULL, &mat);
@@ -946,21 +899,20 @@ void MPRender::UpdateCullInfo()
 	_CullInfo.vecFrustum[6] = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
 	_CullInfo.vecFrustum[7] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-	for (INT i = 0; i < 8; i++)
-	{
+	for (INT i = 0; i < 8; i++) {
 		D3DXVec3TransformCoord(&_CullInfo.vecFrustum[i], &_CullInfo.vecFrustum[i], &mat);
 	}
 
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[0], &_CullInfo.vecFrustum[0],
-		&_CullInfo.vecFrustum[1], &_CullInfo.vecFrustum[2]);
+						&_CullInfo.vecFrustum[1], &_CullInfo.vecFrustum[2]);
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[1], &_CullInfo.vecFrustum[6],
-		&_CullInfo.vecFrustum[7], &_CullInfo.vecFrustum[5]);
+						&_CullInfo.vecFrustum[7], &_CullInfo.vecFrustum[5]);
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[2], &_CullInfo.vecFrustum[2],
-		&_CullInfo.vecFrustum[6], &_CullInfo.vecFrustum[4]);
+						&_CullInfo.vecFrustum[6], &_CullInfo.vecFrustum[4]);
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[3], &_CullInfo.vecFrustum[7],
-		&_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[5]);
+						&_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[5]);
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[4], &_CullInfo.vecFrustum[2],
-		&_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[6]);
+						&_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[6]);
 	D3DXPlaneFromPoints(&_CullInfo.planeFrustum[5], &_CullInfo.vecFrustum[1],
-		&_CullInfo.vecFrustum[0], &_CullInfo.vecFrustum[4]);
+						&_CullInfo.vecFrustum[0], &_CullInfo.vecFrustum[4]);
 }

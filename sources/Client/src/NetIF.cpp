@@ -493,7 +493,8 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 		unsigned short cmd = pk.GetCmd();
 		if (cmd != CMD_CM_PING) {
 			EnsureConsole();
-			ToLogService("network", "[OUT] CMD={:5} {:40} SESS={:10} SIZE={}", cmd, GetCmdName(cmd), pk.GetSess(), pk.GetPacketSize());
+			ToLogService("network", "[OUT] CMD={:5} {:40} SESS={:10} SIZE={}", cmd, GetCmdName(cmd), pk.GetSess(),
+						 pk.GetPacketSize());
 		}
 	}
 

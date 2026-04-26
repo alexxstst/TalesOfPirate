@@ -5,7 +5,4 @@
 #include "lwInterface.h"
 
 LW_BEGIN
-
-
 LW_END
-

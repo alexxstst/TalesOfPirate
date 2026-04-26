@@ -3,26 +3,23 @@
 
 using namespace std;
 
-string CChatRecord::m_strPath="";
+string CChatRecord::m_strPath = "";
 
 
-CChatRecord::CChatRecord(void)
-{
+CChatRecord::CChatRecord(void) {
 }
 
-CChatRecord::~CChatRecord(void)
-{
+CChatRecord::~CChatRecord(void) {
 }
 
-bool CChatRecord::Save(const string name, DWORD number, const string chatData)
-{
-	if (name.length()==0 || chatData.length()==0) return false;
+bool CChatRecord::Save(const string name, DWORD number, const string chatData) {
+	if (name.length() == 0 || chatData.length() == 0) return false;
 	__time64_t t;
 	_time64(&t);
-	tm *ltime=_gmtime64(&t);
-	char buf[_MAX_PATH+1];
-	char folder[_MAX_PATH+1];
-	sprintf(folder,"chats\\%d-%d-%d",ltime->tm_year+1900,ltime->tm_mon+1,ltime->tm_mday);
+	tm* ltime = _gmtime64(&t);
+	char buf[_MAX_PATH + 1];
+	char folder[_MAX_PATH + 1];
+	sprintf(folder, "chats\\%d-%d-%d", ltime->tm_year + 1900, ltime->tm_mon + 1, ltime->tm_mday);
 	CreateDirectory("chats",NULL);
 	CreateDirectory(folder,NULL);
 	ofstream chatLog;
@@ -39,16 +36,15 @@ bool CChatRecord::Save(const string name, DWORD number, const string chatData)
 	//{
 	//	return false;
 	//}
-	sprintf(buf,"\\%s.txt",name.c_str());
-	m_strPath=folder+string(buf);
-	chatLog.open(m_strPath.c_str(),ios_base::app); // 
+	sprintf(buf, "\\%s.txt", name.c_str());
+	m_strPath = folder + string(buf);
+	chatLog.open(m_strPath.c_str(), ios_base::app); // 
 	// End
-	chatLog<<chatData.c_str();
+	chatLog << chatData.c_str();
 	chatLog.close();
 	return true;
 }
 
-string CChatRecord::GetLastSavePath()
-{
+string CChatRecord::GetLastSavePath() {
 	return m_strPath;
 }

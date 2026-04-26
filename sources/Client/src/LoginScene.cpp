@@ -816,7 +816,8 @@ void CLoginScene::_Connect() {
 
 	_eState = enumConnect;
 
-	g_logManager.InternalLog(LogLevel::Debug, "connections", SafeVFormat(GetLanguageString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex));
+	g_logManager.InternalLog(LogLevel::Debug, "connections",
+							 SafeVFormat(GetLanguageString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex));
 	//int nSelRegionNo = 0;
 	//int nNO = lstServer->GetItems()->GetSelect()->GetIndex();
 

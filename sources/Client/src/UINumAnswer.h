@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 
 #include "uiForm.h"
@@ -14,17 +13,13 @@
 #include "uiStoreForm.h"
 
 
-
 // 
 #define ENABLE_NUMANSWER   1
 
 
-
 // BMP
-class CImageBMP
-{
+class CImageBMP {
 public:
-
 	CImageBMP();
 	~CImageBMP();
 
@@ -38,20 +33,16 @@ public:
 	DWORD GetColor(int x, int y);
 
 private:
-
-	BYTE*	_pData;
-	int		_nDataSize;
-	int		_nBmpData;
-	int		_nWidth;
-	int		_nHeight;
+	BYTE* _pData;
+	int _nDataSize;
+	int _nBmpData;
+	int _nWidth;
+	int _nHeight;
 };
 
 
-namespace GUI
-{
-
-	class CNumAnswerMgr : public CUIInterface
-	{
+namespace GUI {
+	class CNumAnswerMgr : public CUIInterface {
 	public:
 		CNumAnswerMgr();
 		~CNumAnswerMgr();
@@ -66,28 +57,27 @@ namespace GUI
 
 	protected:
 		virtual bool Init();
-		virtual void CloseForm() {}
+
+		virtual void CloseForm() {
+		}
+
 		virtual void FrameMove(DWORD dwTime);
 
 	private:
+		CForm* frmNumAnswer;
+		CForm* frmFast; // 
+		CEdit* edtUserInput;
+		CLabelEx* labTimeLeft;
+		C3DCompent* ui3dCheckCode;
 
-		CForm*			frmNumAnswer;
-		CForm*			frmFast;	// 
-		CEdit*			edtUserInput;
-		CLabelEx*		labTimeLeft;
-		C3DCompent*		ui3dCheckCode;
-
-		LPTEXTURE		_pNumTexture;
+		LPTEXTURE _pNumTexture;
 
 		static const int NUMBER_COUNT = 4;
-		CImageBMP		_imgBMP[NUMBER_COUNT];
+		CImageBMP _imgBMP[NUMBER_COUNT];
 
-		DWORD			_dwTickCount;
+		DWORD _dwTickCount;
 
-		static void _evtCheckCodeMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-		static void	_evtCheckCodeRenderEvent(C3DCompent *pSender, int x, int y);
+		static void _evtCheckCodeMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _evtCheckCodeRenderEvent(C3DCompent* pSender, int x, int y);
 	};
-
 }
-
-

@@ -7,45 +7,34 @@
 //---------------------------------------------------------------------------
 extern int GetChaPhotoTexID(int nTypeID);
 
-inline int GetEffectPhotoTexID(int nTypeID)
-{
-	CEffectInfo *pInfo = GetEffectInfo(nTypeID);
-    if(pInfo)
-	{
+inline int GetEffectPhotoTexID(int nTypeID) {
+	CEffectInfo* pInfo = GetEffectInfo(nTypeID);
+	if (pInfo) {
 		return pInfo->nPhotoTexID;
 	}
 	return 0;
 }
 
-inline int GetTerrainTextureType(int nID)
-{
-	MPTerrainInfo *pInfo = GetTerrainInfo(nID);	
-	if(!pInfo) 
-	{
+inline int GetTerrainTextureType(int nID) {
+	MPTerrainInfo* pInfo = GetTerrainInfo(nID);
+	if (!pInfo) {
 		return -1;
 	}
 	return pInfo->btType;
 }
 
-inline int GetSceneObjPhotoTexID(int nTypeID)
-{
-	CSceneObjInfo *pInfo = GetSceneObjInfo(nTypeID);
-	if(pInfo)
-	{
+inline int GetSceneObjPhotoTexID(int nTypeID) {
+	CSceneObjInfo* pInfo = GetSceneObjInfo(nTypeID);
+	if (pInfo) {
 		return pInfo->_photoTexId;
 	}
 	return 0;
 }
 
-inline int GetSceneObjPhotoTexType(int nTypeID)
-{
-	CSceneObjInfo *pInfo = GetSceneObjInfo(nTypeID);
-	if(pInfo)
-	{
+inline int GetSceneObjPhotoTexType(int nTypeID) {
+	CSceneObjInfo* pInfo = GetSceneObjInfo(nTypeID);
+	if (pInfo) {
 		return pInfo->_style;
 	}
 	return -1;
 }
-
-
-

@@ -536,9 +536,9 @@ LW_BEGIN
 	class lwResourceMgr : public lwIResourceMgr {
 		typedef lwSlotMapVoidPtr10240 lwPoolMesh;
 		typedef lwSlotMapVoidPtr40960 lwPoolTex;
-		typedef lwSlotMapVoidPtr1024  lwPoolMeshRender;
-		typedef lwSlotMapVoidPtr1024  lwPoolTexRender;
-		typedef lwSlotMapVoidPtr1024  lwPoolAnimCtrl;
+		typedef lwSlotMapVoidPtr1024 lwPoolMeshRender;
+		typedef lwSlotMapVoidPtr1024 lwPoolTexRender;
+		typedef lwSlotMapVoidPtr1024 lwPoolAnimCtrl;
 
 		LW_STD_DECLARATION()
 
@@ -558,8 +558,8 @@ LW_BEGIN
 		lwPoolAnimCtrl _pool_animctrl;
 
 		lwSlotMapVoidPtr10240 _pool_model;
-		lwSlotMapVoidPtr1024  _pool_physique;
-		lwSlotMapVoidPtr1024  _pool_item;
+		lwSlotMapVoidPtr1024 _pool_physique;
+		lwSlotMapVoidPtr1024 _pool_item;
 
 
 		char _texture_path[LW_MAX_PATH];

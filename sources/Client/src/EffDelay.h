@@ -11,103 +11,109 @@ class CSkillRecord;
 class CServerHarm;
 
 // ,,,
-class CHitRepresent 
-{
+class CHitRepresent {
 public:
-	CHitRepresent() : _pTarget(NULL), _pSkill(NULL), _nAttackX(0), _nAttackY(0), _pAttack(NULL) {}
+	CHitRepresent() : _pTarget(NULL), _pSkill(NULL), _nAttackX(0), _nAttackY(0), _pAttack(NULL) {
+	}
 
-	void	SetAttack( CCharacter*	p )		{ _pAttack=p;				}
-	void	SetTarget( CCharacter*	p )		{ _pTarget=p;				}
-	void	SetSkill( CSkillRecord* p )		{ _pSkill=p;				}
-	void	SetAttackPoint( int x, int y )	{ _nAttackX=x; _nAttackY=y;	}
+	void SetAttack(CCharacter* p) {
+		_pAttack = p;
+	}
 
-	void	ActionExec( CServerHarm* pHarm, int nActionKey );
-	void    EffectExec( CServerHarm* pHarm );
+	void SetTarget(CCharacter* p) {
+		_pTarget = p;
+	}
+
+	void SetSkill(CSkillRecord* p) {
+		_pSkill = p;
+	}
+
+	void SetAttackPoint(int x, int y) {
+		_nAttackX = x;
+		_nAttackY = y;
+	}
+
+	void ActionExec(CServerHarm* pHarm, int nActionKey);
+	void EffectExec(CServerHarm* pHarm);
 
 private:
-	CSkillRecord*	_pSkill;
-	CCharacter*		_pTarget;				// 
-	int				_nAttackX,  _nAttackY;	// 
-	CCharacter*		_pAttack;				// , ,
+	CSkillRecord* _pSkill;
+	CCharacter* _pTarget; // 
+	int _nAttackX, _nAttackY; // 
+	CCharacter* _pAttack; // , ,
 
 private:
-	void	Exec( CServerHarm* pHarm );
-
+	void Exec(CServerHarm* pHarm);
 };
 
 // ,,
-class CEffDelay
-{
+class CEffDelay {
 public:
-    enum ePlayStyle
-    {
-        enumNone,       //  
-        enumPos,        // 
-        enumHitEffect,  // 
-    };
+	enum ePlayStyle {
+		enumNone, //  
+		enumPos, // 
+		enumHitEffect, // 
+	};
 
 public:
-    CEffDelay(CEffectObj* pOwn);
-    ~CEffDelay();
+	CEffDelay(CEffectObj* pOwn);
+	~CEffDelay();
 
-    void Reset()        { _eStyle=enumNone; }
-    void Exec();
+	void Reset() {
+		_eStyle = enumNone;
+	}
 
-    void SetPosEffect( int nEffID, const D3DXVECTOR3& pos );
-    void SetServerHarm( CHitRepresent& Hit, CServerHarm* pHarm );
+	void Exec();
+
+	void SetPosEffect(int nEffID, const D3DXVECTOR3& pos);
+	void SetServerHarm(CHitRepresent& Hit, CServerHarm* pHarm);
 
 private:
-    CEffectObj* _pOwn;
-    ePlayStyle  _eStyle;
-    int         _nEffectID;
+	CEffectObj* _pOwn;
+	ePlayStyle _eStyle;
+	int _nEffectID;
 
-    // enumPos
-    D3DXVECTOR3 _Pos;
+	// enumPos
+	D3DXVECTOR3 _Pos;
 
-    // enumActor
-	CHitRepresent	_cHit;
-    CServerHarm*    _pHarm;
-
+	// enumActor
+	CHitRepresent _cHit;
+	CServerHarm* _pHarm;
 };
 
 // 
-inline void CHitRepresent::EffectExec( CServerHarm* pHarm )
-{
-	if( !_pSkill->IsEffectHarm() ) return;
+inline void CHitRepresent::EffectExec(CServerHarm* pHarm) {
+	if (!_pSkill->IsEffectHarm()) return;
 
-	Exec( pHarm );
+	Exec(pHarm);
 }
 
-inline void CHitRepresent::ActionExec( CServerHarm* pHarm, int nActionKey )
-{
-	if( !_pSkill->IsActKeyHarm() ) return;
+inline void CHitRepresent::ActionExec(CServerHarm* pHarm, int nActionKey) {
+	if (!_pSkill->IsActKeyHarm()) return;
 
-	if( _pSkill->chTargetEffectTime!=nActionKey ) return;
+	if (_pSkill->chTargetEffectTime != nActionKey) return;
 
-	Exec( pHarm );
+	Exec(pHarm);
 }
 
-inline void CEffDelay::SetServerHarm( CHitRepresent& Hit, CServerHarm* pHarm )
-{
-    if( _eStyle!=enumNone ) 
-    {
-        ToLogService("common", "msgCEffDelay::SetServerHarm() Style[{}] is Valid", static_cast<int>(_eStyle));
-    }
+inline void CEffDelay::SetServerHarm(CHitRepresent& Hit, CServerHarm* pHarm) {
+	if (_eStyle != enumNone) {
+		ToLogService("common", "msgCEffDelay::SetServerHarm() Style[{}] is Valid", static_cast<int>(_eStyle));
+	}
 
-    _eStyle = enumHitEffect;
+	_eStyle = enumHitEffect;
 
 	_cHit = Hit;
 	_pHarm = pHarm;
 }
 
-inline void CEffDelay::SetPosEffect( int nEffID, const D3DXVECTOR3& pos )
-{
-    if( _eStyle!=enumNone ) 
-    {
-        ToLogService("common", "msgCEffDelay::SetPosEffect(nEffID[{}],pos[{},{},{}]) Style[{}] is Valid", nEffID, pos.x, pos.y, pos.z, static_cast<int>(_eStyle));
-    }
-    _eStyle = enumPos;
+inline void CEffDelay::SetPosEffect(int nEffID, const D3DXVECTOR3& pos) {
+	if (_eStyle != enumNone) {
+		ToLogService("common", "msgCEffDelay::SetPosEffect(nEffID[{}],pos[{},{},{}]) Style[{}] is Valid", nEffID, pos.x,
+					 pos.y, pos.z, static_cast<int>(_eStyle));
+	}
+	_eStyle = enumPos;
 
-    _nEffectID = nEffID;
-    _Pos = pos;
+	_nEffectID = nEffID;
+	_Pos = pos;
 }

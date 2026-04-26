@@ -24,15 +24,15 @@ LW_RESULT lwLitAnimTexCoord4(lwIAnimKeySetPRS* ctrl);
 
 static const char* __lit_anim_type[] =
 {
-    "Anim Type NULL",
-    "Anim Type 120-rot",
-    "Anim Type 120-pos",
-    "Anim Type 360-pos-u",
-    "Anim Type 360-pos-v",
-    "Anim Type 360-pos-uv",
-    "Anim Type 360-pos/rot",
-    "Anim Type 360-pos/rot-neg",
-    "Anim Type 720-rot",
+	"Anim Type NULL",
+	"Anim Type 120-rot",
+	"Anim Type 120-pos",
+	"Anim Type 360-pos-u",
+	"Anim Type 360-pos-v",
+	"Anim Type 360-pos-uv",
+	"Anim Type 360-pos/rot",
+	"Anim Type 360-pos/rot-neg",
+	"Anim Type 720-rot",
 };
 
 const DWORD __lit_anim_num = LW_ARRAY_LENGTH(__lit_anim_type);

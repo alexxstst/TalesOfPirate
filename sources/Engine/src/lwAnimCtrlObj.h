@@ -7,218 +7,277 @@
 #include "lwInterfaceExt.h"
 
 LW_BEGIN
+	class lwAnimCtrlObjMat : public lwIAnimCtrlObjMat {
+		enum { THIS_TYPE = ANIM_CTRL_TYPE_MAT };
+
+		LW_STD_DECLARATION();
+
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlMatrix* _anim_ctrl;
+		lwPlayPoseInfo _ppi;
+		lwAnimCtrlObjTypeInfo _type_info;
+
+		lwMatrix44 _rtm;
+
+	public:
+		lwAnimCtrlObjMat(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlObjMat();
+
+		LW_RESULT Clone(lwIAnimCtrlObjMat** ret_obj);
+		lwIAnimCtrlMatrix* AttachAnimCtrl(lwIAnimCtrlMatrix* ctrl);
+		lwIAnimCtrlMatrix* DetachAnimCtrl();
+
+		lwIAnimCtrl* GetAnimCtrl() {
+			return _anim_ctrl;
+		}
+
+		lwPlayPoseInfo* GetPlayPoseInfo() {
+			return &_ppi;
+		}
+
+		LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT PlayPose(const lwPlayPoseInfo* info);
+
+		BOOL IsPlaying() {
+			return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID);
+		}
+
+		LW_RESULT UpdateAnimCtrl();
+		LW_RESULT UpdateObject();
+
+		LW_RESULT GetRTM(lwMatrix44* mat);
+	};
+
+	class lwAnimCtrlObjBone : public lwIAnimCtrlObjBone {
+		enum { THIS_TYPE = ANIM_CTRL_TYPE_BONE };
+
+		LW_STD_DECLARATION();
+
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlBone* _anim_ctrl;
+		lwPlayPoseInfo _ppi;
+		lwAnimCtrlObjTypeInfo _type_info;
+
+		lwIndexMatrix44* _dummy_rtm_seq;
+		DWORD _dummy_rtm_num;
+		lwMatrix44* _bone_rtm_seq;
+		DWORD _bone_rtm_num;
+
+	public:
+		lwAnimCtrlObjBone(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlObjBone();
+
+		// base method
+		LW_RESULT Clone(lwIAnimCtrlObjBone** ret_obj);
+		lwIAnimCtrlBone* AttachAnimCtrl(lwIAnimCtrlBone* ctrl);
+		lwIAnimCtrlBone* DetachAnimCtrl();
+
+		lwIAnimCtrl* GetAnimCtrl() {
+			return _anim_ctrl;
+		}
+
+		lwPlayPoseInfo* GetPlayPoseInfo() {
+			return &_ppi;
+		}
+
+		void SetPlayPoseInfo(const lwPlayPoseInfo* ppi) {
+			_ppi = *ppi;
+		}
+
+		LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT PlayPose(const lwPlayPoseInfo* info);
+
+		BOOL IsPlaying() {
+			return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID);
+		}
+
+		LW_RESULT UpdateAnimCtrl();
+		LW_RESULT UpdateObject(lwIAnimCtrlObjBone* ctrl_obj, lwIMesh* mesh_obj);
+		LW_RESULT UpdateHelperObject(lwIHelperObject* helper_obj);
+
+		lwMatrix44* GetBoneRTMSeq() {
+			return _bone_rtm_seq;
+		}
+
+		lwMatrix44* GetDummyRTM(DWORD id);
+
+		lwIndexMatrix44* GetDummyRTMSeq() {
+			return _dummy_rtm_seq;
+		}
+
+		DWORD GetBoneRTTMNum() {
+			return _bone_rtm_num;
+		}
+
+		DWORD GetDummyRTMNum() {
+			return _dummy_rtm_num;
+		}
+	};
 
 
-class lwAnimCtrlObjMat : public lwIAnimCtrlObjMat
-{
-    enum { THIS_TYPE = ANIM_CTRL_TYPE_MAT };
+	class lwAnimCtrlObjTexUV : public lwIAnimCtrlObjTexUV {
+		enum { THIS_TYPE = ANIM_CTRL_TYPE_TEXUV };
 
-    LW_STD_DECLARATION();
+		LW_STD_DECLARATION();
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlMatrix* _anim_ctrl;
-    lwPlayPoseInfo _ppi;
-    lwAnimCtrlObjTypeInfo _type_info;
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlTexUV* _anim_ctrl;
+		lwPlayPoseInfo _ppi;
+		lwAnimCtrlObjTypeInfo _type_info;
 
-    lwMatrix44 _rtm;
+		lwMatrix44 _rtm;
 
-public:
-    lwAnimCtrlObjMat(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlObjMat();
+	public:
+		lwAnimCtrlObjTexUV(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlObjTexUV();
 
-    LW_RESULT Clone(lwIAnimCtrlObjMat** ret_obj);
-    lwIAnimCtrlMatrix* AttachAnimCtrl(lwIAnimCtrlMatrix* ctrl);
-    lwIAnimCtrlMatrix* DetachAnimCtrl();
-    lwIAnimCtrl* GetAnimCtrl() { return _anim_ctrl; }
-    lwPlayPoseInfo* GetPlayPoseInfo() { return &_ppi; }
-    LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT PlayPose(const lwPlayPoseInfo* info);
-    BOOL IsPlaying() { return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID); }
+		LW_RESULT Clone(lwIAnimCtrlObjTexUV** ret_obj);
+		lwIAnimCtrlTexUV* AttachAnimCtrl(lwIAnimCtrlTexUV* ctrl);
+		lwIAnimCtrlTexUV* DetachAnimCtrl();
 
-    LW_RESULT UpdateAnimCtrl();
-    LW_RESULT UpdateObject();
+		lwIAnimCtrl* GetAnimCtrl() {
+			return _anim_ctrl;
+		}
 
-    LW_RESULT GetRTM(lwMatrix44* mat);
-};
+		lwPlayPoseInfo* GetPlayPoseInfo() {
+			return &_ppi;
+		}
 
-class lwAnimCtrlObjBone : public lwIAnimCtrlObjBone
-{
-    enum { THIS_TYPE = ANIM_CTRL_TYPE_BONE };
+		LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT PlayPose(const lwPlayPoseInfo* info);
 
-    LW_STD_DECLARATION();
+		BOOL IsPlaying() {
+			return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID);
+		}
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlBone* _anim_ctrl;
-    lwPlayPoseInfo _ppi;
-    lwAnimCtrlObjTypeInfo _type_info;
+		LW_RESULT UpdateAnimCtrl();
+		LW_RESULT UpdateObject();
 
-    lwIndexMatrix44* _dummy_rtm_seq;
-    DWORD _dummy_rtm_num;
-    lwMatrix44* _bone_rtm_seq;
-    DWORD _bone_rtm_num;
+		LW_RESULT GetRTM(lwMatrix44* mat);
+	};
 
-public:
-    lwAnimCtrlObjBone(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlObjBone();
+	class lwAnimCtrlObjTexImg : public lwIAnimCtrlObjTexImg {
+		enum { THIS_TYPE = ANIM_CTRL_TYPE_TEXIMG };
 
-    // base method
-    LW_RESULT Clone(lwIAnimCtrlObjBone** ret_obj);
-    lwIAnimCtrlBone* AttachAnimCtrl(lwIAnimCtrlBone* ctrl);
-    lwIAnimCtrlBone* DetachAnimCtrl();
-    lwIAnimCtrl* GetAnimCtrl() { return _anim_ctrl; }
-    lwPlayPoseInfo* GetPlayPoseInfo() { return &_ppi; }
-    void SetPlayPoseInfo(const lwPlayPoseInfo* ppi) { _ppi = *ppi; }
-    LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT PlayPose(const lwPlayPoseInfo* info);
-    BOOL IsPlaying() { return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID); }
+		LW_STD_DECLARATION();
 
-    LW_RESULT UpdateAnimCtrl();
-    LW_RESULT UpdateObject(lwIAnimCtrlObjBone* ctrl_obj, lwIMesh* mesh_obj);
-    LW_RESULT UpdateHelperObject(lwIHelperObject* helper_obj);
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlTexImg* _anim_ctrl;
+		lwPlayPoseInfo _ppi;
+		lwAnimCtrlObjTypeInfo _type_info;
 
-    lwMatrix44* GetBoneRTMSeq()
-	{
-		return _bone_rtm_seq;
-	}
-    lwMatrix44* GetDummyRTM(DWORD id);
-    lwIndexMatrix44* GetDummyRTMSeq() { return _dummy_rtm_seq; }
-    DWORD GetBoneRTTMNum() { return _bone_rtm_num; }
-    DWORD GetDummyRTMNum() { return _dummy_rtm_num; }
-};
+		lwITex* _rt_tex;
 
+	public:
+		lwAnimCtrlObjTexImg(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlObjTexImg();
 
-class lwAnimCtrlObjTexUV : public lwIAnimCtrlObjTexUV
-{
-    enum { THIS_TYPE = ANIM_CTRL_TYPE_TEXUV };
+		LW_RESULT Clone(lwIAnimCtrlObjTexImg** ret_obj);
+		lwIAnimCtrlTexImg* AttachAnimCtrl(lwIAnimCtrlTexImg* ctrl);
+		lwIAnimCtrlTexImg* DetachAnimCtrl();
 
-    LW_STD_DECLARATION();
+		lwIAnimCtrl* GetAnimCtrl() {
+			return _anim_ctrl;
+		}
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlTexUV* _anim_ctrl;
-    lwPlayPoseInfo _ppi;
-    lwAnimCtrlObjTypeInfo _type_info;
+		lwPlayPoseInfo* GetPlayPoseInfo() {
+			return &_ppi;
+		}
 
-    lwMatrix44 _rtm;
+		LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT PlayPose(const lwPlayPoseInfo* info);
 
-public:
-    lwAnimCtrlObjTexUV(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlObjTexUV();
+		BOOL IsPlaying() {
+			return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID);
+		}
 
-    LW_RESULT Clone(lwIAnimCtrlObjTexUV** ret_obj);
-    lwIAnimCtrlTexUV* AttachAnimCtrl(lwIAnimCtrlTexUV* ctrl);
-    lwIAnimCtrlTexUV* DetachAnimCtrl();
-    lwIAnimCtrl* GetAnimCtrl() { return _anim_ctrl; }
-    lwPlayPoseInfo* GetPlayPoseInfo() { return &_ppi; }
-    LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT PlayPose(const lwPlayPoseInfo* info);
-    BOOL IsPlaying() { return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID); }
+		LW_RESULT UpdateAnimCtrl();
+		LW_RESULT UpdateObject();
 
-    LW_RESULT UpdateAnimCtrl();
-    LW_RESULT UpdateObject();
+		LW_RESULT GetRunTimeTex(lwITex** tex);
+	};
 
-    LW_RESULT GetRTM(lwMatrix44* mat);
-};
+	class lwAnimCtrlObjMtlOpacity : public lwIAnimCtrlObjMtlOpacity {
+		enum { THIS_TYPE = ANIM_CTRL_TYPE_MTLOPACITY };
 
-class lwAnimCtrlObjTexImg : public lwIAnimCtrlObjTexImg
-{
-    enum { THIS_TYPE = ANIM_CTRL_TYPE_TEXIMG };
+		LW_STD_DECLARATION();
 
-    LW_STD_DECLARATION();
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlMtlOpacity* _anim_ctrl;
+		lwPlayPoseInfo _ppi;
+		lwAnimCtrlObjTypeInfo _type_info;
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlTexImg* _anim_ctrl;
-    lwPlayPoseInfo _ppi;
-    lwAnimCtrlObjTypeInfo _type_info;
+		float _rt_opacity;
 
-    lwITex* _rt_tex;
+	public:
+		lwAnimCtrlObjMtlOpacity(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlObjMtlOpacity();
 
-public:
-    lwAnimCtrlObjTexImg(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlObjTexImg();
+		LW_RESULT Clone(lwIAnimCtrlObjMtlOpacity** ret_obj);
+		lwIAnimCtrlMtlOpacity* AttachAnimCtrl(lwIAnimCtrlMtlOpacity* ctrl);
+		lwIAnimCtrlMtlOpacity* DetachAnimCtrl();
 
-    LW_RESULT Clone(lwIAnimCtrlObjTexImg** ret_obj);
-    lwIAnimCtrlTexImg* AttachAnimCtrl(lwIAnimCtrlTexImg* ctrl);
-    lwIAnimCtrlTexImg* DetachAnimCtrl();
-    lwIAnimCtrl* GetAnimCtrl() { return _anim_ctrl; }
-    lwPlayPoseInfo* GetPlayPoseInfo() { return &_ppi; }
-    LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT PlayPose(const lwPlayPoseInfo* info);
-    BOOL IsPlaying() { return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID); }
+		lwIAnimCtrl* GetAnimCtrl() {
+			return _anim_ctrl;
+		}
 
-    LW_RESULT UpdateAnimCtrl();
-    LW_RESULT UpdateObject();
+		lwPlayPoseInfo* GetPlayPoseInfo() {
+			return &_ppi;
+		}
 
-    LW_RESULT GetRunTimeTex(lwITex** tex);
-};
+		LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
+		LW_RESULT PlayPose(const lwPlayPoseInfo* info);
 
-class lwAnimCtrlObjMtlOpacity : public lwIAnimCtrlObjMtlOpacity
-{
-    enum { THIS_TYPE = ANIM_CTRL_TYPE_MTLOPACITY };
+		BOOL IsPlaying() {
+			return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID);
+		}
 
-    LW_STD_DECLARATION();
+		LW_RESULT UpdateAnimCtrl();
+		LW_RESULT UpdateObject();
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlMtlOpacity* _anim_ctrl;
-    lwPlayPoseInfo _ppi;
-    lwAnimCtrlObjTypeInfo _type_info;
+		LW_RESULT GetRunTimeOpacity(float* opacity);
+	};
 
-    float _rt_opacity;
+	// lwAnimCtrlAgent
+	class lwAnimCtrlAgent : public lwIAnimCtrlAgent {
+		LW_STD_DECLARATION()
 
-public:
-    lwAnimCtrlObjMtlOpacity(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlObjMtlOpacity();
+	private:
+		lwIResourceMgr* _res_mgr;
+		lwIAnimCtrlObj** _obj_seq;
+		DWORD _obj_num;
 
-    LW_RESULT Clone(lwIAnimCtrlObjMtlOpacity** ret_obj);
-    lwIAnimCtrlMtlOpacity* AttachAnimCtrl(lwIAnimCtrlMtlOpacity* ctrl);
-    lwIAnimCtrlMtlOpacity* DetachAnimCtrl();
-    lwIAnimCtrl* GetAnimCtrl() { return _anim_ctrl; }
-    lwPlayPoseInfo* GetPlayPoseInfo() { return &_ppi; }
-    LW_RESULT SetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT GetTypeInfo(lwAnimCtrlObjTypeInfo* info);
-    LW_RESULT PlayPose(const lwPlayPoseInfo* info);
-    BOOL IsPlaying() { return !(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID); }
+	private:
+	public:
+		lwAnimCtrlAgent(lwIResourceMgr* res_mgr);
+		~lwAnimCtrlAgent();
 
-    LW_RESULT UpdateAnimCtrl();
-    LW_RESULT UpdateObject();
+		LW_RESULT AddAnimCtrlObj(lwIAnimCtrlObj* obj);
+		lwIAnimCtrlObj* RemoveAnimCtrlObj(lwAnimCtrlObjTypeInfo* info);
+		lwIAnimCtrlObj* GetAnimCtrlObj(lwAnimCtrlObjTypeInfo* info);
 
-    LW_RESULT GetRunTimeOpacity(float* opacity);
-};
+		lwIAnimCtrlObj* GetAnimCtrlObj(DWORD id) {
+			return _obj_seq[id];
+		}
 
-// lwAnimCtrlAgent
-class lwAnimCtrlAgent : public lwIAnimCtrlAgent
-{
-    LW_STD_DECLARATION()
+		DWORD GetAnimCtrlObjNum() {
+			return _obj_num;
+		}
 
+		LW_RESULT Update();
 
-private:
-    lwIResourceMgr* _res_mgr;
-    lwIAnimCtrlObj** _obj_seq;
-    DWORD _obj_num;
-
-private:
-public:
-    lwAnimCtrlAgent(lwIResourceMgr* res_mgr);
-    ~lwAnimCtrlAgent();
-
-    LW_RESULT AddAnimCtrlObj(lwIAnimCtrlObj* obj);
-    lwIAnimCtrlObj* RemoveAnimCtrlObj(lwAnimCtrlObjTypeInfo* info);
-    lwIAnimCtrlObj* GetAnimCtrlObj(lwAnimCtrlObjTypeInfo* info);
-    lwIAnimCtrlObj* GetAnimCtrlObj(DWORD id) { return _obj_seq[id]; }
-    DWORD GetAnimCtrlObjNum() { return _obj_num; }
-
-    LW_RESULT Update();
-
-    LW_RESULT Clone(lwIAnimCtrlAgent** ret_obj);
-    LW_RESULT ExtractAnimData(lwIAnimDataInfo* data_info);
-};
+		LW_RESULT Clone(lwIAnimCtrlAgent** ret_obj);
+		LW_RESULT ExtractAnimData(lwIAnimDataInfo* data_info);
+	};
 
 LW_END

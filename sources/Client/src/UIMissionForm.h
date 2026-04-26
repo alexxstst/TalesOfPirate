@@ -2,20 +2,18 @@
 #include "UIGlobalVar.h"
 #include "NetProtocol.h"
 
-namespace GUI
-{
+namespace GUI {
 	class CForm;
 	class CMemoEx;
 	class CTextButton;
 
 	// 
-	class CMissionMgr : public CUIInterface
-	{
+	class CMissionMgr : public CUIInterface {
 	public:
 		CMissionMgr();
 		virtual ~CMissionMgr();
 
-		void ShowMissionPage( DWORD dwNpcID, BYTE byCmd, const NET_MISPAGE& page );
+		void ShowMissionPage(DWORD dwNpcID, BYTE byCmd, const NET_MISPAGE& page);
 
 	protected:
 		bool Init();
@@ -24,18 +22,16 @@ namespace GUI
 
 	private:
 		// 
-		static void _MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey );
-		static void _ItemClickEvent( std::string strItem );
+		static void _MouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey);
+		static void _ItemClickEvent(std::string strItem);
 
-		CForm*			m_pMisForm;
-		CMemoEx*		m_pMisInfo;
-		CTextButton*	m_pMisBtn1;
-		CTextButton*	m_pMisBtn2;
-		CTextButton*	m_pMisClose;
+		CForm* m_pMisForm;
+		CMemoEx* m_pMisInfo;
+		CTextButton* m_pMisBtn1;
+		CTextButton* m_pMisBtn2;
+		CTextButton* m_pMisClose;
 
-		DWORD	m_dwNpcID;
-		BYTE	m_byMisCmd;
+		DWORD m_dwNpcID;
+		BYTE m_byMisCmd;
 	};
-
 }
-

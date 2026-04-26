@@ -439,7 +439,6 @@ protected:
 	DWORD _dwVerCount;
 	DWORD _dwFaceCount;
 
-
 public:
 	// Getters and Setters
 	bool IsUsing() {
@@ -623,6 +622,7 @@ public:
 	}
 
 	virtual void Render();
+
 	virtual void End() {
 		if (m_pCModel)
 			m_pCModel->End();
@@ -801,6 +801,7 @@ public:
 	}
 
 	void SetModel(CEffectModel* pCModel);
+
 	void ChangeTexture(const s_string& pszName) {
 		if (_eEffectType == EFFECT_FRAMETEX) {
 		}

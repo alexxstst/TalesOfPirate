@@ -27,7 +27,9 @@ public:
 	TextureManager();
 	~TextureManager();
 
-	static TextureManager* I() { return _Instance; }
+	static TextureManager* I() {
+		return _Instance;
+	}
 
 	// Получить ID по имени файла. Создаёт запись если нет.
 	int GetOrCreateID(const char* path);
@@ -51,22 +53,27 @@ public:
 	// Перезагрузка всех текстур (смена качества).
 	void ReloadAll();
 	void SetLevel(int level);
-	int  GetLevel() const { return _nTextureLevel; }
 
-	void SetReleaseInterval(DWORD ms) { _dwReleaseInterval = ms; }
+	int GetLevel() const {
+		return _nTextureLevel;
+	}
+
+	void SetReleaseInterval(DWORD ms) {
+		_dwReleaseInterval = ms;
+	}
 
 private:
 	lwITex* LoadTexture(Entry& entry);
-	void    ReleaseTexture(Entry& entry);
+	void ReleaseTexture(Entry& entry);
 	std::string ResolveTexturePath(const char* filename);
-	bool    IsMemoryFull();
+	bool IsMemoryFull();
 
 	static TextureManager* _Instance;
 
 	std::vector<Entry> _entries;
 	std::unordered_map<std::string, int> _nameIndex;
 
-	int   _nTextureLevel;
+	int _nTextureLevel;
 	DWORD _dwReleaseInterval{8000};
-	int   _nLoadedCount{0};
+	int _nLoadedCount{0};
 };

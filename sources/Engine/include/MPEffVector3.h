@@ -7,20 +7,28 @@
 #include "MPEffectMath.h"
 #include "MPEffQuaternion.h"
 
-class MPEffVector3
-{
+class MPEffVector3 {
 public:
 	D3DXVECTOR3 m_vSelf;
+
 public:
-	MPEffVector3() : m_vSelf(0, 0, 0) {}
-	MPEffVector3(float x, float y, float z) : m_vSelf(x, y, z) {}
-	MPEffVector3(const MPEffVector3& v) : m_vSelf(v.m_vSelf) {}
-	MPEffVector3(const D3DXVECTOR3& dxV) : m_vSelf(dxV) {}
+	MPEffVector3() : m_vSelf(0, 0, 0) {
+	}
 
-	D3DXVECTOR3& GetDXValue()	{ return m_vSelf; }
+	MPEffVector3(float x, float y, float z) : m_vSelf(x, y, z) {
+	}
 
-	inline MPEffVector3 operator + ( const MPEffVector3& rkVector ) const
-	{
+	MPEffVector3(const MPEffVector3& v) : m_vSelf(v.m_vSelf) {
+	}
+
+	MPEffVector3(const D3DXVECTOR3& dxV) : m_vSelf(dxV) {
+	}
+
+	D3DXVECTOR3& GetDXValue() {
+		return m_vSelf;
+	}
+
+	inline MPEffVector3 operator +(const MPEffVector3& rkVector) const {
 		MPEffVector3 kSum;
 
 		D3DXVec3Add(&(kSum.m_vSelf), &m_vSelf, &(rkVector.m_vSelf));
@@ -29,14 +37,12 @@ public:
 	}
 
 
-	inline MPEffVector3& operator *= ( float fScalar )
-	{
+	inline MPEffVector3& operator *=(float fScalar) {
 		D3DXVec3Scale(&m_vSelf, &m_vSelf, fScalar);
 		return *this;
 	}
 
-	inline MPEffVector3& operator *= ( const MPEffVector3& rkVector )
-	{
+	inline MPEffVector3& operator *=(const MPEffVector3& rkVector) {
 		m_vSelf.x *= rkVector.m_vSelf.x;
 		m_vSelf.y *= rkVector.m_vSelf.y;
 		m_vSelf.z *= rkVector.m_vSelf.z;
@@ -45,17 +51,15 @@ public:
 	}
 
 
-	inline MPEffVector3 crossProduct( const MPEffVector3& rkVector ) const
-	{
+	inline MPEffVector3 crossProduct(const MPEffVector3& rkVector) const {
 		D3DXVECTOR3 kCross;
-		
-		D3DXVec3Cross( &kCross, &m_vSelf, &(rkVector.m_vSelf));
+
+		D3DXVec3Cross(&kCross, &m_vSelf, &(rkVector.m_vSelf));
 
 		return kCross;
 	}
 
-	inline float squaredLength () const
-	{
+	inline float squaredLength() const {
 		return D3DXVec3LengthSq(&m_vSelf);
 	}
 
@@ -64,12 +68,10 @@ public:
 		
 	@returns .
 	*/
-	inline float normalise()
-	{
+	inline float normalise() {
 		float fLength = D3DXVec3Length(&m_vSelf);
 
-		if ( fLength > 1e-06f )
-		{
+		if (fLength > 1e-06f) {
 			D3DXVec3Normalize(&m_vSelf, &m_vSelf);
 		}
 
@@ -84,28 +86,25 @@ public:
 	method will guarantee to generate one of them. If you need more 
 	control you should use the Quaternion class.
 	*/
-	inline MPEffVector3 perpendicular(void) const
-	{
+	inline MPEffVector3 perpendicular(void) const {
 		static const float fSquareZero = float(1e-06 * 1e-06);
 
-		MPEffVector3 perp = this->crossProduct( MPEffVector3::UNIT_X );
+		MPEffVector3 perp = this->crossProduct(MPEffVector3::UNIT_X);
 
 		//  length
-		if( perp.squaredLength() < fSquareZero )
-		{
+		if (perp.squaredLength() < fSquareZero) {
 			/* Y.
 			*/
-			perp = this->crossProduct( MPEffVector3::UNIT_Y );
+			perp = this->crossProduct(MPEffVector3::UNIT_Y);
 		}
 
 		return perp;
 	}
 
-	inline bool operator == ( const MPEffVector3& rkVector ) const
-	{
-		return ( m_vSelf.x == rkVector.m_vSelf.x 
-			&& m_vSelf.y == rkVector.m_vSelf.y 
-			&& m_vSelf.z == rkVector.m_vSelf.z );
+	inline bool operator ==(const MPEffVector3& rkVector) const {
+		return (m_vSelf.x == rkVector.m_vSelf.x
+			&& m_vSelf.y == rkVector.m_vSelf.y
+			&& m_vSelf.z == rkVector.m_vSelf.z);
 	}
 
 
@@ -119,27 +118,24 @@ public:
 	@returns 
 		
 	*/
-	inline MPEffVector3 randomDeviant( const MPRadian& angle,
-		const MPEffVector3& up = MPEffVector3::ZERO ) const
-	{
+	inline MPEffVector3 randomDeviant(const MPRadian& angle,
+									  const MPEffVector3& up = MPEffVector3::ZERO) const {
 		MPEffVector3 newUp;
 
-		if (up == MPEffVector3::ZERO)
-		{
+		if (up == MPEffVector3::ZERO) {
 			newUp = this->perpendicular();
 		}
-		else
-		{
+		else {
 			newUp = up;
 		}
 
 		// up
 		MPEffQuaternion q;
-		q.FromAngleAxis( MPRadian(MPEffectMath::UnitRandom() * MPEffectMath::TWO_PI), *this );
+		q.FromAngleAxis(MPRadian(MPEffectMath::UnitRandom() * MPEffectMath::TWO_PI), *this);
 		newUp = q * newUp;
 
 		// Finally rotate this by given angle around randomised up
-		q.FromAngleAxis( angle, newUp );
+		q.FromAngleAxis(angle, newUp);
 		return q * (*this);
 	}
 
@@ -151,6 +147,5 @@ public:
 	static const MPEffVector3 NEGATIVE_UNIT_Y;
 	static const MPEffVector3 NEGATIVE_UNIT_Z;
 	static const MPEffVector3 UNIT_SCALE;
-
 };
 #endif

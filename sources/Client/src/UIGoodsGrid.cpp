@@ -14,24 +14,23 @@ using namespace GUI;
 // class CGoodsGrid
 //---------------------------------------------------------------------------
 
-int CGoodsGrid::_nTmpX		= 0;
-int CGoodsGrid::_nTmpY		= 0;  
-int CGoodsGrid::_nTmpRow	= 0;	
-int CGoodsGrid::_nTmpCol	= 0;
+int CGoodsGrid::_nTmpX = 0;
+int CGoodsGrid::_nTmpY = 0;
+int CGoodsGrid::_nTmpRow = 0;
+int CGoodsGrid::_nTmpCol = 0;
 
 CGoodsGrid::CGoodsGrid(CForm& frmOwn)
-: CCommandCompent(frmOwn)
-, _nLeftMargin(0), _nTopMargin(0), _nRightMargin(0), _nBottomMargin(0)
-, _nUnitHeight(32), _nUnitWidth(32)
-, _nSpaceX(2), _nSpaceY(2)
-, _nRow(0), _nCol(0), _nMaxNum(0), _pItems(NULL)
-, _nFirst(0), _nLast(0), _nTmpIndex(0), _eShowStyle(enumSmall)
-, evtThrowItem(NULL), evtSwapItem(NULL), evtUseCommand(NULL), evtBeforeAccept(NULL), evtRMouseEvent(NULL)
-, _nCurNum(0), _IsShowHint(true)
-{
-	_pImage = new CGuiPic( this );
-	_pUnit = new CGuiPic( this );
-	_pScroll = new CScroll( frmOwn );
+	: CCommandCompent(frmOwn)
+	  , _nLeftMargin(0), _nTopMargin(0), _nRightMargin(0), _nBottomMargin(0)
+	  , _nUnitHeight(32), _nUnitWidth(32)
+	  , _nSpaceX(2), _nSpaceY(2)
+	  , _nRow(0), _nCol(0), _nMaxNum(0), _pItems(NULL)
+	  , _nFirst(0), _nLast(0), _nTmpIndex(0), _eShowStyle(enumSmall)
+	  , evtThrowItem(NULL), evtSwapItem(NULL), evtUseCommand(NULL), evtBeforeAccept(NULL), evtRMouseEvent(NULL)
+	  , _nCurNum(0), _IsShowHint(true) {
+	_pImage = new CGuiPic(this);
+	_pUnit = new CGuiPic(this);
+	_pScroll = new CScroll(frmOwn);
 	_pDrag = new CDrag;
 
 
@@ -42,21 +41,19 @@ CGoodsGrid::CGoodsGrid(CForm& frmOwn)
 }
 
 CGoodsGrid::CGoodsGrid(const CGoodsGrid& rhs)
-: CCommandCompent(rhs), _pItems(NULL), _nRow(0), _nCol(0)
-{
+	: CCommandCompent(rhs), _pItems(NULL), _nRow(0), _nCol(0) {
 	_pScroll = new CScroll(*rhs._pScroll);
 	_pImage = new CGuiPic(*rhs._pImage);
 	_pUnit = new CGuiPic(*rhs._pUnit);
 
 	//if( _pDrag ) delete _pDrag;
 	SAFE_DELETE(_pDrag); // UI
-    _pDrag = new CDrag;
+	_pDrag = new CDrag;
 
 	_Copy(rhs);
 }
 
-CGoodsGrid& CGoodsGrid::operator=(const CGoodsGrid& rhs)
-{
+CGoodsGrid& CGoodsGrid::operator=(const CGoodsGrid& rhs) {
 	CCommandCompent::operator =(rhs);
 
 	_ClearItem();
@@ -66,14 +63,13 @@ CGoodsGrid& CGoodsGrid::operator=(const CGoodsGrid& rhs)
 	*_pUnit = *rhs._pUnit;
 
 	_Copy(rhs);
-    return *this;
+	return *this;
 }
 
-void CGoodsGrid::_Copy( const CGoodsGrid& rhs )
-{
+void CGoodsGrid::_Copy(const CGoodsGrid& rhs) {
 	_nLeftMargin = rhs._nLeftMargin;
 	_nTopMargin = rhs._nTopMargin;
-	_nRightMargin= rhs._nRightMargin;
+	_nRightMargin = rhs._nRightMargin;
 	_nBottomMargin = rhs._nBottomMargin;
 
 	_nUnitHeight = rhs._nUnitHeight;
@@ -88,15 +84,15 @@ void CGoodsGrid::_Copy( const CGoodsGrid& rhs )
 	_nTotalH = rhs._nTotalW;
 
 	evtThrowItem = rhs.evtThrowItem;
-    evtSwapItem = rhs.evtSwapItem;
-    evtBeforeAccept = rhs.evtBeforeAccept;
-    evtUseCommand = rhs.evtUseCommand;
+	evtSwapItem = rhs.evtSwapItem;
+	evtBeforeAccept = rhs.evtBeforeAccept;
+	evtUseCommand = rhs.evtUseCommand;
 	evtRMouseEvent = rhs.evtRMouseEvent;
 
 	_eShowStyle = rhs._eShowStyle;
 	_IsShowHint = rhs._IsShowHint;
 
-	SetContent( rhs._nRow, rhs._nCol );
+	SetContent(rhs._nRow, rhs._nCol);
 
 	//for( int i=0; i<_nMaxNum; i++ )
 	//{
@@ -110,46 +106,41 @@ void CGoodsGrid::_Copy( const CGoodsGrid& rhs )
 	_SetSelf();
 }
 
-void CGoodsGrid::_SetSelf()
-{
+void CGoodsGrid::_SetSelf() {
 	_pScroll->SetParent(this);
 	_pScroll->SetIsShow(false);
 	_pScroll->evtChange = _OnScrollChange;
 
 	_pImage->SetParent(this);
 
-	if( _pDrag )
-	{
-		_pDrag->SetIsMove( false );
+	if (_pDrag) {
+		_pDrag->SetIsMove(false);
 		_pDrag->evtMouseDragBegin = NULL;
 		_pDrag->evtMouseDragMove = NULL;
 		_pDrag->evtMouseDragEnd = _DragEnd;
 	}
 
 	_pDragItem = nullptr;
-    _nDragIndex = -1;
+	_nDragIndex = -1;
 }
 
-CGoodsGrid::~CGoodsGrid()
-{
+CGoodsGrid::~CGoodsGrid() {
 	_ClearItem();
 
 	//delete _pImage;
 	//delete _pUnit;
 
-	SAFE_DELETE(_pImage);	// UI
-	SAFE_DELETE(_pImage);	// UI
+	SAFE_DELETE(_pImage); // UI
+	SAFE_DELETE(_pImage); // UI
 }
 
-void CGoodsGrid::SetAlpha( BYTE alpha )
-{
-	_pScroll->SetAlpha( alpha );
-	_pImage->SetAlpha( alpha );
-	_pUnit->SetAlpha( alpha );
+void CGoodsGrid::SetAlpha(BYTE alpha) {
+	_pScroll->SetAlpha(alpha);
+	_pImage->SetAlpha(alpha);
+	_pUnit->SetAlpha(alpha);
 }
 
-void CGoodsGrid::Render()
-{
+void CGoodsGrid::Render() {
 	_pImage->Render(GetX(), GetY());
 
 	static int i;
@@ -158,19 +149,15 @@ void CGoodsGrid::Render()
 	y = _nStartY;
 	col = 0;
 
-	if( !_pUnit->IsNull() )
-	{
-		for( i=_nFirst; i<_nLast; i++ )
-		{
-			_pUnit->Render( x, y );
-			if( ++col >= _nCol )
-			{
+	if (!_pUnit->IsNull()) {
+		for (i = _nFirst; i < _nLast; i++) {
+			_pUnit->Render(x, y);
+			if (++col >= _nCol) {
 				col = 0;
 				y += _nTotalH;
 				x = _nStartX;
 			}
-			else
-			{
+			else {
 				x += _nTotalW;
 			}
 		}
@@ -178,67 +165,54 @@ void CGoodsGrid::Render()
 		y = _nStartY;
 		col = 0;
 	}
-	if( _eShowStyle==enumSmall )
-	{
-		for( i=_nFirst; i<_nLast; i++ )
-		{
-			if( _pItems[i] ) _pItems[i]->Render( x, y );
-			if (selectorEnabled && selectedItemIndicies[i])  selectItemImage->Render(x, y);
+	if (_eShowStyle == enumSmall) {
+		for (i = _nFirst; i < _nLast; i++) {
+			if (_pItems[i]) _pItems[i]->Render(x, y);
+			if (selectorEnabled && selectedItemIndicies[i]) selectItemImage->Render(x, y);
 
-			if( ++col >= _nCol )
-			{
+			if (++col >= _nCol) {
 				col = 0;
 				y += _nTotalH;
 				x = _nStartX;
 			}
-			else
-			{
+			else {
 				x += _nTotalW;
 			}
 		}
 	}
-	else if( _eShowStyle == enumSale )
-	{
-		for( i=_nFirst; i<_nLast; i++ )
-		{
-			if( _pItems[i] ) _pItems[i]->SaleRender( x, y, _nUnitWidth, _nUnitHeight );
+	else if (_eShowStyle == enumSale) {
+		for (i = _nFirst; i < _nLast; i++) {
+			if (_pItems[i]) _pItems[i]->SaleRender(x, y, _nUnitWidth, _nUnitHeight);
 
-			if( ++col >= _nCol )
-			{
+			if (++col >= _nCol) {
 				col = 0;
 				y += _nTotalH;
 				x = _nStartX;
 			}
-			else
-			{
+			else {
 				x += _nTotalW;
 			}
 		}
 	}
-	else if( _eShowStyle == enumOwnDef )
-	{
-		for( i=_nFirst; i<_nLast; i++ )
-		{
-			if( _pItems[i] ) _pItems[i]->OwnDefRender( x, y, _nUnitWidth, _nUnitHeight );
+	else if (_eShowStyle == enumOwnDef) {
+		for (i = _nFirst; i < _nLast; i++) {
+			if (_pItems[i]) _pItems[i]->OwnDefRender(x, y, _nUnitWidth, _nUnitHeight);
 
-			if( ++col >= _nCol )
-			{
+			if (++col >= _nCol) {
 				col = 0;
 				y += _nTotalH;
 				x = _nStartX;
 			}
-			else
-			{
+			else {
 				x += _nTotalW;
 			}
 		}
 	}
 
-    if( _pScroll->GetIsShow() ) _pScroll->Render();
+	if (_pScroll->GetIsShow()) _pScroll->Render();
 }
 
-void CGoodsGrid::Refresh()
-{
+void CGoodsGrid::Refresh() {
 	CCompent::Refresh();
 
 	_pImage->Refresh();
@@ -247,32 +221,29 @@ void CGoodsGrid::Refresh()
 	_nStartX = GetX() + _nLeftMargin;
 	_nStartY = GetY() + _nTopMargin;
 
-	_nPageShowNum = _nCol * (int)( ( GetHeight() - _nBottomMargin - _nTopMargin ) / _nTotalH );
+	_nPageShowNum = _nCol * (int)((GetHeight() - _nBottomMargin - _nTopMargin) / _nTotalH);
 	_OnScrollChange();
 }
 
-bool CGoodsGrid::MouseRun( int x, int y, DWORD key )
-{
+bool CGoodsGrid::MouseRun(int x, int y, DWORD key) {
 	//AllocConsole();
 	//freopen("CONOUT$", "w", stdout);
-	if( !IsNormal() ){
+	if (!IsNormal()) {
 		return false;
-	} 
+	}
 
-	if( InRect( x, y ) )
-	{
-		if( (key & Mouse_LDown) && !_isChild && GetActive()!=this ) _SetActive();
+	if (InRect(x, y)) {
+		if ((key & Mouse_LDown) && !_isChild && GetActive() != this) _SetActive();
 
-		if( _pScroll->MouseRun( x, y, key ) ) return true;
-		
-		_GetHitItem( x, y );
-		if( _nTmpIndex==-1 ) return true;
+		if (_pScroll->MouseRun(x, y, key)) return true;
+
+		_GetHitItem(x, y);
+		if (_nTmpIndex == -1) return true;
 
 		// The behavior of "Locked Slot" item 
-		if (_pItems[_nTmpIndex])
-		{
+		if (_pItems[_nTmpIndex]) {
 			CItemCommand* item = dynamic_cast<CItemCommand*>(_pItems[_nTmpIndex]);
-			if(!item->GetCanDrag()){
+			if (!item->GetCanDrag()) {
 				return false;
 			}
 		}
@@ -281,43 +252,36 @@ bool CGoodsGrid::MouseRun( int x, int y, DWORD key )
 			&& ((key & Mouse_LDown) ||
 				(key & Mouse_RDown) ||
 				(key & Mouse_LDB))
-			)
-		{
+		) {
 			ResetItemSelections();
 		}
 
-		if (key & Mouse_LDown)
-		{
+		if (key & Mouse_LDown) {
 			// Evaluate occupied slots only
-			if (_pItems[_nTmpIndex])
-			{
-				if (g_pGameApp->IsCtrlPress())
-				{
+			if (_pItems[_nTmpIndex]) {
+				if (g_pGameApp->IsCtrlPress()) {
 					selectedItemIndicies[_nTmpIndex] = !selectedItemIndicies[_nTmpIndex];
 					return true;
 				}
 
-				if (_pItems[_nTmpIndex]->MouseDown())
-				{
+				if (_pItems[_nTmpIndex]->MouseDown()) {
 					return true;
 				}
 			}
 		}
 
-		
-		if( key & Mouse_RDown ){
+
+		if (key & Mouse_RDown) {
 			if (_pItems[_nTmpIndex]) {
 				// Select a single item whenever not pressing CTRL
-				if (!g_pGameApp->IsCtrlPress())
-				{
+				if (!g_pGameApp->IsCtrlPress()) {
 					selectedItemIndicies[_nTmpIndex] = true;
 				}
 
 
-				if( evtRMouseEvent ){		
+				if (evtRMouseEvent) {
 					// Right click only works on a selected item
-					if(selectedItemIndicies[_nTmpIndex])
-					{
+					if (selectedItemIndicies[_nTmpIndex]) {
 						evtRMouseEvent(this, _pItems[_nTmpIndex], _nTmpIndex);
 					}
 				}
@@ -327,27 +291,22 @@ bool CGoodsGrid::MouseRun( int x, int y, DWORD key )
 				return true;
 			}
 		}
-		
-        if( key & Mouse_LDB )
-        {
-			if( _pItems[_nTmpIndex] )
-			{				
+
+		if (key & Mouse_LDB) {
+			if (_pItems[_nTmpIndex]) {
 				_pItems[_nTmpIndex]->Exec();
 			}
 			return true;
 		}
 
-		if( _pDrag && _pDrag->BeginMouseRun(this, _IsMouseIn, x, y, key )==CDrag::stDrag )
-		{				
-			_GetHitItem( _pDrag->GetStartX(), _pDrag->GetStartY() );
-			if( _nTmpIndex==-1 ) 
-			{
+		if (_pDrag && _pDrag->BeginMouseRun(this, _IsMouseIn, x, y, key) == CDrag::stDrag) {
+			_GetHitItem(_pDrag->GetStartX(), _pDrag->GetStartY());
+			if (_nTmpIndex == -1) {
 				_pDrag->Reset();
 				return true;
 			}
 
-			if( _pItems[_nTmpIndex] )
-			{
+			if (_pItems[_nTmpIndex]) {
 				_pDragItem = _pItems[_nTmpIndex];
 
 				_nDragIndex = _nTmpIndex;
@@ -356,8 +315,7 @@ bool CGoodsGrid::MouseRun( int x, int y, DWORD key )
 				_nDragRow = _nTmpRow;
 				_nDragCol = _nTmpCol;
 			}
-			else
-			{
+			else {
 				_pDrag->Reset();
 			}
 		}
@@ -366,12 +324,10 @@ bool CGoodsGrid::MouseRun( int x, int y, DWORD key )
 	return _IsMouseIn;
 }
 
-int CGoodsGrid::_GetHitItem( int x, int y )
-{
+int CGoodsGrid::_GetHitItem(int x, int y) {
 	_nTmpX = x - _nStartX;
 	_nTmpCol = _nTmpX / _nTotalW;
-	if( _nTmpCol>=_nCol ) 
-	{
+	if (_nTmpCol >= _nCol) {
 		_nTmpIndex = -1;
 		return _nTmpIndex;
 	}
@@ -379,8 +335,7 @@ int CGoodsGrid::_GetHitItem( int x, int y )
 	_nTmpY = y - _nStartY;
 	_nTmpRow = _nTmpY / _nTotalH;
 	_nTmpIndex = _nTmpRow * _nCol + _nTmpCol + _nFirst;
-	if( _nTmpIndex >= _nLast ) 
-	{
+	if (_nTmpIndex >= _nLast) {
 		_nTmpIndex = -1;
 		return _nTmpIndex;
 	}
@@ -390,132 +345,119 @@ int CGoodsGrid::_GetHitItem( int x, int y )
 	return _nTmpIndex;
 }
 
-void CGoodsGrid::_OnScrollChange()
-{
+void CGoodsGrid::_OnScrollChange() {
 	_nFirst = (int)_pScroll->GetStep().GetPosition() * _nCol;
 	_nLast = _nFirst + _nPageShowNum;
-	if( _nLast>_nMaxNum ) _nLast=_nMaxNum;
+	if (_nLast > _nMaxNum) _nLast = _nMaxNum;
 }
 
 //#include "ItemRecord.h"
 //#include "uiitemcommand.h"
-void CGoodsGrid::Init()
-{
+void CGoodsGrid::Init() {
 	_nTotalW = _nSpaceX + _nUnitWidth;
 	_nTotalH = _nSpaceY + _nUnitHeight;
 
-	_pUnit->SetScale( _nUnitWidth, _nUnitHeight );
+	_pUnit->SetScale(_nUnitWidth, _nUnitHeight);
 
-	_pScroll->SetPos( GetWidth() - _nRightMargin - _pScroll->GetWidth(), _nTopMargin );
+	_pScroll->SetPos(GetWidth() - _nRightMargin - _pScroll->GetWidth(), _nTopMargin);
 
-    //// 
-    //for( int i=0; i<100; i++ )
-    //{
-    //    if( rand() % 3 )
-    //    {
-    //        int nItemScript = 25;
-    //        CItemRecord* pInfo = GetItemRecordInfo(nItemScript);
-    //        CItemCommand* pItem = new CItemCommand( pInfo );
-    //        pItem->SetIsValid(rand()%2);
-    //        pItem->SetIsSolid(rand()%2);
-    //        pItem->nTag = nItemScript;
-    //        pItem->SetTotalNum( rand() % 10 + 1 );
-    //        SetItem( i, pItem );
-    //    }
-    //}
+	//// 
+	//for( int i=0; i<100; i++ )
+	//{
+	//    if( rand() % 3 )
+	//    {
+	//        int nItemScript = 25;
+	//        CItemRecord* pInfo = GetItemRecordInfo(nItemScript);
+	//        CItemCommand* pItem = new CItemCommand( pInfo );
+	//        pItem->SetIsValid(rand()%2);
+	//        pItem->SetIsSolid(rand()%2);
+	//        pItem->nTag = nItemScript;
+	//        pItem->SetTotalNum( rand() % 10 + 1 );
+	//        SetItem( i, pItem );
+	//    }
+	//}
 
 	int nHeight = GetHeight() - _nBottomMargin - _nTopMargin;
 	int nRowHeight = nHeight / _nTotalH;
-	float fMax = (float)( _nRow - nRowHeight );
-	_pScroll->SetSize( _pScroll->GetWidth(), nHeight );
-	_pScroll->SetRange( 0.0f, fMax );
+	float fMax = (float)(_nRow - nRowHeight);
+	_pScroll->SetSize(_pScroll->GetWidth(), nHeight);
+	_pScroll->SetRange(0.0f, fMax);
 	// xuqin modified
 	//_pScroll->SetRange( 0.0f, _nRow );
 	_pScroll->Init();
 }
 
-void CGoodsGrid::SetMargin( int left, int top, int right, int bottom ) 
-{ 
+void CGoodsGrid::SetMargin(int left, int top, int right, int bottom) {
 	_nLeftMargin = left;
 	_nTopMargin = top;
-	_nRightMargin= right;
-	_nBottomMargin = bottom; 
+	_nRightMargin = right;
+	_nBottomMargin = bottom;
 }
 
-bool CGoodsGrid::SetContent( int nRow, int nCol )
-{
-	if( nCol<=0 || nRow<=0 ) return false;
+bool CGoodsGrid::SetContent(int nRow, int nCol) {
+	if (nCol <= 0 || nRow <= 0) return false;
 
 	_nCurNum = 0;
-	if( nCol==_nCol && nRow==_nRow ) return true;
+	if (nCol == _nCol && nRow == _nRow) return true;
 
-    // :
-    // 1.,_pItems
-    // 2.,_pItems,,
+	// :
+	// 1.,_pItems
+	// 2.,_pItems,,
 
 	// _ClearItem();
 
-    int oldMax = _nMaxNum;
-    CCommandObj**  pOldItems = _pItems;
+	int oldMax = _nMaxNum;
+	CCommandObj** pOldItems = _pItems;
 
 	_nRow = nRow;
 	_nCol = nCol;
 
-	_nMaxNum = nRow*nCol;
+	_nMaxNum = nRow * nCol;
 
 	_pItems = new CCommandObj*[_nMaxNum];
 	selectedItemIndicies = std::make_unique<bool[]>(_nMaxNum);
-	memset( _pItems, 0, sizeof(CCommandObj*)*_nMaxNum);
+	memset(_pItems, 0, sizeof(CCommandObj*) * _nMaxNum);
 
-    if( pOldItems )
-    {
-        int nMin = oldMax<_nMaxNum ? oldMax : _nMaxNum;
-        memcpy( _pItems, pOldItems, sizeof(CCommandObj*)*nMin );
-        for( int i=nMin; i<oldMax; i++ )
-        {
-            //if( pOldItems[i] )
-            //{
-            //    delete pOldItems[i];
-            //}
+	if (pOldItems) {
+		int nMin = oldMax < _nMaxNum ? oldMax : _nMaxNum;
+		memcpy(_pItems, pOldItems, sizeof(CCommandObj*) * nMin);
+		for (int i = nMin; i < oldMax; i++) {
+			//if( pOldItems[i] )
+			//{
+			//    delete pOldItems[i];
+			//}
 
-			SAFE_DELETE(pOldItems[i]);	// UI
-        }
-    }
+			SAFE_DELETE(pOldItems[i]); // UI
+		}
+	}
 	Init();
 	return true;
 }
 
-bool CGoodsGrid::SetItem( unsigned int nIndex, CCommandObj* pItem )
-{
-	if( nIndex >= (unsigned int)_nMaxNum ) return false;
+bool CGoodsGrid::SetItem(unsigned int nIndex, CCommandObj* pItem) {
+	if (nIndex >= (unsigned int)_nMaxNum) return false;
 
-	if( _pItems[nIndex] ) 
-	{
+	if (_pItems[nIndex]) {
 		delete _pItems[nIndex];
-		_pItems[nIndex] = 0;	// UI
+		_pItems[nIndex] = 0; // UI
 	}
-	else
-	{
+	else {
 		_nCurNum++;
 	}
 
 	_pItems[nIndex] = pItem;
-    pItem->SetParent( this );
-    pItem->SetIndex( nIndex );
+	pItem->SetParent(this);
+	pItem->SetIndex(nIndex);
 	return true;
 }
 
-bool CGoodsGrid::DelItem( int nIndex )
-{
-	if( nIndex >= _nMaxNum ) return false;
+bool CGoodsGrid::DelItem(int nIndex) {
+	if (nIndex >= _nMaxNum) return false;
 
-	if( _pItems[nIndex] )
-	{
+	if (_pItems[nIndex]) {
 		_nCurNum--;
-		if( _pDragItem==_pItems[nIndex] )
-		{
-			if( CDrag::GetParent()==this && _pDrag )
-			{
+		if (_pDragItem == _pItems[nIndex]) {
+			if (CDrag::GetParent() == this && _pDrag) {
 				_pDrag->Reset();
 			}
 			_pDragItem = nullptr;
@@ -529,38 +471,29 @@ bool CGoodsGrid::DelItem( int nIndex )
 	return false;
 }
 
-int CGoodsGrid::GetFreeIndex()
-{
-	for( int i=0; i<_nMaxNum; i++ )	
-	{
-		if( !_pItems[i] )
-		{
+int CGoodsGrid::GetFreeIndex() {
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (!_pItems[i]) {
 			return i;
 		}
 	}
 	return -1;
 }
 
-void CGoodsGrid::Clear()
-{
+void CGoodsGrid::Clear() {
 	_pDragItem = nullptr;
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( _pItems[i] ) 
-        {
-            delete _pItems[i];
-            _pItems[i] = NULL;
-        }
-    }
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (_pItems[i]) {
+			delete _pItems[i];
+			_pItems[i] = NULL;
+		}
+	}
 }
 
-void CGoodsGrid::_ClearItem()
-{
+void CGoodsGrid::_ClearItem() {
 	_pDragItem = nullptr;
-	if( _pItems ) 
-	{
-		for( int i=0; i<_nMaxNum; i++ )
-		{
+	if (_pItems) {
+		for (int i = 0; i < _nMaxNum; i++) {
 			//if( _pItems[i] ) 
 			//	delete _pItems[i];
 			SAFE_DELETE(_pItems[i]); // UI
@@ -578,60 +511,49 @@ void CGoodsGrid::_ClearItem()
 	selectedItemIndicies.reset();
 }
 
-bool CGoodsGrid::MouseScroll( int nScroll )
-{
-	if( !IsNormal() ) return false;
+bool CGoodsGrid::MouseScroll(int nScroll) {
+	if (!IsNormal()) return false;
 
-	if( _IsMouseIn ) _pScroll->MouseScroll( nScroll );
+	if (_IsMouseIn) _pScroll->MouseScroll(nScroll);
 	return _IsMouseIn;
 }
 
-void CGoodsGrid::DragRender()
-{	
-	if( _pDragItem ) 
-	{
-		if( _eShowStyle==enumSmall )
-		{
-			_pDragItem->Render( _pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY );
+void CGoodsGrid::DragRender() {
+	if (_pDragItem) {
+		if (_eShowStyle == enumSmall) {
+			_pDragItem->Render(_pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY);
 		}
-		else if(  _eShowStyle==enumSale )
-		{
-			_pDragItem->SaleRender( _pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY, _nUnitWidth, _nUnitHeight );
+		else if (_eShowStyle == enumSale) {
+			_pDragItem->SaleRender(_pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY, _nUnitWidth, _nUnitHeight);
 		}
-		else if(  _eShowStyle==enumOwnDef )
-		{
-			_pDragItem->OwnDefRender( _pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY, _nUnitWidth, _nUnitHeight );
+		else if (_eShowStyle == enumOwnDef) {
+			_pDragItem->OwnDefRender(_pDrag->GetX() - _nDragOffX, _pDrag->GetY() - _nDragOffY, _nUnitWidth,
+									 _nUnitHeight);
 		}
 	}
 }
 
-void CGoodsGrid::_DragEnd( int x, int y, DWORD key )
-{
+void CGoodsGrid::_DragEnd(int x, int y, DWORD key) {
 	_pDragItem = nullptr;
-	if( InRect( x, y ) )
-	{
-		_GetHitItem( x, y );
-		if( _nTmpIndex!=-1 )
-		{
-			if( _nTmpIndex!=_nDragIndex )
-			{
+	if (InRect(x, y)) {
+		_GetHitItem(x, y);
+		if (_nTmpIndex != -1) {
+			if (_nTmpIndex != _nDragIndex) {
 				bool isSwap = false;
-				if( evtSwapItem ) evtSwapItem( this, _nTmpIndex, _nDragIndex, isSwap );
+				if (evtSwapItem) evtSwapItem(this, _nTmpIndex, _nDragIndex, isSwap);
 
-				if( isSwap ) swap( _pItems[_nTmpIndex], _pItems[_nDragIndex] );
+				if (isSwap) swap(_pItems[_nTmpIndex], _pItems[_nDragIndex]);
 			}
 		}
 		return;
 	}
 
-	CForm * form = CFormMgr::s_Mgr.GetHitForm( x, y );
-	if( form )
-	{
-		CCompent* p = form->GetHitCommand( x, y );     
-		if( !p ) return;
+	CForm* form = CFormMgr::s_Mgr.GetHitForm(x, y);
+	if (form) {
+		CCompent* p = form->GetHitCommand(x, y);
+		if (!p) return;
 
-		switch( p->SetCommand( _pItems[_nDragIndex], x, y ) )
-		{
+		switch (p->SetCommand(_pItems[_nDragIndex], x, y)) {
 		case enumFast:
 			break;
 		case enumAccept:
@@ -641,192 +563,153 @@ void CGoodsGrid::_DragEnd( int x, int y, DWORD key )
 			break;
 		}
 	}
-	else
-	{
-		if( _pItems[_nDragIndex] )
-		{
-            bool isThrow = false;
+	else {
+		if (_pItems[_nDragIndex]) {
+			bool isThrow = false;
 
-            if( evtThrowItem ) evtThrowItem(this, _nDragIndex, isThrow);
-            if( isThrow )
-            {
-                delete _pItems[_nDragIndex];
-                _pItems[_nDragIndex] = NULL;
-            }
+			if (evtThrowItem) evtThrowItem(this, _nDragIndex, isThrow);
+			if (isThrow) {
+				delete _pItems[_nDragIndex];
+				_pItems[_nDragIndex] = NULL;
+			}
 		}
 	}
 }
 
-eAccept	CGoodsGrid::SetCommand( CCommandObj* p, int x, int y )
-{
-	if( !p ) return enumRefuse;
+eAccept CGoodsGrid::SetCommand(CCommandObj* p, int x, int y) {
+	if (!p) return enumRefuse;
 
-    _GetHitItem( x, y );
-    if( _nTmpIndex!=-1 )
-    {
-        bool isAccept = false;
-        if( evtBeforeAccept ) evtBeforeAccept( this, p, _nTmpIndex, isAccept );
+	_GetHitItem(x, y);
+	if (_nTmpIndex != -1) {
+		bool isAccept = false;
+		if (evtBeforeAccept) evtBeforeAccept(this, p, _nTmpIndex, isAccept);
 
-        if( isAccept )
-        {
-            if( _pItems[_nTmpIndex] )
-            {
-                delete _pItems[_nTmpIndex];
+		if (isAccept) {
+			if (_pItems[_nTmpIndex]) {
+				delete _pItems[_nTmpIndex];
 				_pItems[_nTmpIndex] = NULL;
 				_nCurNum--;
-            }
+			}
 
-            SetItem( _nTmpIndex, p );
-            return enumAccept;
-        }
-    }
+			SetItem(_nTmpIndex, p);
+			return enumAccept;
+		}
+	}
 	return enumRefuse;
 }
 
-void CGoodsGrid::RenderHint( int x, int y )
-{
-    if( _nTmpIndex!=-1 && _pItems[_nTmpIndex] ) 
-    {
-        _pItems[_nTmpIndex]->RenderHint( x, y );
-    }
-    else
-    {
-        _RenderHint( _strHint.c_str(), x, y );
-    }
+void CGoodsGrid::RenderHint(int x, int y) {
+	if (_nTmpIndex != -1 && _pItems[_nTmpIndex]) {
+		_pItems[_nTmpIndex]->RenderHint(x, y);
+	}
+	else {
+		_RenderHint(_strHint.c_str(), x, y);
+	}
 }
 
-CCompent* CGoodsGrid::GetHintCompent( int x, int y )
-{
-    if( GetIsShow() && InRect( x, y ) )
-    {
-        if( !_strHint.empty() )
-            return this;
+CCompent* CGoodsGrid::GetHintCompent(int x, int y) {
+	if (GetIsShow() && InRect(x, y)) {
+		if (!_strHint.empty())
+			return this;
 
-		if( _IsShowHint )
-		{
-			_GetHitItem( x, y );
-			if( _nTmpIndex!=-1 && _pItems[_nTmpIndex] && SetHintItem( _pItems[_nTmpIndex] ) ) 
-			{
-				
+		if (_IsShowHint) {
+			_GetHitItem(x, y);
+			if (_nTmpIndex != -1 && _pItems[_nTmpIndex] && SetHintItem(_pItems[_nTmpIndex])) {
 				return this;
 			}
 		}
-    }
-    return NULL;
+	}
+	return NULL;
 }
 
-void CGoodsGrid::GetFreeIndex( int* nFree, int& nCount, int nSize )
-{
-    nCount = 0;
-    if( nSize<=0 ) return;
+void CGoodsGrid::GetFreeIndex(int* nFree, int& nCount, int nSize) {
+	nCount = 0;
+	if (nSize <= 0) return;
 
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( !_pItems[i] )
-        {
-            nFree[nCount++] = i;
-            if( nCount>=nSize )
-            {
-                return;
-            }
-        }
-    }
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (!_pItems[i]) {
+			nFree[nCount++] = i;
+			if (nCount >= nSize) {
+				return;
+			}
+		}
+	}
 }
 
-int CGoodsGrid::FindCommand( CCommandObj* p )
-{
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( _pItems[i]==p )
-        {
-            return i;
-        }
-    }
-    return -1;
+int CGoodsGrid::FindCommand(CCommandObj* p) {
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (_pItems[i] == p) {
+			return i;
+		}
+	}
+	return -1;
 }
 
-bool CGoodsGrid::SwapItem( unsigned int nFirst, unsigned int nSecond )
-{
-	if( nFirst>(unsigned int)_nMaxNum || nSecond>(unsigned int)_nMaxNum ) return false;
+bool CGoodsGrid::SwapItem(unsigned int nFirst, unsigned int nSecond) {
+	if (nFirst > (unsigned int)_nMaxNum || nSecond > (unsigned int)_nMaxNum) return false;
 
 	_pDragItem = nullptr;
 
 	CCommandObj* tmp = _pItems[nFirst];
 	_pItems[nFirst] = _pItems[nSecond];
 	_pItems[nSecond] = tmp;
-	if( _pItems[nFirst] )
-	{
-		_pItems[nFirst]->SetIndex( nFirst );
+	if (_pItems[nFirst]) {
+		_pItems[nFirst]->SetIndex(nFirst);
 	}
-	if( _pItems[nSecond] )
-	{
-		_pItems[nSecond]->SetIndex( nSecond );
+	if (_pItems[nSecond]) {
+		_pItems[nSecond]->SetIndex(nSecond);
 	}
 	return true;
 }
 
-void CGoodsGrid::Reset()
-{
+void CGoodsGrid::Reset() {
 	_pScroll->Reset();
 }
 
-void CGoodsGrid::SetItemValid( bool v )
-{
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( _pItems[i] )
-        {
-			_pItems[i]->SetIsValid( v );
-        }
-    }
+void CGoodsGrid::SetItemValid(bool v) {
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (_pItems[i]) {
+			_pItems[i]->SetIsValid(v);
+		}
+	}
 }
 
 
-int CGoodsGrid::GetEmptyGridCount()
-{
+int CGoodsGrid::GetEmptyGridCount() {
 	int nCount = 0;
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( ! _pItems[i] )
-        {
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (!_pItems[i]) {
 			++nCount;
-        }
-    }
+		}
+	}
 
 	return nCount;
 }
 
-int CGoodsGrid::GetUsedGridCount()
-{
+int CGoodsGrid::GetUsedGridCount() {
 	int nCount = 0;
-    for( int i=0; i<_nMaxNum; i++ )
-    {
-        if( _pItems[i] )
-        {
+	for (int i = 0; i < _nMaxNum; i++) {
+		if (_pItems[i]) {
 			++nCount;
-        }
-    }
+		}
+	}
 
 	return nCount;
 }
 
-void CGoodsGrid::ResetItemSelections()
-{
-	for (auto& b : std::span(selectedItemIndicies.get(), _nMaxNum))
-	{
+void CGoodsGrid::ResetItemSelections() {
+	for (auto& b : std::span(selectedItemIndicies.get(), _nMaxNum)) {
 		b = false;
 	}
 }
 
-bool GUI::CGoodsGrid::IsItemSelected(int index) const
-{
+bool GUI::CGoodsGrid::IsItemSelected(int index) const {
 	if (index > _nMaxNum || index < 0)
 		return false;
 
 	return selectedItemIndicies[index];
 }
 
-int GUI::CGoodsGrid::GetSelectedItemCount() const
-{
+int GUI::CGoodsGrid::GetSelectedItemCount() const {
 	return std::count(selectedItemIndicies.get(), selectedItemIndicies.get() + _nMaxNum, true);
 }

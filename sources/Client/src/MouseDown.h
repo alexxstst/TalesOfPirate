@@ -8,68 +8,80 @@ class CEvent;
 class CSceneNode;
 class CAutoAttack;
 
-class CMouseDown
-{
+class CMouseDown {
 public:
 	CMouseDown();
 	~CMouseDown();
 
-	void	Init( CWorldScene* pScene )			{ _pScene=pScene;	Reset();	}
-	void	Reset();
+	void Init(CWorldScene* pScene) {
+		_pScene = pScene;
+		Reset();
+	}
 
-	void	Start()								{ _eLastType=eLastNone;			}
-	void	CheckWalkContinue();
-	void	MouseButtonDown();
+	void Reset();
 
-	void	FrameMove();
+	void Start() {
+		_eLastType = eLastNone;
+	}
 
-	// 
-	void	SetPickItem( CSceneItem* pItem, DWORD dwTime );
-	void	SetAttackCha( CSkillRecord* pSkill, CCharacter* pCha, DWORD dwTime );
+	void CheckWalkContinue();
+	void MouseButtonDown();
 
-	void	SetNpc( CCharacter* pCha );
-	void	SetEvent( CSceneNode* pNode, CEvent* pEvent );
-	void	SetAreaSkill( CSkillRecord* pSkill );
-	void	SetMove();
-	void	SetDummyObj( int x, int y, int h, int t_angle, int action );
-	void	SetFollow( CCharacter* pCha );
+	void FrameMove();
 
 	// 
-	bool	ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd=false, bool isLine=false, bool IsCompart=true );
-	bool	ActAttackCha( CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget, bool isTrace=true, bool IsForce=false, bool IsCompart=true );
-	bool	ActTalkNpc( CCharacter* pCha, CCharacter* pNpc );
-	bool	ActPickItem( CCharacter* pCha, CSceneItem* pItem, bool IsMove=true );
-	bool	ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScrX, int nScrY, bool IsForce=false, bool IsCompart=true );
-	bool	ActEvent( CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent );
-    bool    ActDummyObj( CCharacter* pCha, int x, int y, int h, int t_angle, int action );      // 
+	void SetPickItem(CSceneItem* pItem, DWORD dwTime);
+	void SetAttackCha(CSkillRecord* pSkill, CCharacter* pCha, DWORD dwTime);
+
+	void SetNpc(CCharacter* pCha);
+	void SetEvent(CSceneNode* pNode, CEvent* pEvent);
+	void SetAreaSkill(CSkillRecord* pSkill);
+	void SetMove();
+	void SetDummyObj(int x, int y, int h, int t_angle, int action);
+	void SetFollow(CCharacter* pCha);
 
 	// 
-	bool	ActCha( CCharacter* pCha, CCharacter* pTarget );
+	bool ActMove(CCharacter* pCha, int nScrX, int nScrY, bool isAdd = false, bool isLine = false,
+				 bool IsCompart = true);
+	bool ActAttackCha(CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget, bool isTrace = true,
+					  bool IsForce = false, bool IsCompart = true);
+	bool ActTalkNpc(CCharacter* pCha, CCharacter* pNpc);
+	bool ActPickItem(CCharacter* pCha, CSceneItem* pItem, bool IsMove = true);
+	bool ActAttackArea(CCharacter* pCha, CSkillRecord* pSkill, int nScrX, int nScrY, bool IsForce = false,
+					   bool IsCompart = true);
+	bool ActEvent(CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent);
+	bool ActDummyObj(CCharacter* pCha, int x, int y, int h, int t_angle, int action); // 
 
 	// 
-	bool	ActShop( CCharacter* pCha, CCharacter* pTarget );
-
-	bool	PickItem( CCharacter* pMain );
+	bool ActCha(CCharacter* pCha, CCharacter* pTarget);
 
 	// 
-	bool	ActBackMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd=false );
+	bool ActShop(CCharacter* pCha, CCharacter* pTarget);
 
-	CAutoAttack*	GetAutoAttack()	{ return _pAutoAttack;	}
+	bool PickItem(CCharacter* pMain);
 
-	void	SetIsEnabled( bool v )	{ _IsEnabled = v;		}
+	// 
+	bool ActBackMove(CCharacter* pCha, int nScrX, int nScrY, bool isAdd = false);
+
+	CAutoAttack* GetAutoAttack() {
+		return _pAutoAttack;
+	}
+
+	void SetIsEnabled(bool v) {
+		_IsEnabled = v;
+	}
 
 private:
-	bool	_AttackCha( CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget );
-	bool	_AttackArea( CCharacter* pMain, CSkillRecord* pSkill, int nScrX, int nScrY );
-	 
-	static BOOL CALLBACK _EnumWindowsProc( HWND hWnd, LPARAM lParam );
+	bool _AttackCha(CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget);
+	bool _AttackArea(CCharacter* pMain, CSkillRecord* pSkill, int nScrX, int nScrY);
+
+	static BOOL CALLBACK _EnumWindowsProc(HWND hWnd, LPARAM lParam);
 
 private:
-	CWorldScene*	_pScene;
+	CWorldScene* _pScene;
 
 	//
-	enum eLastType
-	{
+	enum eLastType {
 		eLastNone,
 		eLastAttack,
 		eLastPick,
@@ -77,41 +89,40 @@ private:
 		eLastNpc,
 		eLastArea,
 		eLastMove,
-		eLastDummy,		// 
+		eLastDummy, // 
 		eLastFollow,
 	};
-	eLastType		_eLastType;
 
-	CSkillRecord*	_pAttackSkill;
-	CCharacter*		_pAttackCha;
-	DWORD			_dwAttackTime;
+	eLastType _eLastType;
 
-	CSceneItem*		_pPickItem;
-	DWORD			_dwPickTime;
+	CSkillRecord* _pAttackSkill;
+	CCharacter* _pAttackCha;
+	DWORD _dwAttackTime;
 
-	CEvent*			_pEvent;
-	CSceneNode*		_pEventNode;
+	CSceneItem* _pPickItem;
+	DWORD _dwPickTime;
 
-	CCharacter*		_pNpcCha;
+	CEvent* _pEvent;
+	CSceneNode* _pEventNode;
 
-	CSkillRecord*	_pAreaSkill;
+	CCharacter* _pNpcCha;
 
-	CCharacter*		_pFollow;
+	CSkillRecord* _pAreaSkill;
 
-	int _nDummyX; 
+	CCharacter* _pFollow;
+
+	int _nDummyX;
 	int _nDummyY;
 	int _nDummyH;
 	int _nDummyAngle;
 	int _nDummyAction;
 
-	CAutoAttack*	_pAutoAttack;
-	bool			_IsEnabled;
-
+	CAutoAttack* _pAutoAttack;
+	bool _IsEnabled;
 };
 
 
-inline void CMouseDown::SetAttackCha( CSkillRecord* pSkill, CCharacter* pCha, DWORD dwTime )
-{
+inline void CMouseDown::SetAttackCha(CSkillRecord* pSkill, CCharacter* pCha, DWORD dwTime) {
 	_eLastType = eLastAttack;
 	_pAttackSkill = pSkill;
 	_pAttackCha = pCha;
@@ -119,51 +130,44 @@ inline void CMouseDown::SetAttackCha( CSkillRecord* pSkill, CCharacter* pCha, DW
 	_dwAttackTime = dwTime;
 }
 
-inline void CMouseDown::SetNpc( CCharacter* pCha )
-{
+inline void CMouseDown::SetNpc(CCharacter* pCha) {
 	_eLastType = eLastNpc;
 	_pNpcCha = pCha;
 }
 
-inline void CMouseDown::SetEvent( CSceneNode* pNode, CEvent* pEvent )
-{
+inline void CMouseDown::SetEvent(CSceneNode* pNode, CEvent* pEvent) {
 	_eLastType = eLastEvent;
 	_pEvent = pEvent;
 	_pEventNode = pNode;
 }
 
-inline void CMouseDown::SetPickItem( CSceneItem* pItem, DWORD dwTime )
-{
+inline void CMouseDown::SetPickItem(CSceneItem* pItem, DWORD dwTime) {
 	_eLastType = eLastPick;
 	_pPickItem = pItem;
 
 	_dwPickTime = dwTime;
 }
 
-inline void CMouseDown::SetAreaSkill( CSkillRecord* pSkill )
-{
+inline void CMouseDown::SetAreaSkill(CSkillRecord* pSkill) {
 	_eLastType = eLastArea;
 	_pAreaSkill = pSkill;
 }
 
-inline void CMouseDown::SetMove()
-{ 
-	_eLastType=eLastMove;			
+inline void CMouseDown::SetMove() {
+	_eLastType = eLastMove;
 }
 
-inline void	CMouseDown::SetDummyObj( int x, int y, int h, int t_angle, int action )
-{
+inline void CMouseDown::SetDummyObj(int x, int y, int h, int t_angle, int action) {
 	_eLastType = eLastDummy;
 
-	_nDummyX = x; 
+	_nDummyX = x;
 	_nDummyY = y;
 	_nDummyH = h;
 	_nDummyAngle = t_angle;
 	_nDummyAction = action;
 }
 
-inline void	CMouseDown::SetFollow( CCharacter* pCha )
-{
+inline void CMouseDown::SetFollow(CCharacter* pCha) {
 	_eLastType = eLastFollow;
 
 	_pFollow = pCha;

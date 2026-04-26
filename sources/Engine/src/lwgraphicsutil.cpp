@@ -376,6 +376,7 @@ LW_BEGIN
 	void _ConvertMeshData_xb2unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
 	void _ConvertMeshData_xb3unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
 	void _ConvertMeshData_xb4unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
+
 	LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num,
 								D3DFORMAT vb_fvf, D3DFORMAT ib_fvf) {
 		LW_RESULT ret = LW_RET_FAILED;
@@ -691,8 +692,7 @@ LW_BEGIN
 	LW_RESULT lwLoadMeshDataInfo(lwMeshDataInfo* info, const lwMeshInfo* mi) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (LW_RESULT r = _ConvertMeshDataVB(&info->vb_data, &info->vb_size, &info->vb_stride, mi); LW_FAILED(r))
-		{
+		if (LW_RESULT r = _ConvertMeshDataVB(&info->vb_data, &info->vb_size, &info->vb_stride, mi); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _ConvertMeshDataVB failed: vertex_num={}, fvf={}, ret={}",
 						 __FUNCTION__, mi ? mi->vertex_num : 0u, mi ? mi->fvf : 0u, static_cast<long long>(r));
@@ -700,8 +700,7 @@ LW_BEGIN
 		}
 
 		if (mi->index_num > 0) {
-			if (LW_RESULT r = _ConvertMeshDataIB(&info->ib_data, &info->ib_size, &info->ib_stride, mi); LW_FAILED(r))
-			{
+			if (LW_RESULT r = _ConvertMeshDataIB(&info->ib_data, &info->ib_size, &info->ib_stride, mi); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _ConvertMeshDataIB failed: index_num={}, ret={}",
 							 __FUNCTION__, mi->index_num, static_cast<long long>(r));

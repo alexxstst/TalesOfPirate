@@ -2,16 +2,15 @@
 #include "MPColorValue.h"
 
 //-----------------------------------------------------------------------------
-MPColorValue MPColorValue::Black = MPColorValue(0.0,0.0,0.0);
-MPColorValue MPColorValue::White = MPColorValue(1.0,1.0,1.0);
-MPColorValue MPColorValue::Red = MPColorValue(1.0,0.0,0.0);
-MPColorValue MPColorValue::Green = MPColorValue(0.0,1.0,0.0);
-MPColorValue MPColorValue::Blue = MPColorValue(0.0,0.0,1.0);
+MPColorValue MPColorValue::Black = MPColorValue(0.0, 0.0, 0.0);
+MPColorValue MPColorValue::White = MPColorValue(1.0, 1.0, 1.0);
+MPColorValue MPColorValue::Red = MPColorValue(1.0, 0.0, 0.0);
+MPColorValue MPColorValue::Green = MPColorValue(0.0, 1.0, 0.0);
+MPColorValue MPColorValue::Blue = MPColorValue(0.0, 0.0, 1.0);
 //-----------------------------------------------------------------------------
-RGBA MPColorValue::getAsRGBA(void) const
-{
+RGBA MPColorValue::getAsRGBA(void) const {
 	unsigned char val8;
-	unsigned int  val32 = 0;
+	unsigned int val32 = 0;
 
 	// 32
 	// (RGBA = 8888)
@@ -34,9 +33,9 @@ RGBA MPColorValue::getAsRGBA(void) const
 
 	return val32;
 }
+
 //-----------------------------------------------------------------------------
-ARGB MPColorValue::getAsARGB(void) const
-{
+ARGB MPColorValue::getAsARGB(void) const {
 	unsigned char val8;
 	unsigned int val32 = 0;
 
@@ -62,11 +61,11 @@ ARGB MPColorValue::getAsARGB(void) const
 
 	return val32;
 }
+
 //-----------------------------------------------------------------------------
-ABGR MPColorValue::getAsABGR(void) const
-{
+ABGR MPColorValue::getAsABGR(void) const {
 	unsigned char val8;
-	unsigned int  val32 = 0;
+	unsigned int val32 = 0;
 
 	// 32
 	// (ABRG = 8888)
@@ -90,9 +89,9 @@ ABGR MPColorValue::getAsABGR(void) const
 
 	return val32;
 }
+
 //-----------------------------------------------------------------------------
-void MPColorValue::setAsRGBA(const RGBA val)
-{
+void MPColorValue::setAsRGBA(const RGBA val) {
 	unsigned int val32 = val;
 
 	// 32
@@ -110,9 +109,9 @@ void MPColorValue::setAsRGBA(const RGBA val)
 	// Alpha
 	a = static_cast<unsigned char>(val32) / 255.0f;
 }
+
 //-----------------------------------------------------------------------------
-void MPColorValue::setAsARGB(const ARGB val)
-{
+void MPColorValue::setAsARGB(const ARGB val) {
 	unsigned int val32 = val;
 
 	// 32
@@ -130,9 +129,9 @@ void MPColorValue::setAsARGB(const ARGB val)
 	// Blue
 	b = static_cast<unsigned char>(val32) / 255.0f;
 }
+
 //-----------------------------------------------------------------------------
-void MPColorValue::setAsABGR(const ABGR val)
-{
+void MPColorValue::setAsABGR(const ABGR val) {
 	unsigned int val32 = val;
 
 	// 32
@@ -150,17 +149,16 @@ void MPColorValue::setAsABGR(const ABGR val)
 	// Red
 	r = static_cast<unsigned char>(val32) / 255.0f;
 }
+
 //-----------------------------------------------------------------------------
-bool MPColorValue::operator==(const MPColorValue& rhs) const
-{
+bool MPColorValue::operator==(const MPColorValue& rhs) const {
 	return (r == rhs.r &&
 		g == rhs.g &&
 		b == rhs.b &&
 		a == rhs.a);
 }
+
 //-----------------------------------------------------------------------------
-bool MPColorValue::operator!=(const MPColorValue& rhs) const
-{
+bool MPColorValue::operator!=(const MPColorValue& rhs) const {
 	return !(*this == rhs);
 }
-

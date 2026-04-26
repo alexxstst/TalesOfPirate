@@ -20,14 +20,19 @@ ArchiveMPDataStream
 	
 
 */
-class MPDataStream
-{
+class MPDataStream {
 public:
-	MPDataStream() : m_Size(0) {}
-	MPDataStream(const String& name) : m_Name(name), m_Size(0) {}
-	virtual ~MPDataStream() {}
+	MPDataStream() : m_Size(0) {
+	}
 
-	template<typename T> MPDataStream& operator>>(T& val);
+	MPDataStream(const String& name) : m_Name(name), m_Size(0) {
+	}
+
+	virtual ~MPDataStream() {
+	}
+
+	template <typename T>
+	MPDataStream& operator>>(T& val);
 	/** , eof.
 	@param buf 
 	@param count 
@@ -56,7 +61,7 @@ public:
 	trimAfter If true, the line is trimmed for whitespace (as in 
 	String.trim(true,true))
 	*/
-	virtual String getLine( bool trimAfter = true );
+	virtual String getLine(bool trimAfter = true);
 
 	/** . */
 	virtual String getAsString(void);
@@ -72,7 +77,7 @@ public:
 
 	/** .
 	*/
-	virtual void seek( size_t pos ) = 0;
+	virtual void seek(size_t pos) = 0;
 
 	/**  */
 	virtual size_t tell(void) const = 0;
@@ -84,13 +89,18 @@ public:
 	virtual void close(void) = 0;
 
 	/** 0. */
-	size_t size(void) const { return m_Size; }
+	size_t size(void) const {
+		return m_Size;
+	}
+
 	/// .
-	const String& getName(void) const { return m_Name; }
+	const String& getName(void) const {
+		return m_Name;
+	}
 
 protected:
 	/// ()
-	String m_Name;		
+	String m_Name;
 	/// (0)
 	size_t m_Size;
 #define MP_STREAM_TEMP_SIZE 128
@@ -102,10 +112,8 @@ typedef std::list<MPDataStreamPtr> MPDataStreamList;
 typedef MPSharedPtr<MPDataStreamList> MPDataStreamListPtr;
 
 /** DataStream.*/
-class MPMemoryDataStream : public MPDataStream
-{
+class MPMemoryDataStream : public MPDataStream {
 public:
-
 	/** .
 	@param pMem 
 	@param size 
@@ -118,8 +126,8 @@ public:
 	@param size 
 	@param freeOnClose true.
 	*/
-	MPMemoryDataStream(const String& name, void* pMem, size_t size, 
-		bool freeOnClose = false);
+	MPMemoryDataStream(const String& name, void* pMem, size_t size,
+					   bool freeOnClose = false);
 	/** .
 	@param sourceStream 
 	@param freeOnClose true.
@@ -135,15 +143,15 @@ public:
 	@param sourceStream 
 	@param freeOnClose true.
 	*/
-	MPMemoryDataStream(const String& name, MPDataStream& sourceStream, 
-		bool freeOnClose = true);
+	MPMemoryDataStream(const String& name, MPDataStream& sourceStream,
+					   bool freeOnClose = true);
 	/** .
 	@param name 
 	@param sourceStream ()
 	@param freeOnClose true.
 	*/
-	MPMemoryDataStream(const String& name, const MPDataStreamPtr& sourceStream, 
-		bool freeOnClose = true);
+	MPMemoryDataStream(const String& name, const MPDataStreamPtr& sourceStream,
+					   bool freeOnClose = true);
 	/** .
 	@param size 
 	@param freeOnClose true.
@@ -159,13 +167,19 @@ public:
 	~MPMemoryDataStream();
 
 	/** . */
-	uchar* getPtr(void) { return m_Data; }
+	uchar* getPtr(void) {
+		return m_Data;
+	}
 
 	/** . */
-	uchar* getCurrentPtr(void) { return m_Pos; }
+	uchar* getCurrentPtr(void) {
+		return m_Pos;
+	}
 
 	/** . */
-	void setFreeOnClose(bool free) { m_FreeOnClose = free; }
+	void setFreeOnClose(bool free) {
+		m_FreeOnClose = free;
+	}
 
 	/** @copydoc DataStream::read		*/
 	size_t read(void* buf, size_t count);
@@ -176,7 +190,7 @@ public:
 	/** @copydoc DataStream::skip		*/
 	void skip(long count);
 	/** @copydoc DataStream::seek		*/
-	void seek( size_t pos );
+	void seek(size_t pos);
 	/** @copydoc DataStream::tell		*/
 	size_t tell(void) const;
 	/** @copydoc DataStream::eof		*/
@@ -188,14 +202,13 @@ protected:
 	uchar* m_Data;
 	uchar* m_Pos;
 	uchar* m_End;
-	bool m_FreeOnClose;			
+	bool m_FreeOnClose;
 };
 
 typedef MPSharedPtr<MPMemoryDataStream> MPMemoryDataStreamPtr;
 
 /** DataStream,std::basic_istream.*/
-class MPFileStreamDataStream : public MPDataStream
-{
+class MPFileStreamDataStream : public MPDataStream {
 public:
 	/** stl
 	@param s stl
@@ -232,7 +245,7 @@ public:
 	/** @copydoc DataStream::skip		*/
 	void skip(long count);
 	/** @copydoc DataStream::seek		*/
-	void seek( size_t pos );
+	void seek(size_t pos);
 	/** @copydoc DataStream::tell		*/
 	size_t tell(void) const;
 	/** @copydoc DataStream::eof		*/
@@ -242,12 +255,11 @@ public:
 
 protected:
 	std::ifstream* m_pStream;
-	bool m_FreeOnClose;			
+	bool m_FreeOnClose;
 };
 
 /** DataStream,C.*/
-class MPFileHandleDataStream : public MPDataStream
-{
+class MPFileHandleDataStream : public MPDataStream {
 public:
 	/// c
 	MPFileHandleDataStream(FILE* handle);
@@ -264,7 +276,7 @@ public:
 	/** @copydoc DataStream::skip		*/
 	void skip(long count);
 	/** @copydoc DataStream::seek		*/
-	void seek( size_t pos );
+	void seek(size_t pos);
 	/** @copydoc DataStream::tell		*/
 	size_t tell(void) const;
 	/** @copydoc DataStream::eof		*/

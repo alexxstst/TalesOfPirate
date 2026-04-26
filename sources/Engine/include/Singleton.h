@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-namespace FontModule
-{
+namespace FontModule {
 	// Del by lark.li 20080611
 	//template < typename T > class Singleton
 
@@ -14,6 +13,4 @@ namespace FontModule
 	// end
 
 	//template < typename T > class Singleton
-
-
 }

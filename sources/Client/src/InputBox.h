@@ -14,48 +14,50 @@
 
 #include "EncodingUtil.h"
 
-class CInputBox
-{
+class CInputBox {
 public:
 	CInputBox()
-		: _bAccountMode(FALSE), _nCursorPos(0), _hEdit(0)
-	{
+		: _bAccountMode(FALSE), _nCursorPos(0), _hEdit(0) {
 		_szText[0] = '\0';
 	}
 
-	HWND    GetEditWindow()                 { return _hEdit;  }
-	void    SetEditWindow(HWND hEdit)       { _hEdit = hEdit; }
-	void    HandleWindowMsg(DWORD dwMsgType, DWORD dwParam1, DWORD dwParam2);
+	HWND GetEditWindow() {
+		return _hEdit;
+	}
 
-	void    SetAccountMode(BOOL bAccount);
-	void    SetPasswordMode(BOOL bPassword);
-	void    SetDigitalMode(BOOL bDigitalMode);
-	void    SetMaxNum(int nMaxNum);
-	void    SetMultiMode(BOOL bMultiLine);
-	void    SetSel(int nStartChar, int nEndChar);
+	void SetEditWindow(HWND hEdit) {
+		_hEdit = hEdit;
+	}
 
-	void    SetCursorTail();
-	char*   RefreshText();
-	int     RefreshCursor();
-	void    ClearText();
-	char*   SetText(const char *pszText);
-	void    ReplaceSel(const char *pszRplText, BOOL bCanUndo = TRUE);
+	void HandleWindowMsg(DWORD dwMsgType, DWORD dwParam1, DWORD dwParam2);
+
+	void SetAccountMode(BOOL bAccount);
+	void SetPasswordMode(BOOL bPassword);
+	void SetDigitalMode(BOOL bDigitalMode);
+	void SetMaxNum(int nMaxNum);
+	void SetMultiMode(BOOL bMultiLine);
+	void SetSel(int nStartChar, int nEndChar);
+
+	void SetCursorTail();
+	char* RefreshText();
+	int RefreshCursor();
+	void ClearText();
+	char* SetText(const char* pszText);
+	void ReplaceSel(const char* pszRplText, BOOL bCanUndo = TRUE);
 
 protected:
-	char    _szText[1024];   // UTF-8
-	int     _nCursorPos;
-	BOOL    _bAccountMode;
-	HWND    _hEdit;
+	char _szText[1024]; // UTF-8
+	int _nCursorPos;
+	BOOL _bAccountMode;
+	HWND _hEdit;
 };
 
 
-inline void CInputBox::SetMaxNum(int nMaxNum)
-{
+inline void CInputBox::SetMaxNum(int nMaxNum) {
 	::SendMessage(_hEdit, EM_LIMITTEXT, nMaxNum, 0);
 }
 
-inline char* CInputBox::RefreshText()
-{
+inline char* CInputBox::RefreshText() {
 	// UTF-16 из Edit → UTF-8 в _szText. Длина wide в символах, буфер
 	// берём с запасом (_szText/1024 byte достаточно для 256 BMP-символов
 	// в UTF-8 ≈ 768 байт + NUL).
@@ -68,8 +70,7 @@ inline char* CInputBox::RefreshText()
 	return _szText;
 }
 
-inline char* CInputBox::SetText(const char *pszText)
-{
+inline char* CInputBox::SetText(const char* pszText) {
 	if (!pszText) pszText = "";
 	const std::wstring wide = encoding::Utf8ToWide(pszText);
 	::SetWindowTextW(_hEdit, wide.c_str());
@@ -81,41 +82,33 @@ inline char* CInputBox::SetText(const char *pszText)
 	return _szText;
 }
 
-inline void CInputBox::ClearText()
-{
+inline void CInputBox::ClearText() {
 	_szText[0] = '\0';
 	::SetWindowTextW(_hEdit, L"");
 }
 
-inline int CInputBox::RefreshCursor()
-{
+inline int CInputBox::RefreshCursor() {
 	::SendMessage(_hEdit, EM_GETSEL, (WPARAM)&_nCursorPos, 0);
 	return _nCursorPos;
 }
 
-inline void CInputBox::SetCursorTail()
-{
+inline void CInputBox::SetCursorTail() {
 	// EM_SETSEL принимает wide-индексы (количество codepoint/wchar).
 	wchar_t wbuf[512] = {0};
 	const int wlen = ::GetWindowTextW(_hEdit, wbuf, static_cast<int>(std::size(wbuf)));
 	::SendMessage(_hEdit, EM_SETSEL, wlen, wlen);
 }
 
-inline void CInputBox::SetSel(int nStartChar, int nEndChar)
-{
+inline void CInputBox::SetSel(int nStartChar, int nEndChar) {
 	::SendMessage(_hEdit, EM_SETSEL, nStartChar, nEndChar);
 }
 
-inline void CInputBox::HandleWindowMsg(DWORD dwMsgType, DWORD dwParam1, DWORD dwParam2)
-{
-	if (dwMsgType == WM_KEYDOWN || dwMsgType == WM_KEYUP)
-	{
+inline void CInputBox::HandleWindowMsg(DWORD dwMsgType, DWORD dwParam1, DWORD dwParam2) {
+	if (dwMsgType == WM_KEYDOWN || dwMsgType == WM_KEYUP) {
 		if (dwParam1 == VK_UP) return;
 	}
-	else if (dwMsgType == WM_CHAR)
-	{
-		if (_bAccountMode)
-		{
+	else if (dwMsgType == WM_CHAR) {
+		if (_bAccountMode) {
 			if (dwParam1 == ' ' || dwParam1 == ',') return;
 		}
 	}
@@ -125,8 +118,7 @@ inline void CInputBox::HandleWindowMsg(DWORD dwMsgType, DWORD dwParam1, DWORD dw
 	::SendMessage(_hEdit, dwMsgType, dwParam1, dwParam2);
 }
 
-inline void CInputBox::ReplaceSel(const char *pszRplText, BOOL bCanUndo)
-{
+inline void CInputBox::ReplaceSel(const char* pszRplText, BOOL bCanUndo) {
 	if (!pszRplText) pszRplText = "";
 	const std::wstring wide = encoding::Utf8ToWide(pszRplText);
 	::SendMessageW(_hEdit, EM_REPLACESEL, (WPARAM)bCanUndo, (LPARAM)wide.c_str());

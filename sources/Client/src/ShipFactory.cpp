@@ -470,7 +470,8 @@ BOOL xShipFactory::CheckShipName() {
 		return 0;
 	}
 	else if (l < MIN_LENGTH || l > MAX_LENGTH) {
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(391), static_cast<int>(MIN_LENGTH), static_cast<int>(MAX_LENGTH)).c_str());
+		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(391), static_cast<int>(MIN_LENGTH),
+											 static_cast<int>(MAX_LENGTH)).c_str());
 		return 0;
 	}
 

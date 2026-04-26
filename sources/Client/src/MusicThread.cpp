@@ -12,65 +12,58 @@ using namespace Corsairs::Client::Audio;
 
 BOOL GThreadLoopEnd = FALSE;
 
-class CMusicThread : public IMusicThread
-{
+class CMusicThread : public IMusicThread {
 public:
 	CMusicThread();
 	virtual ~CMusicThread();
 
-	virtual void	SetThreadPriority( EThreadPriority NewPriority );
-	virtual bool	Begin();
-	virtual bool	Resume();
-	virtual bool	Suspend();
-	virtual bool	Terminate();
-	virtual	void	Play( unsigned long MusicID, bool Loop = false );
-	
-	UINT	Run();
-	bool	Stop();
+	virtual void SetThreadPriority(EThreadPriority NewPriority);
+	virtual bool Begin();
+	virtual bool Resume();
+	virtual bool Suspend();
+	virtual bool Terminate();
+	virtual void Play(unsigned long MusicID, bool Loop = false);
+
+	UINT Run();
+	bool Stop();
 
 private:
 	CRITICAL_SECTION CriticalSection;
-	HANDLE			m_hThread;
-	DWORD			m_dwThreadID;
-	EThreadPriority	m_ThreadPriority;
-	std::uint32_t	m_dwMusicID;
-	bool			m_bLoop;
-	DWORD			m_dwLastTime;
+	HANDLE m_hThread;
+	DWORD m_dwThreadID;
+	EThreadPriority m_ThreadPriority;
+	std::uint32_t m_dwMusicID;
+	bool m_bLoop;
+	DWORD m_dwLastTime;
 };
 
-DWORD WINAPI ThreadStartRoutine( LPVOID lpThreadParameter )
-{
+DWORD WINAPI ThreadStartRoutine(LPVOID lpThreadParameter) {
 	::SetThreadName("music");
 	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
-	return ( ( CMusicThread* ) lpThreadParameter )->Run();
+	return ((CMusicThread*)lpThreadParameter)->Run();
 }
 
-CMusicThread::CMusicThread()
-{
+CMusicThread::CMusicThread() {
 	m_hThread = NULL;
 	m_dwThreadID = 0xFFFFFFFF;
 	m_ThreadPriority = TPri_AboveNormal;
 	m_dwMusicID = 0;
 	m_bLoop = false;
 
-//	InitializeCriticalSection( &CriticalSection );
-
+	//	InitializeCriticalSection( &CriticalSection );
 }
 
-CMusicThread::~CMusicThread()
-{
-//	Terminate();
+CMusicThread::~CMusicThread() {
+	//	Terminate();
 
-//	DeleteCriticalSection( &CriticalSection );
+	//	DeleteCriticalSection( &CriticalSection );
 }
 
-bool CMusicThread::Begin()
-{
-	if( !m_hThread )
-	{
+bool CMusicThread::Begin() {
+	if (!m_hThread) {
 		GThreadLoopEnd = FALSE;
 
-		m_hThread = CreateThread( NULL, 0, ThreadStartRoutine, this, 0, &m_dwThreadID );
+		m_hThread = CreateThread(NULL, 0, ThreadStartRoutine, this, 0, &m_dwThreadID);
 		//if( m_hThread )
 		//	SetThreadIdealProcessor( m_hThread, 1 );
 	}
@@ -79,106 +72,97 @@ bool CMusicThread::Begin()
 }
 
 
-bool CMusicThread::Resume()
-{
-	return -1 != ResumeThread( m_hThread );
+bool CMusicThread::Resume() {
+	return -1 != ResumeThread(m_hThread);
 }
 
-bool CMusicThread::Suspend()
-{
-	return -1 != SuspendThread( m_hThread );
+bool CMusicThread::Suspend() {
+	return -1 != SuspendThread(m_hThread);
 }
 
-bool CMusicThread::Terminate()
-{	
-//	EnterCriticalSection( &CriticalSection );
+bool CMusicThread::Terminate() {
+	//	EnterCriticalSection( &CriticalSection );
 
-//	if( m_hThread )
+	//	if( m_hThread )
 	{
 		Stop();
 
-//		BOOL bOK = CloseHandle( m_hThread );
-//		m_hThread = NULL;
-//		GThreadLoopEnd = TRUE;
+		//		BOOL bOK = CloseHandle( m_hThread );
+		//		m_hThread = NULL;
+		//		GThreadLoopEnd = TRUE;
 
-//		LeaveCriticalSection( &CriticalSection );
+		//		LeaveCriticalSection( &CriticalSection );
 
-//		return bOK == TRUE;
+		//		return bOK == TRUE;
 	}
 
-//	LeaveCriticalSection( &CriticalSection );
+	//	LeaveCriticalSection( &CriticalSection );
 
 	return true;
 }
 
-void CMusicThread::SetThreadPriority( EThreadPriority NewPriority )
-{
-	if( NewPriority != m_ThreadPriority )
-	{
+void CMusicThread::SetThreadPriority(EThreadPriority NewPriority) {
+	if (NewPriority != m_ThreadPriority) {
 		m_ThreadPriority = NewPriority;
-		::SetThreadPriority( m_hThread,
-			m_ThreadPriority == TPri_AboveNormal ? THREAD_PRIORITY_ABOVE_NORMAL :
-		m_ThreadPriority == TPri_BelowNormal ? THREAD_PRIORITY_BELOW_NORMAL :
-		THREAD_PRIORITY_NORMAL);
+		::SetThreadPriority(m_hThread,
+							m_ThreadPriority == TPri_AboveNormal
+								? THREAD_PRIORITY_ABOVE_NORMAL
+								: m_ThreadPriority == TPri_BelowNormal
+								? THREAD_PRIORITY_BELOW_NORMAL
+								: THREAD_PRIORITY_NORMAL);
 	}
 }
 
-void CMusicThread::Play( unsigned long MusicID, bool Loop )
-{
-//	EnterCriticalSection( &CriticalSection );
+void CMusicThread::Play(unsigned long MusicID, bool Loop) {
+	//	EnterCriticalSection( &CriticalSection );
 
-	if( MusicID == m_dwMusicID )
-	{
-//		LeaveCriticalSection( &CriticalSection );
+	if (MusicID == m_dwMusicID) {
+		//		LeaveCriticalSection( &CriticalSection );
 		return;
 	}
 
-	if( m_dwMusicID )
+	if (m_dwMusicID)
 		Terminate();
 
 	m_dwMusicID = MusicID;
 	m_bLoop = Loop;
-	
+
 	Run();
 
-//	LeaveCriticalSection( &CriticalSection );
+	//	LeaveCriticalSection( &CriticalSection );
 }
 
-bool CMusicThread::Stop()
-{
-	AudioSDL::Instance().Stop( m_dwMusicID );
+bool CMusicThread::Stop() {
+	AudioSDL::Instance().Stop(m_dwMusicID);
 	m_dwMusicID = 0;
 
 	return true;
 }
 
-UINT CMusicThread::Run()
-{
-//	if( m_ThreadPriority != TPri_Normal )
-//		SetThreadPriority( m_ThreadPriority );
+UINT CMusicThread::Run() {
+	//	if( m_ThreadPriority != TPri_Normal )
+	//		SetThreadPriority( m_ThreadPriority );
 
-	try
-	{
-		AudioSDL::Instance().Play( m_dwMusicID, m_bLoop );
+	try {
+		AudioSDL::Instance().Play(m_dwMusicID, m_bLoop);
 	}
-	catch(...)
-	{
+	catch (...) {
 	}
 
-/*	bool LoopEnd = false;
-	while( !GThreadLoopEnd && !LoopEnd )
-	{
-		Sleep( 30 );
-
-		if( !m_dwMusicID )
+	/*	bool LoopEnd = false;
+		while( !GThreadLoopEnd && !LoopEnd )
 		{
-			int index = 0;
-			index ++;
-		}
-
-		if( m_dwMusicID )
-			LoopEnd = AudioSDL::Instance().IsStopped( m_dwMusicID ) && ( !m_bLoop );
-	}*/
+			Sleep( 30 );
+	
+			if( !m_dwMusicID )
+			{
+				int index = 0;
+				index ++;
+			}
+	
+			if( m_dwMusicID )
+				LoopEnd = AudioSDL::Instance().IsStopped( m_dwMusicID ) && ( !m_bLoop );
+		}*/
 
 	return 0;
 }

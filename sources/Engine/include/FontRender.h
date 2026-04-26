@@ -48,12 +48,20 @@ public:
 					float sizeScale = 1.0f);
 
 	// Legacy-заглушка: в старом GDI/Effect-пути здесь сохранялся CMPEffectFile.
-	void BindingRes(CMPResManger*) {}
+	void BindingRes(CMPResManger*) {
+	}
 
-	void Begin() {}
-	void End() {}
-	void BeginClip() {}
-	void EndClip() {}
+	void Begin() {
+	}
+
+	void End() {
+	}
+
+	void BeginClip() {
+	}
+
+	void EndClip() {
+	}
 
 	void Draw(char* szText, int x, int y, D3DXCOLOR color);
 	void DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip,
@@ -72,15 +80,20 @@ public:
 					D3DXCOLOR color = 0xFFFFFFFF, float fScale = 0.3f);
 
 	SIZE* GetTextSize(const std::string& szText, SIZE* pSize, float fScale = 1.0f);
-	int   GetHzLength(float fscale = 1.0f);
-	int   GetAscLength(float fscale = 1.0f);
+	int GetHzLength(float fscale = 1.0f);
+	int GetAscLength(float fscale = 1.0f);
 
 	void ReleaseFont();
 
 	// Кодовая страница для MultiByteToWideChar при DrawText. По умолчанию
 	// CP_UTF8; оставлена для Console-слота и legacy call-sites.
-	void SetCodepage(UINT codepage) { _codepage = codepage; }
-	UINT GetCodepage() const        { return _codepage; }
+	void SetCodepage(UINT codepage) {
+		_codepage = codepage;
+	}
+
+	UINT GetCodepage() const {
+		return _codepage;
+	}
 
 	// Диагностический дамп атласа fontstash: чекерборд + альфа из атласа
 	// (glyph-cache). Один BMP на весь FONScontext.
@@ -88,30 +101,40 @@ public:
 	bool DumpAtlas(const std::string& path);
 
 	// Toggle'ы, управляющие Lua-скриптами через UIScript биндинги.
-	static void SetTextDumpEnabled(bool enabled) { s_textDumpEnabled = enabled; }
-	static bool IsTextDumpEnabled() { return s_textDumpEnabled; }
+	static void SetTextDumpEnabled(bool enabled) {
+		s_textDumpEnabled = enabled;
+	}
+
+	static bool IsTextDumpEnabled() {
+		return s_textDumpEnabled;
+	}
 
 	// DrawTextShadow по умолчанию рендерит текст дважды (shadow+main). При
 	// false — только main. Используется для диагностики "жирности" текста.
-	static void SetShadowEnabled(bool enabled) { s_shadowEnabled = enabled; }
-	static bool IsShadowEnabled() { return s_shadowEnabled; }
+	static void SetShadowEnabled(bool enabled) {
+		s_shadowEnabled = enabled;
+	}
+
+	static bool IsShadowEnabled() {
+		return s_shadowEnabled;
+	}
 
 private:
 	std::wstring _ToWide(const char* mbstr) const;
-	std::string  _ToUtf8(const std::wstring& w) const;
-	void         _DrawWide(const std::wstring& wtext, int x, int y,
-						   D3DXCOLOR color, float fScale,
-						   const RECT* clipRect = nullptr);
+	std::string _ToUtf8(const std::wstring& w) const;
+	void _DrawWide(const std::wstring& wtext, int x, int y,
+				   D3DXCOLOR color, float fScale,
+				   const RECT* clipRect = nullptr);
 
 private:
 	MPRender* _dev{nullptr};
 
 	// fontstash-путь (единственный). FONScontext владеет FontManager.
 	FONScontext* _fons{nullptr};
-	int          _fonsFontId{-1};
+	int _fonsFontId{-1};
 	// Множитель для fonsSetSize = (asc-desc)/em шрифта, чтобы em-size совпадал
 	// с GDI-интерпретацией lfHeight. Для шрифтов с em==fh (редкость) = 1.0f.
-	float        _sizeScale{1.0f};
+	float _sizeScale{1.0f};
 
 	int _textSize{0};
 
@@ -122,7 +145,7 @@ private:
 	int _spaceAdvance{0};
 
 	std::string _fontName;
-	UINT        _codepage{CP_UTF8};
+	UINT _codepage{CP_UTF8};
 
 	// Дедуп для debug-дампа (оставлен как no-op в будущих режимах).
 	std::unordered_set<std::wstring> _dumpedTexts;

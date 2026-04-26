@@ -7,21 +7,24 @@
 #include "lwExpObj.h"
 
 LW_BEGIN
+	class lwEfxTrack {
+	private:
+		lwAnimDataMatrix* _data;
 
-class lwEfxTrack
-{
-private:
-    lwAnimDataMatrix* _data;
+	public:
+		lwEfxTrack();
+		~lwEfxTrack();
 
-public:
-    lwEfxTrack();
-    ~lwEfxTrack();
+		void SetData(lwAnimDataMatrix* data) {
+			_data = data;
+		}
 
-    void SetData(lwAnimDataMatrix* data) { _data = data; }
-    lwAnimDataMatrix* GetData() { return _data; }
+		lwAnimDataMatrix* GetData() {
+			return _data;
+		}
 
-    LW_RESULT Load(const char* file);
-    LW_RESULT Save(const char* file);
-};
+		LW_RESULT Load(const char* file);
+		LW_RESULT Save(const char* file);
+	};
 
 LW_END

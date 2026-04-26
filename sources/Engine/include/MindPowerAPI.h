@@ -5,9 +5,9 @@
 #ifdef MINDPOWER_USE_DLL
 
 #ifdef MINDPOWER_EXPORTS
-	#define __declspec(dllexport)
+#define __declspec(dllexport)
 #else
-	#define __declspec(dllimport)
+#define __declspec(dllimport)
 #endif
 
 #else

@@ -29,55 +29,50 @@ extern CAudioThread g_AudioThread;
 
 using namespace Corsairs::Client::Audio;
 
-void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
+void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove) //Vim
 {
-	for (int i = 0; i < MAX_ANI_CLOCK; i++)
-	{
+	for (int i = 0; i < MAX_ANI_CLOCK; i++) {
 		_AniClock[i].Update();
 	}
-	
-	if(camMove)
-	{
+
+	if (camMove) {
 		/*
 		If camMove is set, we only force the computation of all matrices and
 		skipping the rest.
 		The rest causes problems, when calling _FrameMove inside the renderloop for
 		multiple views.
 		*/
-		CCameraCtrl *pCam = GetMainCam();
+		CCameraCtrl* pCam = GetMainCam();
 		pCam->SetViewTransform();
 		return;
 	}
 
 	// Modified by CLP
-	CCameraCtrl *pCam = GetMainCam();
-	Ninja::Camera *pCamera = GetNinjaCamera();
+	CCameraCtrl* pCam = GetMainCam();
+	Ninja::Camera* pCamera = GetNinjaCamera();
 
-	MPTerrain *pTerr = GetCurScene()->GetTerrain();
-	CCharacter *pCha = _pCurScene->GetMainCha();
+	MPTerrain* pTerr = GetCurScene()->GetTerrain();
+	CCharacter* pCha = _pCurScene->GetMainCha();
 
-	if(m_AddSceneObjList.size() > 0)
-	{
-		SAddSceneObj *pAdd = m_AddSceneObjList.front();
+	if (m_AddSceneObjList.size() > 0) {
+		SAddSceneObj* pAdd = m_AddSceneObjList.front();
 		m_AddSceneObjList.pop_front();
-		CGameScene *pScene = g_pGameApp->GetCurScene();
-		CSceneObj *pObj = pScene->AddSceneObj(pAdd->nTypeID);
-		if(pObj)
-		{
+		CGameScene* pScene = g_pGameApp->GetCurScene();
+		CSceneObj* pObj = pScene->AddSceneObj(pAdd->nTypeID);
+		if (pObj) {
 			pObj->setHeightOff(pAdd->nHeightOff);
 			pObj->setPos(pAdd->nPosX, pAdd->nPosY);
 			pObj->setYaw(pAdd->nAngle);
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY));
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+									 SafeVFormat(GetLanguageString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY));
 		}
 		delete pAdd;
 	}
 
 	// 
-	if(_bCameraFollow)
-	{
-		if(pCha)
-		{
-			D3DXVECTOR3 vecCha = pCha->GetPos() + D3DXVECTOR3( 0, 0, 1.f );
+	if (_bCameraFollow) {
+		if (pCha) {
+			D3DXVECTOR3 vecCha = pCha->GetPos() + D3DXVECTOR3(0, 0, 1.f);
 
 			pCam->AddPoint(vecCha.x, vecCha.y, vecCha.z);
 			pCam->Update();
@@ -87,12 +82,11 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 			g_Render.SetWorldViewFOV(Angle2Radian(pCam->m_ffov));
 		}
 	}
-	if(_bCameraFollow)
-	{
+	if (_bCameraFollow) {
 		D3DXVECTOR3 vecCha = pCam->m_RefPos;
 		const auto v = -pCam->m_vDir * pCam->_fdistshow;
-		D3DXVec3Add(&vecCha,&vecCha,&(v));
-		if (pTerr) { 
+		D3DXVec3Add(&vecCha, &vecCha, &(v));
+		if (pTerr) {
 			pTerr->SetShowCenter(vecCha.x, vecCha.y);
 		}
 	}
@@ -156,15 +150,14 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	//  1s 
 	static DWORD tick = 0;
-	if( GetCurTick() - tick > 1000 )
-	{
+	if (GetCurTick() - tick > 1000) {
 		tick = GetCurTick();
 		CS_SendPing();
 	}
 
-	CUIInterface::All_FrameMove( dwTimeParam );
+	CUIInterface::All_FrameMove(dwTimeParam);
 
-	_pCurScene->_FrameMove( dwTimeParam );
+	_pCurScene->_FrameMove(dwTimeParam);
 
 #ifdef TESTDEMO
 	g_pTestDemo->FrameMove();
@@ -172,27 +165,23 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	// 
 #ifdef USE_DSOUND
-//	if( m_pAudioPlayer )
-//		m_pAudioPlayer->Update( TRUE );
+	//	if( m_pAudioPlayer )
+	//		m_pAudioPlayer->Update( TRUE );
 #else
 	g_AudioThread.FrameMove();
 #endif
 
 	// 
-	switch( _eSwitchMusic )
-	{
+	switch (_eSwitchMusic) {
 	case enumOldMusic:
 		_nCurMusicSize--;
-		if( _nCurMusicSize<=1 )
-		{
+		if (_nCurMusicSize <= 1) {
 			//::bkg_snd_stop();
 			AudioSDL::Instance().Stop(::g_dwCurMusicID);
-			if( _szBkgMusic[0]=='\0' )
-			{
-				_eSwitchMusic=enumNoMusic;
+			if (_szBkgMusic[0] == '\0') {
+				_eSwitchMusic = enumNoMusic;
 			}
-			else
-			{
+			else {
 				//::bkg_snd_play( _szBkgMusic, true );
 				std::uint32_t OldMusicID = g_dwCurMusicID;
 				g_dwCurMusicID = AudioSDL::Instance().GetResourceId(_szBkgMusic, AudioType::Stream);
@@ -203,14 +192,13 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 #ifndef USE_DSOUND
 				g_AudioThread.play(g_dwCurMusicID, true);
 #else
-				if( g_dwCurMusicID && ( OldMusicID != g_dwCurMusicID ) )
-					AudioSDL::Instance().Play( g_dwCurMusicID, true );
+				if (g_dwCurMusicID && (OldMusicID != g_dwCurMusicID))
+					AudioSDL::Instance().Play(g_dwCurMusicID, true);
 #endif
-				_eSwitchMusic=enumNewMusic;
+				_eSwitchMusic = enumNewMusic;
 			}
 		}
-		else
-		{
+		else {
 			//::bkg_snd_vol( _nCurMusicSize );
 			AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nCurMusicSize) / 128.0f);
 		}
@@ -218,12 +206,10 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	case enumNewMusic:
 		_nCurMusicSize++;
-		if( _nCurMusicSize>=_nMusicSize )
-		{
-			_eSwitchMusic=enumMusicPlay;
+		if (_nCurMusicSize >= _nMusicSize) {
+			_eSwitchMusic = enumMusicPlay;
 		}
-		else
-		{
+		else {
 			//::bkg_snd_vol( _nCurMusicSize );
 			AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nCurMusicSize) / 128.0f);
 		}
@@ -236,27 +222,26 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	HandleKeyContinue();
 
-	if(GlobalAppConfig.IsEditor())
-	{
+	if (GlobalAppConfig.IsEditor()) {
 		g_Editor.FrameMove(dwTimeParam);
 
-		if(_pCurScene->GetTerrain())
-		{
-			g_Render.Print(INFO_DEBUG, 290, 120, "showcenter = %f,%f",_pCurScene->GetTerrain()->GetShowCenterX(),_pCurScene->GetTerrain()->GetShowCenterY() );
+		if (_pCurScene->GetTerrain()) {
+			g_Render.Print(INFO_DEBUG, 290, 120, "showcenter = %f,%f", _pCurScene->GetTerrain()->GetShowCenterX(),
+						   _pCurScene->GetTerrain()->GetShowCenterY());
 		}
 
-		if(pCha)
-		{
-			g_Render.Print(INFO_DEBUG, 290, 410, "cha pos = %f,%f,%f",pCha->GetPos().x * 100,pCha->GetPos().y * 100 ,pCha->GetPos().z* 100 );
-			g_Render.Print(INFO_DEBUG, 290, 430, "cha angle = %d",(int)(int(((float)pCha->getYaw() * 0.01745329f /*+ D3DX_PI*/) * 57.29577f) % 360));
+		if (pCha) {
+			g_Render.Print(INFO_DEBUG, 290, 410, "cha pos = %f,%f,%f", pCha->GetPos().x * 100, pCha->GetPos().y * 100,
+						   pCha->GetPos().z * 100);
+			g_Render.Print(INFO_DEBUG, 290, 430, "cha angle = %d",
+						   (int)(int(((float)pCha->getYaw() * 0.01745329f /*+ D3DX_PI*/) * 57.29577f) % 360));
 		}
 	}
 
 
 	_stCursorMgr.FrameMove(dwTimeParam);
 
-	if( CGameScene::_bShowMinimap && CGameScene::_pSmallMap )
-	{
+	if (CGameScene::_bShowMinimap && CGameScene::_pSmallMap) {
 		CGameScene::_pSmallMap->FrameMove(dwTimeParam);
 	}
 
@@ -264,25 +249,21 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 }
 
 bool CGameApp::_MouseInScene = false;
-void CGameApp::_PreMouseRun( DWORD dwMouseKey )
-{
-	if( !GetConsole()->IsVisible() )
-	{
+
+void CGameApp::_PreMouseRun(DWORD dwMouseKey) {
+	if (!GetConsole()->IsVisible()) {
 		extern HWND g_InputEdit;
-		if( GetFocus()!=g_InputEdit )
-		{
-			::SetFocus( g_InputEdit );
+		if (GetFocus() != g_InputEdit) {
+			::SetFocus(g_InputEdit);
 		}
 	}
-	else
-	{
-		::SetFocus( GetHWND() );
+	else {
+		::SetFocus(GetHWND());
 	}
 
-	CFormMgr::s_Mgr.FrameMove( GetMouseX(), GetMouseY(), dwMouseKey, GetCurTick() );
+	CFormMgr::s_Mgr.FrameMove(GetMouseX(), GetMouseY(), dwMouseKey, GetCurTick());
 
-	switch( CFormMgr::GetMouseAction() )
-	{
+	switch (CFormMgr::GetMouseAction()) {
 	case enumMA_None:
 		_MouseInScene = true;
 		break;
@@ -293,17 +274,15 @@ void CGameApp::_PreMouseRun( DWORD dwMouseKey )
 	case enumMA_Drill:
 		_MouseInScene = CCozeForm::GetInstance()->IsMouseOnList(GetMouseX(), GetMouseY());
 		break;
-	}	
+	}
 }
 
-CAniClock* CGameApp::AddAniClock()
-{
-    for (unsigned int i = 0; i < MAX_ANI_CLOCK; i++)
-	{
-        if (_AniClock[i].IsEnd())
-            return &_AniClock[i];
-    }
+CAniClock* CGameApp::AddAniClock() {
+	for (unsigned int i = 0; i < MAX_ANI_CLOCK; i++) {
+		if (_AniClock[i].IsEnd())
+			return &_AniClock[i];
+	}
 
-    ToLogService("common", "msgCGameScene::AddAniClock return NULL");
-    return NULL;
+	ToLogService("common", "msgCGameScene::AddAniClock return NULL");
+	return NULL;
 }

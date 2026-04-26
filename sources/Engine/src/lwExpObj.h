@@ -437,7 +437,6 @@ LW_BEGIN
 		lwBoneKeyInfo* _key_seq;
 		lwMatrix44* _invmat_seq;
 
-
 	public:
 		lwAnimDataBone();
 		virtual ~lwAnimDataBone();
@@ -508,7 +507,6 @@ LW_BEGIN
 	public:
 		lwMatrix43* _mat_seq;
 		DWORD _frame_num;
-
 
 	public:
 		lwAnimDataMatrix();
@@ -581,7 +579,6 @@ LW_BEGIN
 	public:
 		lwMatrix44* _mat_seq;
 		DWORD _frame_num;
-
 
 	public:
 		lwAnimDataTexUV() : _mat_seq(0), _frame_num(0)/*, _subset_type(LW_INVALID_INDEX)*/ {

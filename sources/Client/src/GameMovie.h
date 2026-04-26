@@ -1,5 +1,4 @@
-﻿
-#pragma once
+﻿#pragma once
 
 
 #include <windows.h>
@@ -13,7 +12,7 @@
 			(p)->Release();		\
 			(p) = 0;			\
 		}						\
-	}							
+	}
 #endif
 
 
@@ -21,14 +20,12 @@
 
 
 // 
-class CGameMovie
-{
+class CGameMovie {
 public:
 	CGameMovie(void);
 	virtual ~CGameMovie(void);
 
 public:
-
 	// 
 	bool Play(HWND hWnd, const char* pszFileName);
 
@@ -42,22 +39,24 @@ public:
 	void Cleanup(void);
 
 	// 
-	HRESULT GetLastError(void) { return _hResult; }
+	HRESULT GetLastError(void) {
+		return _hResult;
+	}
 
-	IMediaEventEx* GetEvent() { return _pEvent; }
+	IMediaEventEx* GetEvent() {
+		return _pEvent;
+	}
 
 	void HandleGraphEvent();
 
 private:
-
 	HRESULT _hResult;
-	HWND	_hWnd;
+	HWND _hWnd;
 
-	IGraphBuilder*	_pGraph;
-	IMediaControl*	_pControl;
-	IVideoWindow*	_pVidWin;
-	IMediaPosition*	_pPosition;
+	IGraphBuilder* _pGraph;
+	IMediaControl* _pControl;
+	IVideoWindow* _pVidWin;
+	IMediaPosition* _pPosition;
 
 	IMediaEventEx* _pEvent;
 };
-

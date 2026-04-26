@@ -9,11 +9,11 @@
 class CProCirculate;
 
 //   (  dbc:: namespace)
-using uChar  = uint8_t;
+using uChar = uint8_t;
 using uShort = uint16_t;
-using uLong  = unsigned long;
-using cChar  = const char;
-using LLong  = __int64;
+using uLong = unsigned long;
+using cChar = const char;
+using LLong = __int64;
 
 //  
 #ifndef DS_DISCONN
@@ -21,8 +21,8 @@ using LLong  = __int64;
 #endif
 
 //   ( dbc::RPacket& / dbc::WPacket&)
-typedef net::RPacket&  LPRPACKET;
-typedef net::WPacket&  LPWPACKET;
+typedef net::RPacket& LPRPACKET;
+typedef net::WPacket& LPWPACKET;
 //    
 using WPacket = net::WPacket;
 using RPacket = net::RPacket;
@@ -48,32 +48,47 @@ public:
 	//  ICryptoProvider 
 	bool IsActive() const override;
 	bool Encrypt(uint8_t* ciphertext, int ciphertext_len,
-	             const uint8_t* plaintext, int& len) override;
+				 const uint8_t* plaintext, int& len) override;
 	bool Decrypt(uint8_t* data, int& len) override;
 
 	//   API 
 
-	bool IsConnected() { return m_connect.IsConnected(); }
-	int  GetConnStat() { return m_connect.GetConnStat(); }
+	bool IsConnected() {
+		return m_connect.IsConnected();
+	}
+
+	int GetConnStat() {
+		return m_connect.GetConnStat();
+	}
+
 	std::string GetDisconnectErrText(int reason) const;
 
 	//  WPacket  
-	net::WPacket GetWPacket() { return net::WPacket(256); }
+	net::WPacket GetWPacket() {
+		return net::WPacket(256);
+	}
 
 	//      (  game loop)
-	void PollPackets(int maxPackets = 1) { _client.PollPackets(maxPackets); }
+	void PollPackets(int maxPackets = 1) {
+		_client.PollPackets(maxPackets);
+	}
 
 	unsigned long GetAveragePing();
-	CProCirculate* GetProCir() { return m_pCProCir; }
+
+	CProCirculate* GetProCir() {
+		return m_pCProCir;
+	}
+
 	void SwitchNet(bool isConnected);
 
 	//   TcpClient ( Connection)
-	net::TcpClient& GetClient() { return _client; }
+	net::TcpClient& GetClient() {
+		return _client;
+	}
 
-	Connection       m_connect;
+	Connection m_connect;
 
-	struct
-	{
+	struct {
 		unsigned long m_pingid;
 		unsigned long m_maxdelay, m_curdelay, m_mindelay;
 		DWORD dwLatencyTime[20];
@@ -81,35 +96,36 @@ public:
 		unsigned long m_ulCurStatistic;
 		unsigned long m_ulDelayTime[4];
 	};
-	unsigned long    m_ulPacketCount;
-	long             m_framedelay;
 
-	CProCirculate*   m_pCProCir;
+	unsigned long m_ulPacketCount;
+	long m_framedelay;
+
+	CProCirculate* m_pCProCir;
 	std::recursive_mutex m_mutmov;
-	char             m_accounts[100];
-	char             m_passwd[100];
+	char m_accounts[100];
+	char m_passwd[100];
 
 	// RSA-AES Network encryption (BCrypt)
 	BCRYPT_KEY_HANDLE hRsaPubKey;
-	BYTE              cliAesKey[32];
+	BYTE cliAesKey[32];
 	BCRYPT_ALG_HANDLE hAesAlg;
 	BCRYPT_KEY_HANDLE hAesKey;
-	bool              handshakeDone;
+	bool handshakeDone;
 
 	bool InitAesKey();
 	void CleanupCrypto();
 
 	bool _enc;
-	int  _comm_enc;
+	int _comm_enc;
 
 private:
 	bool EncryptAES(char* ciphertext, unsigned long ciphertext_len,
-	                const char* plaintext, unsigned long& ciphersize);
+					const char* plaintext, unsigned long& ciphersize);
 	bool DecryptAES(char* ciphertext, unsigned long& len);
 
 	net::TcpClient _client;
 };
 
-extern NetIF*    g_NetIF;
+extern NetIF* g_NetIF;
 
 #endif

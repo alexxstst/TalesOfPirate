@@ -8,76 +8,85 @@
 #include "lwIUtil.h"
 
 LW_BEGIN
+	// ============================================================================
+	// Замки размеров структур, участвующих в fread/fwrite целиком.
+	// ============================================================================
+	// Файлы моделей/анимаций (`.lgo`, `.lmo`, `.lab`, `.lam`) пишутся/читаются
+	// через `fread(&x, sizeof(Type), count, fp)`, т.е. размер структуры жёстко
+	// зашит в бинарный формат. Если `sizeof(Type)` меняется — например, из-за
+	// добавления поля-указателя (его размер 4 на x86 и 8 на x64), либо смены
+	// порядка полей — смещения в файле съезжают, в поля типа `index_num`
+	// попадает мусор, и клиент падает на `LW_NEW(DWORD[info->index_num])`.
+	// Static_assert'ы ниже ловят это на этапе компиляции. Если какая-то из проверок
+	// упала — ЗАПРЕЩЕНО "подправлять" ожидаемое число; нужно вернуть размер
+	// структуры к прежнему, иначе существующие файлы перестанут читаться.
+	// При намеренной смене формата необходимо также повысить version и добавить
+	// legacy-путь разбора.
+	// ============================================================================
 
-// ============================================================================
-// Замки размеров структур, участвующих в fread/fwrite целиком.
-// ============================================================================
-// Файлы моделей/анимаций (`.lgo`, `.lmo`, `.lab`, `.lam`) пишутся/читаются
-// через `fread(&x, sizeof(Type), count, fp)`, т.е. размер структуры жёстко
-// зашит в бинарный формат. Если `sizeof(Type)` меняется — например, из-за
-// добавления поля-указателя (его размер 4 на x86 и 8 на x64), либо смены
-// порядка полей — смещения в файле съезжают, в поля типа `index_num`
-// попадает мусор, и клиент падает на `LW_NEW(DWORD[info->index_num])`.
-// Static_assert'ы ниже ловят это на этапе компиляции. Если какая-то из проверок
-// упала — ЗАПРЕЩЕНО "подправлять" ожидаемое число; нужно вернуть размер
-// структуры к прежнему, иначе существующие файлы перестанут читаться.
-// При намеренной смене формата необходимо также повысить version и добавить
-// legacy-путь разбора.
-// ============================================================================
+	// Примитивы (float/DWORD-массивы, без указателей) — safety net.
+	static_assert(sizeof(lwVector2) == 8, "lwVector2 layout changed — breaks .lgo/.lmo binary format");
+	static_assert(sizeof(lwVector3) == 12, "lwVector3 layout changed — breaks .lgo/.lmo binary format");
+	static_assert(sizeof(lwQuaternion) == 16, "lwQuaternion layout changed — breaks .lab binary format");
+	static_assert(sizeof(lwMatrix43) == 48, "lwMatrix43 layout changed — breaks .lab binary format");
+	static_assert(sizeof(lwMatrix44) == 64, "lwMatrix44 layout changed — breaks .lgo/.lab binary format");
+	static_assert(sizeof(lwColorValue4b) == 4, "lwColorValue4b layout changed");
+	static_assert(sizeof(lwColorValue4f) == 16, "lwColorValue4f layout changed");
+	static_assert(sizeof(lwPlane) == 16, "lwPlane layout changed");
+	static_assert(sizeof(lwBox) == 24, "lwBox layout changed");
+	static_assert(sizeof(lwSphere) == 16, "lwSphere layout changed");
+	static_assert(sizeof(lwMaterial) == 68, "lwMaterial layout changed");
+	static_assert(sizeof(lwRenderStateAtom) == 12, "lwRenderStateAtom layout changed");
+	static_assert(sizeof(lwRenderStateValue) == 8, "lwRenderStateValue layout changed");
+	static_assert(sizeof(lwSubsetInfo) == 16, "lwSubsetInfo layout changed — breaks mesh subset block");
+	static_assert(sizeof(lwBlendInfo) == 20, "lwBlendInfo layout changed — breaks bone-skin block");
 
-// Примитивы (float/DWORD-массивы, без указателей) — safety net.
-static_assert(sizeof(lwVector2)              == 8,    "lwVector2 layout changed — breaks .lgo/.lmo binary format");
-static_assert(sizeof(lwVector3)              == 12,   "lwVector3 layout changed — breaks .lgo/.lmo binary format");
-static_assert(sizeof(lwQuaternion)           == 16,   "lwQuaternion layout changed — breaks .lab binary format");
-static_assert(sizeof(lwMatrix43)             == 48,   "lwMatrix43 layout changed — breaks .lab binary format");
-static_assert(sizeof(lwMatrix44)             == 64,   "lwMatrix44 layout changed — breaks .lgo/.lab binary format");
-static_assert(sizeof(lwColorValue4b)         == 4,    "lwColorValue4b layout changed");
-static_assert(sizeof(lwColorValue4f)         == 16,   "lwColorValue4f layout changed");
-static_assert(sizeof(lwPlane)                == 16,   "lwPlane layout changed");
-static_assert(sizeof(lwBox)                  == 24,   "lwBox layout changed");
-static_assert(sizeof(lwSphere)               == 16,   "lwSphere layout changed");
-static_assert(sizeof(lwMaterial)             == 68,   "lwMaterial layout changed");
-static_assert(sizeof(lwRenderStateAtom)      == 12,   "lwRenderStateAtom layout changed");
-static_assert(sizeof(lwRenderStateValue)     == 8,    "lwRenderStateValue layout changed");
-static_assert(sizeof(lwSubsetInfo)           == 16,   "lwSubsetInfo layout changed — breaks mesh subset block");
-static_assert(sizeof(lwBlendInfo)            == 20,   "lwBlendInfo layout changed — breaks bone-skin block");
+	// Render-state template-наборы (используются в заголовках мешей/материалов).
+	// Внутри только массив `rsv_seq[SET_SIZE][SEQUENCE_SIZE]` из `lwRenderStateValue`
+	// (8 байт); `SET_SIZE` и `SEQUENCE_SIZE` — enum'ы, места не занимают.
+	static_assert(sizeof(lwRenderStateSetMesh2) == 128,
+				  "lwRenderStateSetMesh2 layout changed — breaks legacy mesh header");
+	static_assert(sizeof(lwRenderStateSetMtl2) == 128,
+				  "lwRenderStateSetMtl2 layout changed — breaks legacy mtl header");
+	static_assert(sizeof(lwTextureStageStateSetTex2) == 128,
+				  "lwTextureStageStateSetTex2 layout changed — breaks legacy tex block");
 
-// Render-state template-наборы (используются в заголовках мешей/материалов).
-// Внутри только массив `rsv_seq[SET_SIZE][SEQUENCE_SIZE]` из `lwRenderStateValue`
-// (8 байт); `SET_SIZE` и `SEQUENCE_SIZE` — enum'ы, места не занимают.
-static_assert(sizeof(lwRenderStateSetMesh2)  == 128,  "lwRenderStateSetMesh2 layout changed — breaks legacy mesh header");
-static_assert(sizeof(lwRenderStateSetMtl2)   == 128,  "lwRenderStateSetMtl2 layout changed — breaks legacy mtl header");
-static_assert(sizeof(lwTextureStageStateSetTex2) == 128, "lwTextureStageStateSetTex2 layout changed — breaks legacy tex block");
+	// Заголовки мешей — читаются `fread(&info->header, sizeof(...), 1, fp)`.
+	static_assert(sizeof(lwMeshInfoHeader) == 128,
+				  "lwMeshInfoHeader layout changed — breaks .lgo/.lmo (version >= 1.0.0.4)");
+	static_assert(sizeof(lwMeshInfo_0003::lwMeshInfoHeader) == 120,
+				  "lwMeshInfo_0003::lwMeshInfoHeader layout changed — breaks legacy (version 1.0.0.3)");
+	static_assert(sizeof(lwMeshInfo_0000::lwMeshInfoHeader) == 152,
+				  "lwMeshInfo_0000::lwMeshInfoHeader layout changed — breaks legacy (MESH_VERSION0000)");
 
-// Заголовки мешей — читаются `fread(&info->header, sizeof(...), 1, fp)`.
-static_assert(sizeof(lwMeshInfoHeader)       == 128,  "lwMeshInfoHeader layout changed — breaks .lgo/.lmo (version >= 1.0.0.4)");
-static_assert(sizeof(lwMeshInfo_0003::lwMeshInfoHeader) == 120, "lwMeshInfo_0003::lwMeshInfoHeader layout changed — breaks legacy (version 1.0.0.3)");
-static_assert(sizeof(lwMeshInfo_0000::lwMeshInfoHeader) == 152, "lwMeshInfo_0000::lwMeshInfoHeader layout changed — breaks legacy (MESH_VERSION0000)");
+	// Текстуры/материалы (бывший баг: `void* data` в lwTexInfo давал разные
+	// размеры на x86 и x64 → заменено на `DWORD _reserved_data`).
+	static_assert(sizeof(lwTexInfo) == 208, "lwTexInfo layout changed — breaks .lgo/.lmo material block");
+	static_assert(sizeof(lwTexInfo_0001) == 240,
+				  "lwTexInfo_0001 layout changed — breaks legacy material (MTLTEX_VERSION0001)");
+	static_assert(sizeof(lwTexInfo_0000) == 208,
+				  "lwTexInfo_0000 layout changed — breaks legacy material (MTLTEX_VERSION0000)");
+	static_assert(sizeof(lwMtlTexInfo) == 1004, "lwMtlTexInfo layout changed — breaks .lgo/.lmo material block");
+	static_assert(sizeof(lwMtlTexInfo_0001) == 1036, "lwMtlTexInfo_0001 layout changed — breaks legacy material");
+	static_assert(sizeof(lwMtlTexInfo_0000) == 1028, "lwMtlTexInfo_0000 layout changed — breaks legacy material");
 
-// Текстуры/материалы (бывший баг: `void* data` в lwTexInfo давал разные
-// размеры на x86 и x64 → заменено на `DWORD _reserved_data`).
-static_assert(sizeof(lwTexInfo)              == 208,  "lwTexInfo layout changed — breaks .lgo/.lmo material block");
-static_assert(sizeof(lwTexInfo_0001)         == 240,  "lwTexInfo_0001 layout changed — breaks legacy material (MTLTEX_VERSION0001)");
-static_assert(sizeof(lwTexInfo_0000)         == 208,  "lwTexInfo_0000 layout changed — breaks legacy material (MTLTEX_VERSION0000)");
-static_assert(sizeof(lwMtlTexInfo)           == 1004, "lwMtlTexInfo layout changed — breaks .lgo/.lmo material block");
-static_assert(sizeof(lwMtlTexInfo_0001)      == 1036, "lwMtlTexInfo_0001 layout changed — breaks legacy material");
-static_assert(sizeof(lwMtlTexInfo_0000)      == 1028, "lwMtlTexInfo_0000 layout changed — breaks legacy material");
+	// Вспомогательные структуры геометрии.
+	static_assert(sizeof(lwGeomObjInfoHeader) == 116, "lwGeomObjInfoHeader layout changed — breaks .lgo header");
+	static_assert(sizeof(lwHelperDummyInfo) == 140, "lwHelperDummyInfo layout changed — breaks helper block");
+	static_assert(sizeof(lwHelperBoxInfo) == 132, "lwHelperBoxInfo layout changed — breaks helper block");
+	static_assert(sizeof(lwHelperMeshFaceInfo) == 52, "lwHelperMeshFaceInfo layout changed — breaks helper mesh block");
+	static_assert(sizeof(lwBoundingBoxInfo) == 92, "lwBoundingBoxInfo layout changed — breaks helper bbox block");
+	static_assert(sizeof(lwBoundingSphereInfo) == 84,
+				  "lwBoundingSphereInfo layout changed — breaks helper bsphere block");
 
-// Вспомогательные структуры геометрии.
-static_assert(sizeof(lwGeomObjInfoHeader)    == 116,  "lwGeomObjInfoHeader layout changed — breaks .lgo header");
-static_assert(sizeof(lwHelperDummyInfo)      == 140,  "lwHelperDummyInfo layout changed — breaks helper block");
-static_assert(sizeof(lwHelperBoxInfo)        == 132,  "lwHelperBoxInfo layout changed — breaks helper block");
-static_assert(sizeof(lwHelperMeshFaceInfo)   == 52,   "lwHelperMeshFaceInfo layout changed — breaks helper mesh block");
-static_assert(sizeof(lwBoundingBoxInfo)      == 92,   "lwBoundingBoxInfo layout changed — breaks helper bbox block");
-static_assert(sizeof(lwBoundingSphereInfo)   == 84,   "lwBoundingSphereInfo layout changed — breaks helper bsphere block");
+	// Кости и анимация.
+	static_assert(sizeof(lwAnimDataBone::lwBoneInfoHeader) == 16,
+				  "lwBoneInfoHeader layout changed — breaks .lab header");
+	static_assert(sizeof(lwBoneBaseInfo) == 72, "lwBoneBaseInfo layout changed — breaks .lab base block");
+	static_assert(sizeof(lwBoneDummyInfo) == 72, "lwBoneDummyInfo layout changed — breaks .lab dummy block");
 
-// Кости и анимация.
-static_assert(sizeof(lwAnimDataBone::lwBoneInfoHeader) == 16, "lwBoneInfoHeader layout changed — breaks .lab header");
-static_assert(sizeof(lwBoneBaseInfo)         == 72,   "lwBoneBaseInfo layout changed — breaks .lab base block");
-static_assert(sizeof(lwBoneDummyInfo)        == 72,   "lwBoneDummyInfo layout changed — breaks .lab dummy block");
-
-// Позы.
-static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed — breaks .lpc pose block");
+	// Позы.
+	static_assert(sizeof(lwPoseInfo) == 48, "lwPoseInfo layout changed — breaks .lpc pose block");
 
 #define VERSION_BONESKIN            0x0001
 
@@ -313,7 +322,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwSaveMtlTexInfo(FILE* fp, const lwMtlTexInfo* info, DWORD num) {
-
 		fwrite(&num, sizeof(DWORD), 1, fp);
 
 		for (DWORD i = 0; i < num; i++) {
@@ -408,15 +416,8 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		//    return 0;
 
 
-
-
 		//    // DirectXUVUV
 		//    //
-
-
-
-
-
 
 
 		//return 1;
@@ -488,11 +489,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		if (_aks_ctrl) {
 			lwIAnimKeySetFloat* aksf;
 
-			if (LW_RESULT r = _aks_ctrl->Clone(&aksf); LW_FAILED(r))
-			{
+			if (LW_RESULT r = _aks_ctrl->Clone(&aksf); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] AnimKeySetFloat::Clone failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] AnimKeySetFloat::Clone failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
 			}
 
@@ -524,12 +524,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		_aks_ctrl = LW_NEW(lwAnimKeySetFloat);
 
-		if (LW_RESULT r = _aks_ctrl->SetKeySequence(seq, num); LW_FAILED(r))
-		{
+		if (LW_RESULT r = _aks_ctrl->SetKeySequence(seq, num); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] SetKeySequence failed: num={}, ret={}",
-			             __FUNCTION__, static_cast<long long>(num),
-			             static_cast<long long>(r));
+						 "[{}] SetKeySequence failed: num={}, ret={}",
+						 __FUNCTION__, static_cast<long long>(num),
+						 static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -675,7 +674,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwAnimDataBone::Save(FILE* fp) const {
-
 		fwrite(&_header, sizeof(lwBoneInfoHeader), 1, fp);
 
 		fwrite(_base_seq, sizeof(lwBoneBaseInfo), _bone_num, fp);
@@ -711,7 +709,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 
-
 		return LW_RET_OK;
 	}
 
@@ -733,12 +730,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			MessageBox(NULL, buf, "warning", MB_OK);
 		}
 
-		if (LW_RESULT r = Load(fp, version); LW_FAILED(r))
-		{
+		if (LW_RESULT r = Load(fp, version); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] AnimDataBone::Load(fp) failed: file='{}', version={}, ret={}",
-			             __FUNCTION__, file ? file : "(null)",
-			             static_cast<long long>(version), static_cast<long long>(r));
+						 "[{}] AnimDataBone::Load(fp) failed: file='{}', version={}, ret={}",
+						 __FUNCTION__, file ? file : "(null)",
+						 static_cast<long long>(version), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -762,12 +758,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD version = EXP_OBJ_VERSION;
 		fwrite(&version, sizeof(version), 1, fp);
 
-		if (LW_RESULT r = Save(fp); LW_FAILED(r))
-		{
+		if (LW_RESULT r = Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] AnimDataBone::Save(fp) failed: file='{}', ret={}",
-			             __FUNCTION__, file ? file : "(null)",
-			             static_cast<long long>(r));
+						 "[{}] AnimDataBone::Save(fp) failed: file='{}', ret={}",
+						 __FUNCTION__, file ? file : "(null)",
+						 static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -1014,7 +1009,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		if (_frame_num > 0) {
 			size += sizeof(_frame_num);
 			size += sizeof(lwMatrix43) * _frame_num;
-
 		}
 
 		return size;
@@ -1094,25 +1088,28 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD key_rot[2];
 		DWORD key_sca[2];
 
-		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataVector3 >(&key_pos[0], &key_pos[1], f, pos_seq, pos_num); LW_FAILED(r)) {
+		if (LW_RESULT r = lwKeyDataSearch<lwKeyDataVector3>(&key_pos[0], &key_pos[1], f, pos_seq, pos_num);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwKeyDataSearch<Vector3>(pos) failed: f={}, pos_num={}, ret={}",
-			             __FUNCTION__, static_cast<long long>(f),
-			             static_cast<long long>(pos_num), static_cast<long long>(r));
+						 "[{}] lwKeyDataSearch<Vector3>(pos) failed: f={}, pos_num={}, ret={}",
+						 __FUNCTION__, static_cast<long long>(f),
+						 static_cast<long long>(pos_num), static_cast<long long>(r));
 			assert(0);
 		}
-		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataQuaternion >(&key_rot[0], &key_rot[1], f, rot_seq, rot_num); LW_FAILED(r)) {
+		if (LW_RESULT r = lwKeyDataSearch<lwKeyDataQuaternion>(&key_rot[0], &key_rot[1], f, rot_seq, rot_num);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwKeyDataSearch<Quaternion>(rot) failed: f={}, rot_num={}, ret={}",
-			             __FUNCTION__, static_cast<long long>(f),
-			             static_cast<long long>(rot_num), static_cast<long long>(r));
+						 "[{}] lwKeyDataSearch<Quaternion>(rot) failed: f={}, rot_num={}, ret={}",
+						 __FUNCTION__, static_cast<long long>(f),
+						 static_cast<long long>(rot_num), static_cast<long long>(r));
 			assert(0);
 		}
-		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataVector3 >(&key_sca[0], &key_sca[1], f, sca_seq, sca_num); LW_FAILED(r)) {
+		if (LW_RESULT r = lwKeyDataSearch<lwKeyDataVector3>(&key_sca[0], &key_sca[1], f, sca_seq, sca_num);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwKeyDataSearch<Vector3>(sca) failed: f={}, sca_num={}, ret={}",
-			             __FUNCTION__, static_cast<long long>(f),
-			             static_cast<long long>(sca_num), static_cast<long long>(r));
+						 "[{}] lwKeyDataSearch<Vector3>(sca) failed: f={}, sca_num={}, ret={}",
+						 __FUNCTION__, static_cast<long long>(f),
+						 static_cast<long long>(sca_num), static_cast<long long>(r));
 			assert(0);
 		}
 
@@ -1176,7 +1173,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		mat->_32 *= scale.z;
 		mat->_33 *= scale.z;
 		mat->_34 *= scale.z;
-
 
 
 		return LW_RET_OK;
@@ -1656,8 +1652,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwAnimDataInfo::Save(FILE* fp) {
-
-
 		DWORD data_bone_size = 0;
 		DWORD data_mat_size = 0;
 		DWORD data_mtlopac_size[LW_MAX_SUBSET_NUM];
@@ -1704,11 +1698,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&data_teximg_size, sizeof(data_teximg_size), 1, fp);
 
 		if (data_bone_size > 0) {
-			if (LW_RESULT r = anim_bone->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = anim_bone->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] anim_bone->Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] anim_bone->Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 			}
 		}
 
@@ -1716,11 +1709,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 #ifdef USE_ANIMKEY_PRS
 			lwSaveAnimKeySetPRS(fp, anim_mat);
 #else
-			if (LW_RESULT r = anim_mat->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = anim_mat->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] anim_mat->Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] anim_mat->Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 			}
 #endif
 		}
@@ -1729,11 +1721,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			if (data_mtlopac_size[i] == 0)
 				continue;
 
-			if (LW_RESULT r = anim_mtlopac[i]->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = anim_mtlopac[i]->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] anim_mtlopac->Save failed: i={}, ret={}",
-				             __FUNCTION__, i, static_cast<long long>(r));
+							 "[{}] anim_mtlopac->Save failed: i={}, ret={}",
+							 __FUNCTION__, i, static_cast<long long>(r));
 			}
 		}
 
@@ -1742,11 +1733,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				if (data_texuv_size[i][j] == 0)
 					continue;
 
-				if (LW_RESULT r = anim_tex[i][j]->Save(fp); LW_FAILED(r))
-				{
+				if (LW_RESULT r = anim_tex[i][j]->Save(fp); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
-					             "[{}] anim_tex->Save failed: i={}, j={}, ret={}",
-					             __FUNCTION__, i, j, static_cast<long long>(r));
+								 "[{}] anim_tex->Save failed: i={}, j={}, ret={}",
+								 __FUNCTION__, i, j, static_cast<long long>(r));
 				}
 			}
 		}
@@ -1756,11 +1746,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				if (data_teximg_size[i][j] == 0)
 					continue;
 
-				if (LW_RESULT r = anim_img[i][j]->Save(fp); LW_FAILED(r))
-				{
+				if (LW_RESULT r = anim_img[i][j]->Save(fp); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
-					             "[{}] anim_img->Save failed: i={}, j={}, ret={}",
-					             __FUNCTION__, i, j, static_cast<long long>(r));
+								 "[{}] anim_img->Save failed: i={}, j={}, ret={}",
+								 __FUNCTION__, i, j, static_cast<long long>(r));
 				}
 			}
 		}
@@ -1928,12 +1917,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD version = EXP_OBJ_VERSION;
 		fwrite(&version, sizeof(DWORD), 1, fp);
 
-		if (LW_RESULT r = info->Save(fp); LW_FAILED(r))
-		{
+		if (LW_RESULT r = info->Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] AnimDataBone::Save failed: file='{}', ret={}",
-			             __FUNCTION__, file ? file : "(null)",
-			             static_cast<long long>(r));
+						 "[{}] AnimDataBone::Save failed: file='{}', ret={}",
+						 __FUNCTION__, file ? file : "(null)",
+						 static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -2149,7 +2137,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwHelperInfo::Save(FILE* fp) const {
-
 		fwrite(&type, sizeof(type), 1, fp);
 
 		if (type & HELPER_TYPE_DUMMY) {
@@ -2472,7 +2459,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwGeomObjInfo::Save(FILE* fp) {
-
 		fwrite((lwGeomObjInfoHeader*)&id, sizeof(lwGeomObjInfoHeader), 1, fp);
 
 		// save mtl data
@@ -2486,20 +2472,18 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		if (helper_size > 0) {
-			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] helper_data.Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] helper_data.Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 			}
 		}
 
 		if (anim_size > 0) {
-			if (LW_RESULT r = anim_data.Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = anim_data.Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] anim_data.Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] anim_data.Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 			}
 		}
 
@@ -2669,11 +2653,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		// save helper data
 		if (helper_data.type != HELPER_TYPE_INVALID) {
-			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] helper_data.Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] helper_data.Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 			}
 		}
 
@@ -2765,9 +2748,9 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			lwAnimDataMatrix* anim_data = LW_NEW(lwAnimDataMatrix);
 			if (LW_RESULT r = anim_data->Load(fp, 0); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] AnimDataMatrix::Load failed: id={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(_id),
-				             static_cast<long long>(r));
+							 "[{}] AnimDataMatrix::Load failed: id={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(_id),
+							 static_cast<long long>(r));
 				LW_DELETE(anim_data);
 				goto __ret;
 			}
@@ -2789,12 +2772,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD anim_data_flag = _anim_data ? 1 : 0;
 		fwrite(&anim_data_flag, sizeof(anim_data_flag), 1, fp);
 		if (_anim_data) {
-			if (LW_RESULT r = ((lwAnimDataMatrix*)_anim_data)->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwAnimDataMatrix*)_anim_data)->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] AnimDataMatrix::Save failed: id={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(_id),
-				             static_cast<long long>(r));
+							 "[{}] AnimDataMatrix::Save failed: id={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(_id),
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -2830,45 +2812,41 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (_type == NODE_PRIMITIVE) {
 			_data = LW_NEW(lwGeomObjInfo);
-			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Load(fp, version); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Load(fp, version); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwGeomObjInfo::Load failed: version={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(version),
-				             static_cast<long long>(r));
+							 "[{}] lwGeomObjInfo::Load failed: version={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(version),
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_BONECTRL) {
 			_data = LW_NEW(lwAnimDataBone);
-			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Load(fp, version); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Load(fp, version); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwAnimDataBone::Load failed: version={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(version),
-				             static_cast<long long>(r));
+							 "[{}] lwAnimDataBone::Load failed: version={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(version),
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_DUMMY) {
 			_data = LW_NEW(lwHelperDummyObjInfo);
-			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Load(fp, version); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Load(fp, version); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwHelperDummyObjInfo::Load failed: version={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(version),
-				             static_cast<long long>(r));
+							 "[{}] lwHelperDummyObjInfo::Load failed: version={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(version),
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_HELPER) {
 			_data = LW_NEW(lwHelperInfo);
-			if (LW_RESULT r = ((lwHelperInfo*)_data)->Load(fp, version); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwHelperInfo*)_data)->Load(fp, version); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwHelperInfo::Load failed: version={}, ret={}",
-				             __FUNCTION__, static_cast<long long>(version),
-				             static_cast<long long>(r));
+							 "[{}] lwHelperInfo::Load failed: version={}, ret={}",
+							 __FUNCTION__, static_cast<long long>(version),
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -2887,38 +2865,34 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&_head, sizeof(_head), 1, fp);
 
 		if (_type == NODE_PRIMITIVE) {
-			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwGeomObjInfo::Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] lwGeomObjInfo::Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_BONECTRL) {
-			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwAnimDataBone::Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] lwAnimDataBone::Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_DUMMY) {
-			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwHelperDummyObjInfo::Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] lwHelperDummyObjInfo::Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
 			}
 		}
 		else if (_type == NODE_HELPER) {
-			if (LW_RESULT r = ((lwHelperInfo*)_data)->Save(fp); LW_FAILED(r))
-			{
+			if (LW_RESULT r = ((lwHelperInfo*)_data)->Save(fp); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
-				             "[{}] lwHelperInfo::Save failed: ret={}",
-				             __FUNCTION__, static_cast<long long>(r));
+							 "[{}] lwHelperInfo::Save failed: ret={}",
+							 __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -2948,9 +2922,9 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (LW_RESULT r = data->Load(lp->fp, lp->version); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwModelNodeInfo::Load failed: version={}, ret={}",
-			             __FUNCTION__, static_cast<long long>(lp->version),
-			             static_cast<long long>(r));
+						 "[{}] lwModelNodeInfo::Load failed: version={}, ret={}",
+						 __FUNCTION__, static_cast<long long>(lp->version),
+						 static_cast<long long>(r));
 			LW_DELETE(data);
 			return TREENODE_PROC_RET_ABORT;
 		}
@@ -2967,8 +2941,8 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (LW_RESULT r = data->Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwModelNodeInfo::Save failed: ret={}",
-			             __FUNCTION__, static_cast<long long>(r));
+						 "[{}] lwModelNodeInfo::Save failed: ret={}",
+						 __FUNCTION__, static_cast<long long>(r));
 			return TREENODE_PROC_RET_ABORT;
 		}
 
@@ -3037,11 +3011,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				node_info = LW_NEW(lwModelNodeInfo);
 				if (LW_RESULT r = node_info->Load(fp, _head.version); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
-					             "[{}] lwModelNodeInfo::Load failed: file='{}', i={}, version={}, ret={}",
-					             __FUNCTION__, file ? file : "(null)",
-					             static_cast<long long>(i),
-					             static_cast<long long>(_head.version),
-					             static_cast<long long>(r));
+								 "[{}] lwModelNodeInfo::Load failed: file='{}', i={}, version={}, ret={}",
+								 __FUNCTION__, file ? file : "(null)",
+								 static_cast<long long>(i),
+								 static_cast<long long>(_head.version),
+								 static_cast<long long>(r));
 					LW_DELETE(node_info);
 					goto __ret;
 				}
@@ -3062,20 +3036,17 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 					if (param.node == 0)
 						goto __ret;
 
-					if (LW_RESULT r = param.node->InsertChild(0, tree_node); LW_FAILED(r))
-					{
+					if (LW_RESULT r = param.node->InsertChild(0, tree_node); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
-						             "[{}] InsertChild failed: file='{}', i={}, parent_handle={}, ret={}",
-						             __FUNCTION__, file ? file : "(null)",
-						             static_cast<long long>(i),
-						             static_cast<long long>(node_info->_parent_handle),
-						             static_cast<long long>(r));
+									 "[{}] InsertChild failed: file='{}', i={}, parent_handle={}, ret={}",
+									 __FUNCTION__, file ? file : "(null)",
+									 static_cast<long long>(i),
+									 static_cast<long long>(node_info->_parent_handle),
+									 static_cast<long long>(r));
 						goto __ret;
 					}
 				}
 			}
-
-
 		}
 	__addr_ret_ok:
 		ret = LW_RET_OK;
@@ -3168,11 +3139,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	};
 
 	DWORD __tree_proc_sort_id(lwITreeNode* node, void* param) {
-		if (LW_RESULT r = lwModelNodeSortChild(node); LW_FAILED(r))
-		{
+		if (LW_RESULT r = lwModelNodeSortChild(node); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-			             "[{}] lwModelNodeSortChild failed: ret={}",
-			             __FUNCTION__, static_cast<long long>(r));
+						 "[{}] lwModelNodeSortChild failed: ret={}",
+						 __FUNCTION__, static_cast<long long>(r));
 			return TREENODE_PROC_RET_ABORT;
 		}
 

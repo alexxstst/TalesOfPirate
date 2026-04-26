@@ -10,8 +10,6 @@
 #endif
 
 LW_BEGIN
-
-
 #define LW_RGB555_R(rgb) (BYTE)( ( rgb & 0x7c00) >> 7 )
 #define LW_RGB555_G(rgb) (BYTE)( ( rgb & 0x3e0) >> 2 )
 #define LW_RGB555_B(rgb) (BYTE)( ( rgb & 0x1f) << 3 )
@@ -27,100 +25,107 @@ LW_BEGIN
 #define LW_RGBDWORDTO555(color) (WORD)( ((color&0xf8)<<7) | ((color & 0xf800)>>6) | ((color & 0xf80000)>>19) )
 #define LW_RGBDWORDTO565(color) (WORD)( ((color&0xf8)<<8) | ((color & 0xfC00)>>5) | ((color & 0xf80000)>>19) )
 
-inline WORD lwGetRGB555WithDWORD(DWORD color) { return LW_RGBDWORDTO555(color); }
-inline WORD lwGetRGB565WithDWORD(DWORD color) { return LW_RGBDWORDTO565(color); }
+	inline WORD lwGetRGB555WithDWORD(DWORD color) {
+		return LW_RGBDWORDTO555(color);
+	}
+
+	inline WORD lwGetRGB565WithDWORD(DWORD color) {
+		return LW_RGBDWORDTO565(color);
+	}
 
 
+	struct lwTexDataInfo {
+		void* data;
+		DWORD size;
+		DWORD pitch;
+		DWORD width;
+		DWORD height;
+	};
 
-struct lwTexDataInfo
-{
-    void* data;
-    DWORD size;
-    DWORD pitch;
-    DWORD width;
-    DWORD height;
-};
+	struct lwMeshDataInfo {
+		void* vb_data;
+		void* ib_data;
 
-struct lwMeshDataInfo
-{
-    void* vb_data;
-    void* ib_data;
+		DWORD vb_size;
+		DWORD vb_stride;
 
-    DWORD vb_size;
-    DWORD vb_stride;
+		DWORD ib_size;
+		DWORD ib_stride;
+	};
 
-    DWORD ib_size;
-    DWORD ib_stride;
-};
+	inline void lwMeshDataInfo_Construct(lwMeshDataInfo* obj) {
+		obj->vb_data = 0;
+		obj->ib_data = 0;
+		obj->vb_size = 0;
+		obj->vb_stride = 0;
+		obj->ib_size = 0;
+		obj->ib_stride = 0;
+	}
 
-inline void lwMeshDataInfo_Construct(lwMeshDataInfo* obj)
-{
-    obj->vb_data = 0;
-    obj->ib_data = 0;
-    obj->vb_size = 0;
-    obj->vb_stride = 0;
-    obj->ib_size = 0;
-    obj->ib_stride = 0;
-}
-inline void lwMeshDataInfo_Destruct(lwMeshDataInfo* obj)
-{
-    LW_IF_DELETE_A(obj->vb_data);
-    LW_IF_DELETE_A(obj->ib_data);
-}
+	inline void lwMeshDataInfo_Destruct(lwMeshDataInfo* obj) {
+		LW_IF_DELETE_A(obj->vb_data);
+		LW_IF_DELETE_A(obj->ib_data);
+	}
 
 #ifndef USE_MINDPOWER
-void lwMessageBox( const char* fmt, ... );
+	void lwMessageBox(const char* fmt, ...);
 #define LG_MSGBOX lwMessageBox
 #else
 #ifndef USE_LG_MSGBOX
 #define USE_LG_MSGBOX
-inline void __cdecl LGX(const char* format, ...)
-{
-    char buf[512];
-    buf[0] = 'm';
-    buf[1] = 's';
-    buf[2] = 'g';
-    buf[3] = 0;
-    
-    va_list args;
-    va_start( args, format );
-    _vsntprintf( &buf[3], 512, format, args );
-    va_end( args );
+	inline void __cdecl LGX(const char* format, ...) {
+		char buf[512];
+		buf[0] = 'm';
+		buf[1] = 's';
+		buf[2] = 'g';
+		buf[3] = 0;
 
-    g_logManager.InternalLog(LogLevel::Error, "errors", buf);
-}
+		va_list args;
+		va_start(args, format);
+		_vsntprintf(&buf[3], 512, format, args);
+		va_end(args);
+
+		g_logManager.InternalLog(LogLevel::Error, "errors", buf);
+	}
 
 #define LG_MSGBOX LGX
 #endif
 
 #endif
 
-float lwGetFPS();
+	float lwGetFPS();
 
-int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type, lwColorValue4b* colorkey);
-void lwFreeColorValue( lwColorValue4b* buf );
+	int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type,
+						 lwColorValue4b* colorkey);
+	void lwFreeColorValue(lwColorValue4b* buf);
 
-LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size);
-LW_RESULT lwLoadMeshDataInfo( lwMeshDataInfo* info, const lwMeshInfo* mi );
-DWORD lwGetTexFlexibleSize( DWORD size );
+	LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type,
+								lwColorValue4b* colorkey, int use_power_size);
+	LW_RESULT lwLoadMeshDataInfo(lwMeshDataInfo* info, const lwMeshInfo* mi);
+	DWORD lwGetTexFlexibleSize(DWORD size);
 
-void lwScreenToWorld( lwVector3* org, lwVector3* ray, int x, int y, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
-void lwWorldToScreen( int* x, int* y, float* z, const lwVector3* vec, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
+	void lwScreenToWorld(lwVector3* org, lwVector3* ray, int x, int y, int width, int height,
+						 const lwMatrix44* mat_proj, const lwMatrix44* mat_view);
+	void lwWorldToScreen(int* x, int* y, float* z, const lwVector3* vec, int width, int height,
+						 const lwMatrix44* mat_proj, const lwMatrix44* mat_view);
 
-void lwGetBoxVertLineList( lwVector3* vert_seq, const lwBox* box );
-void lwGetBoxTriangleList( lwVector3* vert_seq, DWORD* index_seq, const lwBox* box );
-void lwGetBoxTriangleList(lwVector3* vert36_seq, lwVector3* normal36_seq, const lwVector3* size);
-void lwBuildVertexNormalWithTriangleList(lwVector3* normal_seq, const lwVector3* vert_seq, const DWORD* index_seq, DWORD vert_num, DWORD index_num);
+	void lwGetBoxVertLineList(lwVector3* vert_seq, const lwBox* box);
+	void lwGetBoxTriangleList(lwVector3* vert_seq, DWORD* index_seq, const lwBox* box);
+	void lwGetBoxTriangleList(lwVector3* vert36_seq, lwVector3* normal36_seq, const lwVector3* size);
+	void lwBuildVertexNormalWithTriangleList(lwVector3* normal_seq, const lwVector3* vert_seq, const DWORD* index_seq,
+											 DWORD vert_num, DWORD index_num);
 
-void lwGetCubeMapViewMatrix(lwMatrix44* mat, DWORD face);
+	void lwGetCubeMapViewMatrix(lwMatrix44* mat, DWORD face);
 
-LW_RESULT lwHitTestBox( lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwBox* box, const lwMatrix44* mat );
+	LW_RESULT lwHitTestBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwBox* box,
+						   const lwMatrix44* mat);
 
-LW_RESULT lwSetRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state, DWORD value );
-LW_RESULT lwClearRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state );
+	LW_RESULT lwSetRenderState(lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state, DWORD value);
+	LW_RESULT lwClearRenderState(lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state);
 
 
-LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num, D3DFORMAT vb_fvf, D3DFORMAT ib_fvf);
-DWORD lwGetSurfaceSize(UINT width, UINT height, D3DFORMAT format);
-LW_RESULT lwGetDirectXVersion(char* o_buf, DWORD version);
+	LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num,
+								D3DFORMAT vb_fvf, D3DFORMAT ib_fvf);
+	DWORD lwGetSurfaceSize(UINT width, UINT height, D3DFORMAT format);
+	LW_RESULT lwGetDirectXVersion(char* o_buf, DWORD version);
 LW_END

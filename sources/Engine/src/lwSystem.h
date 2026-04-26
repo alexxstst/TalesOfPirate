@@ -6,32 +6,44 @@
 #include "lwClassDecl.h"
 
 LW_BEGIN
+	class lwSystem : public lwISystem {
+	public:
+		static lwISystem* __system;
 
-class lwSystem : public lwISystem
-{
-public:
-    static lwISystem* __system;
-    static void SetActiveISystem( lwISystem* sys ) { __system = sys; }
-    static lwISystem* GetActiveISystem() { return __system; }
+		static void SetActiveISystem(lwISystem* sys) {
+			__system = sys;
+		}
 
-private:
-    lwIPathInfo* _path_info;
-    lwIOptionMgr* _option_mgr;
-    lwITimer* _internal_timer;
-    lwISystemInfo* _system_info;
+		static lwISystem* GetActiveISystem() {
+			return __system;
+		}
 
-LW_STD_DECLARATION()
+	private:
+		lwIPathInfo* _path_info;
+		lwIOptionMgr* _option_mgr;
+		lwITimer* _internal_timer;
+		lwISystemInfo* _system_info;
 
-public:
-    lwSystem();
-    ~lwSystem();
+		LW_STD_DECLARATION()
 
-    LW_RESULT Initialize();
-    LW_RESULT CreateGraphicsSystem( lwISysGraphics** sys );
+	public:
+		lwSystem();
+		~lwSystem();
 
-    lwIPathInfo* GetPathInfo() { return _path_info; }
-    lwIOptionMgr* GetOptionMgr() { return _option_mgr; }
-    lwISystemInfo* GetSystemInfo() { return _system_info; }
-};
+		LW_RESULT Initialize();
+		LW_RESULT CreateGraphicsSystem(lwISysGraphics** sys);
+
+		lwIPathInfo* GetPathInfo() {
+			return _path_info;
+		}
+
+		lwIOptionMgr* GetOptionMgr() {
+			return _option_mgr;
+		}
+
+		lwISystemInfo* GetSystemInfo() {
+			return _system_info;
+		}
+	};
 
 LW_END

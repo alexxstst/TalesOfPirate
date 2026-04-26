@@ -2,8 +2,7 @@
 #include "DSoundInstance.h"
 #include "DSoundManager.h"
 
-DSoundInstance::DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound)
-{
+DSoundInstance::DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound) {
 	mSoundManagerP = theSoundManager;
 	mReleased = false;
 	mAutoRelease = false;
@@ -21,18 +20,20 @@ DSoundInstance::DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFF
 
 	HRESULT hr;
 
-	if (mSourceSoundBuffer != NULL)
-	{
-		hr=mSoundManagerP->mDirectSound->DuplicateSoundBuffer(mSourceSoundBuffer, &mSoundBuffer);
-		if (hr!=DS_OK)
-		{
-			switch (hr)
-			{
-			case DSERR_ALLOCATED: MessageBox(0,"DSERR_ALLOCATED","Hey",MB_OK);break;
-			case DSERR_INVALIDCALL: MessageBox(0,"DSERR_INVALIDCALL","Hey",MB_OK);break;
-			case DSERR_INVALIDPARAM: MessageBox(0,"DSERR_INVALIDPARAM","Hey",MB_OK);break;
-			case DSERR_OUTOFMEMORY: MessageBox(0,"DSERR_OUTOFMEMORY","Hey",MB_OK);break;
-			case DSERR_UNINITIALIZED: MessageBox(0,"DSERR_UNINITIALIZED","Hey",MB_OK);break;
+	if (mSourceSoundBuffer != NULL) {
+		hr = mSoundManagerP->mDirectSound->DuplicateSoundBuffer(mSourceSoundBuffer, &mSoundBuffer);
+		if (hr != DS_OK) {
+			switch (hr) {
+			case DSERR_ALLOCATED: MessageBox(0, "DSERR_ALLOCATED", "Hey",MB_OK);
+				break;
+			case DSERR_INVALIDCALL: MessageBox(0, "DSERR_INVALIDCALL", "Hey",MB_OK);
+				break;
+			case DSERR_INVALIDPARAM: MessageBox(0, "DSERR_INVALIDPARAM", "Hey",MB_OK);
+				break;
+			case DSERR_OUTOFMEMORY: MessageBox(0, "DSERR_OUTOFMEMORY", "Hey",MB_OK);
+				break;
+			case DSERR_UNINITIALIZED: MessageBox(0, "DSERR_UNINITIALIZED", "Hey",MB_OK);
+				break;
 			}
 			exit(0);
 		}
@@ -43,78 +44,67 @@ DSoundInstance::DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFF
 	RehupVolume();
 }
 
-DSoundInstance::~DSoundInstance()
-{
+DSoundInstance::~DSoundInstance() {
 	if (mSoundBuffer != NULL)
 		mSoundBuffer->Release();
 }
 
-void DSoundInstance::RehupVolume()
-{
+void DSoundInstance::RehupVolume() {
 	if (mSoundBuffer != NULL)
 		mSoundBuffer->SetVolume(mSoundManagerP->VolumeToDB(mBaseVolume * mVolume * mSoundManagerP->mMasterVolume));
 }
 
-void DSoundInstance::RehupPan()
-{
+void DSoundInstance::RehupPan() {
 	if (mSoundBuffer != NULL)
 		mSoundBuffer->SetPan(mBasePan + mPan);
 }
 
-void DSoundInstance::Release()
-{
+void DSoundInstance::Release() {
 	Stop();
-	mReleased = true;			
+	mReleased = true;
 }
 
 void DSoundInstance::SetVolume(double theVolume) // 0 = max
 {
 	mVolume = theVolume;
-	RehupVolume();	
+	RehupVolume();
 }
 
 void DSoundInstance::SetPan(int thePosition) //-db to =db = left to right
 {
 	mPan = thePosition;
-	RehupPan();	
+	RehupPan();
 }
 
-void DSoundInstance::SetBaseVolume(double theBaseVolume)
-{
+void DSoundInstance::SetBaseVolume(double theBaseVolume) {
 	mBaseVolume = theBaseVolume;
 	RehupVolume();
 }
 
-void DSoundInstance::SetBasePan(int theBasePan)
-{
+void DSoundInstance::SetBasePan(int theBasePan) {
 	mBasePan = theBasePan;
 	RehupPan();
 }
 
-bool DSoundInstance::Play(bool looping, bool autoRelease)
-{
-	if( IsPlaying() )
+bool DSoundInstance::Play(bool looping, bool autoRelease) {
+	if (IsPlaying())
 		return true;
 
 	Stop();
 
-	mHasPlayed = true;	
-	mAutoRelease = autoRelease;	
+	mHasPlayed = true;
+	mAutoRelease = autoRelease;
 
-	if (mSoundBuffer == NULL)
-	{
+	if (mSoundBuffer == NULL) {
 		return false;
 	}
 
-	if (looping)
-	{
+	if (looping) {
 		if (mSoundBuffer->Play(0, 0, DSBPLAY_LOOPING) != DS_OK)
 			return false;
 	}
-	else
-	{
-		if (mSoundBuffer->Play(0, 0, 0) != DS_OK)
-		{
+	else {
+		if (mSoundBuffer->Play(0, 0, 0) != DS_OK) {
 			return false;
 		}
 	}
@@ -122,22 +112,18 @@ bool DSoundInstance::Play(bool looping, bool autoRelease)
 	return true;
 }
 
-void DSoundInstance::Stop()
-{
-	if (mSoundBuffer != NULL)
-	{
+void DSoundInstance::Stop() {
+	if (mSoundBuffer != NULL) {
 		mSoundBuffer->Stop();
 		mSoundBuffer->SetCurrentPosition(0);
 		mAutoRelease = false;
 	}
 }
 
-void DSoundInstance::AdjustPitch(double theNumSteps)
-{
-	if (mSoundBuffer != NULL)
-	{
+void DSoundInstance::AdjustPitch(double theNumSteps) {
+	if (mSoundBuffer != NULL) {
 		double aFrequencyMult = pow(1.0594630943592952645618252949463, theNumSteps);
-		double aNewFrequency = mDefaultFrequency*aFrequencyMult;
+		double aNewFrequency = mDefaultFrequency * aFrequencyMult;
 		if (aNewFrequency < DSBFREQUENCY_MIN)
 			aNewFrequency = DSBFREQUENCY_MIN;
 		if (aNewFrequency > DSBFREQUENCY_MAX)
@@ -147,8 +133,7 @@ void DSoundInstance::AdjustPitch(double theNumSteps)
 	}
 }
 
-bool DSoundInstance::IsPlaying()
-{
+bool DSoundInstance::IsPlaying() {
 	if (!mHasPlayed)
 		return false;
 
@@ -163,15 +148,13 @@ bool DSoundInstance::IsPlaying()
 		return false;
 }
 
-bool DSoundInstance::IsReleased()
-{
-	if ((!mReleased) && (mAutoRelease) && (mHasPlayed) && (!IsPlaying()))	
-		Release();	
+bool DSoundInstance::IsReleased() {
+	if ((!mReleased) && (mAutoRelease) && (mHasPlayed) && (!IsPlaying()))
+		Release();
 
 	return mReleased;
 }
 
-double DSoundInstance::GetVolume()
-{
-	return mVolume; 
+double DSoundInstance::GetVolume() {
+	return mVolume;
 }

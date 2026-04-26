@@ -5,7 +5,6 @@
 #include <string>
 
 LW_BEGIN
-
 	LW_STD_IMPLEMENTATION(lwPoseCtrl)
 
 	LW_RESULT lwPoseCtrl::Load(FILE* fp) {
@@ -147,8 +146,8 @@ LW_BEGIN
 		if (info->type == PLAY_INVALID)
 			goto __ret;
 
-		if (LW_RESULT r = _Update(info->pose, info->type, info->velocity, &info->frame, &info->ret_frame); LW_FAILED(r))
-		{
+		if (LW_RESULT r = _Update(info->pose, info->type, info->velocity, &info->frame, &info->ret_frame);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _Update failed: pose={}, type={}, velocity={}, ret={}",
 						 __FUNCTION__, info->pose, info->type, info->velocity, static_cast<long long>(r));
@@ -157,11 +156,11 @@ LW_BEGIN
 
 		if (info->blend_info.op_state) {
 			if (LW_RESULT r = _Update(info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity,
-									  &info->blend_info.blend_frame, &info->blend_info.blend_ret_frame); LW_FAILED(r))
-			{
+									  &info->blend_info.blend_frame, &info->blend_info.blend_ret_frame); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _Update (blend) failed: blend_pose={}, blend_type={}, velocity={}, ret={}",
-							 __FUNCTION__, info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity, static_cast<long long>(r));
+							 __FUNCTION__, info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity,
+							 static_cast<long long>(r));
 				goto __ret;
 			}
 
@@ -285,8 +284,8 @@ LW_BEGIN
 			for (i = 0; i < num; i++) {
 				if ((pi[i].start > pi[i].end) || (pi[i].end >= _frame_num)) {
 					std::string_view reason = (pi[i].start > pi[i].end)
-						? "start > end"
-						: "end >= animation length";
+												  ? "start > end"
+												  : "end >= animation length";
 					ToLogService("errors", LogLevel::Error,
 								 "lwPoseCtrl::InsertPose: некорректная запись character_actions "
 								 "({}). actionNo={}, start={}, end={}, animLength={}",
