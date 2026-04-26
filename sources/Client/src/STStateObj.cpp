@@ -25,9 +25,6 @@ void CActionState::Cancel() {
 
 #ifdef _STATE_DEBUG
 	if (GetActor()->GetCha() == g_pGameApp->GetCurScene()->GetMainCha()) {
-		static char buf[256] = {0};
-		sprintf(buf, "state-%s", GetActor()->GetCha()->getName().c_str());
-
 		if (_pParent)
 			g_logManager.InternalLog(LogLevel::Debug, "common",
 									 std::format("  \t{}-cancel, Tick:{}", GetExplain(), GetTickCount()));
@@ -48,9 +45,6 @@ void CActionState::End() {
 
 #ifdef _STATE_DEBUG
 	if (GetActor()->GetCha()->IsMainCha()) {
-		static char buf[256] = {0};
-		sprintf(buf, "state-%s", GetActor()->GetCha()->getName().c_str());
-
 		if (_pParent)
 			g_logManager.InternalLog(LogLevel::Debug, "common",
 									 std::format("\t{}-end, Tick:{}", GetExplain(), GetTickCount()));
@@ -70,11 +64,9 @@ void CActionState::Start() {
 	}
 
 #ifdef _STATE_DEBUG
-	static char buf[256] = {0};
 	static bool isMain;
 	isMain = GetActor()->GetCha()->IsMainCha();
 	if (isMain) {
-		sprintf(buf, "state-%s", GetActor()->GetCha()->getName().c_str());
 		if (_pParent)
 			g_logManager.InternalLog(LogLevel::Debug, "common",
 									 std::format("\t{}-start, Tick:{}", GetExplain(), GetTickCount()));

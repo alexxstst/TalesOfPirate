@@ -52,13 +52,12 @@ namespace GUI {
 		frmHaircut->evtEntrustMouseEvent = _MainMouseHaircutEvent;
 		frmHaircut->evtClose = _MainOnCloseEvent;
 
-		char szBuf[16];
 		for (int i(0); i < defHAIR_MAX_ITEM; i++) {
-			sprintf(szBuf, "cmdHead%d", i + 1);
-			cmdProp[i] = dynamic_cast<COneCommand*>(frmHaircut->Find(szBuf));
+			const std::string szBuf = std::format("cmdHead{}", i + 1);
+			cmdProp[i] = dynamic_cast<COneCommand*>(frmHaircut->Find(szBuf.c_str()));
 			if (!cmdProp[i])
 				return Error(GetLanguageString(616).c_str(),
-							 frmHaircut->GetName(), szBuf);
+							 frmHaircut->GetName(), szBuf.c_str());
 		}
 
 		lblHairColor = dynamic_cast<CLabel*>(frmHaircut->Find("labHairColor"));
@@ -160,7 +159,7 @@ namespace GUI {
 		//
 
 		if ((m_dwHairTypeMaxNum = m_pHairTools->GetHairMax()) <= 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(618).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(618));
 			return;
 		}
 
@@ -203,11 +202,9 @@ namespace GUI {
 		CHairRecord* pHairRecord = pHairName->GetInfo(m_dwHairColorIndex);
 		if (!pHairRecord) return;
 
-		char szBuf[16];
 		lblHairColor->SetCaption(pHairRecord->szColor.c_str());
 		lblHairType->SetCaption(pHairRecord->DataName.c_str());
-		sprintf(szBuf, "%d", pHairRecord->dwMoney);
-		lblHairFare->SetCaption(szBuf);
+		lblHairFare->SetCaption(std::format("{}", pHairRecord->dwMoney).c_str());
 
 		CGoodsGrid* pGrid = g_stUIEquip.GetGoodsGrid();
 		if (!pGrid) return;

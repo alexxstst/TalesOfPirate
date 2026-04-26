@@ -199,7 +199,7 @@ void CMenu::Refresh() {
 
 CMenu* CMenu::FindMenu(const char* name) {
 	for (allmenus::iterator it = _allmenus.begin(); it != _allmenus.end(); it++)
-		if (strcmp((*it)->GetName(), name) == 0)
+		if (std::string_view{(*it)->GetName()} == name)
 			return (*it);
 
 	return NULL;

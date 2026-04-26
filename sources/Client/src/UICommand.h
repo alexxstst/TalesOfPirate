@@ -167,7 +167,7 @@ namespace GUI {
 		int _nIndex;
 
 	protected:
-		void PushHint(const char* str, DWORD color = COLOR_WHITE, int height = 5, int font = 0, int index = -1,
+		void PushHint(std::string_view str, DWORD color = COLOR_WHITE, int height = 5, int font = 0, int index = -1,
 					  bool shadow = false, DWORD scolor = 0); // height:
 		void AddHintHeight(int height = 6);
 		void SetHintIsCenter(bool v);
@@ -178,7 +178,7 @@ namespace GUI {
 	};
 
 	// 
-	inline void CCommandObj::PushHint(const char* str, DWORD color, int height, int font, int index, bool shadow,
+	inline void CCommandObj::PushHint(std::string_view str, DWORD color, int height, int font, int index, bool shadow,
 									  DWORD scolor) {
 		_hints.PushHint(str, color, height, font, index, shadow, scolor);
 	}

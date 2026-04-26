@@ -110,9 +110,8 @@ namespace GUI {
 		}
 		--lTimes;
 		if ((sRet > 0) && (lTimes > 0)) {
-			char buff[16] = {0};
-			sprintf(buff, "%li", lTimes);
-			edtNumInput->SetCaption(buff);
+			const std::string buff = std::format("{}", lTimes);
+			edtNumInput->SetCaption(buff.c_str());
 			//CS_LifeSkill(0, g_stUINpcTalk.GetNpcId());
 			CS_Compose(g_stUINpcTalk.GetNpcId(), g_stUICompose.iComposePos, (COMPOSE_COUNT - 1), true);
 		}
@@ -196,10 +195,9 @@ namespace GUI {
 		}
 		btnForgeNo->SetIsEnabled(false);
 
-		char buff[32] = {0};
 		for (int i = 0; i < COMPOSE_COUNT; i++) {
-			sprintf(buff, "cmdItemBase%i", (i + 1));
-			cmdCompose[i] = dynamic_cast<COneCommand*>(frmCompose->Find(buff));
+			const std::string buff = std::format("cmdItemBase{}", (i + 1));
+			cmdCompose[i] = dynamic_cast<COneCommand*>(frmCompose->Find(buff.c_str()));
 			if (!cmdCompose[i]) {
 				ToLogService("common", "frmCompose::{} not found.", buff);
 				return false;
@@ -402,7 +400,7 @@ namespace GUI {
 
 	void CComposeMgr::_evtDragItemBase1(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUICompose.cmdCompose[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -436,7 +434,7 @@ namespace GUI {
 
 	void CComposeMgr::_evtDragItemBase3(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUICompose.cmdCompose[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -456,7 +454,7 @@ namespace GUI {
 	void CComposeMgr::_evtDragItemBase4(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  1
 		if (!g_stUICompose.cmdCompose[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -478,7 +476,7 @@ namespace GUI {
 	void CComposeMgr::_evtDragItemBase5(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  2
 		if (!g_stUICompose.cmdCompose[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -500,7 +498,7 @@ namespace GUI {
 	void CComposeMgr::_evtDragItemBase6(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  3
 		if (!g_stUICompose.cmdCompose[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);

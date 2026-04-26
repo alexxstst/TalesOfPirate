@@ -107,13 +107,13 @@ namespace GUI {
 		}
 
 		void SetMaxLineNum(int v);
-		void SetCaption(const char* str);
+		void SetCaption(std::string_view str);
 
 		const char* GetCaption() {
 			return _str.c_str();
 		}
 
-		void ReplaceSel(const char* str, BOOL bCanUndo = TRUE);
+		void ReplaceSel(std::string_view str, BOOL bCanUndo = TRUE);
 
 		virtual void SetTextColor(DWORD color);
 

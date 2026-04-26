@@ -9,7 +9,7 @@
 #include "stringlib.h"
 using namespace GUI;
 
-static char szBuf[80] = {0};
+// Был static char szBuf[80] — переведено на std::string по месту использования.
 
 CHideForm CBoxMgr::_cTrade;
 CHideForm CBoxMgr::_cSelect;
@@ -94,8 +94,8 @@ bool CBoxMgr::Init() {
 	return true;
 }
 
-CForm* CBoxMgr::_FindForm(const char* frmName) {
-	CForm* form = CFormMgr::s_Mgr.Find(frmName, 4);
+CForm* CBoxMgr::_FindForm(std::string_view frmName) {
+	CForm* form = CFormMgr::s_Mgr.Find(std::string{frmName}.c_str(), 4);
 	if (!form) g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(464), frmName));
 	return form;
 }
@@ -121,7 +121,8 @@ void CBoxMgr::_ClearBox(CHideForm& list) {
 	}
 }
 
-stTradeBox* CBoxMgr::ShowTradeBox(FormMouseEvent evtForm, float fUnitMoney, int nTotalNum, const char* szName) {
+stTradeBox* CBoxMgr::ShowTradeBox(FormMouseEvent evtForm, float fUnitMoney, int nTotalNum,
+								  std::string_view szName) {
 	CForm* frm = _cTrade.GetHide();
 	stTradeBox* t = (stTradeBox*)frm->GetPointer();
 	if (!t) {
@@ -134,12 +135,7 @@ stTradeBox* CBoxMgr::ShowTradeBox(FormMouseEvent evtForm, float fUnitMoney, int 
 		frm->SetPointer((void*)t);
 	}
 
-	if (szName) {
-		t->labName->SetCaption(szName);
-	}
-	else {
-		t->labName->SetCaption("");
-	}
+	t->labName->SetCaption(std::string{szName});
 
 	frm->evtEntrustMouseEvent = evtForm;
 	// frm->nTag = fUnitMoney;
@@ -152,19 +148,17 @@ stTradeBox* CBoxMgr::ShowTradeBox(FormMouseEvent evtForm, float fUnitMoney, int 
 		fUnitMoney = MAX_BOX_NUM;
 
 	if (nTotalNum > 0) {
-		char buf[32] = {0};
-		sprintf(buf, "%d", nTotalNum);
-		t->edtNumber->SetCaption(buf);
+		t->edtNumber->SetCaption(std::format("{}", nTotalNum));
 	}
 	else {
 		t->edtNumber->SetCaption("");
 	}
 	t->nTotalNum = nTotalNum;
-	t->fUnitMoney = (float)(int)fUnitMoney; //  call 
+	t->fUnitMoney = (float)(int)fUnitMoney; //  call
 	return t;
 }
 
-stSelectBox* CBoxMgr::ShowSelectBox(FormMouseEvent evtForm, const char* szTitle, bool bModal) {
+stSelectBox* CBoxMgr::ShowSelectBox(FormMouseEvent evtForm, std::string_view szTitle, bool bModal) {
 	CForm* frm = _cSelect.GetHide();
 	stSelectBox* t = (stSelectBox*)frm->GetPointer();
 	if (!t) {
@@ -174,7 +168,7 @@ stSelectBox* CBoxMgr::ShowSelectBox(FormMouseEvent evtForm, const char* szTitle,
 
 		frm->SetPointer((void*)t);
 	}
-	if (szTitle) t->labInfo->SetCaption(szTitle);
+	if (!szTitle.empty()) t->labInfo->SetCaption(std::string{szTitle});
 	frm->evtEntrustMouseEvent = evtForm;
 	frm->SetIsEscClose(false);
 
@@ -187,7 +181,8 @@ stSelectBox* CBoxMgr::ShowSelectBox(FormMouseEvent evtForm, const char* szTitle,
 	return t;
 }
 
-stNumBox* CBoxMgr::ShowNumberBox(FormMouseEvent evtForm, int nTotalNum, const char* szTitle, bool IsMax, bool bModal) {
+stNumBox* CBoxMgr::ShowNumberBox(FormMouseEvent evtForm, int nTotalNum, std::string_view szTitle, bool IsMax,
+								 bool bModal) {
 	CForm* frm = _cNumber.GetHide();
 	stNumBox* t = (stNumBox*)frm->GetPointer();
 	if (!t) {
@@ -198,8 +193,8 @@ stNumBox* CBoxMgr::ShowNumberBox(FormMouseEvent evtForm, int nTotalNum, const ch
 
 		frm->SetPointer((void*)t);
 	}
-	if (szTitle) {
-		t->labInfo->SetCaption(szTitle);
+	if (!szTitle.empty()) {
+		t->labInfo->SetCaption(std::string{szTitle});
 	}
 	else {
 		t->labInfo->SetCaption(GetLanguageString(454));
@@ -211,9 +206,7 @@ stNumBox* CBoxMgr::ShowNumberBox(FormMouseEvent evtForm, int nTotalNum, const ch
 	t->nTotalNum = nTotalNum;
 
 	if (IsMax && nTotalNum > 0) {
-		char buf[32] = {0};
-		sprintf(buf, "%d", nTotalNum);
-		t->edtNumber->SetCaption(buf);
+		t->edtNumber->SetCaption(std::format("{}", nTotalNum));
 	}
 	else {
 		t->edtNumber->SetCaption("");
@@ -231,7 +224,7 @@ stNumBox* CBoxMgr::ShowNumberBox(FormMouseEvent evtForm, int nTotalNum, const ch
 	return t;
 }
 
-stMsgTimeBox* CBoxMgr::ShowMsgTime(FormMouseEvent evtForm, const char* szTitle, int iSeconds) {
+stMsgTimeBox* CBoxMgr::ShowMsgTime(FormMouseEvent evtForm, std::string_view szTitle, int iSeconds) {
 	stMsgTimeBox* t = (stMsgTimeBox*)_cfrmError->GetPointer();
 
 	if (!t) {
@@ -241,7 +234,7 @@ stMsgTimeBox* CBoxMgr::ShowMsgTime(FormMouseEvent evtForm, const char* szTitle, 
 
 		_cfrmError->SetPointer((void*)t);
 	}
-	if (szTitle) t->labInfo->SetCaption(szTitle);
+	if (!szTitle.empty()) t->labInfo->SetCaption(std::string{szTitle});
 
 	_cfrmError->SetSize(ui::GetWidth(t->labInfo->GetCaption()) + t->labInfo->GetLeft() * 2, _cfrmError->GetHeight());
 	_cfrmError->SetPos((GetRender().GetScreenWidth() - _cfrmError->GetWidth()) / 2
@@ -256,7 +249,7 @@ stMsgTimeBox* CBoxMgr::ShowMsgTime(FormMouseEvent evtForm, const char* szTitle, 
 	return t;
 }
 
-stMsgBox* CBoxMgr::ShowMsgBox(FormMouseEvent evtForm, const char* szTitle, bool bModal) {
+stMsgBox* CBoxMgr::ShowMsgBox(FormMouseEvent evtForm, std::string_view szTitle, bool bModal) {
 	CForm* frm = _cMsg.GetHide();
 	stMsgBox* t = (stMsgBox*)frm->GetPointer();
 	if (!t) {
@@ -266,7 +259,7 @@ stMsgBox* CBoxMgr::ShowMsgBox(FormMouseEvent evtForm, const char* szTitle, bool 
 
 		frm->SetPointer((void*)t);
 	}
-	if (szTitle) t->labInfo->SetCaption(szTitle);
+	if (!szTitle.empty()) t->labInfo->SetCaption(std::string{szTitle});
 
 	frm->SetSize(ui::GetWidth(t->labInfo->GetCaption()) + t->labInfo->GetLeft() * 2, frm->GetHeight());
 	frm->SetPos((GetRender().GetScreenWidth() - frm->GetWidth()) / 2
@@ -278,8 +271,8 @@ stMsgBox* CBoxMgr::ShowMsgBox(FormMouseEvent evtForm, const char* szTitle, bool 
 	return t;
 }
 
-stPasswordBox* CBoxMgr::ShowPasswordBox(FormMouseEvent evtForm, const char* szTitle, const char* szPassword,
-										bool bModal) {
+stPasswordBox* CBoxMgr::ShowPasswordBox(FormMouseEvent evtForm, std::string_view szTitle,
+										std::string_view szPassword, bool bModal) {
 	CForm* frm = _cPassword.GetHide();
 	stPasswordBox* t = (stPasswordBox*)frm->GetPointer();
 	if (!t) {
@@ -290,10 +283,9 @@ stPasswordBox* CBoxMgr::ShowPasswordBox(FormMouseEvent evtForm, const char* szTi
 
 		frm->SetPointer((void*)t);
 	}
-	if (szTitle) t->labInfo->SetCaption(szTitle);
+	if (!szTitle.empty()) t->labInfo->SetCaption(std::string{szTitle});
 
-	if (szPassword) t->edtPassword->SetCaption(szPassword);
-	else t->edtPassword->SetCaption("");
+	t->edtPassword->SetCaption(std::string{szPassword});
 
 	t->edtPassword->SetIsPassWord(true);
 
@@ -382,20 +374,15 @@ void stTradeBox::Refresh() {
 	if (nTotalNum > 0) {
 		if (n > nTotalNum) {
 			n = nTotalNum;
-
-			sprintf(szBuf, "%d", n);
-			edtNumber->SetCaption(szBuf);
+			edtNumber->SetCaption(std::format("{}", n).c_str());
 		}
 		if (n < 0) {
 			n = 0;
-
-			sprintf(szBuf, "%d", n);
-			edtNumber->SetCaption(szBuf);
+			edtNumber->SetCaption(std::format("{}", n).c_str());
 		}
 	}
 
-	sprintf(szBuf, "%s", StringSplitNum((int)((float)n * fUnitMoney)));
-	labPrice->SetCaption(szBuf);
+	labPrice->SetCaption(StringSplitNum((int)((float)n * fUnitMoney)));
 }
 
 //---------------------------------------------------------------------------
@@ -432,15 +419,11 @@ void stNumBox::Refresh() {
 	if (nTotalNum > 0) {
 		if (n > nTotalNum) {
 			n = nTotalNum;
-
-			sprintf(szBuf, "%d", n);
-			edtNumber->SetCaption(szBuf);
+			edtNumber->SetCaption(std::format("{}", n).c_str());
 		}
 		if (n < 0) {
 			n = 0;
-
-			sprintf(szBuf, "%d", n);
-			edtNumber->SetCaption(szBuf);
+			edtNumber->SetCaption(std::format("{}", n).c_str());
 		}
 	}
 }

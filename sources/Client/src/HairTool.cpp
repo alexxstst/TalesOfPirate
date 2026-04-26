@@ -40,7 +40,7 @@ bool CHairTools::RefreshCha(DWORD dwChaID) {
 
 void CHairTools::_AddInfo(CHairRecord* pInfo) {
 	for (hairs::iterator it = _hairs.begin(); it != _hairs.end(); it++) {
-		if (strcmp((*it)->GetName(), pInfo->DataName.c_str()) == 0) {
+		if (pInfo->DataName == (*it)->GetName()) {
 			(*it)->AddInfo(pInfo);
 			return;
 		}

@@ -22,38 +22,27 @@ CGameWG::~CGameWG(void) {
 
 // 
 bool CGameWG::RefreshModule(void) {
-	bool bRet = false;
+	MODULEENTRY32 me32 = {0};
+	std::string strModule;
 
-	try {
-		MODULEENTRY32 me32 = {0};
-		std::string strModule;
+	std::unique_ptr<void, decltype(&CloseHandle)> hModuleSnap(
+		CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId()), &CloseHandle);
+	if (hModuleSnap.get() == INVALID_HANDLE_VALUE)
+		return false;
 
-		std::unique_ptr<void, decltype(&CloseHandle)> hModuleSnap(
-			CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId()), &CloseHandle);
-		if (hModuleSnap.get() == INVALID_HANDLE_VALUE)
-			return false;
+	me32.dwSize = sizeof(MODULEENTRY32);
 
-		me32.dwSize = sizeof(MODULEENTRY32);
-
-		if (Module32First(hModuleSnap.get(), &me32)) {
-			// 
-			do {
-				strModule = me32.szModule;
-				m_lstModule.insert(strModule);
-			}
-			while (Module32Next(hModuleSnap.get(), &me32));
-
-			bRet = true;
-		}
-		else {
-			// 
-			bRet = false;
-		}
-	}
-	catch (...) {
+	if (!Module32First(hModuleSnap.get(), &me32)) {
+		return false;
 	}
 
-	return bRet;
+	do {
+		strModule = me32.szModule;
+		m_lstModule.insert(strModule);
+	}
+	while (Module32Next(hModuleSnap.get(), &me32));
+
+	return true;
 }
 
 

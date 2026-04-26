@@ -167,8 +167,8 @@ public:
 		return _dwMouseDownTime[nButton] > 12;
 	}
 
-	void AddTipText(const char* pszFormat, ...);
-	void SysInfo(const char* pszFormat, ...);
+	void AddTipText(std::string_view text);
+	void SysInfo(std::string_view info);
 	void ShowNotify(const char* szStr, DWORD dwColor);
 	void ShowNotify1(const char* szStr, int setnum, DWORD dwColor); //Add by sunny.sun20080804
 	void ShowHint(int x, int y, const char* szStr, DWORD dwColor);
@@ -179,11 +179,11 @@ public:
 		return (float)_nMusicSize / 128.0f;
 	}
 
-	static void MsgBox(const char* pszFormat, ...);
+	static void MsgBox(std::string_view text);
 
-	void ShowBigText(const char* pszFormat, ...);
-	void ShowMidText(const char* pszFormat, ...);
-	void ShowBottomText(unsigned int rgb, const char* pszFormat, ...);
+	void ShowBigText(std::string_view text);
+	void ShowMidText(std::string_view text);
+	void ShowBottomText(unsigned int rgb, std::string_view text);
 
 	// begin
 	CGameScene* CreateScene(stSceneInitParam* param);
@@ -264,7 +264,7 @@ public:
 	void ResetCaption();
 
 	void AutoTest(); //
-	void AutoTestInfo(const char* pszFormat, ...); //
+	void AutoTestInfo(std::string_view info); //
 	void AutoTestUpdate();
 
 	static bool IsMouseInScene() {

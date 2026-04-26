@@ -1,4 +1,5 @@
 ﻿#include "Stdafx.h"
+#include "DebugStateSystem.h"
 #include "ChaRecordStore.h"
 #include "SkillRecordStore.h"
 #include "Character.h"
@@ -302,10 +303,10 @@ void CGameApp::HandleKeyDown(DWORD dwKey) {
 		if (GlobalAppConfig.IsPower() || (CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv())) {
 			EnableSuperKey(1 - _bEnableSuperKey);
 			if (_bEnableSuperKey) {
-				g_pGameApp->AddTipText("%s", GetLanguageString(102).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(102));
 			}
 			else {
-				g_pGameApp->AddTipText("%s", GetLanguageString(103).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(103));
 			}
 		}
 	}
@@ -327,10 +328,11 @@ void CGameApp::HandleKeyDown(DWORD dwKey) {
 	else if (IsKeyDown(DIK_L) && IsCtrlPress()) {
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if (pMain) {
-			char buf[128] = {0};
-			sprintf(buf, "%d,%d", (pMain->GetCurX() + 50) / 100, (pMain->GetCurY() + 50) / 100);
-			//g_stUICoze.AddInput( buf );			
-			CCozeForm::GetInstance()->AddToEdit(buf);
+			const std::string buf = std::format("{},{}",
+												(pMain->GetCurX() + 50) / 100,
+												(pMain->GetCurY() + 50) / 100);
+			//g_stUICoze.AddInput( buf );
+			CCozeForm::GetInstance()->AddToEdit(buf.c_str());
 		}
 	}
 
@@ -462,10 +464,6 @@ void CGameApp::MouseButtonDown(int nButton) {
 	lua_platform_mousedown(nButton);
 #endif
 
-#ifdef APP_DEBUG
-	try {
-
-#endif
 	if (!_IsSceneOk()) return;
 
 	if (g_Editor.IsEnable()) {
@@ -483,12 +481,6 @@ void CGameApp::MouseButtonDown(int nButton) {
 		GetCurScene()->_MouseButtonDown(nButton);
 		_stCursorMgr.MouseDown(nButton);
 	}
-#ifdef APP_DEBUG
-	}
-	catch(...) {
-		MessageBox(0, "CGameApp MouseButtonDown exception!", "APP_DEBUG", 0);
-	}
-#endif
 }
 
 void CGameApp::MouseButtonUp(int nButton) {
@@ -513,10 +505,6 @@ void CGameApp::MouseContinue(int nButton) {
 }
 
 void CGameApp::MouseMove(int nOffsetX, int nOffsetY) {
-#ifdef APP_DEBUG
-	try {
-
-#endif
 	if (_IsSceneOk()) {
 		if (GlobalAppConfig.IsEditor() && IsCtrlPress()) {
 			CCharacter* pMain = GetCurScene()->GetMainCha();
@@ -556,20 +544,10 @@ void CGameApp::MouseMove(int nOffsetX, int nOffsetY) {
 		}
 		GetCurScene()->_MouseMove(nOffsetX, nOffsetY);
 	}
-#ifdef APP_DEBUG
-	}
-	catch(...) {
-		MessageBox(0, "CGameApp MouseMove exception!", "APP_DEBUG", 0);
-	}
-#endif
 }
 
 
 void CGameApp::MouseButtonDB(int nButton) {
-#ifdef APP_DEBUG
-	try {
-
-#endif
 	//OutputDebugString("ok");
 	if (_IsSceneOk()) {
 		if (CFormMgr::IsMouseInGui()) return;
@@ -599,19 +577,9 @@ void CGameApp::MouseButtonDB(int nButton) {
 		//	g_Render.SetCurrentView(MPRender::VIEW_WORLD);
 		//}
 	}
-#ifdef APP_DEBUG
-}
-catch(...) {
-		MessageBox(0, "CGameApp MouseButtonDB exception!", "APP_DEBUG", 0);
-	}
-#endif
 }
 
 void CGameApp::MouseScroll(int nScroll) {
-#ifdef APP_DEBUG
-	try {
-
-#endif
 	if (_IsSceneOk()) {
 		ihei += nScroll > 0 ? 1 : -1;
 		if (CFormMgr::IsMouseInGui()) {
@@ -637,22 +605,10 @@ void CGameApp::MouseScroll(int nScroll) {
 			//pCamera->Range((float)f * 0.02f);
 		}
 	}
-#ifdef APP_DEBUG
-}
-catch(...) {
-		MessageBox(0, "CGameApp MouseScroll exception!", "APP_DEBUG", 0);
-	}
-#endif
 }
 
 void CGameApp::HandleSuperKey() {
 	if (!IsEnableSuperKey()) return;
-
-#ifdef APP_DEBUG
-	try {
-
-#endif
-
 
 	if (g_pGameApp->IsKeyDown(DIK_C)) {
 		//GetCurScene()->SetMainCha(GetCurScene()->GetMainCha()->getID());
@@ -680,10 +636,10 @@ void CGameApp::HandleSuperKey() {
 		//}
 
 		if (_bCameraFollow) {
-			g_pGameApp->AddTipText("%s", GetLanguageString(106).c_str());
+			g_pGameApp->AddTipText(GetLanguageString(106));
 		}
 		else {
-			g_pGameApp->AddTipText("%s", GetLanguageString(107).c_str());
+			g_pGameApp->AddTipText(GetLanguageString(107));
 		}
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_INSERT) && g_pGameApp->IsCtrlPress()) {
@@ -729,22 +685,16 @@ void CGameApp::HandleSuperKey() {
 		}
 		else if (g_pGameApp->IsKeyDown(DIK_L)) {
 			g_pGameApp->GetDrawPoints()->SetIsEnabled(!g_pGameApp->GetDrawPoints()->GetIsEnabled());
-			g_pGameApp->AddTipText("%s", GetLanguageString(108).c_str());
+			g_pGameApp->AddTipText(GetLanguageString(108));
 		}
 		else if (g_pGameApp->IsKeyDown(DIK_T)) {
 			g_pGameApp->SetIsRenderTipText(!g_pGameApp->GetIsRenderTipText());
-			g_pGameApp->AddTipText("%s", GetLanguageString(109).c_str());
+			g_pGameApp->AddTipText(GetLanguageString(109));
 		}
 	}
 #endif
 
 	if (_IsSceneOk()) GetCurScene()->_HandleSuperKey();
-#ifdef APP_DEBUG
-}
-catch(...) {
-		MessageBox(0, "CGameApp HandleSuperKey exception!", "APP_DEBUG", 0);
-	}
-#endif
 }
 
 //pTerr->GetWidth()
@@ -965,7 +915,7 @@ const char* HandleMonsterCommand(string& strCmd, string& p1, string& p2) {
 		string strList[10];
 		while (!in.eof()) {
 			in.getline(szCha, 255);
-			if (strlen(szCha) == 0) break;
+			if (szCha[0] == '\0') break;
 
 			Util_ResolveTextLine(szCha, strList, 2, '('); // Strip left parenthesis
 			string strRight = strList[1];
@@ -1137,7 +1087,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 	if (strCmd == "?") {
 		int n = 0;
 		while (1) {
-			if (strlen(szConsoleHelp[n]) == 0) break;
+			if (szConsoleHelp[n][0] == '\0') break;
 			g_pGameApp->GetConsole()->AddText(szConsoleHelp[n]);
 			n++;
 		}
@@ -1188,8 +1138,8 @@ const char* ConsoleCallback(const char* pszCmd) {
 		else g_pGameApp->SetFPSInterval(40);
 	}
 	else if (strCmd == "perf") {
-		BOOL bPerf = Str2Int(p1);
-		g_Render.EnablePrint(INFO_PERF, bPerf);
+		const bool bPerf = Str2Int(p1) != 0;
+		DebugStateSystem::Instance().SetEnabled(DebugStateSystem::Category::Performance, bPerf);
 	}
 	else if (strCmd == "ui") // Show UI debug info; 0=off, 1=on  -added by Arcol
 	{
@@ -1294,7 +1244,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 	}
 	else if (strCmd == "logno") {
 		extern long g_nCurrentLogNo;
-		g_pGameApp->SysInfo("LogNo:%d", g_nCurrentLogNo);
+		g_pGameApp->SysInfo(std::format("LogNo:{}", g_nCurrentLogNo));
 	}
 	else if (strCmd == "checkfile") {
 		g_pGameApp->HasLogFile("gui");
@@ -1306,7 +1256,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 			g_pGameApp->SysInfo(g_NetIF->m_connect.GetPeerHost());
 		}
 		else {
-			g_pGameApp->SysInfo("%s", GetLanguageString(124).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(124));
 		}
 	}
 	else if (strCmd == "teamleaderid") {
@@ -1315,8 +1265,8 @@ const char* ConsoleCallback(const char* pszCmd) {
 	else if (strCmd == "state") {
 		CGameScene* pScene = CGameApp::GetCurScene();
 		if (pScene) {
-			g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(125), pScene->m_dwValidEffCnt,
-												  pScene->m_dwValidChaCnt, pScene->m_dwValidSceneObjCnt).c_str());
+			g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(125), pScene->m_dwValidEffCnt,
+												  pScene->m_dwValidChaCnt, pScene->m_dwValidSceneObjCnt));
 		}
 	}
 	else if (GlobalAppConfig.IsEditor() && strCmd == "refine") {
@@ -1457,7 +1407,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 			int nLine = CCommandObj::GetHints().WriteText(p1.c_str());
 			if (nLine > 0) {
 				CTextHint::stHint* pHint = CCommandObj::GetHints().GetHint(0);
-				g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(129), pHint->hint, nLine).c_str());
+				g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(129), pHint->hint, nLine));
 			}
 		}
 	}
@@ -1471,20 +1421,20 @@ const char* ConsoleCallback(const char* pszCmd) {
 	}
 	else if (strCmd == "luaGetStoneHint") {
 		string hint = g_pGameApp->GetScriptMgr()->GetStoneHint(p1.c_str(), Str2Int(p2));
-		g_pGameApp->SysInfo("Hint:%s", hint.c_str());
+		g_pGameApp->SysInfo(std::format("Hint:{}", hint));
 	}
 	else if (strCmd == "luaFunc") {
 		string str;
 		if (g_pGameApp->GetScriptMgr()->DoString(p1.c_str(), "d-s", Str2Int(p2), &str)) {
-			g_pGameApp->SysInfo("return:%s", str.c_str());
+			g_pGameApp->SysInfo(std::format("return:{}", str));
 		}
 	}
 	else if (strCmd == "autotest") {
 		g_pGameApp->GetConsole()->SetVisible(false);
 
-		g_pGameApp->AutoTestInfo("%s", GetLanguageString(130).c_str());
+		g_pGameApp->AutoTestInfo(GetLanguageString(130));
 		g_pGameApp->AutoTest();
-		g_pGameApp->AutoTestInfo("%s", GetLanguageString(131).c_str());
+		g_pGameApp->AutoTestInfo(GetLanguageString(131));
 	}
 	else if (strCmd == "testeffect") {
 		g_pGameApp->GetConsole()->SetVisible(false);
@@ -1507,7 +1457,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 		int nEnd = Str2Int(p2);
 		int nTestCount = Str2Int(p3);
 		if (nTestCount <= 0) nTestCount = 1;
-		g_pGameApp->AutoTestInfo("%s", SafeVFormat(GetLanguageString(132), nStart, nEnd, nTestCount).c_str());
+		g_pGameApp->AutoTestInfo(SafeVFormat(GetLanguageString(132), nStart, nEnd, nTestCount));
 
 		nEnd++;
 		for (int j(0); j < nTestCount; j++) {
@@ -1616,7 +1566,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 		int nEnd = Str2Int(p2);
 		int nTestCount = Str2Int(p3);
 		if (nTestCount <= 0) nTestCount = 1;
-		g_pGameApp->AutoTestInfo("%s", SafeVFormat(GetLanguageString(133), nStart, nEnd, nTestCount).c_str());
+		g_pGameApp->AutoTestInfo(SafeVFormat(GetLanguageString(133), nStart, nEnd, nTestCount));
 
 		nEnd++;
 		CSkillRecord* pInfo = NULL;
@@ -1870,7 +1820,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 		int n;
 		for (int i = 0; i < 100; i += 3) {
 			n = rand() % 1000 - 500;
-			g_pGameApp->SysInfo("%d, %s", n, ConvertNumToChinese(n).c_str());
+			g_pGameApp->SysInfo(std::format("{}, {}", n, ConvertNumToChinese(n)));
 		}
 	}
 	else if (strCmd == "playpose") {
@@ -1950,7 +1900,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 				nTestY -= 100;
 			}
 		}
-		g_pGameApp->SysInfo("Time:%d", ::GetTickCount() - dwStart);
+		g_pGameApp->SysInfo(std::format("Time:{}", ::GetTickCount() - dwStart));
 		return "";
 
 		CChaRecord* pInfo = NULL;
@@ -2027,12 +1977,20 @@ const char* ConsoleCallback(const char* pszCmd) {
 				// This is the main window
 				MPChaLoadInfo load_info;
 
-				sprintf(load_info.bone, "%04d.lab", pInfo->sModel);
+				// load_info.bone — фиксированный 64-байтный буфер MPChaLoadInfo.
+				const std::string boneStr = std::format("{:04}.lab", pInfo->sModel);
+				const std::size_t boneN = std::min<std::size_t>(boneStr.size(), sizeof(load_info.bone) - 1);
+				std::memcpy(load_info.bone, boneStr.data(), boneN);
+				load_info.bone[boneN] = '\0';
 
 				for (DWORD i = 0; i < 5; i++) {
 					if (pInfo->sSkinInfo[i] != 0) {
 						DWORD file_id = pInfo->sModel * 1000000 + pInfo->sSuitID * 10000 + i;
-						sprintf(load_info.part[i], "%010d.lgo", file_id);
+						const std::string partStr = std::format("{:010}.lgo", file_id);
+						const std::size_t partN = std::min<std::size_t>(partStr.size(),
+																		sizeof(load_info.part[i]) - 1);
+						std::memcpy(load_info.part[i], partStr.data(), partN);
+						load_info.part[i][partN] = '\0';
 					}
 				}
 
@@ -2053,7 +2011,7 @@ const char* ConsoleCallback(const char* pszCmd) {
 			pCha->setPos(nTestX, nTestY);
 			nTestY -= 100;
 		}
-		g_pGameApp->SysInfo("Time:%d", ::GetTickCount() - dwStart);
+		g_pGameApp->SysInfo(std::format("Time:{}", ::GetTickCount() - dwStart));
 	}
 	else if (strCmd == "cam1") {
 		g_pGameApp->GetMainCam()->m_fxy = (float)atof(p1.c_str());

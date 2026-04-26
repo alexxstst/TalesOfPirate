@@ -4,10 +4,7 @@
 #include "lwHeader.h"
 #include "lwExpObj.h"
 #include "lwITypes.h"
-
-#ifdef USE_MINDPOWER
 #include "GlobalInc.h"
-#endif
 
 LW_BEGIN
 #define LW_RGB555_R(rgb) (BYTE)( ( rgb & 0x7c00) >> 7 )
@@ -67,31 +64,8 @@ LW_BEGIN
 		LW_IF_DELETE_A(obj->ib_data);
 	}
 
-#ifndef USE_MINDPOWER
-	void lwMessageBox(const char* fmt, ...);
-#define LG_MSGBOX lwMessageBox
-#else
-#ifndef USE_LG_MSGBOX
-#define USE_LG_MSGBOX
-	inline void __cdecl LGX(const char* format, ...) {
-		char buf[512];
-		buf[0] = 'm';
-		buf[1] = 's';
-		buf[2] = 'g';
-		buf[3] = 0;
-
-		va_list args;
-		va_start(args, format);
-		_vsntprintf(&buf[3], 512, format, args);
-		va_end(args);
-
-		g_logManager.InternalLog(LogLevel::Error, "errors", buf);
-	}
-
-#define LG_MSGBOX LGX
-#endif
-
-#endif
+	// LG_MSGBOX и LGX определены в GlobalInc.h, чтобы быть доступными во всех
+	// единицах трансляции движка без дублирования.
 
 	float lwGetFPS();
 

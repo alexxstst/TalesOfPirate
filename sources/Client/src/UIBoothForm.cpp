@@ -459,15 +459,15 @@ namespace GUI {
 		else if (name == "btnSetupBooth") {
 			/// 
 
-			if (strlen(g_stUIBooth.edtBoothName->GetCaption()) == 0) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(447).c_str());
+			if (std::string_view{g_stUIBooth.edtBoothName->GetCaption()}.empty()) {
+				g_pGameApp->MsgBox(GetLanguageString(447));
 				return;
 			}
 
 			//
 			string sName(g_stUIBooth.edtBoothName->GetCaption());
 			if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName)) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(448).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(448));
 				return;
 			}
 
@@ -556,7 +556,7 @@ namespace GUI {
 		if (!kItemNumBox) return;
 
 		if (kItemNumBox->GetNumber() <= 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(449).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(449));
 			return;
 		}
 
@@ -583,13 +583,13 @@ namespace GUI {
 		if (!kItemPriceBox) return;
 
 		if (kItemPriceBox->GetNumber() <= 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(451).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(451));
 			return;
 		}
 
 		int iTotal = g_stUIBooth.m_pkCurrSetupBooth->iNum * kItemPriceBox->GetNumber();
 		if (iTotal >= 1000000000) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(452).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(452));
 			return;
 		}
 
@@ -633,7 +633,7 @@ namespace GUI {
 		}
 
 		if (!g_stUIBooth.m_pkCurrSetupBooth) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(453).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(453));
 			return;
 		}
 
@@ -654,7 +654,7 @@ namespace GUI {
 		}
 
 		if (!g_stUIBooth.m_pkCurrSetupBooth) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(453).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(453));
 			return;
 		}
 
@@ -818,7 +818,7 @@ namespace GUI {
 		if (!kItemNumBox) return;
 
 		if (kItemNumBox->GetNumber() <= 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(449).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(449));
 			return;
 		}
 
@@ -921,13 +921,7 @@ namespace GUI {
 												rkItemCmd.GetItemInfo()->szName.c_str());
 		}
 		else {
-			/// 
-			char buf[256] = {0};
-
-			/*sprintf(buf, GetLanguageString(455),
-				StringSplitNum( rkItemCmd.GetPrice() ),
-				ConvertNumToChinese(rkItemCmd.GetPrice()).c_str(),
-				rkItemCmd.GetName());*/
+			std::string buf;
 			int price = rkItemCmd.GetPrice();
 			if (price > 2000000000) {
 				price -= 2000000000;
@@ -937,25 +931,24 @@ namespace GUI {
 				CItemRecord* pInfo = GetItemRecordInfo(ID);
 
 				if (pInfo) {
-					sprintf(buf, "Do you wish to trade\n%dx %s\nfor %s",
+					buf = std::format("Do you wish to trade\n{}x {}\nfor {}",
 							num,
-							pInfo->szName.c_str(),
+							pInfo->szName,
 							rkItemCmd.GetName());
 				}
 				else {
-					sprintf(buf, "Do you wish to trade\n%dx Undefined\nfor %s",
+					buf = std::format("Do you wish to trade\n{}x Undefined\nfor {}",
 							num,
 							rkItemCmd.GetName());
 				}
 			}
 			else {
-				sprintf(buf, "Do you wish to spend\n%sg\nto purchase [%s]",
+				buf = std::format("Do you wish to spend\n{}g\nto purchase [{}]",
 						StringSplitNum(rkItemCmd.GetPrice()),
-						//ConvertNumToChinese(rkItemCmd.GetPrice()).c_str(),
 						rkItemCmd.GetName());
 			}
 
-			m_SelectBox = g_stUIBox.ShowSelectBox(_BuyAGoodEvent, buf, true);
+			m_SelectBox = g_stUIBox.ShowSelectBox(_BuyAGoodEvent, buf.c_str(), true);
 		}
 
 		return true;
@@ -977,7 +970,7 @@ namespace GUI {
 		CItemCommand* pRHand = g_stUIEquip.GetEquipItem(enumEQUIP_RHAND);
 		CItemCommand* pNeck = g_stUIEquip.GetEquipItem(enumEQUIP_NECK);
 		if (!pRHand || !pNeck) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(941).c_str()); // ""
+			g_pGameApp->MsgBox(GetLanguageString(941)); // ""
 			return false;
 		}
 

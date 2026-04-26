@@ -27,7 +27,7 @@ public:
 
 	float m_fRoll;
 
-	TCHAR strCameraInfo[64];
+	std::string strCameraInfo;
 
 	VOID InitPosition(float ex, float ey, float ez, float rx, float ry, float rz) {
 		m_EyePos.x = ex;

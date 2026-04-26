@@ -105,9 +105,8 @@ BOOL SC_ShowRanking(LPRPACKET pk) {
 	NetMC_LISTGUILD_BEGIN();
 	for (size_t i = 0; i < msg.entries.size(); ++i) {
 		auto& e = msg.entries[i];
-		char buf[8];
-		sprintf(buf, "%03d>", (int)(i + 1));
-		NetMC_LISTGUILD(i + 1, buf, e.name.c_str(), e.guild.c_str(), (uShort)e.level, e.score);
+		const std::string buf = std::format("{:03}>", static_cast<int>(i + 1));
+		NetMC_LISTGUILD(i + 1, buf.c_str(), e.name.c_str(), e.guild.c_str(), (uShort)e.level, e.score);
 	}
 	NetMC_LISTGUILD_END();
 	return TRUE;
@@ -147,9 +146,7 @@ BOOL SC_SendPublicKey(LPRPACKET pk) {
 		std::string hex;
 		hex.reserve(keySize * 2);
 		for (uShort i = 0; i < keySize; i++) {
-			char buf[3];
-			sprintf(buf, "%02x", static_cast<unsigned char>(keyData[i]));
-			hex += buf;
+			std::format_to(std::back_inserter(hex), "{:02x}", static_cast<unsigned char>(keyData[i]));
 		}
 		ToLogService("connections", "SC_SendPublicKey: received SPKI DER key ({} bytes): {}", keySize, hex);
 	}
@@ -1148,11 +1145,10 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 					SSkillInfo.SEffect[i].lAttrID = static_cast<long>(d.effects[i].attrId);
 					SSkillInfo.SEffect[i].lVal = static_cast<long>(d.effects[i].attrVal);
 
-					char val[32];
-					char buff[234];
-					sprintf(buff, "ID = %d val = %s\r\n", SSkillInfo.SEffect[i].lAttrID,
-							_i64toa(SSkillInfo.SEffect[i].lVal, val, 10));
-					::OutputDebugStringA(buff);
+					const std::string buff = std::format("ID = {} val = {}\r\n",
+														 SSkillInfo.SEffect[i].lAttrID,
+														 SSkillInfo.SEffect[i].lVal);
+					::OutputDebugStringA(buff.c_str());
 				}
 			}
 
@@ -1475,12 +1471,13 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 								 std::format("Syn Skill Bag, Type:{},\tTick:[{}]", static_cast<int>(SCurSkill.chType),
 											 GetTickCount()));
 		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(310));
-		char szRange[256];
 		for (short i = 0; i < sSkillNum; i++) {
-			sprintf(szRange, "%d", pSBag[i].sRange[0]);
-			if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
-				for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
-					sprintf(szRange + strlen(szRange), ",%d", pSBag[i].sRange[j]);
+			std::string szRange = std::format("{}", pSBag[i].sRange[0]);
+			if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE) {
+				for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++) {
+					std::format_to(std::back_inserter(szRange), ",{}", pSBag[i].sRange[j]);
+				}
+			}
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format(
 										 "\t{:4}\t{:4}\t{:4}\t{:6}\t{:6}\t{:6}\t{:18}\t{}", pSBag[i].sID,
 										 static_cast<int>(pSBag[i].chState), static_cast<int>(pSBag[i].chLv),
@@ -2737,7 +2734,7 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
 		g_stUIStore.SetStoreMoney(-1, lRplMoney);
 	}
 	else {
-		g_pGameApp->MsgBox("%s", GetLanguageString(907).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(907));
 	}
 
 	g_stUIStore.SetStoreBuyButtonEnable(true);
@@ -2753,7 +2750,7 @@ BOOL SC_StoreChangeAnswer(LPRPACKET packet) {
 		g_stUIStore.SetStoreMoney(static_cast<long>(msg.moBean), static_cast<long>(msg.replMoney));
 	}
 	else {
-		g_pGameApp->MsgBox("%s", GetLanguageString(908).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(908));
 	}
 	return TRUE;
 }

@@ -175,10 +175,9 @@ void CUIGuildMgr::_evtPermFormMouseEvent(CCompent* pSender, int nMsgType, int x,
 	string strName = pSender->GetName();
 	if (strName == "btnPredef") {
 		//toggle all other predef buttons
-		char buf[32];
 		for (int i = 1; i <= 6; i++) {
-			sprintf(buf, "btnPredef%d", i);
-			CTextButton* btn = dynamic_cast<CTextButton*>(m_pGuildPermForm->Find(buf));
+			const std::string buf = std::format("btnPredef{}", i);
+			CTextButton* btn = dynamic_cast<CTextButton*>(m_pGuildPermForm->Find(buf.c_str()));
 			btn->SetIsShow(!btn->GetIsShow());
 		}
 	}
@@ -340,36 +339,31 @@ void CUIGuildMgr::UpdateLogList() {
 			// Member not found inside guild
 			name = j->GetName();
 		}
-		char* buf1 = (char*)calloc(1, 200);
-		char* buf2 = (char*)calloc(1, 200);
-
 		time_t serverTime = curlog->time - 5 * 60 * 60; //GMT -5
-
 		tm* k = gmtime(&serverTime);
 
-		strftime(buf2, 200, "[%d/%m/%y] %H:%M ", k);
+		char timeBuf[64] = {0};
+		strftime(timeBuf, sizeof(timeBuf), "[%d/%m/%y] %H:%M ", k);
+
+		std::string body;
 		switch (curlog->type) {
-		case 0: {
-			sprintf(buf1, "%s withdrew %d gold", name.c_str(), curlog->parameter);
+		case 0:
+			body = std::format("{} withdrew {} gold", name, curlog->parameter);
 			break;
-		}
-		case 1: {
-			sprintf(buf1, "%s deposited %d gold", name.c_str(), curlog->parameter);
+		case 1:
+			body = std::format("{} deposited {} gold", name, curlog->parameter);
 			break;
-		}
-		case 2: {
-			sprintf(buf1, "%s withdrew %dx '%s'", name.c_str(), curlog->quantity,
+		case 2:
+			body = std::format("{} withdrew {}x '{}'", name, curlog->quantity,
+					GetItemRecordInfo(curlog->parameter)->szName);
+			break;
+		case 3:
+			body = std::format("{} deposited {}x '{}'", name, curlog->quantity,
 					GetItemRecordInfo(curlog->parameter)->szName);
 			break;
 		}
-		case 3: {
-			sprintf(buf1, "%s deposited %dx '%s'", name.c_str(), curlog->quantity,
-					GetItemRecordInfo(curlog->parameter)->szName);
-			break;
-		}
-		}
-		strcat(buf2, buf1);
-		m_plistBankLog->GetList()->GetItems()->GetItem(i - start)->GetIndex(0)->SetString(buf2);
+		const std::string fullLine = timeBuf + body;
+		m_plistBankLog->GetList()->GetItems()->GetItem(i - start)->GetIndex(0)->SetString(fullLine.c_str());
 	}
 	m_plistBankLog->Refresh();
 	m_pGuildMgrForm->Refresh();
@@ -500,7 +494,7 @@ void CUIGuildMgr::_OnClickMottoFormOK(CGuiData* pSender, int x, int y, DWORD key
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, name)
 		|| !IsValidName(name)
 	) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(51));
 		return;
 	}
 	CM_GUILD_MOTTO(name.c_str());
@@ -518,8 +512,7 @@ void CUIGuildMgr::RefreshAttribute() {
 	m_plabGuildMaster->SetCaption(CGuildData::GetGuildMasterName().c_str());
 	m_plabGuildMottoName->SetCaption(CGuildData::GetGuildMottoName().c_str());
 
-	sprintf(buf, "%d/%d", CGuildData::GetMemberCount(), CGuildData::GetMaxMembers());
-	m_plabGuildMemberCount->SetCaption(buf);
+	m_plabGuildMemberCount->SetCaption(std::format("{}/{}", CGuildData::GetMemberCount(), CGuildData::GetMaxMembers()).c_str());
 
 	CGuildData::eState state = CGuildData::GetGuildState();
 	string strState;
@@ -569,7 +562,6 @@ void CUIGuildMgr::RefreshAttribute() {
 }
 
 void CUIGuildMgr::RefreshList() {
-	char buf[50];
 	m_plstGuildMember->GetList()->GetItems()->Clear();
 	for (DWORD i = 0; i < CGuildMembersMgr::GetTotalGuildMembers(); i++) {
 		CGuildMemberData* pMemberData = CGuildMembersMgr::FindGuildMemberByIndex(i);
@@ -577,7 +569,7 @@ void CUIGuildMgr::RefreshList() {
 		CItemRow* pRow = m_plstGuildMember->GetList()->NewItem();
 		CItem* pMemberNameItem = new CItem(pMemberData->GetName().c_str(), COLOR_BLACK);
 		CItem* pMemberJobItem = new CItem(pMemberData->GetJob().c_str(), COLOR_BLACK);
-		CItem* pMemberLevelItem = new CItem(_i64toa(pMemberData->GetLevel(), buf, 10), COLOR_BLACK);
+		CItem* pMemberLevelItem = new CItem(std::format("{}", pMemberData->GetLevel()).c_str(), COLOR_BLACK);
 		pRow->SetIndex(0, pMemberNameItem);
 		pRow->SetIndex(1, pMemberJobItem);
 		pRow->SetIndex(2, pMemberLevelItem);
@@ -591,7 +583,7 @@ void CUIGuildMgr::RefreshList() {
 		CItemRow* pRow = m_plstRecruitMember->GetList()->NewItem();
 		CItem* pMemberNameItem = new CItem(pMemberData->GetName().c_str(), COLOR_BLACK);
 		CItem* pMemberJobItem = new CItem(pMemberData->GetJob().c_str(), COLOR_BLACK);
-		CItem* pMemberLevelItem = new CItem(_i64toa(pMemberData->GetLevel(), buf, 10), COLOR_BLACK);
+		CItem* pMemberLevelItem = new CItem(std::format("{}", pMemberData->GetLevel()).c_str(), COLOR_BLACK);
 		pRow->SetIndex(0, pMemberNameItem);
 		pRow->SetIndex(1, pMemberJobItem);
 		pRow->SetIndex(2, pMemberLevelItem);

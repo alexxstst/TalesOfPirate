@@ -32,9 +32,7 @@ string GetDirectSoundString(HRESULT theResult) {
 	case E_OUTOFMEMORY: return "E_OUTOFMEMORY";
 	}
 
-	char aBuf[50];
-	sprintf(aBuf, "%x", theResult);
-	return aBuf;
+	return std::format("{:x}", static_cast<unsigned int>(theResult));
 }
 
 void MkDir(const string& theDir) {

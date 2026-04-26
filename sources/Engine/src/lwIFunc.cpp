@@ -597,7 +597,6 @@ LW_BEGIN
 		if (fp == 0)
 			goto __ret;
 
-		char path[LW_MAX_PATH];
 		char model_file[LW_MAX_PATH];
 		DWORD model_num;
 		LW_HANDLE handle;
@@ -606,13 +605,13 @@ LW_BEGIN
 
 		for (DWORD i = 0; i < model_num; i++) {
 			fscanf(fp, "%d\t%s\n", &handle, model_file);
-			sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
+			const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
 
-			if (LW_RESULT r = buf_mgr->RegisterModelObjInfo(handle, path); LW_FAILED(r)) {
+			if (LW_RESULT r = buf_mgr->RegisterModelObjInfo(handle, path.c_str()); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] RegisterModelObjInfo failed: handle={}, path={}, ret={}",
 							 __FUNCTION__, handle, path, static_cast<long long>(r));
-				LG_MSGBOX("cannot find model file: %s", path);
+				LG_MSGBOX("cannot find model file: {}", path);
 				continue;
 			}
 		}

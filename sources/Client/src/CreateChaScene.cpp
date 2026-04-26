@@ -263,9 +263,8 @@ int LoginScene_CreateCha::LoadModelLXO(const char* file) {
 
 	_res_mgr->SetTexturePath(".\\texture\\scene\\");
 
-	char path[260];
-	sprintf(path, ".\\model\\scene\\%s", file);
-	_model_lxo->Load(path, MODELOBJECT_LOAD_RESET, 0);
+	const std::string path = std::format(".\\model\\scene\\{}", file);
+	_model_lxo->Load(path.c_str(), MODELOBJECT_LOAD_RESET, 0);
 
 	lwINodeObjectA::PlayDefaultPose(_model_lxo);
 	//lwINodeObjectA::ShowBoundingObject(_model_lxo, 1);
@@ -1034,16 +1033,13 @@ bool CCreateChaScene::_InitUI() {
 
 		frmChaCity->evtEntrustMouseEvent = _ChaCityFrmMouseEvent;
 		//Load images
-		char szPicNameBase[] = "imgCity%d%d";
-		char szPicName[20];
-
 		for (int i(0); i < MAX_CITY_NUM + 1; ++i) {
 			for (int j(0); j < CITY_PICTURE_NUM; ++j) {
-				sprintf(szPicName, szPicNameBase, i, j);
-				imgCities[i][j] = (CImage*)frmChaCity->Find(szPicName);
+				const std::string szPicName = std::format("imgCity{}{}", i, j);
+				imgCities[i][j] = (CImage*)frmChaCity->Find(szPicName.c_str());
 				if (!imgCities[i][j]) {
 					return Error(GetLanguageString(46).c_str(),
-								 frmChaCity->GetName(), szPicName);
+								 frmChaCity->GetName(), szPicName.c_str());
 				}
 				if (i == 0)
 					imgCities[i][j]->SetIsShow(true);
@@ -1054,14 +1050,12 @@ bool CCreateChaScene::_InitUI() {
 		iCurrCity = 0;
 
 		//Load city blocks
-		char szCityBlockName[] = "imgCity%d";
-
 		for (int i(0); i < MAX_CITY_NUM; ++i) {
-			sprintf(szPicName, szCityBlockName, i + 1);
-			imgCitiesBlock[i] = (CTextButton*)frmChaCity->Find(szPicName);
+			const std::string szPicName = std::format("imgCity{}", i + 1);
+			imgCitiesBlock[i] = (CTextButton*)frmChaCity->Find(szPicName.c_str());
 			if (!imgCitiesBlock[i]) {
 				return Error(GetLanguageString(46).c_str(),
-							 frmChaCity->GetName(), szPicName);
+							 frmChaCity->GetName(), szPicName.c_str());
 			}
 			imgCitiesBlock[i]->SetIsShow(true); // for debug.
 		}
@@ -1143,13 +1137,12 @@ bool CCreateChaScene::_InitUI() {
 			return false;
 		}
 
-		char szChaView[64] = {0};
 		memset(imgChaView, 0, sizeof(CImage*) * ROLE_ALL_INFO_COUNT);
 
 		// Character class portrait images
 		for (int i = 0; i < ROLE_ALL_INFO_COUNT; ++i) {
-			sprintf(szChaView, "imgChaView%d", i + 1);
-			imgChaView[i] = dynamic_cast<CImage*>(frmRoleAllInfo->Find(szChaView));
+			const std::string szChaView = std::format("imgChaView{}", i + 1);
+			imgChaView[i] = dynamic_cast<CImage*>(frmRoleAllInfo->Find(szChaView.c_str()));
 
 			if (!imgChaView[i]) {
 				ToLogService("common", "msgInit {} UI error", szChaView);
@@ -1539,17 +1532,17 @@ bool CCreateChaScene::IsValidCheckChaName(const std::string& name) {
 	// Обе стороны в UTF-8 после этапа A — побайтовое сравнение корректно для
 	// проверки "юзер не ввёл ничего и оставил placeholder".
 	if (name == GetLanguageString(49)) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(49).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(49));
 		return false;
 	}
 
 	if (name.empty()) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(50).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(50));
 		return false;
 	}
 
 	if (!::IsValidName(name.c_str())) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(51));
 		return false;
 	}
 	//return true;
@@ -1579,12 +1572,12 @@ bool CCreateChaScene::IsValidCheckChaName(const std::string& name) {
 	}
 
 	if (!bOk)
-		g_pGameApp->MsgBox("%s", GetLanguageString(52).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(52));
 
 	//Check for forbidden character name words
 	string sName(name);
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName)) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(53).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(53));
 		return false;
 	}
 
@@ -1672,13 +1665,13 @@ void CCreateChaScene::NewChaError(int error_no, const char* error_info) {
 		m_bSameNameError = true;
 		frmChaFound->ShowModal();
 
-		g_pGameApp->MsgBox("%s", g_GetServerError(error_no));
+		g_pGameApp->MsgBox(g_GetServerError(error_no));
 		ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no,
 					 g_GetServerError(error_no));
 		CGameApp::Waiting(false);
 	}
 	else {
-		g_pGameApp->MsgBox("%s", g_GetServerError(error_no));
+		g_pGameApp->MsgBox(g_GetServerError(error_no));
 		ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no,
 					 g_GetServerError(error_no));
 		CGameApp::Waiting(false);

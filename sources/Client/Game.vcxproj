@@ -13,7 +13,7 @@
     <PropertyGroup Label="Globals">
         <ProjectName>Game</ProjectName>
         <ProjectGuid>{595AD564-2531-4FB6-A058-81D42E7697A4}</ProjectGuid>
-        <RootNamespace>kop</RootNamespace>
+        <RootNamespace>Game</RootNamespace>
         <Keyword>Win32Proj</Keyword>
         <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
         <PreferredToolArchitecture>x64</PreferredToolArchitecture>
@@ -170,6 +170,7 @@
         <ClCompile Include="src\ChatRecord.cpp"/>
         <ClCompile Include="src\Connection.cpp"/>
         <ClCompile Include="src\ConsoleBridge.cpp"/>
+        <ClCompile Include="src\DebugStateSystem.cpp"/>
         <ClCompile Include="src\CRCircle.cpp"/>
         <ClCompile Include="src\CRCursor.cpp"/>
         <ClCompile Include="src\CRCursorObj.cpp"/>
@@ -377,6 +378,7 @@
         <ClInclude Include="src\ChatRecord.h"/>
         <ClInclude Include="src\Connection.h"/>
         <ClInclude Include="src\ConsoleBridge.h"/>
+        <ClInclude Include="src\DebugStateSystem.h"/>
         <ClInclude Include="src\CRCircle.h"/>
         <ClInclude Include="src\CRCursor.h"/>
         <ClInclude Include="src\CRCursorObj.h"/>
@@ -576,11 +578,11 @@
         <ClInclude Include="src\xmlwriter.h"/>
     </ItemGroup>
     <ItemGroup>
-        <Image Include="src\kop.ico"/>
+        <Image Include="src\game.ico"/>
         <Image Include="src\small.ico"/>
     </ItemGroup>
     <ItemGroup>
-        <ResourceCompile Include="src\kop.rc"/>
+        <ResourceCompile Include="src\game.rc"/>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets">

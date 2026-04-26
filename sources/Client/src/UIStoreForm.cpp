@@ -213,68 +213,66 @@ namespace GUI {
 			return false;
 		}
 
-		// 
-		char szName[32] = {0};
 		for (int i = 0; i < STORE_PAGE_SIZE; ++i) {
-			sprintf(szName, "labName_%d", i);
-			m_stStoreGui[i].labName = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			std::string szName = std::format("labName_{}", i);
+			m_stStoreGui[i].labName = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labName) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "labPrice_%d", i);
-			m_stStoreGui[i].labPrice = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			szName = std::format("labPrice_{}", i);
+			m_stStoreGui[i].labPrice = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labPrice) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "labLeftTime_%d", i);
-			m_stStoreGui[i].labLeftTime = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			szName = std::format("labLeftTime_{}", i);
+			m_stStoreGui[i].labLeftTime = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labLeftTime) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "labLeftNum_%d", i);
-			m_stStoreGui[i].labLeftNum = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			szName = std::format("labLeftNum_{}", i);
+			m_stStoreGui[i].labLeftNum = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labLeftNum) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "labRemark_%d", i);
-			m_stStoreGui[i].labRemark = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			szName = std::format("labRemark_{}", i);
+			m_stStoreGui[i].labRemark = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labRemark) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "labRightClickView_%d", i);
-			m_stStoreGui[i].labRightClickView = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
+			szName = std::format("labRightClickView_{}", i);
+			m_stStoreGui[i].labRightClickView = dynamic_cast<CLabelEx*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].labRightClickView) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "cmdStore_%d", i);
-			m_stStoreGui[i].cmdStore = dynamic_cast<COneCommand*>(frmStore->Find(szName));
+			szName = std::format("cmdStore_{}", i);
+			m_stStoreGui[i].cmdStore = dynamic_cast<COneCommand*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].cmdStore) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
-			m_stStoreGui[i].cmdStore->SetIsDrag(false); // 
+			m_stStoreGui[i].cmdStore->SetIsDrag(false);
 
-			sprintf(szName, "imgSquare_%d", i);
-			m_stStoreGui[i].imgSquare = dynamic_cast<CImage*>(frmStore->Find(szName));
+			szName = std::format("imgSquare_{}", i);
+			m_stStoreGui[i].imgSquare = dynamic_cast<CImage*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].imgSquare) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "btnBlue_%d", i);
-			m_stStoreGui[i].btnBlue = dynamic_cast<CTextButton*>(frmStore->Find(szName));
+			szName = std::format("btnBlue_{}", i);
+			m_stStoreGui[i].btnBlue = dynamic_cast<CTextButton*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].btnBlue) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
@@ -282,29 +280,29 @@ namespace GUI {
 			m_stStoreGui[i].btnBlue->evtMouseRClick = _evtStoreListMouseRClick;
 			m_stStoreGui[i].btnBlue->evtMouseDBClick = _evtStoreListMouseDBClick;
 
-			sprintf(szName, "imgCutLine_%d", i);
-			m_stStoreGui[i].imgCutLine = dynamic_cast<CImage*>(frmStore->Find(szName));
+			szName = std::format("imgCutLine_{}", i);
+			m_stStoreGui[i].imgCutLine = dynamic_cast<CImage*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].imgCutLine) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "imgHot_%d", i);
-			m_stStoreGui[i].imgHot = dynamic_cast<CImage*>(frmStore->Find(szName));
+			szName = std::format("imgHot_{}", i);
+			m_stStoreGui[i].imgHot = dynamic_cast<CImage*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].imgHot) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "imgNew_%d", i);
-			m_stStoreGui[i].imgNew = dynamic_cast<CImage*>(frmStore->Find(szName));
+			szName = std::format("imgNew_{}", i);
+			m_stStoreGui[i].imgNew = dynamic_cast<CImage*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].imgNew) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "imgBlue_%d", i);
-			m_stStoreGui[i].imgBlue = dynamic_cast<CImage*>(frmStore->Find(szName));
+			szName = std::format("imgBlue_{}", i);
+			m_stStoreGui[i].imgBlue = dynamic_cast<CImage*>(frmStore->Find(szName.c_str()));
 			if (!m_stStoreGui[i].imgBlue) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
@@ -343,15 +341,15 @@ namespace GUI {
 		}
 
 		for (int i = 0; i < STORE_ITEM_COUNT; ++i) {
-			sprintf(szName, "imgSquareViewAll_%d", i);
-			imgSquareViewAll[i] = dynamic_cast<CImage*>(frmViewAll->Find(szName));
+			std::string szName = std::format("imgSquareViewAll_{}", i);
+			imgSquareViewAll[i] = dynamic_cast<CImage*>(frmViewAll->Find(szName.c_str()));
 			if (!imgSquareViewAll[i]) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
-			sprintf(szName, "cmdSquareIcon_%d", i);
-			cmdSquareIcon[i] = dynamic_cast<COneCommand*>(frmViewAll->Find(szName));
+			szName = std::format("cmdSquareIcon_{}", i);
+			cmdSquareIcon[i] = dynamic_cast<COneCommand*>(frmViewAll->Find(szName.c_str()));
 			if (!cmdSquareIcon[i]) {
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
@@ -764,7 +762,7 @@ namespace GUI {
 				m_pCurrMainCha->FightSwitch(true); // 
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(882).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(882));
 			}
 		}
 		else {
@@ -886,23 +884,22 @@ namespace GUI {
 			return;
 		}
 
-		char szTemp[128] = {0};
-		m_stStoreGui[nSeq].labName->SetCaption(szName); // 
+		m_stStoreGui[nSeq].labName->SetCaption(szName);
 		m_stStoreGui[nSeq].labName->SetIsShow(true);
 
-		m_stStoreGui[nSeq].labPrice->SetCaption(StringSplitNum(nPrice, 3, ',')); // 
+		m_stStoreGui[nSeq].labPrice->SetCaption(StringSplitNum(nPrice, 3, ','));
 		m_stStoreGui[nSeq].labPrice->SetIsShow(true);
 
-		sprintf(szTemp, "%s", StringLimit(szRemark, 25).c_str());
-		m_stStoreGui[nSeq].labRemark->SetCaption(strlen(szRemark) > 0 ? szTemp : szRemark); // 
+		const std::string limited = StringLimit(szRemark, 25);
+		m_stStoreGui[nSeq].labRemark->SetCaption(*szRemark != '\0' ? limited.c_str() : szRemark);
 		m_stStoreGui[nSeq].labRemark->SetIsShow(true);
 
-		sprintf(szTemp, "Quantity: %d", nRemainNum); // "%d"
-		m_stStoreGui[nSeq].labLeftNum->SetCaption(nRemainNum >= 0 ? szTemp : "No Limit");
+		const std::string qty = std::format("Quantity: {}", nRemainNum);
+		m_stStoreGui[nSeq].labLeftNum->SetCaption(nRemainNum >= 0 ? qty.c_str() : "No Limit");
 		m_stStoreGui[nSeq].labLeftNum->SetIsShow(true);
 
-		strncpy_s(szTemp, sizeof(szTemp), SafeVFormat(GetLanguageString(911), nRemainTime).c_str(), _TRUNCATE); // "%d"
-		m_stStoreGui[nSeq].labLeftTime->SetCaption(nRemainTime >= 0 ? szTemp : "No Limit");
+		const std::string leftTime = SafeVFormat(GetLanguageString(911), nRemainTime);
+		m_stStoreGui[nSeq].labLeftTime->SetCaption(nRemainTime >= 0 ? leftTime.c_str() : "No Limit");
 		m_stStoreGui[nSeq].labLeftTime->SetIsShow(true);
 
 		m_stStoreGui[nSeq].btnBlue->SetIsShow(true); // 
@@ -1009,9 +1006,7 @@ namespace GUI {
 		m_nMaxPage = nMaxPage;
 
 		if (m_nMaxPage > 0) {
-			char szBuffer[32] = {0};
-			sprintf(szBuffer, "%d/%d", nCurPage, nMaxPage);
-			labListPage->SetCaption(szBuffer);
+			labListPage->SetCaption(std::format("{}/{}", nCurPage, nMaxPage).c_str());
 
 			btnLeftPage->SetIsShow(true);
 			btnRightPage->SetIsShow(true);
@@ -1027,16 +1022,12 @@ namespace GUI {
 
 	// 
 	void CStoreMgr::SetStoreMoney(long nMoBean, long nRplMoney) {
-		char szBuffer[32] = {0};
-
 		if (nMoBean >= 0) {
-			sprintf(szBuffer, "%ld", nMoBean);
-			labBeanLeft->SetCaption(szBuffer);
+			labBeanLeft->SetCaption(std::format("{}", nMoBean).c_str());
 		}
 
 		if (nRplMoney >= 0) {
-			sprintf(szBuffer, "%ld", nRplMoney);
-			labMoneyLeft->SetCaption(szBuffer);
+			labMoneyLeft->SetCaption(std::format("{}", nRplMoney).c_str());
 		}
 	}
 
@@ -1105,7 +1096,7 @@ namespace GUI {
 		DWORD dwCurr = GetTickCount();
 		if (dwCurr - dwLast < 10000) {
 			if (!bSilent) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(895).c_str()); //
+				g_pGameApp->MsgBox(GetLanguageString(895)); //
 			}
 
 			return false;
@@ -1219,19 +1210,18 @@ namespace GUI {
 		if (0 <= m_nCurSel && m_nCurSel < STORE_PAGE_SIZE &&
 			GetCurSelItemID() > 0) {
 			if (0 == m_nVip && _IsCurSelVipNode()) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(913).c_str()); // VIPVIP
+				g_pGameApp->MsgBox(GetLanguageString(913)); // VIPVIP
 				return;
 			}
 
-			char szTitle[256] = {0};
-			sprintf(szTitle, "%s%s: %s\n%s: %s",
-					GetLanguageString(857).c_str(),
-					GetLanguageString(845).c_str(),
+			const std::string szTitle = std::format("{}{}: {}\n{}: {}",
+					GetLanguageString(857),
+					GetLanguageString(845),
 					g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labName->GetCaption(),
-					GetLanguageString(846).c_str(),
+					GetLanguageString(846),
 					g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labPrice->GetCaption());
 
-			CBoxMgr::ShowSelectBox(_evtTradeCheckEvent, szTitle, true);
+			CBoxMgr::ShowSelectBox(_evtTradeCheckEvent, szTitle.c_str(), true);
 		}
 	}
 
@@ -1313,7 +1303,7 @@ namespace GUI {
 			if (pRoot) {
 				for (int i = 0; i < pRoot->GetChildCount(); ++i) {
 					CTreeNodeObj* pChild = pRoot->GetChildNode(i);
-					if (0 == strcmp(pChild->GetCaption(), strItem.c_str())) {
+					if (strItem == pChild->GetCaption()) {
 						bRootNode = true;
 						break;
 					}
@@ -1322,8 +1312,8 @@ namespace GUI {
 				if (bRootNode) {
 					for (int i = 0; i < pRoot->GetChildCount(); ++i) {
 						CTreeNodeObj* pChild = pRoot->GetChildNode(i);
-						if (strcmp(pChild->GetCaption(), strItem.c_str())) {
-							pChild->SetIsExpand(false); // 
+						if (strItem != pChild->GetCaption()) {
+							pChild->SetIsExpand(false); //
 						}
 						else {
 							pChild->SetIsExpand(true);

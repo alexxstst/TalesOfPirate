@@ -281,10 +281,9 @@ namespace GUI {
 	void CDoublePwdMgr::RandomInputButton() {
 		CTextButton* btnNum[10] = {0};
 
-		char szName[32] = {0};
 		for (int i = 0; i < 10; ++i) {
-			sprintf(szName, "btnNum%d", i);
-			btnNum[i] = dynamic_cast<CTextButton*>(frmDoublePwdInput->Find(szName));
+			const std::string szName = std::format("btnNum{}", i);
+			btnNum[i] = dynamic_cast<CTextButton*>(frmDoublePwdInput->Find(szName.c_str()));
 
 			if (!btnNum[i])
 				return;
@@ -321,11 +320,11 @@ namespace GUI {
 		string strName = pSender->GetName();
 
 		if (strName == "btnYes") {
-			int nPwdLen = (int)strlen(g_stUIDoublePwd.edtDoublePwdCreate->GetCaption());
+			int nPwdLen = (int)std::string_view{g_stUIDoublePwd.edtDoublePwdCreate->GetCaption()}.size();
 
 			if (!IsPwdValid(g_stUIDoublePwd.edtDoublePwdCreate->GetCaption())) {
 				// 
-				g_pGameApp->MsgBox("%s", GetLanguageString(797).c_str()); //" 0 ~ 9 "
+				g_pGameApp->MsgBox(GetLanguageString(797)); //" 0 ~ 9 "
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
@@ -334,17 +333,17 @@ namespace GUI {
 
 			if (6 > nPwdLen || 12 < nPwdLen) {
 				//  6 ~ 12 
-				g_pGameApp->MsgBox("%s", GetLanguageString(798).c_str()); //" 6 ~ 12"
+				g_pGameApp->MsgBox(GetLanguageString(798)); //" 6 ~ 12"
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
 				return;
 			}
 
-			if (0 != strcmp(g_stUIDoublePwd.edtDoublePwdCreate->GetCaption(),
-							g_stUIDoublePwd.edtDoublePwdCreateRetry->GetCaption())) {
+			if (std::string_view{g_stUIDoublePwd.edtDoublePwdCreate->GetCaption()}
+					!= g_stUIDoublePwd.edtDoublePwdCreateRetry->GetCaption()) {
 				// 
-				g_pGameApp->MsgBox("%s", GetLanguageString(799).c_str()); //""
+				g_pGameApp->MsgBox(GetLanguageString(799)); //""
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
@@ -372,7 +371,7 @@ namespace GUI {
 		if (strName == "btnYes") {
 			if (!IsPwdValid(g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption())) {
 				// 
-				g_pGameApp->MsgBox("%s", GetLanguageString(797).c_str()); //" 0 ~ 9 "
+				g_pGameApp->MsgBox(GetLanguageString(797)); //" 0 ~ 9 "
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");
@@ -380,10 +379,10 @@ namespace GUI {
 				return;
 			}
 
-			int nPwdLen = (int)strlen(g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption());
+			int nPwdLen = (int)std::string_view{g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption()}.size();
 			if (6 > nPwdLen || 12 < nPwdLen) {
 				//  6 ~ 12 
-				g_pGameApp->MsgBox("%s", GetLanguageString(798).c_str()); //" 6 ~ 12"
+				g_pGameApp->MsgBox(GetLanguageString(798)); //" 6 ~ 12"
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");
@@ -391,10 +390,10 @@ namespace GUI {
 				return;
 			}
 
-			if (0 != strcmp(g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption(),
-							g_stUIDoublePwd.edtDoublePwdAlterNewRetry->GetCaption())) {
+			if (std::string_view{g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption()}
+					!= g_stUIDoublePwd.edtDoublePwdAlterNewRetry->GetCaption()) {
 				// 
-				g_pGameApp->MsgBox("%s", GetLanguageString(799).c_str()); //""
+				g_pGameApp->MsgBox(GetLanguageString(799)); //""
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");

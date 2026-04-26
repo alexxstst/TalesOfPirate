@@ -1255,56 +1255,51 @@ void CMagicEff::_UpdateHeight() {
 }
 
 void CMagicEff::Emission(int iID, D3DXVECTOR3* vBegin, D3DXVECTOR3* vEnd, int iTime) {
-	try {
-		if (_bDail) {
-			_fsCurTime = 0;
-			_isID = iID;
-			_vsBegin = vBegin ? *vBegin : D3DXVECTOR3(-1, -1, -1);
-			_vsEnd = vEnd ? *vEnd : D3DXVECTOR3(-1, -1, -1);
+	if (_bDail) {
+		_fsCurTime = 0;
+		_isID = iID;
+		_vsBegin = vBegin ? *vBegin : D3DXVECTOR3(-1, -1, -1);
+		_vsEnd = vEnd ? *vEnd : D3DXVECTOR3(-1, -1, -1);
+		return;
+	}
+
+	_iTargetID = iID;
+	if (_bMagic) {
+		if (vBegin && vEnd) {
+			for (INT n = 0; n < (INT)_pMagicCtrl.size(); ++n) {
+				_pMagicCtrl[n]->SetTargetID(iID);
+				_pMagicCtrl[n]->Emission(vBegin, vEnd);
+			}
+			_bPlay = TRUE;
 			return;
 		}
+		assert(0);
+	}
+	if (_bGroupMagic) {
+		if (vBegin && vEnd) {
+			if (GroupEmission)
+				GroupEmission(this, vBegin, vEnd);
+			_bPlay = TRUE;
+			return;
+		}
+		assert(0);
+	}
+	if (vBegin)
+		MoveTo(vBegin);
 
-		_iTargetID = iID;
-		if (_bMagic) {
-			if (vBegin && vEnd) {
-				for (INT n = 0; n < (INT)_pMagicCtrl.size(); ++n) {
-					_pMagicCtrl[n]->SetTargetID(iID);
-					_pMagicCtrl[n]->Emission(vBegin, vEnd);
-				}
-				_bPlay = TRUE;
-				return;
-			}
-			assert(0);
-		}
-		if (_bGroupMagic) {
-			if (vBegin && vEnd) {
-				if (GroupEmission)
-					GroupEmission(this, vBegin, vEnd);
-				_bPlay = TRUE;
-				return;
-			}
-			assert(0);
-		}
-		if (vBegin)
-			MoveTo(vBegin);
-
-		if (_bMagicEm) {
-			if (809 <= _iIdxID && _iIdxID <= 818)
-				_pEffCtrl->GetPartCtrl()->Play(0); // 
-			else
-				_pEffCtrl->GetPartCtrl()->Play(!_bloop/*0*/);
-			if (_bloop)
-				_pEffCtrl->GetPartCtrl()->SetPlayType(0);
-		}
-		else {
-			_pEffCtrl->GetPartCtrl()->Play(0);
+	if (_bMagicEm) {
+		if (809 <= _iIdxID && _iIdxID <= 818)
+			_pEffCtrl->GetPartCtrl()->Play(0); //
+		else
+			_pEffCtrl->GetPartCtrl()->Play(!_bloop/*0*/);
+		if (_bloop)
 			_pEffCtrl->GetPartCtrl()->SetPlayType(0);
-		}
-		_bPlay = TRUE;
 	}
-	catch (...) {
-		__debugbreak();
+	else {
+		_pEffCtrl->GetPartCtrl()->Play(0);
+		_pEffCtrl->GetPartCtrl()->SetPlayType(0);
 	}
+	_bPlay = TRUE;
 }
 
 void CMagicEff::Stop() {

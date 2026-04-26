@@ -57,7 +57,7 @@ LW_BEGIN
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _model->Load failed: file={}, model_id={}, ret={}",
 						 __FUNCTION__, file ? file : "(null)", model_id, static_cast<long long>(ret));
-			LG_MSGBOX("Load MPSceneObject %s error", file);
+			LG_MSGBOX("Load MPSceneObject {} error", file ? file : "(null)");
 		}
 		return ret;
 	}

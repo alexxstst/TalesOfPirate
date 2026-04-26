@@ -26,7 +26,7 @@ namespace GUI {
 		virtual bool IsAllowUse();
 
 		const char* GetName();
-		const char* GetSkillName();
+		std::string GetSkillName();
 
 		int GetSkillID() {
 			return _pSkill->sID;

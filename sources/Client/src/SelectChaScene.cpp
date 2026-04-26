@@ -638,13 +638,14 @@ void CSelectChaScene::_OnClickUpdatePass(CGuiData* pSender, int x, int y, DWORD 
 	CEdit* edtPassword2 = dynamic_cast<CEdit*>(frmUpdPas->Find("edtPassword2"));
 	CEdit* confirmPIN = dynamic_cast<CEdit*>(frmUpdPas->Find("confirmPIN"));
 
-	if (strlen(edtPassword->GetCaption()) == 0 || strlen(edtPassword2->GetCaption()) == 0 || strlen(
-		confirmPIN->GetCaption()) == 0) {
+	if (std::string_view{edtPassword->GetCaption()}.empty()
+		|| std::string_view{edtPassword2->GetCaption()}.empty()
+		|| std::string_view{confirmPIN->GetCaption()}.empty()) {
 		NetShowMapCrash("Please fill in all fields.");
 		return;
 	}
 
-	if (strcmp(edtPassword->GetCaption(), edtPassword2->GetCaption()) != 0) {
+	if (std::string_view{edtPassword->GetCaption()} != edtPassword2->GetCaption()) {
 		NetShowMapCrash("Passwords do not match.");
 		return;
 	}
@@ -1000,7 +1001,7 @@ CSelectChaScene& CSelectChaScene::GetCurrScene() {
 }
 
 void CSelectChaScene::SelectChaError(int error_no, const char* error_info) {
-	g_pGameApp->MsgBox("%s", g_GetServerError(error_no));
+	g_pGameApp->MsgBox(g_GetServerError(error_no));
 	ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no,
 				 g_GetServerError(error_no));
 	CGameApp::Waiting(false);

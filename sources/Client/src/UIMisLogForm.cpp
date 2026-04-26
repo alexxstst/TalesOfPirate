@@ -356,7 +356,7 @@ void CMisLogForm::MisClear(WORD wMisID) {
 	}
 
 	if (nIndex == -1) {
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(732), wMisID).c_str());
+		g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(732), wMisID));
 		return;
 	}
 
@@ -379,7 +379,7 @@ void CMisLogForm::MisClear(WORD wMisID) {
 		for (USHORT n = 0; n < sNum; n++) {
 			CTreeNodeObj* pChild = pNode->GetChildNode(n);
 			if (pChild == NULL) {
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(733), wMisID, n).c_str());
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(733), wMisID, n));
 				break;
 			}
 			DWORD dwData = pChild->GetTag();
@@ -469,7 +469,7 @@ void CMisLogForm::MisLogState(WORD wMisID, BYTE byState) {
 		for (USHORT n = 0; n < sNum; n++) {
 			CTreeNodeObj* pChild = pNode->GetChildNode(n);
 			if (pChild == NULL) {
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(734), wMisID, n).c_str());
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(734), wMisID, n));
 				break;
 			}
 			DWORD dwData = pChild->GetTag();
@@ -481,7 +481,7 @@ void CMisLogForm::MisLogState(WORD wMisID, BYTE byState) {
 	}
 
 	if (pFind == NULL) {
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(735), wMisID).c_str());
+		g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(735), wMisID));
 		return;
 	}
 
@@ -614,7 +614,7 @@ void CMisLogForm::_ItemClickEvent(string strItem) {
 					const char* npc = pData->szName;
 
 					if (map == npc) {
-						if (strcmp(pData->szName, "jialebi") == 0) {
+						if (std::string_view{pData->szName} == "jialebi") {
 							targetmap = "Pirate\'s Base";
 						}
 						else {
@@ -635,7 +635,7 @@ void CMisLogForm::_ItemClickEvent(string strItem) {
 			return;
 		}
 
-		if (targetmap && strcmp((const char*)targetmap, curmap) != 0) {
+		if (targetmap && std::string_view{(const char*)targetmap} != curmap) {
 			g_stUIBox.ShowMsgBox(NULL, "Not on the same map");
 			return;
 		}

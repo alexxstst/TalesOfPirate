@@ -53,38 +53,37 @@ namespace GUI {
 			return false;
 		}
 
-		char szName[32] = {0};
 		for (int i = 0; i < FINDTEAM_PAGE_SIZE; ++i) {
-			sprintf(szName, "labName_%d", i);
-			labName[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
+			std::string szName = std::format("labName_{}", i);
+			labName[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName.c_str()));
 			if (!labName[i]) {
 				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "labLevel_%d", i);
-			labLevel[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
+			szName = std::format("labLevel_{}", i);
+			labLevel[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName.c_str()));
 			if (!labLevel[i]) {
 				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "labJob_%d", i);
-			labJob[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
+			szName = std::format("labJob_{}", i);
+			labJob[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName.c_str()));
 			if (!labJob[i]) {
 				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "labPlace_%d", i);
-			labPlace[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
+			szName = std::format("labPlace_{}", i);
+			labPlace[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName.c_str()));
 			if (!labPlace[i]) {
 				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "btnSubmit_%d", i);
-			btnSubmit[i] = dynamic_cast<CTextButton*>(frmFindTeam->Find(szName));
+			szName = std::format("btnSubmit_{}", i);
+			btnSubmit[i] = dynamic_cast<CTextButton*>(frmFindTeam->Find(szName.c_str()));
 			if (!btnSubmit[i]) {
 				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
@@ -114,9 +113,7 @@ namespace GUI {
 		m_nCurPage = nCurPage;
 		m_nPageNum = nPageNum;
 
-		char szPage[32] = {0};
-		sprintf(szPage, "%d/%d", nCurPage, nPageNum);
-		labListPage->SetCaption(szPage);
+		labListPage->SetCaption(std::format("{}/{}", nCurPage, nPageNum).c_str());
 	}
 
 
@@ -125,9 +122,7 @@ namespace GUI {
 			labName[nSeq]->SetCaption(szName);
 			labName[nSeq]->SetIsShow(true);
 
-			char szLevel[32] = {0};
-			sprintf(szLevel, "%d", nLevel);
-			labLevel[nSeq]->SetCaption(szLevel);
+			labLevel[nSeq]->SetCaption(std::format("{}", nLevel).c_str());
 			labLevel[nSeq]->SetIsShow(true);
 
 			if (0 <= nJob && nJob < MAX_JOB_TYPE) {
@@ -210,9 +205,9 @@ namespace GUI {
 
 			DWORD dwCurTick = g_pGameApp->GetCurTick();
 			if (g_stUIFindTeam.m_dwLastTick + 1000 * FINDTEAM_INTERVAL > dwCurTick) {
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(883), FINDTEAM_INTERVAL,
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(883), FINDTEAM_INTERVAL,
 													 FINDTEAM_INTERVAL - (dwCurTick - g_stUIFindTeam.m_dwLastTick) /
-													 1000).c_str());
+													 1000));
 				return;
 			}
 			g_stUIFindTeam.m_dwLastTick = dwCurTick;

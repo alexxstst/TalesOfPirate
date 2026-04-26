@@ -38,9 +38,7 @@ bool CFrndInviteFormMgr::AddInviteForm(DWORD id, string inviterName) {
 	dupe.SetSample(frmAcceptFrnd);
 	node->pForm = dupe.Clone();
 	//node->pForm=dynamic_cast<CForm*>(frmAcceptFrnd->Clone());
-	char str[256];
-	sprintf(str, "frmAcceptFrnd_Arcol_%d", id);
-	node->pForm->SetName(str);
+	node->pForm->SetName(std::format("frmAcceptFrnd_Arcol_{}", id).c_str());
 	m_FormLink.push_back(node);
 	//node->pForm->SetPos(200,200);
 	CLabelEx* labFrndName = dynamic_cast<CLabelEx*>(node->pForm->Find("labFrndName"));

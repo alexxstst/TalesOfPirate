@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 
+#include "DebugStateSystem.h"
 #include "UIText.h"
 #include "GameApp.h"
 #include "cameractrl.h"
@@ -246,7 +247,7 @@ BOOL CGameApp::_Init() {
 		return ConsoleBridge::Get().CanOpen();
 	});
 
-	g_Render.EnablePrint(INFO_GAME, TRUE);
+	DebugStateSystem::Instance().SetEnabled(DebugStateSystem::Category::Game, true);
 
 	// Шрифты создаются в font_bootstrap.lua (вызывается из CFormMgr::Init).
 	// FontSlot::TipText / MidAnnounce / BottomShadow соответствуют бывшим
@@ -696,17 +697,16 @@ void CAniClock::Render(int x, int y) {
 
 	g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 8, &_vTempVer, sizeof(ClockVer));
 
-	char txt[3];
-	sprintf(txt, "%.0f%", RemainingTime());
+	const std::string txt = std::format("{:.0f}", RemainingTime());
 	const int check = int(RemainingTime());
 	if (check < 10) {
-		ui::BRender(2, txt, x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt.c_str(), x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 	else if (check > 100) {
-		ui::BRender(2, txt, x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt.c_str(), x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 	else {
-		ui::BRender(2, txt, x + 9, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt.c_str(), x + 9, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 }
 

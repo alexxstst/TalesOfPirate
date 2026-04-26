@@ -231,13 +231,7 @@ int CSystemProperties::writeToFile(const char* szIniFileName) {
 
 	g_SystemIni["startOption"].SetInt64("first", m_startOption.bFirst ? 1 : 0);
 
-	try {
-		g_SystemIni.Save();
-	}
-	catch (const std::exception&) {
-		return -1;
-	}
-
+	g_SystemIni.Save();
 	return 0;
 }
 
@@ -452,24 +446,24 @@ bool CSystemMgr::Init() {
 }
 
 void CSystemMgr::End() {
-	const char* Value = cboResolution->GetText();
+	const std::string_view Value{cboResolution->GetText()};
 	int setResolution;
-	if (strcmp("800x600", Value) == 0) {
+	if (Value == "800x600") {
 		setResolution = 0;
 	}
-	if (strcmp("1152x648", Value) == 0) {
+	if (Value == "1152x648") {
 		setResolution = 1;
 	}
-	else if (strcmp("1280x720", Value) == 0) {
+	else if (Value == "1280x720") {
 		setResolution = 2;
 	}
-	else if (strcmp("1366x768", Value) == 0) {
+	else if (Value == "1366x768") {
 		setResolution = 3;
 	}
-	else if (strcmp("1600x900", Value) == 0) {
+	else if (Value == "1600x900") {
 		setResolution = 4;
 	}
-	else if (strcmp("1920x1080", Value) == 0) {
+	else if (Value == "1920x1080") {
 		setResolution = 5;
 	}
 
@@ -552,28 +546,28 @@ void CSystemMgr::_evtVideoFormMouseEvent(CCompent* pSender, int nMsgType, int x,
 		int width;
 		int height;
 
-		const char* getValue = g_stUISystem.cboResolution->GetText();
-		if (strcmp("800x600", getValue) == 0) {
+		const std::string_view getValue{g_stUISystem.cboResolution->GetText()};
+		if (getValue == "800x600") {
 			width = TINY_RES_X;
 			height = TINY_RES_Y;
 		}
-		if (strcmp("1152x648", getValue) == 0) {
+		if (getValue == "1152x648") {
 			width = SMALL_RES_X;
 			height = SMALL_RES_Y;
 		}
-		else if (strcmp("1280x720", getValue) == 0) {
+		else if (getValue == "1280x720") {
 			width = MID_RES_X;
 			height = MID_RES_Y;
 		}
-		else if (strcmp("1366x768", getValue) == 0) {
+		else if (getValue == "1366x768") {
 			width = LARGE_RES_X;
 			height = LARGE_RES_Y;
 		}
-		else if (strcmp("1600x900", getValue) == 0) {
+		else if (getValue == "1600x900") {
 			width = EXTRA_LARGE_RES_X;
 			height = EXTRA_LARGE_RES_Y;
 		}
-		else if (strcmp("1920x1080", getValue) == 0) {
+		else if (getValue == "1920x1080") {
 			width = FULL_LARGE_RES_X;
 			height = FULL_LARGE_RES_Y;
 		}
@@ -1048,7 +1042,7 @@ bool CChaExitOnTime::_IsTime() {
 			return false;
 		}
 
-		g_pGameApp->SysInfo("%s", GetLanguageString(774).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(774));
 		return true;
 	}
 
@@ -1160,7 +1154,7 @@ void CChaExitOnTime::FrameMove(DWORD dwTime) {
 	if (dwTime < _dwEndTime) {
 		static CTimeWork time(1000);
 		if (time.IsTimeOut(dwTime)) {
-			g_pGameApp->ShowBigText("%s", SafeVFormat(GetLanguageString(775), (_dwEndTime - dwTime) / 1000).c_str());
+			g_pGameApp->ShowBigText(SafeVFormat(GetLanguageString(775), (_dwEndTime - dwTime) / 1000));
 			return;
 		}
 	}
@@ -1213,13 +1207,13 @@ bool CChaExitOnTime::TimeArrived() {
 void CChaExitOnTime::NetStartExit(DWORD dwExitTime) {
 	_dwEndTime = CGameApp::GetCurTick() + dwExitTime;
 
-	g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(776), dwExitTime / 1000).c_str());
+	g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(776), dwExitTime / 1000));
 }
 
 void CChaExitOnTime::NetCancelExit() {
 	_eOptionType = enumInit;
 
-	g_pGameApp->SysInfo("%s", GetLanguageString(777).c_str());
+	g_pGameApp->SysInfo(GetLanguageString(777));
 }
 
 void CChaExitOnTime::Reset() {

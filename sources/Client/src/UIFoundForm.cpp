@@ -173,10 +173,9 @@ namespace GUI {
 		}
 		btnForgeSmall->SetIsEnabled(false);
 
-		char buff[32] = {0};
 		for (int i = 0; i < FOUND_COUNT; i++) {
-			sprintf(buff, "cmdItemBase%i", (i + 1));
-			cmdFound[i] = dynamic_cast<COneCommand*>(frmFound->Find(buff));
+			const std::string buff = std::format("cmdItemBase{}", (i + 1));
+			cmdFound[i] = dynamic_cast<COneCommand*>(frmFound->Find(buff.c_str()));
 			if (!cmdFound[i]) {
 				ToLogService("common", "frmFound::{} not found.", buff);
 				return false;
@@ -192,20 +191,20 @@ namespace GUI {
 		cmdFound[5]->evtBeforeAccept = _evtDragItemBase6;
 
 		for (int i = 0; i < 6; i++) {
-			sprintf(buff, "imgShaiZi1_%i", (i + 1));
-			Dice1[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
+			std::string buff = std::format("imgShaiZi1_{}", (i + 1));
+			Dice1[i] = dynamic_cast<CImage*>(frmFound->Find(buff.c_str()));
 			if (!Dice1[i]) {
 				ToLogService("common", "frmFound::{} not found.", buff);
 				return false;
 			}
-			sprintf(buff, "imgShaiZi2_%i", (i + 1));
-			Dice2[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
+			buff = std::format("imgShaiZi2_{}", (i + 1));
+			Dice2[i] = dynamic_cast<CImage*>(frmFound->Find(buff.c_str()));
 			if (!Dice2[i]) {
 				ToLogService("common", "frmFound::{} not found.", buff);
 				return false;
 			}
-			sprintf(buff, "imgShaiZi3_%i", (i + 1));
-			Dice3[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
+			buff = std::format("imgShaiZi3_{}", (i + 1));
+			Dice3[i] = dynamic_cast<CImage*>(frmFound->Find(buff.c_str()));
 			if (!Dice3[i]) {
 				ToLogService("common", "frmFound::{} not found.", buff);
 				return false;
@@ -374,7 +373,7 @@ namespace GUI {
 
 	void CFoundMgr::_evtDragItemBase1(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUIFound.cmdFound[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -406,7 +405,7 @@ namespace GUI {
 
 	void CFoundMgr::_evtDragItemBase3(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUIFound.cmdFound[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -425,7 +424,7 @@ namespace GUI {
 	void CFoundMgr::_evtDragItemBase4(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  1
 		if (!g_stUIFound.cmdFound[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -446,7 +445,7 @@ namespace GUI {
 	void CFoundMgr::_evtDragItemBase5(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  2
 		if (!g_stUIFound.cmdFound[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -467,7 +466,7 @@ namespace GUI {
 	void CFoundMgr::_evtDragItemBase6(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  3
 		if (!g_stUIFound.cmdFound[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);

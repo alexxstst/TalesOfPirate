@@ -1,5 +1,7 @@
 ﻿#include "Stdafx.h"
 #include "GameApp.h"
+#include "DebugStateSystem.h"
+#include "UIText.h"
 #include "FontManager.h"
 #include "MPFont.h"
 #include "MPEditor.h"
@@ -168,6 +170,20 @@ void CGameApp::_Render() {
 	//, -------------------------------------------------------------
 	if (IsEnableSpAvi())
 		_CreateAviScreen();
+
+	// Debug-overlay (DebugStateSystem) — поверх UI, до консоли. FPS обновляется
+	// раз в секунду в MPRender::EndRender; перед каждым кадром публикуем его в
+	// overlay (если категория Fps включена — переключатель Ctrl+F5 / Scene.cpp).
+	{
+		auto& dbg = DebugStateSystem::Instance();
+		if (dbg.IsEnabled(DebugStateSystem::Category::Fps)) {
+			dbg.SetFmt(DebugStateSystem::Category::Fps, 5, 5,
+					   "FPS : {}", g_Render.GetFPS());
+		}
+		dbg.ForEachVisible([](const DebugStateSystem::Entry& e) {
+			ui::Render(e.text, e.x, e.y, 0xFFFFFF00);
+		});
+	}
 
 	// Текст консоли рисуется ПОСЛЕ всего остального UI, чтобы лежать поверх
 	// собственного тёмного фона (который рисуется в MPGameApp::Render до _Render).

@@ -158,7 +158,7 @@ void NetPC_GUILD_START(bool online, uLong chaid, cChar* chaname, cChar* motto, c
 	CTextGraph* pItem = new CTextGraph(2);
 	pMemberData->SetPointer(pItem);
 	string str = chaname;
-	if (strlen(motto) > 0) {
+	if (!std::string_view{motto}.empty()) {
 		str += "(" + string(motto) + ")";
 	}
 	pItem->SetHint(str.c_str());
@@ -202,7 +202,7 @@ void NetPC_GUILD_ADD(bool online, uLong chaid, cChar* chaname, cChar* motto, cCh
 	CTextGraph* pItem = new CTextGraph(2);
 	pMemberData->SetPointer(pItem);
 	string str = chaname;
-	if (strlen(motto) > 0) {
+	if (!std::string_view{motto}.empty()) {
 		str += "(" + string(motto) + ")";
 	}
 	pItem->SetHint(str.c_str());

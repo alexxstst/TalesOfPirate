@@ -1110,8 +1110,8 @@ void CGrid::Init() {
 
 	_pSelectImage->SetSize(_nUnitWidth, _nUnitHeight);
 
-	sprintf(_strPage, "0/0");
-	_nStrWidth = ui::GetWidth(_strPage);
+	_strPage = "0/0";
+	_nStrWidth = ui::GetWidth(_strPage.c_str());
 
 	_nTotalW = _nSpaceX + _nUnitWidth;
 	_nTotalH = _nSpaceY + _nUnitHeight;

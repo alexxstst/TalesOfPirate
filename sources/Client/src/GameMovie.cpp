@@ -138,22 +138,8 @@ void CGameMovie::Cleanup() {
 
 // 
 bool CGameMovie::IsPlaying(void) {
-	/*	yangyinyu	2008-10-14	add	begin!
-	*/
-	return false;
-	//	yangyinyu	2008-10-14	add	end!
-	try {
-		if (_pPosition) {
-			REFTIME nCurrent(0), nLength(0);
-			_pPosition->get_CurrentPosition(&nCurrent);
-			_pPosition->get_Duration(&nLength);
-
-			return nCurrent < nLength;
-		}
-	}
-	catch (...) {
-	}
-
+	// Метод отключён (yangyinyu 2008-10-14): DirectShow-плеер не используется
+	// в текущей сборке клиента, _pPosition всегда nullptr.
 	return false;
 }
 

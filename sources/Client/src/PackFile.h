@@ -29,7 +29,7 @@ public:
 
 	bool SaveToPack(const char* pszDirName, const char* pszOutFile, const char* pszFilter = "*.bmp"); // 
 
-	bool LoadPackFile(char* pszFile); // 
+	bool LoadPackFile(const char* pszFile); //
 
 	void Clear();
 

@@ -17,23 +17,12 @@
 #include <vector>
 #include "lwIFunc.h"
 
-#define MAX_INFO_TYPE 5
-
 #define LPTEXTURE			IDirect3DTextureX*
 #define VECTOR3				D3DXVECTOR3
 #define VECTOR2				D3DXVECTOR2
 #define LPSPRITE			LPD3DXSPRITE
 #define RENDER_STATE		D3DRENDERSTATETYPE
 #define TEXTURE_STAGE_STATE D3DTEXTURESTAGESTATETYPE
-
-enum INFO_TYPE {
-	INFO_DEBUG = 0, // 
-	INFO_PERF, // Performance
-	INFO_CMD, // Console
-	INFO_FPS, // FPS
-	INFO_GAME // 
-};
-
 
 struct MPLine {
 	VECTOR3 v1;
@@ -63,7 +52,6 @@ public:
 	// Render Routines
 	BOOL BeginRender(bool clear = true);
 	void EndRender(bool present = true);
-	void RenderDebugInfo();
 	void SetBackgroundColor(DWORD dwColor);
 
 	void EnableClearTarget(BOOL bEnable = TRUE) {
@@ -220,10 +208,6 @@ public:
 	HRESULT DrawIndexedPrimitive(D3DPRIMITIVETYPE pt_type, INT base_vert_index, UINT min_index, UINT vert_num,
 								 UINT start_index, UINT count);
 
-	// Text Info Print
-	void Print(int nInfoType, int x, int y, const char* szFormat, ...);
-	void EnablePrint(int nInfoType, BOOL bEnable);
-	void ClearPrint(int nInfoType);
 	void IgnoreModelTexture(BOOL bIgnore);
 
 	// FPS
@@ -358,10 +342,6 @@ protected:
 
 
 	D3DLIGHTX _Light;
-
-	BOOL _PrintInfoMask[MAX_INFO_TYPE];
-	std::map<int, std::string> _InfoIdx[MAX_INFO_TYPE];
-	char _szInfo[512];
 
 	// FPS
 	DWORD _dwFPS;
@@ -516,19 +496,6 @@ inline bool MPRender::IsInWorldView(int nPosX, int nPosY) {
 inline void MPRender::SetClip(float fNearClip, float fFarClip) {
 	_fNearClip = fNearClip;
 	_fFarClip = fFarClip;
-}
-
-inline void MPRender::EnablePrint(int nInfoType, BOOL bEnable) {
-	_PrintInfoMask[nInfoType] = bEnable;
-}
-
-inline void MPRender::ClearPrint(int nInfoType) {
-	if (nInfoType == -1) {
-		for (int i = 0; i < MAX_INFO_TYPE; i++) _InfoIdx[i].clear();
-	}
-	else {
-		_InfoIdx[nInfoType].clear();
-	}
 }
 
 inline void MPRender::ResetWorldTransform() {

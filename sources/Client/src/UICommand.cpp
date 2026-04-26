@@ -126,14 +126,14 @@ void CCommandObj::ReadyForHint(int x, int y, CCompent* pCompent) {
 
 			int n = pFast->nTag % 12;
 
-			char buf[32] = {0};
+			std::string buf;
 			if (pFast->topBar == true) {
-				sprintf(buf, "Shortcut: Shift + F%d", n + 1);
+				buf = std::format("Shortcut: Shift + F{}", n + 1);
 			}
 			else {
-				strncpy_s(buf, sizeof(buf), SafeVFormat(GetLanguageString(492), n + 1).c_str(), _TRUNCATE);
+				buf = SafeVFormat(GetLanguageString(492), n + 1);
 			}
-			PushHint(buf);
+			PushHint(buf.c_str());
 		}
 	}
 

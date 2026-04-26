@@ -40,24 +40,23 @@ namespace GUI {
 		}
 
 		// Command
-		char szName[32] = {0};
 		for (int i = 0; i < TYPE_COUNT; ++i) {
-			sprintf(szName, "labHintleft%d", i + 1);
-			labHintleft[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
+			std::string szName = std::format("labHintleft{}", i + 1);
+			labHintleft[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName.c_str()));
 			if (!labHintleft[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "labHintright%d", i + 1);
-			labHintright[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
+			szName = std::format("labHintright{}", i + 1);
+			labHintright[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName.c_str()));
 			if (!labHintright[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
-			sprintf(szName, "labTitle%d", i + 1);
-			labTitle[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
+			szName = std::format("labTitle{}", i + 1);
+			labTitle[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName.c_str()));
 			if (!labTitle[i]) {
 				ToLogService("common", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
@@ -347,9 +346,7 @@ namespace GUI {
 			nMoney = 200;
 		}
 
-		char szBuffer[256] = {0};
-		sprintf(szBuffer, "%d", nMoney);
-		labMoneyShow->SetCaption(szBuffer);
+		labMoneyShow->SetCaption(std::format("{}", nMoney).c_str());
 	}
 
 
@@ -376,28 +373,28 @@ namespace GUI {
 		if (g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE) {
 			//if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			//{
-			//	g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
+			//	g_pGameApp->MsgBox(GetLanguageString(831)); // 
 			//	return;
 			//}
 		}
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE) {
 			if (pItemCommand->GetItemInfo()->sType != 29) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(852).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(852)); // 
 				return;
 			}
 		}
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE) {
 			if (!g_stUIPurify.IsEquipItem(*pItemCommand)) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(831)); // 
 				return;
 			}
 		}
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE) {
 			if (!g_stUIPurify.IsMainLifeItem(*pItemCommand)) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(891).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(891)); // 
 				return;
 			}
 		}
@@ -423,7 +420,7 @@ namespace GUI {
 		// 
 		if (g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE) {
 			if (NULL == pMainItem) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(828)); // 
 				return;
 			}
 
@@ -442,26 +439,26 @@ namespace GUI {
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE) {
 			if (NULL == pMainItem) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(853).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(853)); // 
 				return;
 			}
 		}
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE) {
 			if (NULL == pMainItem) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(828)); // 
 				return;
 			}
 		}
 		// 
 		else if (g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE) {
 			if (NULL == pMainItem) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(892).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(892)); // 
 				return;
 			}
 
 			if (!g_stUIPurify.IsRepairLifeItem(*pItemCommand)) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(893).c_str()); // 
+				g_pGameApp->MsgBox(GetLanguageString(893)); // 
 				return;
 			}
 		}

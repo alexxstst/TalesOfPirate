@@ -94,14 +94,12 @@ bool CBoatMgr::Init() //
 	frm[0] = frmShipRoom;
 
 	CForm* frmClone = NULL;
-	char buf[128] = {0};
-	for (int i = 1; i < defMaxBoat + 1; i++) // 
+	for (int i = 1; i < defMaxBoat + 1; i++) //
 	{
 		frmClone = dynamic_cast<CForm*>(frmShipRoom->Clone());
 		if (!frmClone) return false;
 
-		sprintf(buf, "frmShipRoom%d", i);
-		frmClone->SetName(buf);
+		frmClone->SetName(std::format("frmShipRoom{}", i).c_str());
 
 		CFormMgr::s_Mgr.AddForm(frmClone, enumMainForm);
 		frmClone->Init();

@@ -692,7 +692,7 @@ void CForm::Hide() {
 
 CCompent* CForm::Find(const char* str) {
 	for (vcs::iterator it = _allCompents.begin(); it != _allCompents.end(); it++) {
-		if (strcmp((*it)->GetName(), str) == 0) {
+		if (std::string_view{(*it)->GetName()} == str) {
 			return *it;
 		}
 	}

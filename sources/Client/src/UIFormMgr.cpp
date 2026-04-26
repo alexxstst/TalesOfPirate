@@ -693,9 +693,6 @@ struct sUIDebugInfo {
 void CFormMgr::ShowDebugInfo() {
 	if (!_IsDebugMode) return;
 	int i = 0;
-	char temp[25];
-	char buf[10240];
-
 	int data0 = 0, data1 = 0, data2 = 0, data3 = 0, data4 = 0, data5 = 0, data6 = 0, data7 = 0, totalTick = 0;
 	sUIDebugInfo* pInfo = new sUIDebugInfo[_forms->size()];
 	i = 0;
@@ -707,11 +704,9 @@ void CFormMgr::ShowDebugInfo() {
 		pInfo[i].formName = pForm->GetName();
 		pInfo[i].isShow = pForm->GetIsShow() ? "Y" : "N";
 		pInfo[i].isEnable = pForm->GetIsEnabled() ? "Y" : "N";
-		sprintf(buf, "(%4d,%4d)-(%4d,%4d)", pForm->GetLeft(), pForm->GetTop(), pForm->GetRight(), pForm->GetBottom());
-		pInfo[i].coordinate = buf;
+		pInfo[i].coordinate = std::format("({:4},{:4})-({:4},{:4})", pForm->GetLeft(), pForm->GetTop(), pForm->GetRight(), pForm->GetBottom());
 		pInfo[i].totalCompents = (int)pForm->_allCompents.size();
-		sprintf(temp, "%c", pForm->GetHotKey());
-		pInfo[i].hotkey = (pForm->GetHotKey() == '\0') ? "" : temp;
+		pInfo[i].hotkey = (pForm->GetHotKey() == '\0') ? std::string{} : std::string(1, pForm->GetHotKey());
 		pInfo[i].hasPopMenu = (pForm->_pPopMenu) ? "Y" : "N";
 		pInfo[i].layer = -1;
 		pInfo[i].renderTime = "N/A";
@@ -730,8 +725,7 @@ void CFormMgr::ShowDebugInfo() {
 				(*it)->Render();
 				tick = GetTickCount() - tick;
 				totalTick += tick;
-				sprintf(buf, "%d", tick);
-				pInfo[i].renderTime = buf;
+				pInfo[i].renderTime = std::format("{}", tick);
 				pInfo[i].layer = j;
 				j--;
 			}
@@ -749,8 +743,7 @@ void CFormMgr::ShowDebugInfo() {
 				(*it)->Render();
 				tick = GetTickCount() - tick;
 				totalTick += tick;
-				sprintf(buf, "%d", tick);
-				pInfo[i].renderTime = buf;
+				pInfo[i].renderTime = std::format("{}", tick);
 				pInfo[i].layer = j;
 				j--;
 			}
@@ -774,11 +767,11 @@ void CFormMgr::ShowDebugInfo() {
 		//DWORD color=COLOR_WHITE;
 
 		DWORD color = COLOR_WHITE;
-		//"ID                                                "
-		sprintf(buf, "%-6d %-20s %s   %s     %s     %s     %3s    %3d    %2s     %4s", i, pInfo[i].formName.c_str(),
-				pInfo[i].coordinate.c_str(), pInfo[i].isShow.c_str(), pInfo[i].isEnable.c_str(),
-				pInfo[i].hasPopMenu.c_str(), (pInfo[i].layer >= 0) ? itoa(pInfo[i].layer, temp, 10) : "N/A",
-				pInfo[i].totalCompents, pInfo[i].hotkey.c_str(), pInfo[i].renderTime.c_str());
+		const std::string layerStr = (pInfo[i].layer >= 0) ? std::format("{}", pInfo[i].layer) : std::string("N/A");
+		const std::string buf = std::format("{:<6} {:<20} {}   {}     {}     {}     {:>3}    {:3}    {:>2}     {:>4}", i, pInfo[i].formName,
+				pInfo[i].coordinate, pInfo[i].isShow, pInfo[i].isEnable,
+				pInfo[i].hasPopMenu, layerStr,
+				pInfo[i].totalCompents, pInfo[i].hotkey, pInfo[i].renderTime);
 
 		if (pInfo[i].form->GetIsShow()) {
 			color = 0xFFFFFF7F;
@@ -789,7 +782,7 @@ void CFormMgr::ShowDebugInfo() {
 		if (_IsDrawBackgroundInDebugMode) {
 			GetRender().FillFrame(0, 30 + i * 11, 600, 41 + i * 11);
 		}
-		ui::Render(buf, 0, 30 + i * 11, color);
+		ui::Render(buf.c_str(), 0, 30 + i * 11, color);
 	}
 	//delete[] pInfo;
 	SAFE_DELETE_ARRAY(pInfo); // UI
@@ -807,10 +800,11 @@ void CFormMgr::ShowDebugInfo() {
 	data5 = (int)_show.size() + (int)_modal.size(); //
 	data6 = (int)_modal.size(); //
 	data7 = (int)CGuiTime::_times.size();
-	FmtLang(buf, sizeof(buf), GetLanguageString(576), data0, data1, data2, data3, data4, data5, data6, data7,
+	char headerBuf[1024] = {0};
+	FmtLang(headerBuf, sizeof(headerBuf), GetLanguageString(576), data0, data1, data2, data3, data4, data5, data6, data7,
 			totalTick);
-	GetRender().FillFrame(0, 0, ui::GetWidth(buf), 11);
-	ui::Render(buf, 0, 0, COLOR_WHITE);
+	GetRender().FillFrame(0, 0, ui::GetWidth(headerBuf), 11);
+	ui::Render(headerBuf, 0, 0, COLOR_WHITE);
 	int help_sx = 620;
 	int help_sy = 160;
 	if (_IsDrawBackgroundInDebugMode) {

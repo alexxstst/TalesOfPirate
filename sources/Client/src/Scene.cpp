@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Scene.h"
+#include "DebugStateSystem.h"
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneItem.h"
@@ -1384,11 +1385,13 @@ bool CGameScene::_HandleSuperKey() {
 		TipI(IsSceneObjCulling(), GetLanguageString(329).c_str(), GetLanguageString(330).c_str());
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_F5)) {
-		static BOOL g_bEnablePrint = FALSE;
-		g_bEnablePrint = 1 - g_bEnablePrint;
-		g_Render.EnablePrint(INFO_FPS, g_bEnablePrint);
-		g_Render.EnablePrint(INFO_DEBUG, g_bEnablePrint);
-		TipI(g_bEnablePrint, GetLanguageString(331).c_str(), GetLanguageString(332).c_str());
+		static bool g_bEnablePrint = false;
+		g_bEnablePrint = !g_bEnablePrint;
+		auto& dbg = DebugStateSystem::Instance();
+		dbg.SetEnabled(DebugStateSystem::Category::Fps, g_bEnablePrint);
+		dbg.SetEnabled(DebugStateSystem::Category::Debug, g_bEnablePrint);
+		dbg.SetEnabled(DebugStateSystem::Category::Performance, g_bEnablePrint);
+		TipI(g_bEnablePrint ? TRUE : FALSE, GetLanguageString(331).c_str(), GetLanguageString(332).c_str());
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_F6)) {
 		//g_pGameApp->ResetGameCamera();
@@ -1500,7 +1503,7 @@ bool CGameScene::_HandleSuperKey() {
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_X)) {
 		_IsShowPath = !_IsShowPath;
-		g_pGameApp->AddTipText("%s", GetLanguageString(338).c_str());
+		g_pGameApp->AddTipText(GetLanguageString(338));
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_M)) {
 		if (!_pBigMap->IsLoad())
@@ -1657,7 +1660,7 @@ bool CGameScene::LoadMap(const char* file) {
 	};
 
 	for (DWORD i = 0; i < 3; i++) {
-		if (strcmp(file, map_name[i]) == 0) {
+		if (std::string_view{file} == map_name[i]) {
 			m_dwEnvColor = map_env[i];
 			break;
 		}
@@ -1694,7 +1697,7 @@ CCharacter* CGameScene::SearchByName(const char* name) {
 	CCharacter* pCha;
 	for (int i = 0; i < _nChaCnt; i++) {
 		pCha = &_pChaArray[i];
-		if (pCha->IsValid() && strcmp(pCha->getName().c_str(), name) == 0) {
+		if (pCha->IsValid() && pCha->getName() == name) {
 			return pCha;
 		}
 	}
@@ -1706,7 +1709,7 @@ CCharacter* CGameScene::SearchByHumanName(const char* name) {
 	CCharacter* pCha;
 	for (int i = 0; i < _nChaCnt; i++) {
 		pCha = &_pChaArray[i];
-		if (pCha->IsValid() && strcmp(pCha->getHumanName(), name) == 0) {
+		if (pCha->IsValid() && std::string_view{pCha->getHumanName()} == name) {
 			return pCha;
 		}
 	}
@@ -1944,8 +1947,7 @@ void CGameScene::PlayEnvSound(int nX, int nY) {
 			if (dis <= pInfo->_envSoundDis) {
 				dis = (int)(_fSoundSize * (1.0f - (float)dis / (float)pInfo->_envSoundDis));
 				if (pObj->GetMusicID() == -1) {
-					static char szSoundName[256] = {0};
-					sprintf(szSoundName, "music/sound/%s.wav", pInfo->_envSound.c_str());
+					[[maybe_unused]] const std::string szSoundName = std::format("music/sound/{}.wav", pInfo->_envSound);
 					//r = ::env_snd_add( szSoundName );
 					//if( r != -1 )
 					//{

@@ -1259,9 +1259,8 @@ int UI_GridNodeAddItem(int nodeid, int itemid) {
 		if (stricmp(obj->GetItem()->GetString(), GetLanguageString(528).c_str()) == 0) {
 			CChaRecord* pInfo = GetChaRecordInfo(pHint->nTag);
 			if (pInfo) {
-				char szBuf[128] = {0};
-				sprintf(szBuf, "%d.%s", pInfo->lID, pInfo->szName.c_str());
-				pHint->SetHint(szBuf);
+				const std::string szBuf = std::format("{}.{}", pInfo->lID, pInfo->szName);
+				pHint->SetHint(szBuf.c_str());
 			}
 		}
 		else if (stricmp(obj->GetItem()->GetString(), GetLanguageString(532).c_str()) == 0) {
@@ -1276,18 +1275,16 @@ int UI_GridNodeAddItem(int nodeid, int itemid) {
 		else if (stricmp(obj->GetItem()->GetString(), GetLanguageString(529).c_str()) == 0) {
 			CEffectInfo* pInfo = GetEffectInfo(pHint->nTag);
 			if (pInfo) {
-				char szBuf[128] = {0};
-				sprintf(szBuf, "%d.%s", pInfo->Id, pInfo->szName);
-				pHint->SetHint(szBuf);
+				const std::string szBuf = std::format("{}.{}", pInfo->Id, pInfo->szName);
+				pHint->SetHint(szBuf.c_str());
 			}
 		}
 		else if (pParent) {
 			if (stricmp(pParent->GetItem()->GetString(), GetLanguageString(540).c_str()) == 0) {
 				CSceneObjInfo* pInfo = GetSceneObjInfo(pHint->nTag);
 				if (pInfo) {
-					char szBuf[128] = {0};
-					sprintf(szBuf, "%d.%s", pInfo->_id, pInfo->_name.c_str());
-					pHint->SetHint(szBuf);
+					const std::string szBuf = std::format("{}.{}", pInfo->_id, pInfo->_name);
+					pHint->SetHint(szBuf.c_str());
 				}
 			}
 		}

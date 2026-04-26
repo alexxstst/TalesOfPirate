@@ -140,7 +140,7 @@ namespace GUI {
 		CTextButton* _pNextPage; // 
 		CTextButton* _pPriorPage; // 	
 
-		char _strPage[10]; // 
+		std::string _strPage; // текущий "page/maxPage"
 		int _nStrX, _nStrY;
 		int _nStrWidth;
 
@@ -197,7 +197,7 @@ namespace GUI {
 		_nFirst = _nPage * _nPageNum;
 		_nLast = _nFirst + _nPageNum;
 		if (_nLast > _nSize) _nLast = _nSize;
-		sprintf(_strPage, "%d/%d", _nPage + 1, _nMaxPage + 1);
+		_strPage = std::format("{}/{}", _nPage + 1, _nMaxPage + 1);
 	}
 
 	inline void CGrid::_NextClick() {

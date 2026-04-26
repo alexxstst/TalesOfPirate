@@ -150,10 +150,6 @@ public:
 		return (int)_vecEffectList[idx].size();
 	}
 
-	char* GetEffectSavePath() {
-		return _pszEFFectPath;
-	}
-
 	I_Effect* AddEffectToMgr(const s_string& strName);
 	void AddUniteEffectToMgr(std::vector<I_Effect>& vecEffArray);
 
@@ -303,7 +299,7 @@ public:
 
 protected:
 	//!
-	bool LoadEffectFromFile(int idx, char* pszFileName);
+	bool LoadEffectFromFile(int idx, std::string_view pszFileName);
 
 	void LoadTotalRes();
 	void LoadTotalData();
@@ -318,9 +314,9 @@ protected:
 protected:
 	static bool s_resourcePreload;
 
-	char _pszTexPath[MAX_PATH];
-	char _pszMeshPath[MAX_PATH];
-	char _pszEFFectPath[MAX_PATH];
+	std::string _pszTexPath;
+	std::string _pszMeshPath;
+	std::string _pszEFFectPath;
 
 	int _iTexNum;
 	int _iMeshNum;

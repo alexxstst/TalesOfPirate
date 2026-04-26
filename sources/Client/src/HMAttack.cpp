@@ -126,7 +126,6 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 
 	bool isMain = pTarget->IsMainCha();
 
-	char buf[30] = {0};
 	int count = Value.GetCount();
 	stEffect* p = Value.GetValue();
 	SGameAttr* pAttr = pTarget->getGameAttr();
@@ -153,8 +152,8 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 		switch (p[i].lAttrID) {
 		case ATTR_HP: type = val < 0 ? enumSubLife : enumAddLife;
 			if (pTarget->IsEnabled()) {
-				sprintf(buf, "%d", abs(val));
-				CreateEffect(type, buf, VPOS2, VPOS, vdir, IsHarmMain(pTarget, pAttack), dwDelay);
+				const std::string buf = std::format("{}", abs(val));
+				CreateEffect(type, buf.c_str(), VPOS2, VPOS, vdir, IsHarmMain(pTarget, pAttack), dwDelay);
 			}
 			break;
 		//case ATTR_SP: type = val<0 ? enumSubSp : enumAddSp;
@@ -163,7 +162,7 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 		case ATTR_CEXP:
 			if (isMain) {
 				if (pTarget->IsBoat()) {
-					g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(144), val).c_str());
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(144), val));
 				}
 				else if (val > 0) {
 					//g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(145), val).c_str() );
@@ -176,13 +175,13 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 						dwObtainExp = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP; // 80 
 						dwObtainExp += (dwLv80Exp - dwLastExp); // 79 
 
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), dwObtainExp).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), dwObtainExp));
 					}
 					else if (pTarget->getGameAttr()->get(ATTR_LV) >= 80) {
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), val * LEVEL80_EXP).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), val * LEVEL80_EXP));
 					}
 					else {
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), val).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), val));
 					}
 				}
 			}
@@ -216,8 +215,8 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 		if (!pTarget->IsBoat()) {
 			if (isMain) {
 				g_pGameApp->PlaySound(21);
-				g_pGameApp->ShowBigText(
-					"%s", SafeVFormat(GetLanguageString(146), pTarget->getGameAttr()->get(ATTR_LV)).c_str());
+				g_pGameApp->ShowBigText(SafeVFormat(GetLanguageString(146),
+													pTarget->getGameAttr()->get(ATTR_LV)));
 				pTarget->SelfEffect(132, -1);
 			}
 			else {
@@ -230,7 +229,7 @@ void CAttackEffect::ExecHarm(CSizeArray<stEffect>& Value, CCharacter* pTarget, C
 	if (Change.GetChangeBitFlag(ATTR_SAILLV) && pTarget->getGameAttr()->get(ATTR_CSAILEXP) > 0) {
 		if (isMain) {
 			g_pGameApp->PlaySound(21);
-			g_pGameApp->ShowBigText("reborn level %d", pTarget->getGameAttr()->get(ATTR_SAILLV));
+			g_pGameApp->ShowBigText(std::format("reborn level {}", pTarget->getGameAttr()->get(ATTR_SAILLV)));
 			pTarget->SelfEffect(132, -1);
 		}
 		else {
@@ -378,7 +377,7 @@ void CAttribSynchro::_Exec() {
 				val = p[i].lVal - pAttr->get((short)p[i].lAttrID);
 
 				if (pCha->IsBoat()) {
-					g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(144), val).c_str());
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(144), val));
 				}
 				else if (val > 0) {
 					//g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(145), val).c_str() );
@@ -391,13 +390,13 @@ void CAttribSynchro::_Exec() {
 						dwObtainExp = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP; // 80 
 						dwObtainExp += (dwLv80Exp - dwLastExp); // 79 
 
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), dwObtainExp).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), dwObtainExp));
 					}
 					else if (g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_LV) >= 80) {
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), val * LEVEL80_EXP).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), val * LEVEL80_EXP));
 					}
 					else {
-						g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(145), val).c_str());
+						g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(145), val));
 					}
 				}
 			}
@@ -459,8 +458,8 @@ void CAttribSynchro::_Exec() {
 				if (enumATTRSYN_INIT != _nType) {
 					// 
 					g_pGameApp->PlaySound(21);
-					g_pGameApp->ShowBigText(
-						"%s", SafeVFormat(GetLanguageString(146), pCha->getGameAttr()->get(ATTR_LV)).c_str());
+					g_pGameApp->ShowBigText(SafeVFormat(GetLanguageString(146),
+														pCha->getGameAttr()->get(ATTR_LV)));
 
 					if (g_stUISystem.m_sysProp.m_gameOption.bHelpMode && pCha->getGameAttr()->get(ATTR_LV) <= 50)
 					//	Modify by alfred.shi 20080905
@@ -486,7 +485,7 @@ void CAttribSynchro::_Exec() {
 				if (enumATTRSYN_INIT != _nType) {
 					g_pGameApp->PlaySound(21);
 					//g_pGameApp->ShowBigText( "%d", pCha->getGameAttr()->get(ATTR_SAILLV) );
-					g_pGameApp->ShowBigText("reborn level %d", pCha->getGameAttr()->get(ATTR_SAILLV));
+					g_pGameApp->ShowBigText(std::format("reborn level {}", pCha->getGameAttr()->get(ATTR_SAILLV)));
 					pCha->SelfEffect(132, -1);
 				}
 			}

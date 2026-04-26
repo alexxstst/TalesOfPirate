@@ -115,8 +115,10 @@ public class Character
     public DateTimeOffset? EstopUntil { get; set; }
     public int EstopTime { get; set; }
 
-    // --- Расширенные данные (nullable в БД) ---
-    public string? ExtendData { get; set; }
+    // --- Расширенные данные ---
+    // Колонка [extend] в БД — NOT NULL без default'а, поэтому здесь non-nullable
+    // со значением по умолчанию "". При INSERT EF подставит пустую строку, а не NULL.
+    public string ExtendData { get; set; } = "";
     public int? Imp { get; set; }
 
     // --- Навигация ---

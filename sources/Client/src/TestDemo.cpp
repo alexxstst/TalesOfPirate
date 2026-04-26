@@ -306,12 +306,12 @@ else if(g_pGameApp->IsCtrlPress())
 			else if(g_pGameApp->IsKeyDown(DIK_L)) 
 			{
 				g_pGameApp->GetDrawPoints()->SetIsEnabled( !g_pGameApp->GetDrawPoints()->GetIsEnabled() );
-				g_pGameApp->AddTipText( "%s", GetLanguageString(108).c_str() );
+				g_pGameApp->AddTipText(GetLanguageString(108));
 			}
 			else if( g_pGameApp->IsKeyDown(DIK_T) )
 			{
 				g_pGameApp->SetIsRenderTipText( !g_pGameApp->GetIsRenderTipText() );
-				g_pGameApp->AddTipText( "%s", GetLanguageString(109).c_str() );
+				g_pGameApp->AddTipText(GetLanguageString(109));
 			}
 		}
 #endif

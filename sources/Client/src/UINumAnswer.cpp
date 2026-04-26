@@ -159,9 +159,8 @@ namespace GUI {
 			if (_dwTickCount) {
 				int nSecond = 60 - ((GetTickCount() - _dwTickCount) / 1000);
 
-				char szTime[64] = {0};
-				sprintf(szTime, "%d", nSecond);
-				labTimeLeft->SetCaption(szTime);
+				const std::string szTime = std::format("{}", nSecond);
+				labTimeLeft->SetCaption(szTime.c_str());
 
 				if (nSecond <= 0) {
 					frmNumAnswer->SetIsShow(false);

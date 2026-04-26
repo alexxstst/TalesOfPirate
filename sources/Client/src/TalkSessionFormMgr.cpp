@@ -720,9 +720,8 @@ void CTalkSessionForm::OnHotKeyShow() {
 }
 
 void CTalkSessionForm::SetInformText(const char* name, const char* text) {
-	char buf[100];
-	sprintf(buf, "New message from %s", name);
-	m_pInformTitle->SetCaption(buf);
+	const std::string buf = std::format("New message from {}", name);
+	m_pInformTitle->SetCaption(buf.c_str());
 	string str = StringLimit(text, 22);
 	m_pInformTextBtn->SetCaption(str.c_str());
 }
@@ -801,9 +800,7 @@ void CTalkSessionForm::_OnMouseSendButton(CGuiData* pSender, int x, int y, DWORD
 	__time64_t t;
 	_time64(&t);
 	tm* ltime = _gmtime64(&t);
-	char ch[12];
-	sprintf(ch, "  %d:%d:%d", ltime->tm_hour + 8, ltime->tm_min, ltime->tm_sec);
-	string time = ch;
+	const string time = std::format("  {}:{}:{}", ltime->tm_hour + 8, ltime->tm_min, ltime->tm_sec);
 	if (strMotto.size() == 0) {
 		strName += ":" + time + "\r\n  ";
 	}
@@ -885,13 +882,10 @@ void CTalkSessionForm::_OnMouseSelectFace(CGuiData* pSender) {
 
 	CGraph* pGraph = pThis->m_pFaceGrid->GetSelect();
 	if (pGraph) {
-		char buf[20];
 		int index = pThis->m_pFaceGrid->GetSelectIndex();
-		//pThis->m_pNormalEdit->SetIsParseText(true);
 		pThis->m_pNormalEdit->SetActive(pThis->m_pNormalEdit);
 		string str = pThis->m_pNormalEdit->GetCaption();
-		sprintf(buf, "#%.2d", index);
-		str += buf;
+		str += std::format("#{:02}", index);
 		pThis->m_pNormalEdit->SetCaption(str.c_str());
 	}
 }
@@ -998,9 +992,7 @@ void CTalkSessionForm::GetMsg(DWORD chaID, string talkMsg) {
 		__time64_t t;
 		_time64(&t);
 		tm* ltime = _gmtime64(&t);
-		char ch[12];
-		sprintf(ch, "  %d:%d:%d", ltime->tm_hour + 8, ltime->tm_min, ltime->tm_sec);
-		string time = ch;
+		const string time = std::format("  {}:{}:{}", ltime->tm_hour + 8, ltime->tm_min, ltime->tm_sec);
 		if (pMsg->motto.size() == 0) {
 			strName += ":" + time + "\r\n  ";
 		}
@@ -1698,15 +1690,11 @@ DWORD CTalkSessionFormMgr::GetSessionCount() {
 }
 
 void CTalkSessionFormMgr::PrintTraceInfo() {
-	string strInfo = "";
-	char szBuf[2048] = {0};
-	vector<CTalkSessionForm*>::iterator Iter;
-	for (Iter = m_SessionFormsLink.begin(); Iter != m_SessionFormsLink.end(); Iter++) {
-		CTalkSessionForm* pSessionForm = (*Iter);
+	string strInfo;
+	for (auto* pSessionForm : m_SessionFormsLink) {
 		DWORD dwSessionID = pSessionForm->GetSessionID();
 		int nMemberCount = pSessionForm->GetTotalMembers();
-		sprintf(szBuf, "ID=%d =%d :", nMemberCount, dwSessionID);
-		strInfo += szBuf;
+		strInfo += std::format("ID={} ={} :", nMemberCount, dwSessionID);
 		for (int i = 0; i < nMemberCount; i++) {
 			CSessionMember* pMember = pSessionForm->GetMemberByIndex(i);
 			strInfo += string(pMember->GetName()) + "|";

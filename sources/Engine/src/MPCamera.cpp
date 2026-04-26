@@ -6,9 +6,9 @@ MPCameraNOLEECH::MPCameraNOLEECH() {
 	m_fRoll = 0.0f;
 
 	InitPosition(0.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f);
-	sprintf(strCameraInfo, "camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)",
-			m_EyePos.x, m_EyePos.y, m_EyePos.z,
-			m_RefPos.x, m_RefPos.y, m_RefPos.z);
+	strCameraInfo = std::format("camera : ({:7.2f} {:7.2f} {:7.2f})__({:7.2f} {:7.2f} {:7.2f})",
+								m_EyePos.x, m_EyePos.y, m_EyePos.z,
+								m_RefPos.x, m_RefPos.y, m_RefPos.z);
 }
 
 MPCameraNOLEECH::~MPCameraNOLEECH() {
@@ -84,9 +84,9 @@ VOID MPCameraNOLEECH::Move(DWORD dwMoveType) {
 		break;
 	}
 	}
-	sprintf(strCameraInfo, "camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)",
-			m_EyePos.x, m_EyePos.y, m_EyePos.z,
-			m_RefPos.x, m_RefPos.y, m_RefPos.z);
+	strCameraInfo = std::format("camera : ({:7.2f} {:7.2f} {:7.2f})__({:7.2f} {:7.2f} {:7.2f})",
+								m_EyePos.x, m_EyePos.y, m_EyePos.z,
+								m_RefPos.x, m_RefPos.y, m_RefPos.z);
 }
 
 // , Hang

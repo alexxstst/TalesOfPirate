@@ -70,9 +70,8 @@ namespace GUI {
 	void CChurchChallengeMgr::ChallengePriceAsk(void) {
 		_pNumberBox = g_stUIBox.ShowNumberBox(_evtChallengeNumInput, -1, GetLanguageString(936).c_str(), true); // ""
 
-		char szBuf[32] = {0};
-		sprintf(szBuf, "%d", _stInfo.nCurPrice + _stInfo.nMinbid);
-		_pNumberBox->edtNumber->SetCaption(szBuf);
+		const std::string szBuf = std::format("{}", _stInfo.nCurPrice + _stInfo.nMinbid);
+		_pNumberBox->edtNumber->SetCaption(szBuf.c_str());
 	}
 
 
@@ -85,8 +84,8 @@ namespace GUI {
 				g_stUIBox.ShowSelectBox(_evtChallengeNumCheck, _str.c_str(), true);
 			}
 			else {
-				g_pGameApp->MsgBox(
-					"%s", SafeVFormat(GetLanguageString(937), _stInfo.nCurPrice + _stInfo.nMinbid).c_str()); //" %d"
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(937),
+											   _stInfo.nCurPrice + _stInfo.nMinbid));
 			}
 		}
 	}

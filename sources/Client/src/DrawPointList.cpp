@@ -44,9 +44,8 @@ void CDrawPointList::Reader() {
 		CPathBox.Render();
 
 		if (points[m].color == 0xffff0000) {
-			static char buf[80] = {0};
-			sprintf(buf, "%d,%d", (int)points[m].pos.x, (int)points[m].pos.y);
-			FontManager::Instance().Get(FontSlot::TipText)->Draw3DText(buf, points[m].pos, 0xff000000, 0.3f);
+			const std::string buf = std::format("{},{}", (int)points[m].pos.x, (int)points[m].pos.y);
+			FontManager::Instance().Get(FontSlot::TipText)->Draw3DText(buf.c_str(), points[m].pos, 0xff000000, 0.3f);
 		}
 	}
 }

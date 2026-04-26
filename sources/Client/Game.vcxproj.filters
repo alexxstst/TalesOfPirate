@@ -1346,7 +1346,7 @@
     <ClInclude Include="src\CryptoUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="src\kop.ico">
+    <Image Include="src\game.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="src\small.ico">
@@ -1354,7 +1354,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\kop.rc">
+    <ResourceCompile Include="src\game.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

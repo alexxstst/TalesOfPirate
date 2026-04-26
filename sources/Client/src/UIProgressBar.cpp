@@ -56,14 +56,14 @@ void CProgressBar::Refresh() {
 }
 
 void CProgressBar::RenderHint(int x, int y) {
-	char buf[80] = {0};
+	std::string buf;
 	if (_eHintStyle == hsHintNum) {
-		sprintf(buf, "%s:%d/%d", _strHint.c_str(), (int)_step.GetPosition(), (int)_step.GetRange());
+		buf = std::format("{}:{}/{}", _strHint, (int)_step.GetPosition(), (int)_step.GetRange());
 	}
 	else {
-		sprintf(buf, "%s:%.02f%%", _strHint.c_str(), _step.GetPosition() / _step.GetRange() * 100.0f);
+		buf = std::format("{}:{:.2f}%", _strHint, _step.GetPosition() / _step.GetRange() * 100.0f);
 	}
-	_RenderHint(buf, x, y);
+	_RenderHint(buf.c_str(), x, y);
 }
 
 bool CProgressBar::MouseRun(int x, int y, DWORD key) {

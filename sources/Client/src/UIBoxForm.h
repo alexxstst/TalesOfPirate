@@ -70,29 +70,31 @@ namespace GUI {
 		short teamID;
 	};
 
-	// 
+	//
 	class CBoxMgr : public CUIInterface {
 	public:
-		// 
+		//
 		static stTradeBox* ShowTradeBox(FormMouseEvent evtForm = NULL, float fUnitMoney = 0, int nTotalNum = -1,
-										const char* szName = NULL);
+										std::string_view szName = {});
 
-		// 
-		static stSelectBox* ShowSelectBox(FormMouseEvent evtForm = NULL, const char* szTitle = NULL,
+		//
+		static stSelectBox* ShowSelectBox(FormMouseEvent evtForm = NULL, std::string_view szTitle = {},
 										  bool bModal = false);
 
-		// 
-		static stNumBox* ShowNumberBox(FormMouseEvent evtForm = NULL, int nTotalNum = -1, const char* szTitle = NULL,
+		//
+		static stNumBox* ShowNumberBox(FormMouseEvent evtForm = NULL, int nTotalNum = -1,
+									   std::string_view szTitle = {},
 									   bool IsMax = true, bool bModal = true);
 
-		// 
-		static stPasswordBox* ShowPasswordBox(FormMouseEvent evtForm = NULL, const char* szTitle = NULL,
-											  const char* szPassword = NULL, bool bModal = true);
+		//
+		static stPasswordBox* ShowPasswordBox(FormMouseEvent evtForm = NULL, std::string_view szTitle = {},
+											  std::string_view szPassword = {}, bool bModal = true);
 
-		// 
-		static stMsgBox* ShowMsgBox(FormMouseEvent evtForm = NULL, const char* szTitle = NULL, bool bModal = true);
+		//
+		static stMsgBox* ShowMsgBox(FormMouseEvent evtForm = NULL, std::string_view szTitle = {}, bool bModal = true);
 
-		static stMsgTimeBox* ShowMsgTime(FormMouseEvent evtForm = NULL, const char* szTitle = NULL, int iSeconds = 60);
+		static stMsgTimeBox* ShowMsgTime(FormMouseEvent evtForm = NULL, std::string_view szTitle = {},
+										 int iSeconds = 60);
 
 		static void CloseAllBox();
 
@@ -104,7 +106,7 @@ namespace GUI {
 	private:
 		static void _ClearBox(CHideForm& list);
 
-		CForm* _FindForm(const char* frmName);
+		CForm* _FindForm(std::string_view frmName);
 
 	private:
 		// :,

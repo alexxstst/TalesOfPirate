@@ -385,9 +385,7 @@ void CTradeMgr::ShowCharTradeMoney(DWORD dwCharID, DWORD dwMoney) {
 	if (!labOtherGold) return;
 	if (!labSelfGold) return;
 
-	char szBuf[32] = {0};
-	int nCurMoney = dwMoney;
-	sprintf(szBuf, "%s", StringSplitNum(nCurMoney));
+	const char* szBuf = StringSplitNum(static_cast<int>(dwMoney));
 	if (dwCharID == m_dwMainID) {
 		labSelfGold->SetCaption(szBuf);
 	}
@@ -402,9 +400,7 @@ void CTradeMgr::ShowCharTradeIMP(DWORD dwCharID, DWORD dwMoney) {
 	if (!labOtherIMP) return;
 	if (!labSelfIMP) return;
 
-	char szBuf[32] = {0};
-	int nCurMoney = dwMoney;
-	sprintf(szBuf, "%s", StringSplitNum(nCurMoney));
+	const char* szBuf = StringSplitNum(static_cast<int>(dwMoney));
 	if (dwCharID == m_dwMainID) {
 		labSelfIMP->SetCaption(szBuf);
 	}
@@ -436,7 +432,7 @@ void CTradeMgr::LocalSaleItem(CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int 
 
 	if (CItemCommand* pBoat = dynamic_cast<CItemCommand*>(pItem)) {
 		if (pBoat && pBoat->GetItemInfo()->sType == 43) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(782).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(782));
 		}
 	}
 
@@ -501,16 +497,16 @@ void CTradeMgr::ValidateTrade(DWORD dwCharID) {
 void CTradeMgr::ShowTradeSuccess() {
 	int nFree = g_stUIEquip.GetGoodsGrid()->GetMaxNum() - g_stUIEquip.GetGoodsGrid()->GetCurNum();
 	if (nFree < g_stUITrade.grdBuy->GetCurNum()) {
-		g_pGameApp->ShowMidText("%s", GetLanguageString(783).c_str());
-		g_pGameApp->SysInfo("%s", GetLanguageString(783).c_str());
+		g_pGameApp->ShowMidText(GetLanguageString(783));
+		g_pGameApp->SysInfo(GetLanguageString(783));
 	}
 
-	g_pGameApp->SysInfo("%s", GetLanguageString(784).c_str());
+	g_pGameApp->SysInfo(GetLanguageString(784));
 	Clear();
 }
 
 void CTradeMgr::ShowTradeFailed() {
-	g_pGameApp->SysInfo("%s", GetLanguageString(785).c_str());
+	g_pGameApp->SysInfo(GetLanguageString(785));
 	Clear();
 }
 
@@ -550,9 +546,9 @@ void CTradeMgr::Clear() {
 
 void CTradeMgr::CancelCharTrade(DWORD dwCharID) {
 	if (dwCharID == m_dwMainID)
-		g_pGameApp->SysInfo("%s", GetLanguageString(786).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(786));
 	else
-		g_pGameApp->SysInfo("%s", GetLanguageString(787).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(787));
 
 	Clear();
 }

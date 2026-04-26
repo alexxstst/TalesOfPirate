@@ -428,9 +428,7 @@ LW_BEGIN
 
 	LW_RESULT lwAnimDataTexImg::Load(FILE* fp, DWORD version) {
 		if (version == EXP_OBJ_VERSION_0_0_0_0) {
-			char buf[256];
-			sprintf(buf, "old version file, need re-export it");
-			MessageBox(NULL, buf, "warning", MB_OK);
+			MessageBox(NULL, "old version file, need re-export it", "warning", MB_OK);
 			return LW_RET_FAILED;
 		}
 		else {
@@ -725,9 +723,8 @@ LW_BEGIN
 		if (version < EXP_OBJ_VERSION_1_0_0_0) {
 			goto __ret;
 			version = EXP_OBJ_VERSION_0_0_0_0;
-			char buf[256];
-			sprintf(buf, "old animation file: %s, need re-export it", file);
-			MessageBox(NULL, buf, "warning", MB_OK);
+			const std::string buf = std::format("old animation file: {}, need re-export it", file);
+			MessageBox(NULL, buf.c_str(), "warning", MB_OK);
 		}
 
 		if (LW_RESULT r = Load(fp, version); LW_FAILED(r)) {

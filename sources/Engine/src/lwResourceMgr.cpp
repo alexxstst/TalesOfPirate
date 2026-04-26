@@ -299,10 +299,13 @@ LW_BEGIN
 		switch (info->type) {
 		case TEX_TYPE_FILE:
 			if (tex_path) {
-				sprintf(_file_name, "%s%s", tex_path, info->file_name);
+				std::snprintf(_file_name, sizeof(_file_name), "%s%s", tex_path, info->file_name);
 			}
 			else {
-				strcpy(_file_name, info->file_name);
+				const std::string_view src{info->file_name};
+				const std::size_t n = std::min<std::size_t>(src.size(), sizeof(_file_name) - 1);
+				std::memcpy(_file_name, src.data(), n);
+				_file_name[n] = '\0';
 			}
 			break;
 		case TEX_TYPE_DATA:
@@ -3166,14 +3169,9 @@ LW_BEGIN
 		DWORD found = LW_INVALID_INDEX;
 		_pool_mesh.ForEach([&](DWORD handle, void* raw) -> bool {
 			auto* obj = static_cast<lwMesh*>(raw);
-			try {
-				if ((obj->GetState() & RES_STATE_INIT) && (obj->GetResFileMesh()->Compare(rfm) == 1)) {
-					found = handle;
-					return false;
-				}
-			}
-			catch (...) {
-				__debugbreak();
+			if ((obj->GetState() & RES_STATE_INIT) && (obj->GetResFileMesh()->Compare(rfm) == 1)) {
+				found = handle;
+				return false;
 			}
 			return true;
 		});

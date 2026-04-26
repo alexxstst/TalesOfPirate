@@ -292,13 +292,13 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press) {
 					pEffect->SetValid(TRUE);
 				}
 			}
-				g_pGameApp->AddTipText("%s", GetLanguageString(536).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(536));
 				break;
 			case 1:
 				CReadyDieState* st = new CReadyDieState(pCha->GetActor());
 				st->SetState(enumDied);
 				pCha->GetActor()->InsertState(st);
-				g_pGameApp->AddTipText("%s", GetLanguageString(537).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(537));
 				break;
 			}
 		}
@@ -485,10 +485,10 @@ bool CEditor::_evtSetChaPosKeyChar(CGuiData* pSender, char& key) {
 				p[1] = atoi(str.substr(pos + 1, str.length()).c_str());
 				CGameApp::GetCurScene()->GetMainCha()->setPos(p[0] * 100, p[1] * 100);
 				CGameApp::GetCurScene()->SetMainCha(CGameApp::GetCurScene()->GetMainCha()->getID());
-				g_pGameApp->AddTipText("%s", GetLanguageString(541).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(541));
 			}
 			else {
-				g_pGameApp->AddTipText("%s", GetLanguageString(542).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(542));
 			}
 		}
 		return true;
@@ -510,7 +510,7 @@ bool CEditor::_evtShotMiniMap(CGuiData* pSender, char& key) {
 			string strList[SIZE];
 			int n = Util_ResolveTextLine(pEdit->GetCaption(), strList, SIZE, ',');
 			if (n != 4) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(543).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(543));
 				return true;
 			}
 
@@ -520,8 +520,8 @@ bool CEditor::_evtShotMiniMap(CGuiData* pSender, char& key) {
 
 			g_pGameApp->SetStartMinimap(value[0], value[1], value[2], value[3]);
 			g_pGameApp->EnableSprintSmMap(TRUE);
-			g_pGameApp->MsgBox(
-				"%s", SafeVFormat(GetLanguageString(544), value[0], value[1], value[2], value[3]).c_str());
+			g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(544),
+										   value[0], value[1], value[2], value[3]));
 		}
 		return true;
 	}
@@ -533,11 +533,11 @@ bool CEditor::_evtSetBrushHeightKeyChar(CGuiData* pSender, char& key) {
 		if (key == VK_RETURN) {
 			string str = g_stUIEditor.edtSetBrushHeight->GetCaption();
 			if (str.empty()) {
-				g_pGameApp->AddTipText("%s", GetLanguageString(545).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(545));
 			}
 			else {
 				g_Editor.m_nBrushHeight = atoi(str.c_str());
-				g_pGameApp->AddTipText("%s", GetLanguageString(546).c_str());
+				g_pGameApp->AddTipText(GetLanguageString(546));
 
 				CEffectObj* pEffect = dynamic_cast<CEffectObj*>(g_Editor.GetSelectSceneObj());
 				if (!pEffect) {

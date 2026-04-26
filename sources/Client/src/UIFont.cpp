@@ -285,94 +285,82 @@ CTextScrollHint::CTextScrollHint() {
 
 void CTextScrollHint::Render() {
 	if (_hint.empty()) return;
-	try {
-		int scrollneedspace = 0;
-		static RECT rt;
-		int yy = _nStartY;
-		//Modify by sunny.sun20080820
-		if (GetRender().GetScreenWidth() == LARGE_RES_X) {
-			rt.left = _nStartX - 5;
-			rt.top = _nStartY - 7;
-			rt.right = _nStartX + _nHintW + 160;
-			rt.bottom = _nStartY + _nHintH + 2;
-			scrollneedspace = SCROLLNEEDSPACE + 39;
-		}
-		else {
-			rt.left = _nStartX - 5;
-			rt.top = _nStartY - 7;
-			rt.right = _nStartX + _nHintW - 55;
-			rt.bottom = _nStartY + _nHintH + 2;
-			scrollneedspace = SCROLLNEEDSPACE + 3;
-		}
 
-		if (RenderScrollNum < SetScrollNum) {
-			hints::iterator it = _hint.begin();
-			GetRender().FillFrame(rt.left, rt.top, rt.right, rt.bottom, _dwBkgColor);
-			SpaceLength = "";
-			if (num == 0) {
-				SpaceLength = "";
-				for (int n = 0; n < scrollneedspace; n++)
-					SpaceLength = SpaceLength + " ";
-				CopyHints = SpaceLength + (*it)->hint;
-				(*it)->hint = SpaceLength;
-				m = 0;
-			}
-			if ((index % 5) == 0) // Original: %10
-			{
-				(*it)->hint = CopyHints;
-
-				if (m == CopyHints.length()) {
-					m = 0;
-					(*it)->hint = "";
-					RenderScrollNum++;
-				}
-				else if (m > (int)(CopyHints.length() - scrollneedspace - 1)) {
-					char c = (*it)->hint.at(m);
-					if ((unsigned char)c >= (unsigned char)0x80) {
-						if (m >= (int)CopyHints.length()) m = 0;
-						(*it)->hint = (*it)->hint.erase(0, m);
-						m += 1;
-					}
-					else
-						(*it)->hint = (*it)->hint.substr(m, CopyHints.length() - m);
-				}
-				else {
-					char c = (*it)->hint.at(m);
-					char d = (*it)->hint.at(m + scrollneedspace - 1);
-					if ((unsigned char)c >= (unsigned char)0x80 || (unsigned char)d >= (unsigned char)0x80) {
-						(*it)->hint = (*it)->hint.substr(m, scrollneedspace - 1);
-						m += 1;
-					}
-					else
-						(*it)->hint = (*it)->hint.substr(m, scrollneedspace - 1);
-				}
-				++m;
-				index = 0;
-			}
-			num++;
-			ui::Render((*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color);
-			index++;
-			//End
-			if (_IsShowFrame) {
-				extern BOOL RenderHintFrame(const RECT* rc, DWORD color);
-				RenderHintFrame(&rt, D3DCOLOR_ARGB(255, 123, 218, 229));
-				rt.left--;
-				rt.top--;
-				rt.right++;
-				rt.bottom++;
-				RenderHintFrame(&rt, COLOR_BLACK);
-			}
-		}
+	int scrollneedspace = 0;
+	static RECT rt;
+	int yy = _nStartY;
+	//Modify by sunny.sun20080820
+	if (GetRender().GetScreenWidth() == LARGE_RES_X) {
+		rt.left = _nStartX - 5;
+		rt.top = _nStartY - 7;
+		rt.right = _nStartX + _nHintW + 160;
+		rt.bottom = _nStartY + _nHintH + 2;
+		scrollneedspace = SCROLLNEEDSPACE + 39;
 	}
-	catch (...) {
-		try {
-			for (vector<stHint*>::iterator it = _hint.begin(); it != _hint.end(); it++) {
-				stHint* st = *it;
-				ToLogService("common", "hint error !{}", st->hint.c_str());
-			}
-			_hint.clear();
+	else {
+		rt.left = _nStartX - 5;
+		rt.top = _nStartY - 7;
+		rt.right = _nStartX + _nHintW - 55;
+		rt.bottom = _nStartY + _nHintH + 2;
+		scrollneedspace = SCROLLNEEDSPACE + 3;
+	}
+
+	if (RenderScrollNum < SetScrollNum) {
+		hints::iterator it = _hint.begin();
+		GetRender().FillFrame(rt.left, rt.top, rt.right, rt.bottom, _dwBkgColor);
+		SpaceLength = "";
+		if (num == 0) {
+			SpaceLength = "";
+			for (int n = 0; n < scrollneedspace; n++)
+				SpaceLength = SpaceLength + " ";
+			CopyHints = SpaceLength + (*it)->hint;
+			(*it)->hint = SpaceLength;
+			m = 0;
 		}
-		catch (...) {
+		if ((index % 5) == 0) // Original: %10
+		{
+			(*it)->hint = CopyHints;
+
+			if (m == CopyHints.length()) {
+				m = 0;
+				(*it)->hint = "";
+				RenderScrollNum++;
+			}
+			else if (m > (int)(CopyHints.length() - scrollneedspace - 1)) {
+				char c = (*it)->hint.at(m);
+				if ((unsigned char)c >= (unsigned char)0x80) {
+					if (m >= (int)CopyHints.length()) m = 0;
+					(*it)->hint = (*it)->hint.erase(0, m);
+					m += 1;
+				}
+				else
+					(*it)->hint = (*it)->hint.substr(m, CopyHints.length() - m);
+			}
+			else {
+				char c = (*it)->hint.at(m);
+				char d = (*it)->hint.at(m + scrollneedspace - 1);
+				if ((unsigned char)c >= (unsigned char)0x80 || (unsigned char)d >= (unsigned char)0x80) {
+					(*it)->hint = (*it)->hint.substr(m, scrollneedspace - 1);
+					m += 1;
+				}
+				else
+					(*it)->hint = (*it)->hint.substr(m, scrollneedspace - 1);
+			}
+			++m;
+			index = 0;
+		}
+		num++;
+		ui::Render((*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color);
+		index++;
+		//End
+		if (_IsShowFrame) {
+			extern BOOL RenderHintFrame(const RECT* rc, DWORD color);
+			RenderHintFrame(&rt, D3DCOLOR_ARGB(255, 123, 218, 229));
+			rt.left--;
+			rt.top--;
+			rt.right++;
+			rt.bottom++;
+			RenderHintFrame(&rt, COLOR_BLACK);
 		}
 	}
 }

@@ -32,37 +32,32 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 		strcpy(szLogName, pCha->getLogName());
 	}
 
-	try {
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", pCNetIf->m_ulPacketCount));
-		switch (type) {
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", pCNetIf->m_ulPacketCount));
+	switch (type) {
 		case enumACTION_MOVE: {
 			stNetMoveInfo* pMove = (stNetMoveInfo*)param;
 			pk.WriteSequence((cChar*)pMove->pos_buf, uShort(sizeof(Point) * pMove->pos_num));
 			pCNetIf->SendPacketMessage(pk);
 
-			char buffer[64] = {0};
-			char buf[64] = {0};
 			CCharacter* pCha = CGameScene::GetMainCha();
 			CGameScene* pScene = g_pGameApp->GetCurScene();
 			if (!pCha->IsBoat()) {
 				int nArea = pScene->_pTerrain->GetTile(pCha->GetCurX() / 100, pCha->GetCurY() / 100)->getIsland();
 				CAreaInfo* pArea = GetAreaInfo(nArea);
 
-				sprintf(buf, "In %s", pArea->DataName.c_str());
-
-				sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+				const std::string buf = std::format("In {}", pArea->DataName);
+				const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 						g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
 				if (pCha->GetTeamLeaderID() > 0) {
 				}
 				else {
-					updateDiscordPresence(buffer, buf);
+					updateDiscordPresence(buffer.c_str(), buf.c_str());
 				}
 			}
 			else {
-				sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+				const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 						g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
-				sprintf(buf, "Sailing");
-				updateDiscordPresence(buffer, buf);
+				updateDiscordPresence(buffer.c_str(), "Sailing");
 			}
 
 			g_logManager.InternalLog(LogLevel::Debug, "common",
@@ -364,10 +359,6 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 		}
 		default:
 			break;
-		}
-	}
-	catch (...) {
-		//MessageBox(0, "!!!!!!!!!!!!!!!!!!!!exception: Begin Action", "error", 0);fix compile again
 	}
 }
 
@@ -440,14 +431,11 @@ bool CProCirculate::SendPrivateKey() {
 		std::string aesHex, encHex;
 		aesHex.reserve(64);
 		encHex.reserve(resultLen * 2);
-		char buf[3];
 		for (int i = 0; i < 32; i++) {
-			sprintf(buf, "%02x", g_NetIF->cliAesKey[i]);
-			aesHex += buf;
+			aesHex += std::format("{:02x}", g_NetIF->cliAesKey[i]);
 		}
 		for (ULONG i = 0; i < resultLen; i++) {
-			sprintf(buf, "%02x", encryptedKey[i]);
-			encHex += buf;
+			encHex += std::format("{:02x}", encryptedKey[i]);
 		}
 		ToLogService("connections", "SendPrivateKey: AES-256 key (32 bytes):\n{}", aesHex.c_str());
 		ToLogService("connections", "SendPrivateKey: RSA-encrypted key ({} bytes):\n{}", resultLen, encHex.c_str());

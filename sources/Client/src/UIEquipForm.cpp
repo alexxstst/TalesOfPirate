@@ -40,8 +40,6 @@ using namespace std;
 
 using namespace GUI;
 
-static char szBuf[32] = {0};
-
 CGuiPic CEquipMgr::_imgCharges[enumEQUIP_NUM];
 CEquipMgr::SSplitItem CEquipMgr::SSplit;
 int CEquipMgr::lIMP = 0;
@@ -215,12 +213,10 @@ bool CEquipMgr::Init() {
 
 	_pFastCommands = new CFastCommand*[SHORT_CUT_NUM];
 	memset(_pFastCommands, 0, sizeof(CFastCommand*) * SHORT_CUT_NUM);
-	char szName[30] = {0};
-
 
 	for (auto i = 0; i < MAX_FAST_COL; ++i) {
-		sprintf(szName, "fscMainF%d", i);
-		_pFastCommands[i] = dynamic_cast<CFastCommand*>(frmFast->Find(szName));
+		const std::string szName = std::format("fscMainF{}", i);
+		_pFastCommands[i] = dynamic_cast<CFastCommand*>(frmFast->Find(szName.c_str()));
 		if (_pFastCommands[i]) {
 			_pFastCommands[i]->nTag = i;
 			_pFastCommands[i]->evtChange = _evtFastChange;
@@ -240,8 +236,8 @@ bool CEquipMgr::Init() {
 
 
 	for (auto i = MAX_FAST_COL * 2; i < MAX_FAST_COL * 3; ++i) {
-		sprintf(szName, "fscMainF2%d", i - 12);
-		_pFastCommands[i] = dynamic_cast<CFastCommand*>(frmFast2->Find(szName));
+		const std::string szName = std::format("fscMainF2{}", i - 12);
+		_pFastCommands[i] = dynamic_cast<CFastCommand*>(frmFast2->Find(szName.c_str()));
 		if (_pFastCommands[i]) {
 			_pFastCommands[i]->nTag = i;
 			_pFastCommands[i]->evtChange = _evtFastChange;
@@ -732,7 +728,7 @@ void CEquipMgr::_evtFastChange(CGuiData* pSender, CCommandObj* pItem, bool& isAc
 	int nIndex = pFast->nTag;
 	if (!g_stUIEquip._GetCommandShortCutType(pItem, chType, sGridID)) {
 		isAccept = false;
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(553), pItem->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(553), pItem->GetName()));
 		return;
 	}
 	g_stUIEquip.FastChange(nIndex, sGridID, chType);
@@ -791,9 +787,7 @@ void CEquipMgr::UpdataEquipSpy(const stNetChangeChaPart& SPart, CCharacter* pCha
 	eqSpyTarget = pCha;
 
 	CLabel* labTitle = (CLabel*)frmItemSpy->Find("labTitle");
-	char buf[64];
-	sprintf(buf, "Stalk - %s", pCha->getName().c_str());
-	labTitle->SetCaption(buf);
+	labTitle->SetCaption(std::format("Stalk - {}", pCha->getName()).c_str());
 
 
 	memcpy(&stEquipSpy, &SPart, sizeof(SPart));
@@ -1307,7 +1301,7 @@ void CEquipMgr::evtSwapItemEvent(CGuiData* pSender, int nFirst, int nSecond, boo
 	if (!pSelf) return;
 
 	if (pSelf->IsBoat() && pSelf != CGameScene::GetMainCha()) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(557).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(557));
 		return;
 	}
 
@@ -1444,7 +1438,7 @@ void CEquipMgr::_evtThrowBoatDialogEvent(CCompent* pSender, int nMsgType, int x,
 
 void CEquipMgr::_SendThrowData(const stThrow& sthrow, int nThrowNum) {
 	if (sthrow.pSelf->IsBoat() && sthrow.pSelf != CGameScene::GetMainCha()) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(557).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(557));
 		return;
 	}
 
@@ -1492,9 +1486,7 @@ void CEquipMgr::UpdateIMP(int IMP) {
 	lIMP = IMP;
 	//CForm* frmInv = _FindForm("frmInv");
 	CLabel* lblIMP = dynamic_cast<CLabel*>(frmInv->Find("labItemIMPnumber"));
-	char szBuf[16];
-	sprintf(szBuf, "%s", StringSplitNum(IMP));
-	lblIMP->SetCaption(szBuf);
+	lblIMP->SetCaption(StringSplitNum(IMP));
 }
 
 void CEquipMgr::FrameMove(DWORD dwTime) {
@@ -1505,12 +1497,8 @@ void CEquipMgr::FrameMove(DWORD dwTime) {
 
 		SGameAttr* pGameAttr = pCha->getGameAttr();
 		if (frmSkill->GetIsShow()) {
-			// 
-			sprintf(szBuf, "%d", pGameAttr->get(ATTR_TP));
-			labPoint->SetCaption(szBuf);
-
-			sprintf(szBuf, "%d", pGameAttr->get(ATTR_LIFETP));
-			labPointLife->SetCaption(szBuf);
+			labPoint->SetCaption(std::format("{}", pGameAttr->get(ATTR_TP)).c_str());
+			labPointLife->SetCaption(std::format("{}", pGameAttr->get(ATTR_LIFETP)).c_str());
 
 			RefreshUpgrade();
 		}
@@ -1528,8 +1516,7 @@ void CEquipMgr::FrameMove(DWORD dwTime) {
 
 
 			if (frmInv->GetIsShow()) {
-				sprintf(szBuf, "%s", StringSplitNum(pGameAttr->get(ATTR_GD)));
-				lblGold->SetCaption(szBuf);
+				lblGold->SetCaption(StringSplitNum(pGameAttr->get(ATTR_GD)));
 
 				for (int i = 0; i < enumEQUIP_NUM; i++)
 					_imgCharges[i].Next();

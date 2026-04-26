@@ -129,28 +129,26 @@ bool CChat::Init() {
 
 	CFormMgr& mgr = CFormMgr::s_Mgr;
 
-	//
-	char szBuf[80] = {0};
 	for (int i = 0; i < MAX_MEMBER; i++) {
-		sprintf(szBuf, "frmTeamMenber%d", i + 1);
-		frmTeamMenber[i] = mgr.Find(szBuf);
+		std::string szBuf = std::format("frmTeamMenber{}", i + 1);
+		frmTeamMenber[i] = mgr.Find(szBuf.c_str());
 		if (!frmTeamMenber[i]) return false;
 		frmTeamMenber[i]->SetIsShow(false);
 		frmTeamMenber[i]->Refresh();
 
-		sprintf(szBuf, "proTeamMenber%dHP", i + 1);
-		proTeamMenberHP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf));
-		if (!proTeamMenberHP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
+		szBuf = std::format("proTeamMenber{}HP", i + 1);
+		proTeamMenberHP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf.c_str()));
+		if (!proTeamMenberHP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf.c_str());
 		proTeamMenberHP[i]->SetRange(0.0f, 1.0f);
 
-		sprintf(szBuf, "proTeamMenber%dSP", i + 1);
-		proTeamMenberSP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf));
-		if (!proTeamMenberSP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
+		szBuf = std::format("proTeamMenber{}SP", i + 1);
+		proTeamMenberSP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf.c_str()));
+		if (!proTeamMenberSP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf.c_str());
 		proTeamMenberSP[i]->SetRange(0.0f, 1.0f);
 
-		sprintf(szBuf, "labMenber%dName", i + 1);
-		labMenberName[i] = dynamic_cast<CLabelEx*>(frmTeamMenber[i]->Find(szBuf));
-		if (!labMenberName[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
+		szBuf = std::format("labMenber{}Name", i + 1);
+		labMenberName[i] = dynamic_cast<CLabelEx*>(frmTeamMenber[i]->Find(szBuf.c_str()));
+		if (!labMenberName[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf.c_str());
 
 		labLv[i] = dynamic_cast<CLabelEx*>(frmTeamMenber[i]->Find("labFLv"));
 		if (!labLv[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "labFLv");
@@ -406,9 +404,7 @@ void CChat::RefreshTeamData(CMember* pCurMember) {
 	proTeamMenberHP[i]->SetRange(0.0f, (float)pCurMemData->GetMaxHP());
 	proTeamMenberHP[i]->SetPosition((float)pCurMemData->GetHP());
 
-	static char szBuf[32] = {0};
-	sprintf(szBuf, "%d", pCurMemData->GetLV());
-	labLv[i]->SetCaption(szBuf);
+	labLv[i]->SetCaption(std::format("{}", pCurMemData->GetLV()).c_str());
 
 	if (pCurMemData->GetFace()) _pCharacter[i]->UpdataFace(*pCurMemData->GetFace());
 }
@@ -732,8 +728,8 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 
 		CCharacter* pCha = pScene->SearchByHumanName(labMenberName[pSender->nTag]->GetCaption());
 		if (!pCha) {
-			g_pGameApp->SysInfo(
-				"%s", SafeVFormat(GetLanguageString(474), labMenberName[pSender->nTag]->GetCaption()).c_str());
+			g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(474),
+											labMenberName[pSender->nTag]->GetCaption()));
 			return;
 		}
 
@@ -763,8 +759,8 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 				return;
 			}
 		}
-		g_pGameApp->SysInfo(
-			"%s", SafeVFormat(GetLanguageString(476), labMenberName[pSender->nTag]->GetCaption()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(476),
+										labMenberName[pSender->nTag]->GetCaption()));
 	}
 }
 
@@ -1073,7 +1069,7 @@ void CChat::_OnMouseMasterMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			//
-			g_pGameApp->SysInfo("%s", GetLanguageString(865).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(865));
 		}
 	}
 	else if (strCommand == GetLanguageString(484)) //
@@ -1085,7 +1081,7 @@ void CChat::_OnMouseMasterMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			//
-			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(866));
 		}
 	}
 	else if (strCommand == GetLanguageString(481)) //
@@ -1133,7 +1129,7 @@ void CChat::_OnMouseStudentMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			//
-			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(866));
 		}
 	}
 	else if (strCommand == GetLanguageString(481)) //
@@ -1190,7 +1186,7 @@ void CChat::_evtAddFrnd(CGuiData* pSender, int x, int y, DWORD key) {
 			CS_Frnd_Invite(name.c_str());
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(51));
 		}
 	}
 	else {
@@ -1247,7 +1243,7 @@ void CChat::_evtChangeMotto(CGuiData* pSender, int x, int y, DWORD key) {
 	std::string name = _pEditMotto->GetCaption();
 
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, name) || !IsValidName(name)) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(51));
 		return;
 	}
 
@@ -1300,9 +1296,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 
 	CLabelEx* pLv = dynamic_cast<CLabelEx*>(_frmDetails->Find("labLv"));
 	if (pLv) {
-		char buf[32] = {0};
-		sprintf(buf, "%d", pMember->GetLevel());
-		pLv->SetCaption(buf);
+		pLv->SetCaption(std::format("{}", pMember->GetLevel()).c_str());
 	}
 	else {
 		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "labLv");
@@ -1409,7 +1403,7 @@ void CChat::_OnDragEnd(CForm* pTargetForm, CTreeView* pTree, CTreeNodeObj* pNode
 		}
 		else {
 			if (string(pMember->GetName()) == pSessForm->GetMemberByIndex(0)->GetName()) {
-				g_pGameApp->SysInfo("%s", GetLanguageString(488).c_str());
+				g_pGameApp->SysInfo(GetLanguageString(488));
 				return;
 			}
 			pSessForm->AddMemberToBuffer(pMember->GetName());

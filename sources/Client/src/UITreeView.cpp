@@ -216,7 +216,8 @@ CItemObj* CTreeNodeObj::GetHitItem(int x, int y) {
 }
 
 CTreeNodeObj* CTreeNodeObj::FindNode(const char* str) {
-	if (strcmp(str, GetCaption()) == 0) {
+	const std::string_view query{str};
+	if (query == GetCaption()) {
 		return this;
 	}
 
@@ -224,7 +225,7 @@ CTreeNodeObj* CTreeNodeObj::FindNode(const char* str) {
 
 	TreeNodes::iterator end = GetChild().end();
 	for (TreeNodes::iterator it = GetChild().begin(); it != end; ++it) {
-		if (strcmp(str, (*it)->GetCaption()) == 0)
+		if (query == (*it)->GetCaption())
 			return *it;
 	}
 
@@ -480,7 +481,7 @@ CItemObj* CTreeGridNode::FindItem(CItemObj* item) {
 
 bool CTreeGridNode::DelItem(const char* str) {
 	for (vitems::iterator it = _items.begin(); it != _items.end(); ++it) {
-		if (strcmp(str, (*it)->GetString()) == 0) {
+		if (std::string_view{str} == (*it)->GetString()) {
 			if (_pOwn->GetSelect()->GetItem() == *it) {
 				_pOwn->GetSelect()->CancelSelect();
 			}
@@ -547,16 +548,12 @@ CTreeView::~CTreeView(void) {
 }
 
 void CTreeView::Render() {
-	try {
-		_pImage->Render(GetX(), GetY());
+	_pImage->Render(GetX(), GetY());
 
-		// ,SelectItem
-		_pSelectItem->Render();
+	// ,SelectItem
+	_pSelectItem->Render();
 
-		if (_pScroll->GetIsShow()) _pScroll->Render();
-	}
-	catch (...) {
-	}
+	if (_pScroll->GetIsShow()) _pScroll->Render();
 }
 
 void CTreeView::Refresh() {

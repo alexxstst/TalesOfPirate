@@ -930,18 +930,18 @@ CEffectObj* CCharacter::SkyEffect(int nEffectID, int nBeginDummy, int nItemDummy
 bool CCharacter::ChangeReadySkill(int nSkillID) {
 	CSkillRecord* p = GetSkillRecordInfo(nSkillID);
 	if (!p) {
-		g_pGameApp->AddTipText("%s", SafeVFormat(GetLanguageString(17), p->szName).c_str());
+		g_pGameApp->AddTipText(SafeVFormat(GetLanguageString(17), p->szName));
 		return false;
 	}
 
 	if (_pReadySkillInfo && _pReadySkillInfo->sID == nSkillID) return true;
 
 	if (!p->GetIsValid()) {
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(18), p->szName).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(18), p->szName));
 		return false;
 	}
 
-	g_pGameApp->AddTipText("%s", SafeVFormat(GetLanguageString(19), p->szName).c_str());
+	g_pGameApp->AddTipText(SafeVFormat(GetLanguageString(19), p->szName));
 	_SetReadySkill(p);
 	return true;
 }
@@ -2291,10 +2291,7 @@ bool CCharacter::GetIsOnMount(){
 	if (this->_stChaPart.SLink[enumEQUIP_MOUNT].sID == 15054){
 		return true;
 	}
-	char buf[32];
-	sprintf(buf, "id: %d",this->_stChaPart.SLink[enumEQUIP_MOUNT].sID);
-
-	g_pGameApp->SysInfo(buf);
+	g_pGameApp->SysInfo(std::format("id: {}", this->_stChaPart.SLink[enumEQUIP_MOUNT].sID).c_str());
 
 	return false;
 }

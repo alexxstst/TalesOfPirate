@@ -15,7 +15,7 @@ CTextParse::~CTextParse(void) {
 
 
 void CTextParse::Render(string str, int x, int y, DWORD color, ALLIGN allign, int height) {
-	int length = (int)strlen(str.c_str());
+	int length = (int)str.size();
 
 	int iPosX = x;
 	int iPosY = y;
@@ -78,7 +78,7 @@ void CTextParse::Render(string str, int x, int y, DWORD color, ALLIGN allign, in
 }
 
 void CTextParse::RenderEx(string str, int x, int y, DWORD color, float scale) {
-	int length = (int)strlen(str.c_str());
+	int length = (int)str.size();
 
 	int iPosX = x;
 	int iPosY = y;

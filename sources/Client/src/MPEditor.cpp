@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "MPEditor.h"
 #include "GameApp.h"
+#include "DebugStateSystem.h"
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneItem.h"
@@ -520,32 +521,28 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 		dwSeaTime = pCurTerrain->m_dwSeaRenderTime;
 	}
 	if (dwTimeParam - g_dwLastReportTick > 500) {
-		char szInfo[255];
-		sprintf(szInfo, "FPS:%2d-%2d A:%2d F:%2d S:%2d O:%2d C:%2d U:%2d T:%2d E:%2d M:%2d CH:%2d",
-				g_Render.GetFPS(),
-				CGameApp::GetFrame()->GetFPS(),
-				g_pGameApp->GetRenderUseTime(),
-				g_pGameApp->GetFrameMoveUseTime(),
-				g_pGameApp->m_dwRenderSceneTime,
-				g_pGameApp->m_dwRenderScneObjTime,
-				g_pGameApp->m_dwRenderChaTime,
-				g_pGameApp->m_dwRenderUITime,
-				dwTerrainTime, dwSeaTime,
-				g_pGameApp->m_dwRenderMMap,
-				CGameApp::GetCurScene()->m_dwValidChaCnt
-		);
-
-		//if(g_pGameApp->m_dwRenderUITime > 0)
-		g_Render.Print(INFO_PERF, 10, 5, "%s", szInfo);
+		auto& dbg = DebugStateSystem::Instance();
+		dbg.SetFmt(DebugStateSystem::Category::Performance, 10, 5,
+				   "FPS:{:2}-{:2} A:{:2} F:{:2} S:{:2} O:{:2} C:{:2} U:{:2} T:{:2} E:{:2} M:{:2} CH:{:2}",
+				   g_Render.GetFPS(),
+				   CGameApp::GetFrame()->GetFPS(),
+				   g_pGameApp->GetRenderUseTime(),
+				   g_pGameApp->GetFrameMoveUseTime(),
+				   g_pGameApp->m_dwRenderSceneTime,
+				   g_pGameApp->m_dwRenderScneObjTime,
+				   g_pGameApp->m_dwRenderChaTime,
+				   g_pGameApp->m_dwRenderUITime,
+				   dwTerrainTime, dwSeaTime,
+				   g_pGameApp->m_dwRenderMMap,
+				   CGameApp::GetCurScene()->m_dwValidChaCnt);
 
 		MPStaticStreamMgrDebugInfo ssmdi;
 		MPIStaticStreamMgr* ssm = g_Render.GetInterfaceMgr()->res_mgr->GetStaticStreamMgr();
 		ssm->GetDebugInfo(&ssmdi);
-		sprintf(szInfo, "VB total:%d, used:%d, free:%d, locked:%d\nIB total:%d, used:%d, free:%d, locked:%d",
-				ssmdi.vbs_size, ssmdi.vbs_used_size, ssmdi.vbs_free_size, ssmdi.vbs_locked_size,
-				ssmdi.ibs_size, ssmdi.ibs_used_size, ssmdi.ibs_free_size, ssmdi.ibs_locked_size);
-
-		g_Render.Print(INFO_PERF, 200, 200, "%s", szInfo);
+		dbg.SetFmt(DebugStateSystem::Category::Performance, 200, 200,
+				   "VB total:{}, used:{}, free:{}, locked:{}\nIB total:{}, used:{}, free:{}, locked:{}",
+				   ssmdi.vbs_size, ssmdi.vbs_used_size, ssmdi.vbs_free_size, ssmdi.vbs_locked_size,
+				   ssmdi.ibs_size, ssmdi.ibs_used_size, ssmdi.ibs_free_size, ssmdi.ibs_locked_size);
 
 
 		g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(200), g_Render.GetFPS(),
@@ -586,14 +583,12 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 
 #if 0
 		{
-			char buf[256];
 			lwWatchDevVideoMemInfo* info = g_Render.GetInterfaceMgr()->dev_obj->GetWatchVideoMemInfo();
-			sprintf(buf, "total: %d, tex: %d, vbib: %d\n",
+			g_logManager.InternalLog(LogLevel::Debug, "common",
+				std::format("total: {}, tex: {}, vbib: {}\n",
 					info->alloc_tex_size + info->alloc_vb_size + info->alloc_ib_size,
 					info->alloc_tex_size,
-					info->alloc_vb_size + info->alloc_ib_size
-			);
-			g_logManager.InternalLog(LogLevel::Debug, "common", buf);
+					info->alloc_vb_size + info->alloc_ib_size));
 		}
 #endif
 
@@ -602,9 +597,9 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 
 #if 1
 	// by lsh
-	char buf[1024];
-	sprintf(buf,
-			"FPS:%3d-%3d, R:%3d F:%3d, S:%3d, SO:%3d, SC:%3d, SE:%3d, MM:%3d, SX:%3d, ST:%3d, SS:%3d, SU:%3d L:%3d, P:%3d, M:%3d\n",
+	g_logManager.InternalLog(LogLevel::Debug, "fps",
+		std::format(
+			"FPS:{:3}-{:3}, R:{:3} F:{:3}, S:{:3}, SO:{:3}, SC:{:3}, SE:{:3}, MM:{:3}, SX:{:3}, ST:{:3}, SS:{:3}, SU:{:3} L:{:3}, P:{:3}, M:{:3}\n",
 			g_Render.GetFPS(),
 			CGameApp::GetFrameFPS(),
 			g_pGameApp->GetRenderUseTime(),
@@ -620,9 +615,7 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 			g_pGameApp->m_dwRenderUITime,
 			g_pGameApp->m_dwLoadingObjTime,
 			g_pGameApp->m_dwPathFinding,
-			g_nTemp);
-
-	g_logManager.InternalLog(LogLevel::Debug, "fps", buf);
+			g_nTemp));
 
 	//LG("fps", "FPS:%3d, R:%3d F:%3d, S:%3d, SO:%3d, SC:%3d, SE:%3d, SX:%3d, ST:%3d, SS:%3d, SU:%3d L:%3d, M:%3d\n",
 	//    g_Render.GetFPS(),
@@ -670,15 +663,18 @@ void MPEditor::FrameMove(DWORD dwTimeParam) {
 			int x = 600;
 			int y = 300;
 			int nTotal = 0;
+			auto& dbg = DebugStateSystem::Instance();
 			for (int i = 0; i < 1000; i++) {
 				if (sMonsterStatus[i] > 0) {
 					CChaRecord* pInfo = GetChaRecordInfo(i);
-					g_Render.Print(INFO_DEBUG, x, y, "[%d] %s %d", i, pInfo->DataName.c_str(), sMonsterStatus[i]);
+					dbg.SetFmt(DebugStateSystem::Category::Debug, x, y,
+							   "[{}] {} {}", i, pInfo->DataName, sMonsterStatus[i]);
 					y = y + 20;
 					nTotal += sMonsterStatus[i];
 				}
 			}
-			g_Render.Print(INFO_DEBUG, x, y, "%s", SafeVFormat(GetLanguageString(206), nTotal).c_str());
+			dbg.Set(DebugStateSystem::Category::Debug, x, y,
+					SafeVFormat(GetLanguageString(206), nTotal));
 		}
 	}
 
@@ -705,7 +701,8 @@ void MPEditor::FrameMove(DWORD dwTimeParam) {
 		case 0: {
 			CCharacter* pSelCha = pCurScene->GetCha(m_nSelID);
 			pSelCha->setPos(nX, nY);
-			g_Render.Print(INFO_DEBUG, 200, nStartY, "Sel Angle = %d\n", FixAngle(pSelCha->getYaw()));
+			DebugStateSystem::Instance().SetFmt(DebugStateSystem::Category::Debug, 200, nStartY,
+												"Sel Angle = {}", FixAngle(pSelCha->getYaw()));
 			break;
 		}
 		case 1:

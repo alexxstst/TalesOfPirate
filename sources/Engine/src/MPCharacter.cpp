@@ -178,7 +178,7 @@ LW_BEGIN
 	LW_RESULT MPCharacter::Load(const MPChaLoadInfo* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (strlen(info->bone) > 0) {
+		if (info->bone[0] != '\0') {
 			if (LW_RESULT r = _physique->LoadBone(info->bone); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _physique->LoadBone failed: bone={}, ret={}",
@@ -189,7 +189,7 @@ LW_BEGIN
 
 
 		for (int i = 0; i < LW_MAX_SUBSKIN_NUM; i++) {
-			if (strlen(info->part[i]) == 0)
+			if (info->part[i][0] == '\0')
 				continue;
 
 			if (LW_RESULT r = LoadPart(i, info->part[i]); LW_FAILED(r)) {
@@ -211,10 +211,9 @@ LW_BEGIN
 
 
 		if (load_bone == 1) {
-			char path_bone[LW_MAX_PATH];
-			sprintf(path_bone, "%04d.lab", obj_id);
+			const std::string path_bone = std::format("{:04}.lab", obj_id);
 
-			if (LW_RESULT r = _physique->LoadBone(path_bone); LW_FAILED(r)) {
+			if (LW_RESULT r = _physique->LoadBone(path_bone.c_str()); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _physique->LoadBone failed: obj_id={}, group_id={}, path_bone={}, ret={}",
 							 __FUNCTION__, obj_id, group_id, path_bone, static_cast<long long>(r));
@@ -270,8 +269,7 @@ LW_BEGIN
 	LW_RESULT MPCharacter::LoadPart(DWORD part_id, DWORD file_id) {
 		LW_RESULT ret = LW_RET_OK;
 
-		char path_mesh[LW_MAX_NAME];
-		sprintf(path_mesh, "%010d.lgo", file_id);
+		const std::string path_mesh = std::format("{:010}.lgo", file_id);
 
 
 		if (LW_SUCCEEDED(ret = _physique->CheckPrimitive( part_id ))) {
@@ -284,12 +282,12 @@ LW_BEGIN
 			}
 		}
 
-		ret = _physique->LoadPrimitive(part_id, path_mesh);
+		ret = _physique->LoadPrimitive(part_id, path_mesh.c_str());
 		if (LW_FAILED(ret)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] LoadPrimitive failed: part_id={}, file_id={}, path_mesh={}, ret={}",
 						 __FUNCTION__, part_id, file_id, path_mesh, static_cast<long long>(ret));
-			LG_MSGBOX("Load MPCharacter %s error", path_mesh);
+			LG_MSGBOX("Load MPCharacter {} error", path_mesh);
 			goto __ret;
 		}
 
@@ -317,7 +315,7 @@ LW_BEGIN
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] LoadPrimitive failed: part_id={}, file={}, ret={}",
 						 __FUNCTION__, part_id, file ? file : "(null)", static_cast<long long>(ret));
-			LG_MSGBOX("Load MPCharacter %s error", file);
+			LG_MSGBOX("Load MPCharacter {} error", file ? file : "(null)");
 			goto __ret;
 		}
 

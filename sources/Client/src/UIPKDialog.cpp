@@ -28,14 +28,13 @@ bool CPkDialog::Init() {
 		frmTeamPkStart->evtEntrustMouseEvent = _MainMousePkStartEvent;
 		frmTeamPkStart->SetIsEscClose(false);
 
-		char szBuf[32];
 		for (int i(0); i < TEAM_NUM; i++) {
-			sprintf(szBuf, "lstTeam%d", i);
-			lvStartTeams[i] = dynamic_cast<CListView*>(frmTeamPkStart->Find(szBuf));
+			const std::string szBuf = std::format("lstTeam{}", i);
+			lvStartTeams[i] = dynamic_cast<CListView*>(frmTeamPkStart->Find(szBuf.c_str()));
 			if (!lvStartTeams[i])
 				return Error(GetLanguageString(616).c_str(),
 							 frmTeamPkStart->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 
 			CItemRow* pRow(0);
 			CItem* pItem(0);
@@ -82,33 +81,25 @@ void CPkDialog::SetStartDialogContent(const stNetTeamFightAsk& sNetTeamFightAsk)
 	int iLeftNum = static_cast<int>(sNetTeamFightAsk.chSideNum1);
 	int iRightNum = static_cast<int>(sNetTeamFightAsk.chSideNum2);
 
-	char szBuf[128];
 	for (int i(0); i < iLeftNum; i++) {
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(
-			sNetTeamFightAsk.Info[i].szName.c_str());
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(
-			sNetTeamFightAsk.Info[i].szJob.c_str());
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i].chLv));
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(2)->SetString(szBuf);
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i].usVictoryNum));
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(3)->SetString(szBuf);
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i].usFightNum));
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(4)->SetString(szBuf);
+		auto* row = lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i);
+		row->GetIndex(0)->SetString(sNetTeamFightAsk.Info[i].szName.c_str());
+		row->GetIndex(1)->SetString(sNetTeamFightAsk.Info[i].szJob.c_str());
+		row->GetIndex(2)->SetString(std::format("{}", static_cast<int>(sNetTeamFightAsk.Info[i].chLv)).c_str());
+		row->GetIndex(3)->SetString(std::format("{}", static_cast<int>(sNetTeamFightAsk.Info[i].usVictoryNum)).c_str());
+		row->GetIndex(4)->SetString(std::format("{}", static_cast<int>(sNetTeamFightAsk.Info[i].usFightNum)).c_str());
 	}
 
 	iRightNum = static_cast<int>(sNetTeamFightAsk.chSideNum2);
 	iLeftNum = static_cast<int>(sNetTeamFightAsk.chSideNum1);
 	for (int i(0); i < iRightNum; i++) {
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(
-			sNetTeamFightAsk.Info[i + iLeftNum].szName.c_str());
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(
-			sNetTeamFightAsk.Info[i + iLeftNum].szJob.c_str());
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i + iLeftNum].chLv));
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(2)->SetString(szBuf);
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i + iLeftNum].usVictoryNum));
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(3)->SetString(szBuf);
-		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i + iLeftNum].usFightNum));
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(4)->SetString(szBuf);
+		auto* row = lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i);
+		const auto& info = sNetTeamFightAsk.Info[i + iLeftNum];
+		row->GetIndex(0)->SetString(info.szName.c_str());
+		row->GetIndex(1)->SetString(info.szJob.c_str());
+		row->GetIndex(2)->SetString(std::format("{}", static_cast<int>(info.chLv)).c_str());
+		row->GetIndex(3)->SetString(std::format("{}", static_cast<int>(info.usVictoryNum)).c_str());
+		row->GetIndex(4)->SetString(std::format("{}", static_cast<int>(info.usFightNum)).c_str());
 	}
 }
 
@@ -131,17 +122,14 @@ string CPkDialog::ShowStartDialogDebug(const stNetTeamFightAsk& sNetTeamFightAsk
 	int iRightNum = static_cast<int>(sNetTeamFightAsk.chSideNum2);
 
 	string sShow;
-	char szBuf[1024];
 	for (int i(0); i < iLeftNum; i++) {
-		sprintf(szBuf, "%d\t%s\t%s\n", sNetTeamFightAsk.Info[i].chLv, sNetTeamFightAsk.Info[i].szJob.c_str(),
-				sNetTeamFightAsk.Info[i].szName.c_str());
-		sShow += szBuf;
+		sShow += std::format("{}\t{}\t{}\n", static_cast<int>(sNetTeamFightAsk.Info[i].chLv),
+				sNetTeamFightAsk.Info[i].szJob, sNetTeamFightAsk.Info[i].szName);
 	}
 
 	for (int i(0); i < iRightNum; i++) {
-		sprintf(szBuf, "%s\t%s\t%d\n", sNetTeamFightAsk.Info[i + iLeftNum].szName.c_str(),
-				sNetTeamFightAsk.Info[i + iLeftNum].szJob.c_str(), sNetTeamFightAsk.Info[i + iLeftNum].chLv);
-		sShow += szBuf;
+		const auto& info = sNetTeamFightAsk.Info[i + iLeftNum];
+		sShow += std::format("{}\t{}\t{}\n", info.szName, info.szJob, static_cast<int>(info.chLv));
 	}
 
 	return sShow;

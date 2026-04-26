@@ -26,9 +26,7 @@ CForm* CCloneForm::Clone() {
 			CFormMgr::s_Mgr.AddForm(rv, enumMainForm);
 			rv->Init();
 
-			char buf[80] = {0};
-			sprintf(buf, "%s%d", rv->GetName(), nCountForm++);
-			rv->SetName(buf);
+			rv->SetName(std::format("{}{}", rv->GetName(), nCountForm++).c_str());
 
 			_vfrm.push_back(rv);
 			_nCount++;
@@ -75,9 +73,7 @@ CForm* CHideForm::GetHide() {
 	if (frm) {
 		CFormMgr::s_Mgr.AddForm(frm, enumMainForm);
 
-		char buf[80] = {0};
-		sprintf(buf, "%s%d", frm->GetName(), nCountForm++);
-		frm->SetName(buf);
+		frm->SetName(std::format("{}{}", frm->GetName(), nCountForm++).c_str());
 		frm->Init();
 
 		_vfrm.push_back(frm);

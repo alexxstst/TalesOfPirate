@@ -1229,22 +1229,17 @@ short MPMap::GetTileRegionAttr(int x, int y) {
 }
 
 float MPMap::GetGridHeight(int x, int y) {
-	try {
-		int offx = x - _nLastGridStartX;
-		int offy = y - _nLastGridStartY;
+	const int offx = x - _nLastGridStartX;
+	const int offy = y - _nLastGridStartY;
 
-		if (offx < 0 || offx >= _nGridShowWidth) {
-			return 0.0f;
-		}
-		if (offy < 0 || offy >= _nGridShowHeight) {
-			return 0.0f;
-		}
+	if (offx < 0 || offx >= _nGridShowWidth) {
+		return 0.0f;
+	}
+	if (offy < 0 || offy >= _nGridShowHeight) {
+		return 0.0f;
+	}
 
-		return _fHeightBuffer[offy][offx];
-	}
-	catch (...) {
-	}
-	return 0.0f;
+	return _fHeightBuffer[offy][offx];
 }
 
 BYTE MPMap::IsGridBlock(int x, int y) {

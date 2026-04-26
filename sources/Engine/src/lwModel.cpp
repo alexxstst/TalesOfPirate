@@ -109,8 +109,7 @@ LW_BEGIN
 		}
 		else {
 			// create new model object
-			char path[LW_MAX_PATH];
-			sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), file);
+			const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_MODEL_SCENE), file);
 
 
 			lwModelObjInfo* model_info_ptr;
@@ -119,9 +118,9 @@ LW_BEGIN
 
 			// use path query
 			if (model_id == LW_INVALID_INDEX) {
-				if (LW_FAILED(res_buf_mgr->QueryModelObjInfo((lwIModelObjInfo**)&model_info_ptr, path))) {
+				if (LW_FAILED(res_buf_mgr->QueryModelObjInfo((lwIModelObjInfo**)&model_info_ptr, path.c_str()))) {
 					LW_HANDLE handle;
-					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(&handle, path); LW_FAILED(r)) {
+					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(&handle, path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] RegisterModelObjInfo failed: file={}, path={}, ret={}",
 									 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
@@ -141,7 +140,7 @@ LW_BEGIN
 			else {
 				// first check object existed
 				if (LW_FAILED(res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, model_id))) {
-					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(model_id, path); LW_FAILED(r)) {
+					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(model_id, path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] RegisterModelObjInfo(model_id) failed: file={}, model_id={}, path={}, ret={}",
 									 __FUNCTION__, file ? file : "(null)", model_id, path, static_cast<long long>(r));
@@ -156,7 +155,9 @@ LW_BEGIN
 				lwResFile res;
 				res.obj_id = i;
 				res.res_type = RES_FILE_TYPE_MODEL;
-				_tcscpy(res.file_name, path);
+				std::memset(res.file_name, 0, sizeof(res.file_name));
+				std::memcpy(res.file_name, path.data(),
+							std::min<std::size_t>(path.size(), sizeof(res.file_name) - 1));
 
 				lwIPrimitive* imp;
 				_res_mgr->CreatePrimitive(&imp);
@@ -177,7 +178,7 @@ LW_BEGIN
 									 "[{}] LoadHelperInfo failed: file={}, path={}, helper_type={}, ret={}",
 									 __FUNCTION__, file ? file : "(null)", path,
 									 static_cast<int>(model_info_ptr->helper_data.type), static_cast<long long>(r));
-						LG_MSGBOX("load helper object error with file:%s", path);
+						LG_MSGBOX("load helper object error with file:{}", path);
 						return LW_RET_FAILED;
 					}
 				}

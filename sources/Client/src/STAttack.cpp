@@ -399,14 +399,8 @@ CAttackState::~CAttackState() {
 }
 
 void CAttackState::_UseSkill() {
-	try {
-		//debug mothannakh 
-		if (_pCommand) {
-			_pCommand->StartCommand();
-		}
-	}
-	catch (const std::exception&) {
-		g_pGameApp->SysInfo("something wrong happened ");
+	if (_pCommand) {
+		_pCommand->StartCommand();
 	}
 
 	CWaitAttackState::_UseSkill();
@@ -712,7 +706,7 @@ bool CAttackState::IsAllowUse() {
 	if (_IsForce) return true;
 
 	if (!g_SkillUse.IsUse(_pSkillInfo, _pSelf, _pTarget)) {
-		g_pGameApp->SysInfo("%s", g_SkillUse.GetError());
+		g_pGameApp->SysInfo(g_SkillUse.GetError());
 		return false;
 	}
 
@@ -850,15 +844,15 @@ CHitAttackState::~CHitAttackState() {
 }
 
 void CHitAttackState::ActionBegin(DWORD pose_id) {
-	g_pGameApp->SysInfo("Pose [%d] ActionBegin:%d\n", _nCurPose, pose_id);
+	g_pGameApp->SysInfo(std::format("Pose [{}] ActionBegin:{}", _nCurPose, pose_id));
 }
 
 void CHitAttackState::ActionFrame(DWORD pose_id, int key_frame) {
-	g_pGameApp->SysInfo("Pose [%d] ActionFrame ID:%d Key:%d\n", _nCurPose, pose_id, key_frame);
+	g_pGameApp->SysInfo(std::format("Pose [{}] ActionFrame ID:{} Key:{}", _nCurPose, pose_id, key_frame));
 }
 
 void CHitAttackState::ActionEnd(DWORD pose_id) {
-	g_pGameApp->SysInfo("Pose [%d] ActionEnd:%d\n", _nCurPose, pose_id);
+	g_pGameApp->SysInfo(std::format("Pose [{}] ActionEnd:{}", _nCurPose, pose_id));
 
 	_nIndex++;
 	if (_nIndex >= _nPoseNum) {
@@ -871,20 +865,18 @@ void CHitAttackState::ActionEnd(DWORD pose_id) {
 }
 
 void CHitAttackState::_End() {
-	g_pGameApp->SysInfo("%s", GetLanguageString(402).c_str());
+	g_pGameApp->SysInfo(GetLanguageString(402));
 }
 
 bool CHitAttackState::_Start() {
 	if (_fSpeed <= 0.0001f) _fSpeed = 1.0f;
 	if (_fSpeed > 1000.0f) _fSpeed = 1000.0f;
 
-	char szBuf[128] = {0};
-	string str = SafeVFormat(GetLanguageString(403), _nPoseNum, _fSpeed);
+	std::string str = SafeVFormat(GetLanguageString(403), _nPoseNum, _fSpeed);
 	for (int i = 0; i < _nPoseNum; i++) {
-		sprintf(szBuf, " %d", _nPose[i]);
-		str += szBuf;
+		std::format_to(std::back_inserter(str), " {}", _nPose[i]);
 	}
-	g_pGameApp->SysInfo(str.c_str());
+	g_pGameApp->SysInfo(str);
 
 	_nIndex = 0;
 	_nCurPose = _nPose[_nIndex];
@@ -905,15 +897,16 @@ CAllPoseState::~CAllPoseState() {
 }
 
 void CAllPoseState::ActionBegin(DWORD pose_id) {
-	g_pGameApp->SysInfo("ChaID:[%d] Pose [%d] ActionBegin:%d\n", _nCurChaID, _nCurPose, pose_id);
+	g_pGameApp->SysInfo(std::format("ChaID:[{}] Pose [{}] ActionBegin:{}", _nCurChaID, _nCurPose, pose_id));
 }
 
 void CAllPoseState::ActionFrame(DWORD pose_id, int key_frame) {
-	g_pGameApp->SysInfo("ChaID:[%d] Pose [%d] ActionFrame ID:%d Key:%d\n", _nCurChaID, _nCurPose, pose_id, key_frame);
+	g_pGameApp->SysInfo(std::format("ChaID:[{}] Pose [{}] ActionFrame ID:{} Key:{}",
+									_nCurChaID, _nCurPose, pose_id, key_frame));
 }
 
 void CAllPoseState::ActionEnd(DWORD pose_id) {
-	g_pGameApp->SysInfo("ChaID:[%d] Pose [%d] ActionEnd:%d\n", _nCurChaID, _nCurPose, pose_id);
+	g_pGameApp->SysInfo(std::format("ChaID:[{}] Pose [{}] ActionEnd:{}", _nCurChaID, _nCurPose, pose_id));
 
 	_nCurPose++;
 	if (_nCurPose >= _nPoseEnd) {
@@ -949,7 +942,7 @@ void CAllPoseState::ActionEnd(DWORD pose_id) {
 }
 
 void CAllPoseState::_End() {
-	g_pGameApp->SysInfo("%s", GetLanguageString(402).c_str());
+	g_pGameApp->SysInfo(GetLanguageString(402));
 }
 
 bool CAllPoseState::_Start() {

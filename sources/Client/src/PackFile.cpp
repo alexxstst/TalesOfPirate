@@ -70,7 +70,7 @@ __ret:
 	return true;
 }
 
-bool CPackFile::LoadPackFile(char* pszFile) {
+bool CPackFile::LoadPackFile(const char* pszFile) {
 	Clear();
 	_pPackFile = fopen(pszFile, "rb");
 	if (!_pPackFile)
@@ -105,9 +105,6 @@ bool CPackFile::PackDirectory(FILE* ptf, DirectoryData* pParentDir, const char* 
 	ptDir->dwFileNum = 0;
 	ptDir->strDirName = pszDir;
 
-	char t_Path[MAX_PATH];
-	char t_FilePath[MAX_PATH];
-
 	WIN32_FIND_DATA t_sfd;
 	HANDLE t_hFind = NULL;
 
@@ -116,9 +113,9 @@ bool CPackFile::PackDirectory(FILE* ptf, DirectoryData* pParentDir, const char* 
 	tFileData.offset = 0;
 	tFileData.length = 0;
 
-	sprintf(t_Path, "%s\\%s", pszDir, strFilter.c_str());
+	const std::string t_Path = std::format("{}\\{}", pszDir, strFilter);
 
-	if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+	if ((t_hFind = FindFirstFile(t_Path.c_str(), &t_sfd)) == INVALID_HANDLE_VALUE)
 		return false;
 	do {
 		if (t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -127,19 +124,19 @@ bool CPackFile::PackDirectory(FILE* ptf, DirectoryData* pParentDir, const char* 
 			if (strcmp(t_sfd.cFileName, "..") == 0)
 				continue;
 
-			sprintf(t_FilePath, "%s\\%s", pszDir, t_sfd.cFileName);
+			const std::string t_FilePath = std::format("{}\\{}", pszDir, t_sfd.cFileName);
 
 			ptDir->vecSubDir.push_back(tDirData);
-			PackDirectory(ptf, &ptDir->vecSubDir[ptDir->dwDirNum], t_FilePath);
+			PackDirectory(ptf, &ptDir->vecSubDir[ptDir->dwDirNum], t_FilePath.c_str());
 			ptDir->dwDirNum++;
 		}
 		else {
 			tFileData.strFileName = t_sfd.cFileName;
 			tFileData.offset = ftell(ptf);
 
-			sprintf(t_FilePath, "%s\\%s", pszDir, t_sfd.cFileName);
+			const std::string t_FilePath = std::format("{}\\{}", pszDir, t_sfd.cFileName);
 
-			tFileData.length = AddFileToTempPack(ptf, t_FilePath);
+			tFileData.length = AddFileToTempPack(ptf, t_FilePath.c_str());
 
 			ptDir->vecFile.push_back(tFileData);
 			ptDir->dwFileNum++;
@@ -294,9 +291,8 @@ CMiniPack::~CMiniPack() {
 }
 
 bool CMiniPack::Init(char* pszMapName) {
-	char pszPath[MAX_PATH];
-	sprintf(pszPath, "texture\\minimap\\%s\\%s.pk", pszMapName, pszMapName);
-	if (!LoadPackFile(pszPath))
+	const std::string pszPath = std::format("texture\\minimap\\{}\\{}.pk", pszMapName, pszMapName);
+	if (!LoadPackFile(pszPath.c_str()))
 		return false;
 
 	std::vector<sXY> vecIdx;

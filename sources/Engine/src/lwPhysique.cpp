@@ -21,26 +21,17 @@ using namespace std;
 LW_BEGIN
 	unsigned int __stdcall __load_bone(void* param) {
 		lwPhysiqueBoneInfo* bone = (lwPhysiqueBoneInfo*)param;
-		try {
-			bone->p->LoadBoneCatch(*bone);
-			bone->p->decCount();
-			delete bone;
-		}
-		catch (...) {
-		}
+		bone->p->LoadBoneCatch(*bone);
+		bone->p->decCount();
+		delete bone;
 		return 0;
 	}
 
 	unsigned int __stdcall __load_pri(void* param) {
 		lwPhysiquePriInfo* pri = (lwPhysiquePriInfo*)param;
-		try {
-			pri->p->LoadPriCatch(*pri);
-			pri->p->decCount();
-			delete pri;
-		}
-		catch (...) {
-		}
-
+		pri->p->LoadPriCatch(*pri);
+		pri->p->decCount();
+		delete pri;
 		return 0;
 	}
 
@@ -74,10 +65,9 @@ LW_BEGIN
 	}
 
 	bool lwGeomManager::LoadGeomobj(const char file[]) {
-		static char path[LW_MAX_PATH];
-		sprintf(path, "%s%s", "model\\character\\", file);
+		const std::string path = std::format("model\\character\\{}", file);
 		lwGeomObjInfo* pInfo = new lwGeomObjInfo;
-		if (LW_RESULT r = pInfo->Load(path); LW_FAILED(r)) {
+		if (LW_RESULT r = pInfo->Load(path.c_str()); LW_FAILED(r)) {
 			// TEMP: ищем источник массовой пробы character .lgo. Стектрейс через
 			std::string trace;
 			try {
@@ -106,10 +96,9 @@ LW_BEGIN
 	}
 
 	bool lwGeomManager::LoadBoneData(const char file[]) {
-		static char path[LW_MAX_PATH];
-		sprintf(path, "%s%s", "animation\\", file);
+		const std::string path = std::format("animation\\{}", file);
 		lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
-		if (LW_RESULT r = i_data->Load(path); LW_FAILED(r)) {
+		if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwIAnimDataBone::Load failed: file={}, path={}, ret={}",
 						 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
@@ -298,15 +287,16 @@ LW_BEGIN
 			lwIPathInfo* path_info = 0;
 			sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
 
-			char path[LW_MAX_PATH];
-			sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_ANIMATION), file);
+			const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_ANIMATION), file);
 
 			DWORD ret_id;
 
 			res.obj_id = 0;
 			res.res_type = RES_FILE_TYPE_GENERIC;
 			res.anim_type = ANIM_CTRL_TYPE_BONE;
-			_tcscpy(res.file_name, path);
+			std::memset(res.file_name, 0, sizeof(res.file_name));
+			std::memcpy(res.file_name, path.data(),
+						std::min<std::size_t>(path.size(), sizeof(res.file_name) - 1));
 
 			if (LW_SUCCEEDED(_res_mgr->QueryAnimCtrl(&ret_id, &res))) {
 				lwIAnimCtrlBone* anim_ctrl = NULL;
@@ -349,9 +339,8 @@ LW_BEGIN
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] tp->RegisterTask(__load_bone) failed: path={}, ret={}",
 								 __FUNCTION__, path, static_cast<long long>(r));
-					char szData[128];
-					sprintf(szData, "Load bone file error!%s.", path);
-					MessageBox(NULL, szData, "Error", MB_OK);
+					const std::string szData = std::format("Load bone file error!{}.", path);
+					MessageBox(NULL, szData.c_str(), "Error", MB_OK);
 					return LW_RET_FAILED;
 				}
 #else
@@ -359,7 +348,7 @@ LW_BEGIN
 				lwIAnimDataBone* i_data = g_GeomManager.GetBoneData(file);
 				if (i_data == NULL) {
 					i_data = LW_NEW(lwAnimDataBone);
-					if (LW_RESULT r = i_data->Load(path); LW_FAILED(r)) {
+					if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] lwAnimDataBone::Load failed: file={}, path={}, ret={}",
 									 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
@@ -542,13 +531,17 @@ LW_BEGIN
 		// query mesh pool
 		DWORD ret_id;
 
-		char path[LW_MAX_PATH];
-		sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_CHARACTER), file);
+		const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_MODEL_CHARACTER), file);
+
+		auto copyToFixedBuf = [](char* dst, std::size_t cap, std::string_view src) {
+			std::memset(dst, 0, cap);
+			std::memcpy(dst, src.data(), std::min<std::size_t>(src.size(), cap - 1));
+		};
 
 		lwResFile res;
 		res.obj_id = 0;
 		res.res_type = RES_FILE_TYPE_GEOMETRY;
-		_tcscpy(res.file_name, path);
+		copyToFixedBuf(res.file_name, sizeof(res.file_name), path);
 
 		//    return LW_RET_FAILED;
 
@@ -574,7 +567,7 @@ LW_BEGIN
 		lwResFileMesh rfm;
 		rfm.obj_id = 0;
 		rfm.res_type = RES_FILE_TYPE_GEOMETRY;
-		_tcscpy(rfm.file_name, path);
+		copyToFixedBuf(rfm.file_name, sizeof(rfm.file_name), path);
 
 		if (LW_SUCCEEDED(_res_mgr->QueryMesh( &ret_id, &rfm ))) {
 			_res_mgr->GetMesh(&mesh, ret_id);
@@ -615,9 +608,9 @@ LW_BEGIN
 				if (tex_info->stage == LW_INVALID_INDEX)
 					break;
 
-				sprintf(path, "%s%s", tex_path, tex_info->file_name);
+				const std::string texPath = std::format("{}{}", tex_path, tex_info->file_name);
 
-				if (LW_SUCCEEDED(_res_mgr->QueryTex( &tex_id, path ))) {
+				if (LW_SUCCEEDED(_res_mgr->QueryTex( &tex_id, texPath.c_str() ))) {
 					_res_mgr->GetTex(&tex, tex_id);
 					_res_mgr->AddRefTex(tex, 1);
 

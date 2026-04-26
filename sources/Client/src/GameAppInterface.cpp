@@ -250,7 +250,7 @@ void CGameApp::AutoTestUpdate() {
 
 void CGameApp::GotoScene(CGameScene* scene, bool isDelCurScene, bool IsShowLoading) {
 	if (!scene) {
-		MsgBox("%s", GetLanguageString(71).c_str());
+		MsgBox(GetLanguageString(71));
 		return;
 	}
 
@@ -397,14 +397,12 @@ void CGameApp::CreateCharImg() {
 	_pCurScene->_Render();
 
 	if (be) {
-		char szPath[255];
-		char fileName[255];
-		sprintf(szPath, "screenshot/cha");
-		Util_MakeDir(szPath);
+		const std::string szPath = "screenshot/cha";
+		Util_MakeDir(szPath.c_str());
 
-		sprintf(fileName, "%s/%s.bmp", szPath, pInfo->DataName.c_str());
+		const std::string fileName = std::format("{}/{}.bmp", szPath, pInfo->DataName);
 
-		g_Render.CaptureScreen(fileName);
+		g_Render.CaptureScreen(fileName.c_str());
 
 		if (pCha)
 			pCha->SetValid(FALSE);
@@ -490,7 +488,6 @@ BOOL CGameApp::_CreateSmMap(MPTerrain* pTerr) {
 		D3DXMatrixOrthoLH(&matProj, SHOWRSIZE,
 						  SHOWRSIZE, 0.0f, 1000.0f);
 		g_Render.SetTransformProj(&matProj);
-		char fileName[64];
 
 		D3DXMatrixLookAtLH(&matView, &vEyePt, &vLookatPt, &vUpVec);
 		g_Render.SetTransformView(&matView);
@@ -499,17 +496,16 @@ BOOL CGameApp::_CreateSmMap(MPTerrain* pTerr) {
 		pTerr->SetShowSize(SHOWRSIZE + 5,SHOWRSIZE + 5);
 		_pCurScene->RenderSMallMap();
 
-		char szPath[255];
-		sprintf(szPath, "texture/minimap/%s", _pCurScene->GetTerrainName());
-		Util_MakeDir(szPath);
-		sprintf(fileName, "%s/sm_%d_%d.bmp", szPath,
-				int(vEyePt.x / SHOWRSIZE), int(vEyePt.y / SHOWRSIZE));
+		const std::string szPath = std::format("texture/minimap/{}", _pCurScene->GetTerrainName());
+		Util_MakeDir(szPath.c_str());
+		const std::string fileName = std::format("{}/sm_{}_{}.bmp", szPath,
+												 int(vEyePt.x / SHOWRSIZE), int(vEyePt.y / SHOWRSIZE));
 
-		g_Render.CaptureScreen(fileName);
+		g_Render.CaptureScreen(fileName.c_str());
 
 		IDirect3DTextureX* pTex = NULL;
 		D3DXCreateTextureFromFileEx(g_Render.GetDevice(),
-									fileName, //
+									fileName.c_str(), //
 									256, //
 									256, //
 									1, //mipmap1
@@ -522,7 +518,7 @@ BOOL CGameApp::_CreateSmMap(MPTerrain* pTerr) {
 									NULL, //?
 									NULL, //?
 									&pTex); //
-		D3DXSaveTextureToFile(fileName, D3DXIFF_BMP, pTex,NULL);
+		D3DXSaveTextureToFile(fileName.c_str(), D3DXIFF_BMP, pTex, NULL);
 		SAFE_RELEASE(pTex);
 	}
 	return TRUE;
@@ -534,21 +530,20 @@ BOOL CGameApp::_PrintScreen() {
 	}
 	else {
 		static int g_nScreenCap = 0;
-		char fileName[64];
 		Util_MakeDir("screenshot\\");
 
-		char pszName[64];
+		std::string pszName;
 
 		int nidx = 0;
 		while (1) {
-			sprintf(pszName, "screenshot\\%d\\", nidx);
-			if (_access(pszName, 0) == -1) {
-				Util_MakeDir(pszName);
+			pszName = std::format("screenshot\\{}\\", nidx);
+			if (_access(pszName.c_str(), 0) == -1) {
+				Util_MakeDir(pszName.c_str());
 				break;
 			}
 		}
-		sprintf(fileName, "%scap%05d.bmp", pszName, g_nScreenCap);
-		g_Render.CaptureScreen(fileName);
+		const std::string fileName = std::format("{}cap{:05}.bmp", pszName, g_nScreenCap);
+		g_Render.CaptureScreen(fileName.c_str());
 
 		auto _strTip = SafeVFormat(GetLanguageString(75), fileName);
 		Tip(_strTip.c_str());
@@ -744,47 +739,30 @@ static bool WaitModalForm(CGuiData* pSender, char& key) {
 	return false;
 }
 
-void CGameApp::MsgBox(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
-	g_stUIBox.ShowMsgBox(NULL, _szOutBuf);
+void CGameApp::MsgBox(std::string_view text) {
+	g_stUIBox.ShowMsgBox(NULL, std::string{text}.c_str());
 }
 
-void CGameApp::ShowBigText(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
-	g_stUIStart.ShowBigText(_szOutBuf);
+void CGameApp::ShowBigText(std::string_view text) {
+	g_stUIStart.ShowBigText(std::string{text}.c_str());
 }
 
-void CGameApp::ShowMidText(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
-	strncpy(_stMidFont.szText, _szOutBuf, sizeof(_stMidFont.szText));
+void CGameApp::ShowMidText(std::string_view text) {
+	const std::size_t n = std::min<std::size_t>(text.size(), sizeof(_stMidFont.szText) - 1);
+	std::memcpy(_stMidFont.szText, text.data(), n);
+	_stMidFont.szText[n] = '\0';
 	_stMidFont.dwBeginTime = GetCurTick() + SHOW_TEXT_TIME;
 	_stMidFont.btAlpha = 255;
 
-	//g_stUICoze.OnSystemSay( _szOutBuf );
-	CCozeForm::GetInstance()->OnSystemMsg(_szOutBuf);
+	CCozeForm::GetInstance()->OnSystemMsg(std::string{text}.c_str());
 }
 
-void CGameApp::ShowBottomText(unsigned int rgb, const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
+void CGameApp::ShowBottomText(unsigned int rgb, std::string_view text) {
 	STipText* tmpSize = new STipText;
 
-	strncpy(tmpSize->szText, _szOutBuf, sizeof(tmpSize->szText));
+	const std::size_t n = std::min<std::size_t>(text.size(), sizeof(tmpSize->szText) - 1);
+	std::memcpy(tmpSize->szText, text.data(), n);
+	tmpSize->szText[n] = '\0';
 	tmpSize->dwBeginTime = GetCurTick() + TIME_CQUEUE;
 	tmpSize->btAlpha = 255;
 
@@ -852,33 +830,26 @@ void CGameApp::RenderColourQueue() {
 	}
 }
 
-void CGameApp::AddTipText(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
+void CGameApp::AddTipText(std::string_view text) {
 	auto& textTip = _TipText.emplace_back(std::make_unique<STipText>());
-	strncpy(textTip->szText, _szOutBuf, TIP_TEXT_NUM);
+	const std::size_t n = std::min<std::size_t>(text.size(), TIP_TEXT_NUM - 1);
+	std::memcpy(textTip->szText, text.data(), n);
+	textTip->szText[n] = '\0';
 	textTip->dwBeginTime = GetTickCount();
 	textTip->btAlpha = 255;
 }
 
 void CGameApp::ShowStateHint(int x, int y, CChaStateMgr::stChaState stateData) {
-	char szTitle[32];
-	sprintf(szTitle, "Lv%d %s", stateData.chStateLv, stateData.pInfo->szName.c_str());
+	const std::string szTitle = std::format("Lv{} {}", stateData.chStateLv, stateData.pInfo->szName);
 	_pNotify->SetFixWidth(0);
 	_dwNotifyTime = GetCurTick() + 100;
 	_pNotify->Clear();
-	_pNotify->PushHint(szTitle, COLOR_WHITE);
-	//char szDescHint[255];
-	//_pNotify->PushHint(szDescHint, COLOR_WHITE);
+	_pNotify->PushHint(szTitle.c_str(), COLOR_WHITE);
 	if (stateData.lTimeRemaining > 0) {
-		int minutes = stateData.lTimeRemaining / 60;
-		int seconds = stateData.lTimeRemaining % 60;
-		char szTime[32];
-		sprintf(szTime, "Time Remaining: %d:%02d", minutes, seconds);
-		_pNotify->PushHint(szTime, COLOR_WHITE);
+		const int minutes = stateData.lTimeRemaining / 60;
+		const int seconds = stateData.lTimeRemaining % 60;
+		const std::string szTime = std::format("Time Remaining: {}:{:02}", minutes, seconds);
+		_pNotify->PushHint(szTime.c_str(), COLOR_WHITE);
 	}
 	_pNotify->ReadyForHint(x, y);
 }
@@ -968,30 +939,17 @@ void CGameApp::ShowNotify1(const char* szStr, int setnum, DWORD dwColor) {
 
 //End
 
-void CGameApp::AutoTestInfo(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
-	string info = _szOutBuf;
-	ShowMidText(info.c_str());
-	info += "\n";
-	g_logManager.InternalLog(LogLevel::Debug, "common", info.c_str());
+void CGameApp::AutoTestInfo(std::string_view info) {
+	ShowMidText(info);
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::string{info}.c_str());
 
 	FrameMove(GetTickCount());
 	Render();
 }
 
-void CGameApp::SysInfo(const char* pszFormat, ...) {
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(_szOutBuf, pszFormat, list);
-	va_end(list);
-
-	string info = _szOutBuf;
+void CGameApp::SysInfo(std::string_view info) {
 	//g_stUICoze.OnSystemSay( info.c_str() );
-	CCozeForm::GetInstance()->OnSystemMsg(info.c_str());
+	CCozeForm::GetInstance()->OnSystemMsg(std::string{info}.c_str());
 }
 
 void CGameApp::Waiting(bool isWaiting) {
@@ -1132,8 +1090,10 @@ void CGameApp::ResetCaption() {
 	for (int i = 0; i < nSpace; i++) szSpace[i] = ' ';
 	szSpace[nSpace] = '\0';
 
+	// CLIENT_NAME — printf-format с %.2f и %s; std::format здесь неприменим без статического формата.
 	char szCaption[350];
-	sprintf(szCaption, CLIENT_NAME, (float)(g_sClientVer % 1000) / 100, szSpace);
+	std::snprintf(szCaption, sizeof(szCaption), CLIENT_NAME,
+				  (float)(g_sClientVer % 1000) / 100, szSpace);
 	SetCaption(szCaption);
 }
 
@@ -1322,13 +1282,12 @@ void CGameApp::ReleaseAllTable() {
 
 bool CGameApp::LoadRes4() {
 	int test = 0;
-	char szBone[128];
 	CCharacter* pChar = this->GetCurScene()->_GetFirstInvalidCha();
 	for (int i = 1; i < 1200; i++) {
 		CChaRecord* pInfo = GetChaRecordInfo(i);
 		if (pInfo && (pInfo->chCtrlType == 1 || pInfo->chCtrlType == 2)) {
-			sprintf(szBone, "%04d.lab", pInfo->sModel);
-			pChar->InitBone(szBone);
+			const std::string szBone = std::format("{:04}.lab", pInfo->sModel);
+			pChar->InitBone(szBone.c_str());
 			test++;
 		}
 	}
@@ -1354,10 +1313,10 @@ void CGameApp::SetFPSInterval(DWORD v) {
 
 void CGameApp::_SceneError(const char* info, CGameScene* p) {
 	if (p) {
-		MsgBox("%s", SafeVFormat(GetLanguageString(78), p->GetInitParam()->strName, info).c_str());
+		MsgBox(SafeVFormat(GetLanguageString(78), p->GetInitParam()->strName, info));
 	}
 	else {
-		MsgBox("%s", SafeVFormat(GetLanguageString(79), info).c_str());
+		MsgBox(SafeVFormat(GetLanguageString(79), info));
 	}
 }
 
@@ -1373,9 +1332,8 @@ bool CGameApp::HasLogFile(const char* log_file, bool isOpen) {
 		fclose(fp);
 
 		if (isOpen) {
-			char buf[256] = {0};
-			sprintf(buf, "notepad %s", file.c_str());
-			::WinExec(buf, SW_SHOWNORMAL);
+			const std::string buf = std::format("notepad {}", file);
+			::WinExec(buf.c_str(), SW_SHOWNORMAL);
 		}
 		return true;
 	}
@@ -1409,11 +1367,8 @@ void LimitCurrentProc() {
 extern const char* ConsoleCallback(const char*);
 
 void CGameApp::AutoTest() {
-	char szBuf[256] = {0};
-	sprintf(szBuf, "testeffect 0 5000 1");
-	ConsoleCallback(szBuf);
-	sprintf(szBuf, "testskilleffect 0 5000 1");
-	ConsoleCallback(szBuf);
+	ConsoleCallback("testeffect 0 5000 1");
+	ConsoleCallback("testskilleffect 0 5000 1");
 
 	CGameScene* pScene = GetCurScene();
 	if (!pScene) return;
@@ -1432,13 +1387,13 @@ void CGameApp::AutoTest() {
 	for (int i(0); i < 1; i++) {
 		//
 		{
-			AutoTestInfo("%s", GetLanguageString(80).c_str());
+			AutoTestInfo(GetLanguageString(80));
 			EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
 				auto* pEffect = pScene->GetFirstInvalidEffObj();
 				if (!pEffect) return;
 
 				if (!pEffect->Create(info.Id)) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.Id).c_str());
+					AutoTestInfo(SafeVFormat(GetLanguageString(81), info.Id));
 					return;
 				}
 
@@ -1451,12 +1406,12 @@ void CGameApp::AutoTest() {
 	}
 	// ,,,
 	{
-		AutoTestInfo("%s", GetLanguageString(82).c_str());
+		AutoTestInfo(GetLanguageString(82));
 
 		ChaRecordStore::Instance()->ForEach([&](const CChaRecord& info) {
 			auto* pCha = pScene->AddCharacter(info.Id);
 			if (!pCha) {
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(83), info.Id).c_str());
+				AutoTestInfo(SafeVFormat(GetLanguageString(83), info.Id));
 				return;
 			}
 
@@ -1468,7 +1423,7 @@ void CGameApp::AutoTest() {
 
 	// begin
 	{
-		AutoTestInfo("%s", GetLanguageString(84).c_str());
+		AutoTestInfo(GetLanguageString(84));
 
 		CCharacter* pHairCha[4] = {NULL};
 		int nMax = 4;
@@ -1480,12 +1435,11 @@ void CGameApp::AutoTest() {
 			for (int j = 0; j < nMax; j++) {
 				if (hair.IsChaUse[j]) {
 					if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwItemID))
-						SysInfo("%s", SafeVFormat(GetLanguageString(85), hair.Id, j + 1, hair.dwItemID).c_str());
+						SysInfo(SafeVFormat(GetLanguageString(85), hair.Id, j + 1, hair.dwItemID));
 
 					for (int k = 0; k < hair.GetFailItemNum(); k++) {
 						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwFailItemID[k]))
-							SysInfo(
-								"%s", SafeVFormat(GetLanguageString(86), hair.Id, j + 1, hair.dwFailItemID[k]).c_str());
+							SysInfo(SafeVFormat(GetLanguageString(86), hair.Id, j + 1, hair.dwFailItemID[k]));
 					}
 					AutoTestUpdate();
 				}
@@ -1499,13 +1453,13 @@ void CGameApp::AutoTest() {
 
 	//
 	{
-		AutoTestInfo("%s", GetLanguageString(80).c_str());
+		AutoTestInfo(GetLanguageString(80));
 		EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
 			auto* pEffect = pScene->GetFirstInvalidEffObj();
 			if (!pEffect) return;
 
 			if (!pEffect->Create(info.Id)) {
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.Id).c_str());
+				AutoTestInfo(SafeVFormat(GetLanguageString(81), info.Id));
 				return;
 			}
 
@@ -1526,14 +1480,14 @@ void CGameApp::AutoTest() {
 			y = CGameScene::GetMainCha()->GetCurY();
 		}
 
-		AutoTestInfo("%s", GetLanguageString(87).c_str());
+		AutoTestInfo(GetLanguageString(87));
 		CItemRecord* pInfo = NULL;
 		CSceneItem* pItem = NULL;
 		CMagicInfo* pEffectInfo = NULL;
 		int nEffectID = 0;
 		auto checkEffect = [&](int effectID, int msgIdx, int id, const char* name) {
 			if (effectID > 0 && !GetMagicInfo(effectID))
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(msgIdx), id, name, effectID).c_str());
+				AutoTestInfo(SafeVFormat(GetLanguageString(msgIdx), id, name, effectID));
 		};
 
 		ItemRecordStore::Instance()->ForEach([&](CItemRecord& item) {
@@ -1546,14 +1500,14 @@ void CGameApp::AutoTest() {
 				auto itemPath = std::format("model/item/{}.lgo", module);
 				auto chaPath = std::format("model/character/{}.lgo", module);
 				if (!IsExistFile(itemPath.c_str()) && !IsExistFile(chaPath.c_str())) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(j == 0 ? 88 : 89), id, item.szName, j,
-												   item.chModule[j]).c_str());
+					AutoTestInfo(SafeVFormat(GetLanguageString(j == 0 ? 88 : 89), id, item.szName, j,
+												   item.chModule[j]));
 				}
 			}
 
 			if (std::string_view(item.szICON) != "0") {
 				if (!IsExistFile(item.GetIconFile()))
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(90), id, item.szName, item.szICON).c_str());
+					AutoTestInfo(SafeVFormat(GetLanguageString(90), id, item.szName, item.szICON));
 			}
 
 			checkEffect(item.sDrap, 91, id, item.szName.c_str());
@@ -1564,7 +1518,7 @@ void CGameApp::AutoTest() {
 
 			auto* sceneItem = pScene->AddSceneItem(id, 0);
 			if (!sceneItem) {
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(95), id, item.szName).c_str());
+				AutoTestInfo(SafeVFormat(GetLanguageString(95), id, item.szName));
 				return;
 			}
 
@@ -1576,13 +1530,13 @@ void CGameApp::AutoTest() {
 
 	// ...
 	{
-		AutoTestInfo("%s", GetLanguageString(96).c_str());
+		AutoTestInfo(GetLanguageString(96));
 		ItemRefineRecordStore::Instance()->ForEach([&](const CItemRefineInfo& refine) {
 			for (int k = 0; k < ITEM_REFINE_NUM; k++) {
 				int effectID = refine.Value[k];
 				if (effectID > 0 && !GetItemRefineEffectInfo(effectID)) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.Id,
-												   std::string_view(refine.DataName.c_str()), effectID).c_str());
+					AutoTestInfo(SafeVFormat(GetLanguageString(97), refine.Id,
+												   std::string_view(refine.DataName.c_str()), effectID));
 				}
 			}
 		});
@@ -1590,7 +1544,7 @@ void CGameApp::AutoTest() {
 
 	// ...
 	{
-		AutoTestInfo("%s", GetLanguageString(98).c_str());
+		AutoTestInfo(GetLanguageString(98));
 		ItemRefineEffectRecordStore::Instance()->ForEach([&](CItemRefineEffectInfo& info) {
 			for (int k = 0; k < 4; k++) {
 				int nEffectNum = info.GetEffectNum(k);
@@ -1600,8 +1554,8 @@ void CGameApp::AutoTest() {
 					for (int level = 0; level < 4; level++) {
 						int nEffectID = info.sEffectID[k][j] * 10 + level;
 						if (!GetMagicInfo(nEffectID)) {
-							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.Id,
-														   std::string_view(info.DataName.c_str()), nEffectID).c_str());
+							AutoTestInfo(SafeVFormat(GetLanguageString(99), info.Id,
+														   std::string_view(info.DataName.c_str()), nEffectID));
 						}
 					}
 				}
@@ -1611,7 +1565,7 @@ void CGameApp::AutoTest() {
 
 	//
 	{
-		AutoTestInfo("%s", GetLanguageString(100).c_str());
+		AutoTestInfo(GetLanguageString(100));
 
 		g_pGameApp->HasLogFile("iteminfoerror");
 	}

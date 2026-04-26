@@ -145,10 +145,9 @@ int I_Effect::BoundingRes(CMPResManger* m_CResMagr, const char* pszParentName) {
 			m_CTexFrame.m_vecTexs[n] =
 				m_CResMagr->GetTextureByNamelw(m_CTexFrame.m_vecTexName[n]);
 			if (!m_CTexFrame.m_vecTexs[n]) {
-				char pszMsg[64];
-				sprintf(pszMsg, "[%s][%s]",
-						pszParentName, m_CTextruelist.m_vecTexName.c_str());
-				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
+				const std::string pszMsg = std::format("[{}][{}]",
+													   pszParentName, m_CTextruelist.m_vecTexName);
+				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg.c_str());
 				return 1;
 			}
 		}
@@ -157,10 +156,9 @@ int I_Effect::BoundingRes(CMPResManger* m_CResMagr, const char* pszParentName) {
 		m_CTextruelist.m_pTex =
 			m_CResMagr->GetTextureByNamelw(m_CTextruelist.m_vecTexName);
 		if (!m_CTextruelist.m_pTex) {
-			char pszMsg[64];
-			sprintf(pszMsg, "[%s][%s]",
-					pszParentName, m_CTextruelist.m_vecTexName.c_str());
-			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
+			const std::string pszMsg = std::format("[{}][{}]",
+												   pszParentName, m_CTextruelist.m_vecTexName);
+			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg.c_str());
 			return 1;
 		}
 		m_CTextruelist.m_lpCurTex = m_CTextruelist.m_pTex->GetTex();
@@ -188,10 +186,9 @@ int I_Effect::BoundingRes(CMPResManger* m_CResMagr, const char* pszParentName) {
 		if (!m_pCModel) {
 			m_pCModel = m_CResMagr->NewTobMesh();
 			if (!m_pCModel->CreateTob(m_strModelName, m_nSegments, m_rHeight, m_rRadius, m_rBotRadius)) {
-				char pszMsg[64];
-				sprintf(pszMsg, "[%s][%s]",
-						pszParentName, m_strModelName.c_str());
-				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
+				const std::string pszMsg = std::format("[{}][{}]",
+													   pszParentName, m_strModelName);
+				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg.c_str());
 				return 2;
 			}
 		}
@@ -199,10 +196,9 @@ int I_Effect::BoundingRes(CMPResManger* m_CResMagr, const char* pszParentName) {
 	else {
 		m_pCModel = m_CResMagr->GetMeshByName(m_strModelName);
 		if (!m_pCModel) {
-			char pszMsg[64];
-			sprintf(pszMsg, "[%s][%s]",
-					pszParentName, m_CTextruelist.m_vecTexName.c_str());
-			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
+			const std::string pszMsg = std::format("[{}][{}]",
+												   pszParentName, m_CTextruelist.m_vecTexName);
+			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg.c_str());
 			return 2;
 		}
 
@@ -344,9 +340,14 @@ void I_Effect::ChangeModel(CEffectModel* pCModel, CMPResManger* pCResMagr) {
 
 //!
 bool I_Effect::SaveToFile(FILE* pFile) {
-	char t_pszName[32];
-	lstrcpy(t_pszName, m_strEffectName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, pFile);
+	// Имена в .eff-файле — фиксированный 32-байтный буфер.
+	auto writeFixedName = [&](std::string_view src) {
+		char t_pszName[32]{};
+		std::memcpy(t_pszName, src.data(),
+					std::min<std::size_t>(src.size(), sizeof(t_pszName) - 1));
+		fwrite(t_pszName, sizeof(char), 32, pFile);
+	};
+	writeFixedName(m_strEffectName);
 
 	int t_temp;
 	//!
@@ -399,16 +400,14 @@ bool I_Effect::SaveToFile(FILE* pFile) {
 	//!
 	fwrite(&m_CTextruelist.m_fFrameTime, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName, m_CTextruelist.m_vecTexName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, pFile);
+	writeFixedName(m_CTextruelist.m_vecTexName);
 
 	for (WORD n = 0; n < m_CTextruelist.m_wTexCount; n++) {
 		fwrite(&m_CTextruelist.m_vecTexList[n].front(),
 			   sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
 	//!
-	lstrcpy(t_pszName, m_pCModel->m_strName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, pFile);
+	writeFixedName(m_pCModel->m_strName);
 
 	fwrite(&_bBillBoard, sizeof(bool), 1, pFile);
 	fwrite(&_iVSIndex, sizeof(int), 1, pFile);
@@ -422,8 +421,7 @@ bool I_Effect::SaveToFile(FILE* pFile) {
 	fwrite(&m_CTexFrame.m_wTexCount, sizeof(WORD), 1, pFile);
 	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
 	for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n) {
-		lstrcpy(t_pszName, m_CTexFrame.m_vecTexName[n].c_str());
-		fwrite(t_pszName, sizeof(char), 32, pFile);
+		writeFixedName(m_CTexFrame.m_vecTexName[n]);
 	}
 	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
 
@@ -515,19 +513,17 @@ bool I_Effect::LoadFromFile(FILE* pFile, DWORD dwVersion) {
 	fread(&m_CTextruelist.m_fFrameTime, sizeof(float), 1, pFile);
 
 	fread(t_pszName, sizeof(char), 32, pFile);
-	char psname[32];
-	memset(psname, 0, 32);
-	char* pDataName = _strlwr(_strdup(t_pszName));
+	std::string lowerName{t_pszName};
+	std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(),
+				   [](unsigned char c) { return std::tolower(c); });
 
-	if ((strstr(pDataName, ".dds") == NULL) && strstr(pDataName, ".tga") == NULL) {
-		m_CTextruelist.m_vecTexName = pDataName;
+	std::string_view lowerView{lowerName};
+	if (lowerView.ends_with(".dds") || lowerView.ends_with(".tga")) {
+		m_CTextruelist.m_vecTexName.assign(lowerView.substr(0, lowerView.size() - 4));
 	}
 	else {
-		int len = lstrlen(pDataName);
-		memcpy(psname, pDataName, len - 4);
-		m_CTextruelist.m_vecTexName = psname;
+		m_CTextruelist.m_vecTexName = lowerName;
 	}
-	SAFE_DELETE_ARRAY(pDataName);
 
 
 	m_CTextruelist.m_vecTexList.resize(m_CTextruelist.m_wTexCount);
@@ -1870,15 +1866,12 @@ bool CEffectFont::CreateEffectFont(MPRender* pDev,
 		"bao",
 		"submiss",
 	};
-	char psName[64];
 	if (!bmain) {
-		sprintf(psName, "%s", str[_iTextureID].c_str());
+		m_vecTexName = str[_iTextureID];
 	}
 	else {
-		sprintf(psName, "%s2", str[_iTextureID].c_str());
+		m_vecTexName = std::format("{}2", str[_iTextureID]);
 	}
-
-	m_vecTexName = psName;
 	int id = pCResMagr->GetTextureID(m_vecTexName);
 	if (id < 0) {
 		g_logManager.LogError("errors", "CEffectFont texture {} not found", m_vecTexName.c_str());
@@ -1962,17 +1955,17 @@ bool CEffectFont::CreateEffectFont(MPRender* pDev,
 	return true;
 }
 
-void CEffectFont::SetRenderText(char* pszText) {
+void CEffectFont::SetRenderText(std::string_view pszText) {
 	if (_iTextureID == 7)
 		return;
 
 	int pos;
 	char pszt[3];
-	int len = lstrlen(pszText);
+	const std::size_t len = pszText.size();
 	_vecCurText.clear();
 
-	for (int m = 0; m < len; m++) {
-		if (pszText[m] & 0x80) {
+	for (std::size_t m = 0; m < len; m++) {
+		if (static_cast<unsigned char>(pszText[m]) & 0x80) {
 			pszt[0] = pszText[m];
 			pszt[1] = pszText[m + 1];
 			pszt[2] = '\0';

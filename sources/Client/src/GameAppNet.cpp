@@ -74,23 +74,19 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2) {
 			if (!dynamic_cast<CLoginScene*>(scene)) {
 				if (!g_ChaExitOnTime.TimeArrived()) {
 					//
-					char szBuf[256] = {0};
+					std::string szBuf;
 					if (g_NetIF) {
-						const auto reason = g_NetIF->GetDisconnectErrText(dwParam1);
-						sprintf(szBuf, reason.c_str());
+						szBuf = g_NetIF->GetDisconnectErrText(dwParam1);
 					}
 					else {
-						{
-							auto _str = SafeVFormat(GetLanguageString(139), dwParam1);
-							strncpy_s(szBuf, sizeof(szBuf), _str.c_str(), _TRUNCATE);
-						}
+						szBuf = SafeVFormat(GetLanguageString(139), dwParam1);
 					}
 
-					g_stUIBox.ShowMsgBox(_Disconnect, szBuf);
+					g_stUIBox.ShowMsgBox(_Disconnect, szBuf.c_str());
 
 					extern bool g_HaveGameMender;
 					if (g_HaveGameMender) {
-						g_pGameApp->MsgBox("%s", GetLanguageString(140).c_str());
+						g_pGameApp->MsgBox(GetLanguageString(140));
 					}
 				}
 			}
@@ -109,9 +105,8 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2) {
 	case APP_SWITCH_MAP_FAILED: {
 		g_pGameApp->Waiting(false);
 
-		char szBuf[256] = {0};
-		sprintf(szBuf, "%s[%d]", g_GetServerError(dwParam1), dwParam1);
-		g_stUIBox.ShowMsgBox(_SwitchMapFailed, szBuf);
+		const std::string szBuf = std::format("{}[{}]", g_GetServerError(dwParam1), dwParam1);
+		g_stUIBox.ShowMsgBox(_SwitchMapFailed, szBuf.c_str());
 	}
 	break;
 	case APP_SWITCH_MAP: {

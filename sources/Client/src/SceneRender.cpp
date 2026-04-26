@@ -354,13 +354,7 @@ void CGameScene::_Render() {
 					sm->SetTranspPrimitiveProc(__SceneTranspObjRenderProc, (void*)stosd);
 				}
 
-				try {
-					pObj->Render();
-					//SetupVertexFog(dev_obj, 0, 0, D3DCOLOR_XRGB(0, 0, 0), D3DFOG_EXP2, 1, 0.0086f);
-				}
-				catch (...) {
-					ToLogService("errors", LogLevel::Error, "pObj->Render()");
-				}
+				pObj->Render();
 
 				if (transp_flag) {
 					sm->SetTranspPrimitiveProc(0, 0);
@@ -743,12 +737,7 @@ void CGameScene::_Render() {
 
 		//g_Render.SetRenderState( D3DRS_LIGHTING, TRUE );
 
-		try {
-			RenderEffectMap();
-		}
-		catch (...) {
-			ToLogService("errors", LogLevel::Error, "RenderEffectMap");
-		}
+		RenderEffectMap();
 
 		//lemon add@2005.2.17
 		if (_pcPugMgr)

@@ -49,7 +49,7 @@ LW_BEGIN
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _obj->Load failed: file={}, arbitrary_flag={}, ret={}",
 						 __FUNCTION__, file ? file : "(null)", arbitrary_flag, static_cast<long long>(ret));
-			LG_MSGBOX("Load MPSceneItem %s error", file);
+			LG_MSGBOX("Load MPSceneItem {} error", file ? file : "(null)");
 		}
 
 		return ret;

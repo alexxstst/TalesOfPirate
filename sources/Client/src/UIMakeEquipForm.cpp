@@ -49,14 +49,13 @@ namespace GUI {
 						 "cmdForgeItem");
 		}
 
-		char szBuf[32];
 		for (int i(0); i < ITEM_NUM; i++) {
-			sprintf(szBuf, "cmdItem%d", i);
-			cmdItem[i] = dynamic_cast<COneCommand*>(frmMakeEquip->Find(szBuf));
+			const std::string szBuf = std::format("cmdItem{}", i);
+			cmdItem[i] = dynamic_cast<COneCommand*>(frmMakeEquip->Find(szBuf.c_str()));
 			if (!cmdItem[i])
 				return Error(GetLanguageString(561).c_str(),
 							 frmMakeEquip->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 		}
 		cmdItem[0]->evtBeforeAccept = _DragEvtEquipItem0;
 		cmdItem[1]->evtBeforeAccept = _DragEvtEquipItem1;
@@ -272,7 +271,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(686).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(686));
 				return;
 			}
 		}
@@ -280,7 +279,7 @@ namespace GUI {
 			CItemCommand* pItemCommand =
 				dynamic_cast<CItemCommand*>(cmdItem[0]->GetCommand());
 			if (!pItemCommand) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(687).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(687));
 				return;
 			}
 
@@ -291,7 +290,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(688).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(688));
 				return;
 			}
 		}
@@ -300,7 +299,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(689).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(689));
 				return;
 			}
 		}
@@ -318,7 +317,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(690).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(690));
 				return;
 			}
 		}
@@ -327,7 +326,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(691).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(691));
 				return;
 			}
 		}
@@ -461,7 +460,7 @@ namespace GUI {
 
 		//  false
 		if (pItemRecord->sType != GEN_STONE_TYPE && pItemRecord->sType != FORGE_STONE_TYPE) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(692).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(692));
 			return false;
 		}
 
@@ -475,7 +474,7 @@ namespace GUI {
 				return true;
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(693).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(693));
 				return false;
 			}
 		}
@@ -749,7 +748,7 @@ namespace GUI {
 				g_stUIMakeEquip.SetMakeEquipUI();
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(695).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(695));
 			}
 			break;
 		case EQUIP_FUSION_TYPE:
@@ -758,7 +757,7 @@ namespace GUI {
 				g_stUIMakeEquip.SetMakeEquipUI();
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(696).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(696));
 			}
 			break;
 		case EQUIP_UPGRADE_TYPE:
@@ -767,7 +766,7 @@ namespace GUI {
 				g_stUIMakeEquip.SetMakeEquipUI();
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(697).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(697));
 			}
 			break;
 		case ELF_SHIFT_TYPE: // 
@@ -776,7 +775,7 @@ namespace GUI {
 				g_stUIMakeEquip.SetMakeEquipUI();
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(698).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(698));
 			}
 		}
 
@@ -860,15 +859,15 @@ namespace GUI {
 			case MAKE_EQUIP_TYPE:
 			case EQUIP_FUSION_TYPE:
 			case EQUIP_UPGRADE_TYPE:
-				g_pGameApp->MsgBox("%s", GetLanguageString(699).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(699));
 				break;
 
 			case ELF_SHIFT_TYPE:
-				g_pGameApp->MsgBox("%s", GetLanguageString(700).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(700));
 				break;
 
 			default:
-				g_pGameApp->MsgBox("%s", GetLanguageString(701).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(701));
 				break;
 			}
 
@@ -1114,7 +1113,7 @@ namespace GUI {
 			sItemHint.sInstAttr[ITEMATTR_VAL_STA];
 
 		if (20 > nLevel) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(702).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(702));
 			return;
 		}
 
@@ -1127,7 +1126,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(703).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(703));
 				return;
 			}
 		}
@@ -1140,7 +1139,7 @@ namespace GUI {
 				PushItem(iIndex, rItem, 1);
 			}
 			else {
-				g_pGameApp->MsgBox("%s", GetLanguageString(703).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(703));
 				return;
 			}
 		}

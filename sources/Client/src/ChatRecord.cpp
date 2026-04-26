@@ -17,27 +17,11 @@ bool CChatRecord::Save(const string name, DWORD number, const string chatData) {
 	__time64_t t;
 	_time64(&t);
 	tm* ltime = _gmtime64(&t);
-	char buf[_MAX_PATH + 1];
-	char folder[_MAX_PATH + 1];
-	sprintf(folder, "chats\\%d-%d-%d", ltime->tm_year + 1900, ltime->tm_mon + 1, ltime->tm_mday);
-	CreateDirectory("chats",NULL);
-	CreateDirectory(folder,NULL);
+	const std::string folder = std::format("chats\\{}-{}-{}", ltime->tm_year + 1900, ltime->tm_mon + 1, ltime->tm_mday);
+	CreateDirectory("chats", NULL);
+	CreateDirectory(folder.c_str(), NULL);
 	ofstream chatLog;
-	//   modify by ning.yan  20080725 Begin
-	//int i=1;
-	//for (;i<1000;i++)
-	//{
-	//	m_strPath=folder+string(buf);
-	//	if (access(m_strPath.c_str(),0)!=-1) continue;
-	//	chatLog.open(m_strPath.c_str(),ios::out);
-	//	if (chatLog.is_open()) break;
-	//}
-	//if (i>=1000)
-	//{
-	//	return false;
-	//}
-	sprintf(buf, "\\%s.txt", name.c_str());
-	m_strPath = folder + string(buf);
+	m_strPath = folder + std::format("\\{}.txt", name);
 	chatLog.open(m_strPath.c_str(), ios_base::app); // 
 	// End
 	chatLog << chatData.c_str();

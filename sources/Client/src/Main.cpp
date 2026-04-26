@@ -241,13 +241,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		while (*pszPos == ' ') {
 			pszPos++;
 		}
-		char pszpath[128];
-		char pszFile[128];
-		sprintf(pszpath, "texture\\minimap\\%s", pszPos);
-		sprintf(pszFile, "texture\\minimap\\%s\\%s.pk", pszPos, pszPos);
+		const std::string pszpath = std::format("texture\\minimap\\{}", pszPos);
+		const std::string pszFile = std::format("texture\\minimap\\{}\\{}.pk", pszPos, pszPos);
 
 		CMiniPack pkfile;
-		if (pkfile.SaveToPack(pszpath, pszFile))
+		if (pkfile.SaveToPack(pszpath.c_str(), pszFile.c_str()))
 			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(188), pszPos));
 		else
 			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(189), pszPos));
@@ -266,7 +264,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 		useModelMode = true;
 
-		sprintf(modelLook, "%s", strList[0].c_str());
+		{
+			auto r = std::format_to_n(modelLook, sizeof(modelLook) - 1, "{}", strList[0]);
+			*r.out = 0;
+		}
 		modelMode = atoi(strList[1].c_str()) == 1;
 	}
 
@@ -287,11 +288,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 		useAutoLogin = true;
 		useAutoLogin2 = true;
-		sprintf(autoLoginName, "%s", strList[0].c_str());
-		sprintf(autoLoginPassword, "%s", strList[1].c_str());
-		sprintf(autoLoginChar, "%s", strList[2].c_str());
-		sprintf(Region, "%s", strList[3].c_str());
-		sprintf(Server, "%s", strList[4].c_str());
+		auto copyTo = []<size_t N>(char (&dst)[N], const std::string& src) {
+			auto r = std::format_to_n(dst, N - 1, "{}", src);
+			*r.out = 0;
+		};
+		copyTo(autoLoginName, strList[0]);
+		copyTo(autoLoginPassword, strList[1]);
+		copyTo(autoLoginChar, strList[2]);
+		copyTo(Region, strList[3]);
+		copyTo(Server, strList[4]);
 		if (autoLoginChar[0] != 0) {
 			canAutoLoginChar = true;
 		}

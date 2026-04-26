@@ -24,9 +24,6 @@ bool CMPResManger::s_resourcePreload = true;
 
 CMPResManger::CMPResManger(void) {
 	m_pDev = NULL;
-	ZeroMemory(_pszTexPath, MAX_PATH);
-	ZeroMemory(_pszMeshPath, MAX_PATH);
-	ZeroMemory(_pszEFFectPath, MAX_PATH);
 
 	_iTexNum = 0;
 	_iMeshNum = 0;
@@ -219,8 +216,7 @@ bool CMPResManger::InitRes(MPRender* pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatvie
 
 
 	_CEffectFile.InitDev(pDev);
-	const char* effectName = "shader\\dx9\\eff.fx";
-	if (!_CEffectFile.LoadEffectFromFile(effectName)) {
+	if (!_CEffectFile.LoadEffectFromFile("shader\\dx9\\eff.fx")) {
 		MessageBox(NULL, "shader\\eff.fx", "ERROR", 0);
 		return false;
 	}
@@ -229,10 +225,9 @@ bool CMPResManger::InitRes(MPRender* pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatvie
 		if (!LoadTotalVShader())
 			return false;
 
-	lstrcpy(_pszTexPath, "texture\\effect");
-
-	lstrcpy(_pszMeshPath, "model");
-	lstrcpy(_pszEFFectPath, "effect");
+	_pszTexPath = "texture\\effect";
+	_pszMeshPath = "model";
+	_pszEFFectPath = "effect";
 
 	LoadTotalTexture();
 
@@ -266,10 +261,7 @@ int CMPResManger::GetTextureID(const s_string& sName) {
 		return (*pos).second;
 	}
 
-	char szMsg[64];
-	sprintf(szMsg, "[%s]()",
-			sName.c_str());
-	ToLogService("errors", LogLevel::Error, "{}", szMsg);
+	ToLogService("errors", LogLevel::Error, "[{}]()", sName);
 	return -1;
 }
 
@@ -287,15 +279,14 @@ lwITex* CMPResManger::GetTextureByIDlw(int iID) {
 	if (_vecTexList[iID])
 		return _vecTexList[iID];
 	else {
-		char t_pszFile[MAX_PATH];
 #ifdef USE_DDS_FILE_EFFECT
-		sprintf(t_pszFile, "%s\\%s.dds", _pszTexPath, _vecTexName[iID].c_str());
+		const std::string t_pszFile = std::format("{}\\{}.dds", _pszTexPath, _vecTexName[iID]);
 #else
-		sprintf(t_pszFile, "%s\\%s.tga", _pszTexPath, _vecTexName[iID].c_str());
+		const std::string t_pszFile = std::format("{}\\{}.tga", _pszTexPath, _vecTexName[iID]);
 #endif
 		lwITex* tex;
 
-		if (LW_RESULT r = lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A8R8G8B8);
+		if (LW_RESULT r = lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile.c_str(), 0, D3DFMT_A8R8G8B8);
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwLoadTex failed: id={}, file={}, ret={}",
@@ -338,16 +329,13 @@ CEffectModel* CMPResManger::GetMeshByID(int iID) {
 			_vecMeshList[iID]->InitDevice(m_pDev);
 			lwIPathInfo* path_info;
 			m_pSys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
-			char szOldPath[260];
-			strcpy(szOldPath, path_info->GetPath(PATH_TYPE_MODEL_ITEM));
+			const std::string szOldPath = path_info->GetPath(PATH_TYPE_MODEL_ITEM);
 			path_info->SetPath(PATH_TYPE_MODEL_ITEM, "model\\effect\\");
 			if (!_vecMeshList[iID]->LoadModel((TCHAR*)_vecMeshName[iID].c_str())) {
 				SAFE_DELETE(_vecMeshList[iID]);
-				path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath);
+				path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath.c_str());
 
-				char szMsg[64];
-				sprintf(szMsg, "[id=%d]", iID);
-				ToLogService("errors", LogLevel::Error, "{}", szMsg);
+				ToLogService("errors", LogLevel::Error, "[id={}]", iID);
 				return 0;
 			}
 			if (!_vecMeshList[iID]->GetObject() || !_vecMeshList[iID]->GetObject()->GetPrimitive()) {
@@ -356,7 +344,7 @@ CEffectModel* CMPResManger::GetMeshByID(int iID) {
 			}
 			else
 				_vecMeshList[iID]->GetObject()->GetPrimitive()->SetState(STATE_TRANSPARENT, 0);
-			path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath);
+			path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath.c_str());
 			pRetMesh = _vecMeshList[iID];
 		}
 		else {
@@ -373,9 +361,7 @@ CEffectModel* CMPResManger::GetMeshByID(int iID) {
 					if (_vecMeshList[n]->m_iID != iID) {
 						if (!_vecMeshList[n]->Copy(*_vecMeshList[iID])) {
 							SAFE_DELETE(_vecMeshList[n]);
-							char szMsg[64];
-							sprintf(szMsg, "[id=%d]", iID);
-							ToLogService("errors", LogLevel::Error, "{}", szMsg);
+							ToLogService("errors", LogLevel::Error, "[id={}]", iID);
 							return 0;
 						}
 					}
@@ -430,8 +416,7 @@ std::vector<I_Effect>& CMPResManger::GetEffectByID(int iID) {
 
 	int n = (int)_vecEffectList[iID].size();
 	if (n <= 0) {
-		char t_pszFile[MAX_PATH];
-		sprintf(t_pszFile, "%s\\%s", _pszEFFectPath, _vecEffectName[iID].c_str());
+		const std::string t_pszFile = std::format("{}\\{}", _pszEFFectPath, _vecEffectName[iID]);
 
 		if (!LoadEffectFromFile(iID, t_pszFile))
 			return _vecEffectList[iID];
@@ -480,14 +465,12 @@ IDirect3DVertexDeclarationX* CMPResManger::GetMinimapVDecl() {
 
 bool CMPResManger::LoadTotalTexture() {
 	{
-		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE t_hFind = NULL;
 
-		lstrcpy(t_Path, _pszTexPath);
-		lstrcat(t_Path, "\\*.tga");
+		const std::string t_Path = _pszTexPath + "\\*.tga";
 
-		if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+		if ((t_hFind = FindFirstFile(t_Path.c_str(), &t_sfd)) == INVALID_HANDLE_VALUE)
 			return false;
 		string sFileName;
 		do {
@@ -522,26 +505,21 @@ void CMPResManger::LoadTotalData() {
 	if (!s_resourcePreload)
 		return;
 
-	char t_Path[MAX_PATH];
 	WIN32_FIND_DATA t_sfd;
 	HANDLE t_hFind = NULL;
 
 	// Pre-warm bone-кэша для animation\*.lab.
-	lstrcpy(t_Path, "animation\\");
-	lstrcat(t_Path, "\\*.lab");
+	constexpr std::string_view t_Path = "animation\\\\*.lab";
 
 	int count = 0;
-	if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+	if ((t_hFind = FindFirstFile(t_Path.data(), &t_sfd)) == INVALID_HANDLE_VALUE)
 		return;
 	do {
 		if (!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-			int length = (int)strlen(t_sfd.cFileName);
-			char* sname = &t_sfd.cFileName[length - 4];
-			if (strcmp(sname, ".lab") != 0) {
+			const std::string_view fileName{t_sfd.cFileName};
+			if (!fileName.ends_with(".lab")) {
 				continue;
 			}
-			char path[LW_MAX_PATH];
-			sprintf(path, "%s%s", "animation\\", t_sfd.cFileName);
 
 			g_GeomManager.LoadBoneData(t_sfd.cFileName);
 			count++;
@@ -560,7 +538,6 @@ void CMPResManger::LoadTotalRes() {
 	if (!s_resourcePreload)
 		return;
 
-	char t_Path[MAX_PATH];
 	WIN32_FIND_DATA t_sfd;
 	HANDLE t_hFind = NULL;
 
@@ -568,17 +545,15 @@ void CMPResManger::LoadTotalRes() {
 	// LoadGeomobj хардкодит этот путь, и здесь итерация совпадает —
 	// заполняем m_GeomobjMap, чтобы первое обращение из lwPhysique::LoadPrimitive
 	// не ходило на диск.
-	lstrcpy(t_Path, "model\\character");
-	lstrcat(t_Path, "\\*.lgo");
+	constexpr std::string_view t_Path = "model\\character\\*.lgo";
 
 	static int nNum = 0;
-	if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+	if ((t_hFind = FindFirstFile(t_Path.data(), &t_sfd)) == INVALID_HANDLE_VALUE)
 		return;
 	do {
 		if (!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-			int length = (int)strlen(t_sfd.cFileName);
-			char* sname = &t_sfd.cFileName[length - 4];
-			if (strcmp(sname, ".lgo") != 0) {
+			const std::string_view fileName{t_sfd.cFileName};
+			if (!fileName.ends_with(".lgo")) {
 				continue;
 			}
 
@@ -656,28 +631,24 @@ bool CMPResManger::LoadTotalMesh() {
 
 
 	{
-		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE t_hFind = NULL;
 
-		lstrcpy(t_Path, "model\\effect");
-		lstrcat(t_Path, "\\*.lgo");
+		constexpr std::string_view t_Path = "model\\effect\\*.lgo";
 
-		if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+		if ((t_hFind = FindFirstFile(t_Path.data(), &t_sfd)) == INVALID_HANDLE_VALUE)
 			return true;
 		string sFileName;
 
 		lwIPathInfo* path_info;
 		m_pSys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
-		char szOldPath[260];
-		strcpy(szOldPath, path_info->GetPath(PATH_TYPE_MODEL_ITEM));
+		const std::string szOldPath = path_info->GetPath(PATH_TYPE_MODEL_ITEM);
 		path_info->SetPath(PATH_TYPE_MODEL_ITEM, "model\\effect\\");
 
 		do {
 			if (!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-				int length = (int)strlen(t_sfd.cFileName);
-				char* sname = &t_sfd.cFileName[length - 4];
-				if (strcmp(sname, ".lgo") != 0) {
+				const std::string_view fileName{t_sfd.cFileName};
+				if (!fileName.ends_with(".lgo")) {
 					continue;
 				}
 				sFileName = t_sfd.cFileName;
@@ -698,7 +669,7 @@ bool CMPResManger::LoadTotalMesh() {
 		}
 		while (FindNextFile(t_hFind, &t_sfd));
 		FindClose(t_hFind);
-		path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath);
+		path_info->SetPath(PATH_TYPE_MODEL_ITEM, szOldPath.c_str());
 	}
 
 	return true;
@@ -737,9 +708,9 @@ void CMPResManger::AddUniteEffectToMgr(std::vector<I_Effect>& vecEffArray) {
 }
 
 
-bool CMPResManger::LoadEffectFromFile(int idx, char* pszFileName) {
+bool CMPResManger::LoadEffectFromFile(int idx, std::string_view pszFileName) {
 	FILE* t_pFile;
-	t_pFile = fopen(pszFileName, "rb");
+	t_pFile = fopen(std::string{pszFileName}.c_str(), "rb");
 	if (!t_pFile)
 		return false;
 	DWORD t_dwVersion;
@@ -778,41 +749,39 @@ bool CMPResManger::LoadEffectFromFile(int idx, char* pszFileName) {
 
 bool CMPResManger::LoadTotalEffect() {
 	{
-		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE t_hFind = NULL;
 
-		lstrcpy(t_Path, _pszEFFectPath);
-		lstrcat(t_Path, "\\*.eff");
+		const std::string t_Path = _pszEFFectPath + "\\*.eff";
 
-		char t_pszFile[MAX_PATH];
-
-		if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+		if ((t_hFind = FindFirstFile(t_Path.c_str(), &t_sfd)) == INVALID_HANDLE_VALUE)
 			return false;
 		do {
 			if (!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-				int length = (int)strlen(t_sfd.cFileName);
-				char* sname = &t_sfd.cFileName[length - 4];
-				if (stricmp(sname, ".eff") != 0) {
+				std::string_view fileNameView{t_sfd.cFileName};
+				// Регистронезависимая проверка расширения ".eff" / ".EFF" / etc.
+				if (fileNameView.size() < 4) {
 					continue;
 				}
-				string sFileName;
-				sFileName = t_sfd.cFileName;
+				const std::string_view ext = fileNameView.substr(fileNameView.size() - 4);
+				if (_stricmp(std::string{ext}.c_str(), ".eff") != 0) {
+					continue;
+				}
+				std::string sFileName{t_sfd.cFileName};
 				transform(sFileName.begin(), sFileName.end(),
 						  sFileName.begin(),
 						  [](unsigned char c) {
 							  return std::tolower(c);
 						  });
 
-				sprintf(t_pszFile, "%s\\%s", _pszEFFectPath, t_sfd.cFileName);
+				const std::string t_pszFile = std::format("{}\\{}", _pszEFFectPath, t_sfd.cFileName);
 				_vecEffectList.resize(_iEffectNum + 1);
 				_vecEffectList[_iEffectNum].clear();
 				_vecEffectParam.resize(_iEffectNum + 1);
 
 				if (!LoadEffectFromFile(_iEffectNum, t_pszFile)) {
-					char szData[1024];
-					sprintf(szData, "(%s)", t_pszFile);
-					MessageBox(NULL, szData, "Error", MB_OK);
+					const std::string szData = std::format("({})", t_pszFile);
+					MessageBox(NULL, szData.c_str(), "Error", MB_OK);
 				}
 
 				_vecEffectName.resize(_iEffectNum + 1);
@@ -834,12 +803,12 @@ bool CMPResManger::LoadTotalEffect() {
 }
 
 bool CMPResManger::LoadTotalVShader() {
-	char t_Path[MAX_PATH];
+	std::string t_Path;
 
 	LPD3DXBUFFER pCode;
 	if (!m_bUseSoft) {
-		sprintf(t_Path, "shader\\dx9\\eff1.vsh");
-		while (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL ))) {
+		t_Path = "shader\\dx9\\eff1.vsh";
+		while (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path.c_str(), NULL, NULL, 0, &pCode, NULL ))) {
 			_iVShaderNum++;
 			_vecVShader.resize(_iVShaderNum);
 			if (HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
@@ -848,17 +817,17 @@ bool CMPResManger::LoadTotalVShader() {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] CreateVertexShader failed (eff loop): path={}, idx={}, hr=0x{:08X}",
 							 __FUNCTION__, t_Path, _iVShaderNum - 1, static_cast<std::uint32_t>(hr));
-				MessageBox(NULL, t_Path, "ERROR", 0);
+				MessageBox(NULL, t_Path.c_str(), "ERROR", 0);
 				return false;
 			}
 
-			sprintf(t_Path, "shader\\dx9\\eff%d.vsh", _iVShaderNum + 1);
+			t_Path = std::format("shader\\dx9\\eff{}.vsh", _iVShaderNum + 1);
 			pCode->Release();
 			pCode = NULL;
 		}
 
-		sprintf(t_Path, "shader\\dx9\\shadeeff.vsh");
-		if (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL ))) {
+		t_Path = "shader\\dx9\\shadeeff.vsh";
+		if (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path.c_str(), NULL, NULL, 0, &pCode, NULL ))) {
 			if (HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
 				(DWORD*)pCode->GetBufferPointer(),
 				(IDirect3DVertexShaderX**)&_dwShadeMapVS); FAILED(hr)) {
@@ -877,8 +846,8 @@ bool CMPResManger::LoadTotalVShader() {
 		}
 	}
 	else {
-		sprintf(t_Path, "shader\\dx9\\eff2.vsh");
-		if (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL ))) {
+		t_Path = "shader\\dx9\\eff2.vsh";
+		if (SUCCEEDED(D3DXAssembleShaderFromFile( t_Path.c_str(), NULL, NULL, 0, &pCode, NULL ))) {
 			_iVShaderNum++;
 			_vecVShader.resize(_iVShaderNum);
 			if (HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
@@ -902,7 +871,6 @@ bool CMPResManger::LoadTotalVShader() {
 bool CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics) {
 	lwISystem* sys = sys_graphics->GetSystem();
 
-	char path[LW_MAX_PATH];
 	lwIPathInfo* path_info = 0;
 	sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
 
@@ -1019,8 +987,8 @@ bool CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics) {
 	}
 
 	for (int i = 0; i < decl_num; i++) {
-		sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-		if (LW_RESULT r = shader_mgr->RegisterVertexShader(shader_type[i], path, shader_compile_flag[i]);
+		const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
+		if (LW_RESULT r = shader_mgr->RegisterVertexShader(shader_type[i], path.c_str(), shader_compile_flag[i]);
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] shader_mgr->RegisterVertexShader failed: i={}, shader_type={}, path={}, ret={}",
@@ -1050,7 +1018,7 @@ bool CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics) {
 
 int CMPResManger::GetEffPathID(const s_string& pszName) {
 	for (size_t i(0); i < _vecPathName.size(); ++i) {
-		if (stricmp(_vecPathName[i].c_str(), pszName.c_str()) == 0)
+		if (_stricmp(_vecPathName[i].c_str(), pszName.c_str()) == 0)
 			return (int)i;
 	}
 	return -1;
@@ -1062,20 +1030,16 @@ CEffPath* CMPResManger::GetEffPath(int iID) {
 
 bool CMPResManger::LoadTotalPath() {
 	{
-		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE t_hFind = NULL;
 
-		lstrcpy(t_Path, _pszEFFectPath);
-		lstrcat(t_Path, "\\*.csf");
+		const std::string t_Path = _pszEFFectPath + "\\*.csf";
 
-		char t_pszFile[MAX_PATH];
-
-		if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+		if ((t_hFind = FindFirstFile(t_Path.c_str(), &t_sfd)) == INVALID_HANDLE_VALUE)
 			return false;
 		do {
 			if (!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-				sprintf(t_pszFile, "%s\\%s", _pszEFFectPath, t_sfd.cFileName);
+				const std::string t_pszFile = std::format("{}\\{}", _pszEFFectPath, t_sfd.cFileName);
 				_vecPathName.push_back(t_sfd.cFileName);
 
 				_iPathNum++;
@@ -1092,7 +1056,7 @@ bool CMPResManger::LoadTotalPath() {
 
 int CMPResManger::GetPartCtrlID(const s_string& pszName) {
 	for (size_t n(0); n < _vecPartName.size(); n++) {
-		if (stricmp(_vecPartName[n].c_str(), pszName.c_str()) == 0) {
+		if (_stricmp(_vecPartName[n].c_str(), pszName.c_str()) == 0) {
 			return (int)n;
 		}
 	}
@@ -1109,12 +1073,11 @@ CMPPartCtrl* CMPResManger::GetPartCtrlByID(int iID) {
 		return NULL;
 	}
 	if ((*_vecPartCtrl[iID]) == NULL) {
-		char t_Path[MAX_PATH];
-		sprintf(t_Path, "%s\\%s", _pszEFFectPath, _vecPartName[iID].c_str());
+		const std::string t_Path = std::format("{}\\{}", _pszEFFectPath, _vecPartName[iID]);
 
 		(*_vecPartCtrl[iID]) = new CMPPartCtrl;
 		if (!(*_vecPartCtrl[iID])->LoadFromFile(t_Path)) {
-			ToLogService("errors", LogLevel::Error, "Load {} error", _vecPartName[iID].c_str());
+			ToLogService("errors", LogLevel::Error, "Load {} error", _vecPartName[iID]);
 			return NULL;
 		}
 		else {
@@ -1127,18 +1090,14 @@ CMPPartCtrl* CMPResManger::GetPartCtrlByID(int iID) {
 
 void CMPResManger::LoadTotalPartCtrl() {
 	{
-		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE t_hFind = NULL;
 
-		char t_FilePath[MAX_PATH];
-
-		lstrcpy(t_Path, _pszEFFectPath);
-		lstrcat(t_Path, "\\*.par");
+		const std::string t_Path = _pszEFFectPath + "\\*.par";
 
 		_vecPartCtrl.resize(MAXPART_COUNT);
 
-		if ((t_hFind = FindFirstFile(t_Path, &t_sfd)) == INVALID_HANDLE_VALUE)
+		if ((t_hFind = FindFirstFile(t_Path.c_str(), &t_sfd)) == INVALID_HANDLE_VALUE)
 			return;
 		string sFileName;
 		do {
@@ -1154,12 +1113,12 @@ void CMPResManger::LoadTotalPartCtrl() {
 				_vecPartName.push_back(sFileName.c_str());
 
 				_vecPartCtrl.setsize(_iPartCtrlNum);
-				sprintf(t_FilePath, "%s\\%s", _pszEFFectPath, _vecPartName[_iPartCtrlNum - 1].c_str());
+				const std::string t_FilePath = std::format("{}\\{}", _pszEFFectPath, _vecPartName[_iPartCtrlNum - 1]);
 
 				(*_vecPartCtrl[_iPartCtrlNum - 1]) = new CMPPartCtrl;
 				if (!(*_vecPartCtrl[_iPartCtrlNum - 1])->LoadFromFile(t_FilePath)) {
 					SAFE_DELETE((*_vecPartCtrl[_iPartCtrlNum - 1]));
-					ToLogService("errors", LogLevel::Error, "Load {} error", sFileName.c_str());
+					ToLogService("errors", LogLevel::Error, "Load {} error", sFileName);
 				}
 			}
 		}

@@ -33,7 +33,7 @@ namespace GUI {
 		void ReadyForHintGM(int x, int y);
 		void Render();
 
-		void PushHint(const char* str, DWORD color = COLOR_WHITE, int height = 5, int font = 0, int index = -1,
+		void PushHint(std::string_view str, DWORD color = COLOR_WHITE, int height = 5, int font = 0, int index = -1,
 					  bool shadow = false, DWORD scolor = 0);
 		void AddHintHeight(int height = 6);
 
@@ -41,7 +41,7 @@ namespace GUI {
 
 	public:
 		struct stHint {
-			stHint(const char* str, DWORD c, int h, int f, bool sh, unsigned int sc)
+			stHint(std::string_view str, DWORD c, int h, int f, bool sh, unsigned int sc)
 				: hint(str), color(c), height(h), offx(0), font(f), width(0), shadow(sh), scolor(sc) {
 			}
 
@@ -138,11 +138,11 @@ namespace GUI {
 		void ReadyForHint(int x, int y, int SetNum);
 		void Render();
 
-		void PushHint(const char* str, DWORD color = COLOR_WHITE, int height = 5, int font = 0);
+		void PushHint(std::string_view str, DWORD color = COLOR_WHITE, int height = 5, int font = 0);
 
 	public:
 		struct stHint {
-			stHint(const char* str, DWORD c, int h, int f) : hint(str), color(c), height(h), offx(0), font(f),
+			stHint(std::string_view str, DWORD c, int h, int f) : hint(str), color(c), height(h), offx(0), font(f),
 															 width(0) {
 			}
 
@@ -191,9 +191,9 @@ namespace GUI {
 		DWORD _dwBkgColor;
 	};
 
-	inline void CTextHint::PushHint(const char* str, DWORD color, int height, int font, int index, bool shadow,
+	inline void CTextHint::PushHint(std::string_view str, DWORD color, int height, int font, int index, bool shadow,
 									DWORD scolor) {
-		if (str && strlen(str) > 0) {
+		if (!str.empty()) {
 			if (index == -1)
 				_hint.push_back(new stHint(str, color, height, font, shadow, scolor));
 			else
@@ -217,8 +217,8 @@ namespace GUI {
 		}
 	}
 
-	inline void CTextScrollHint::PushHint(const char* str, DWORD color, int height, int font) {
-		if (str && strlen(str) > 0) _hint.push_back(new stHint(str, color, height, font));
+	inline void CTextScrollHint::PushHint(std::string_view str, DWORD color, int height, int font) {
+		if (!str.empty()) _hint.push_back(new stHint(str, color, height, font));
 	}
 
 	inline void CTextScrollHint::SetFixWidth(int w) {

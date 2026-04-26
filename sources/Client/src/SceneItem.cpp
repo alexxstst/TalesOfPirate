@@ -40,12 +40,11 @@ BOOL CSceneItem::_Create(int nObjTypeID, int nType) {
 		return FALSE;
 	}
 
-	char str[260];
-	sprintf(str, "%s.lgo", _pItemInfo->chModule[nType].c_str());
+	const std::string str = std::format("{}.lgo", _pItemInfo->chModule[nType]);
 
-	if (Load(str) == 0) {
+	if (Load(str.c_str()) == 0) {
 		g_logManager.InternalLog(LogLevel::Error, "errors",
-								 SafeVFormat(GetLanguageString(350), nObjTypeID, _pItemInfo->szName.c_str(), str));
+								 SafeVFormat(GetLanguageString(350), nObjTypeID, _pItemInfo->szName.c_str(), str.c_str()));
 		return FALSE;
 	}
 

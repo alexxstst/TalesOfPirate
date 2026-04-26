@@ -63,23 +63,23 @@ public:
 	void EndClip() {
 	}
 
-	void Draw(char* szText, int x, int y, D3DXCOLOR color);
-	void DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip,
+	void Draw(std::string_view szText, int x, int y, D3DXCOLOR color);
+	void DrawTextClipOnce(std::string_view szText, int nLen, LPRECT psrc, LPRECT pclip,
 						  D3DXCOLOR color);
 
-	bool DrawText(char* szText, int x, int y,
+	bool DrawText(std::string_view szText, int x, int y,
 				  D3DXCOLOR color = 0xFFFFFFFF, float fScale = 1.0f,
 				  DWORD* dwTime = nullptr);
 	bool DrawText(int iNumber, int x, int y,
 				  D3DXCOLOR color = 0xFFFFFFFF, float fScale = 1.0f);
 
-	bool DrawTextShadow(char* szText, int x1, int y1, int x2, int y2,
+	bool DrawTextShadow(std::string_view szText, int x1, int y1, int x2, int y2,
 						D3DXCOLOR color1, D3DXCOLOR color2);
 
-	bool Draw3DText(char* szText, D3DXVECTOR3& vPos,
+	bool Draw3DText(std::string_view szText, D3DXVECTOR3& vPos,
 					D3DXCOLOR color = 0xFFFFFFFF, float fScale = 0.3f);
 
-	SIZE* GetTextSize(const std::string& szText, SIZE* pSize, float fScale = 1.0f);
+	SIZE* GetTextSize(std::string_view szText, SIZE* pSize, float fScale = 1.0f);
 	int GetHzLength(float fscale = 1.0f);
 	int GetAscLength(float fscale = 1.0f);
 
@@ -120,7 +120,7 @@ public:
 	}
 
 private:
-	std::wstring _ToWide(const char* mbstr) const;
+	std::wstring _ToWide(std::string_view mbstr) const;
 	std::string _ToUtf8(const std::wstring& w) const;
 	void _DrawWide(const std::wstring& wtext, int x, int y,
 				   D3DXCOLOR color, float fScale,

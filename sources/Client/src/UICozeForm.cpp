@@ -507,12 +507,9 @@ void CCozeForm::OnSightMsg(CCharacter* pChar, string strMsg, DWORD dwColour) {
 	if (g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(sender.c_str()))
 		return;
 
-	char buf[10];
-	//for (int i=0; i<=9; i++)
 	for (int i = 0; i <= 50; i++) //Modify by sunny.sun 20080902
 	{
-		sprintf(buf, "***%d", i);
-		if (strMsg == buf) {
+		if (strMsg == std::format("***{}", i)) {
 			pChar->GetHeadSay()->SetFaceID(i);
 			return;
 		}
@@ -531,11 +528,11 @@ void CCozeForm::OnSightMsg(CCharacter* pChar, string strMsg, DWORD dwColour) {
 	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str()) + ": " + strMsg;
 	// ? ning.yan 2008-11-07
 	CItemEx* item = new CItemEx(str.c_str(), CCharMsg::GetChannelColor(CCharMsg::CHANNEL_SIGHT));
-	if (strlen(str.c_str()) > 32) //?32?
+	if (str.size() > 32) //?32?
 	{
 		item->SetIsMultiLine(true);
 		//item->ProcessString((int)strlen(pChar->getHumanName())+1);
-		item->ProcessString((int)strlen(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str()) + 1);
+		item->ProcessString((int)std::string_view{pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str()}.size() + 1);
 	}
 	if (str.find("#") != std::string::npos) {
 		item->SetIsParseText(true);
@@ -694,7 +691,7 @@ void CCozeForm::AddToEdit(string strData) {
 
 	string strMsg = pEdit->GetCaption();
 	strMsg += strData;
-	if ((int)strlen(strMsg.c_str()) > pEdit->GetMaxNum()) return;
+	if ((int)strMsg.size() > pEdit->GetMaxNum()) return;
 	pEdit->SetCaption(strMsg.c_str());
 }
 
@@ -827,7 +824,7 @@ void CCozeForm::SendMsg() {
 	}
 
 	if (g_stUIMap.IsPKSilver() && pChar->getGMLv() <= 0) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(901).c_str()); //
+		g_pGameApp->SysInfo(GetLanguageString(901)); //
 		return;
 	}
 
@@ -855,7 +852,7 @@ void CCozeForm::SendMsg() {
 					}
 					else {
 						// 9
-						g_pGameApp->SysInfo("%s", GetLanguageString(868).c_str());
+						g_pGameApp->SysInfo(GetLanguageString(868));
 					}
 
 					m_edtMsg->SetCaption(strCurCmd.c_str());
@@ -1246,10 +1243,8 @@ bool CCozeForm::EventGlobalKeyDownHandle(int& key) {
 			if (wFaceID >= 0 && wFaceID <= 9) {
 				CCharacter* pCharacter = CGameScene::GetMainCha();
 				if (pCharacter) {
-					char lpszBuf[20];
-					sprintf(lpszBuf, "***%d", wFaceID);
 					pCharacter->GetHeadSay()->SetFaceID(wFaceID);
-					CS_Say(lpszBuf);
+					CS_Say(std::format("***{}", wFaceID).c_str());
 				}
 			}
 		}
@@ -1510,15 +1505,13 @@ void CCozeForm::EventFaceSelected(CGuiData* pSender) {
 	CCozeForm* pThis = CCozeForm::GetInstance();
 	pThis->m_grdFacePanel->SetIsShow(false);
 
-	if ((int)strlen(pThis->m_edtMsg->GetCaption()) > pThis->m_edtMsg->GetMaxNum() - 3) {
+	if ((int)std::string_view{pThis->m_edtMsg->GetCaption()}.size() > pThis->m_edtMsg->GetMaxNum() - 3) {
 		return;
 	}
 
 	if (pThis->m_grdFacePanel->GetSelect()) {
 		pThis->m_edtMsg->SetActive(pThis->m_edtMsg);
-		char lpszFace[10];
-		sprintf(lpszFace, "#%02d", pThis->m_grdFacePanel->GetSelectIndex());
-		pThis->m_edtMsg->ReplaceSel(lpszFace);
+		pThis->m_edtMsg->ReplaceSel(std::format("#{:02}", pThis->m_grdFacePanel->GetSelectIndex()).c_str());
 	}
 }
 
@@ -1540,9 +1533,7 @@ void CCozeForm::EventBrowSelected(CGuiData* pSender) {
 	if (pThis->m_grdBrowPanel->GetSelect()) {
 		int nIndex = pThis->m_grdBrowPanel->GetSelectIndex();
 		pCharacter->GetHeadSay()->SetFaceID(nIndex);
-		char lpszFaceID[10] = {0};
-		sprintf(lpszFaceID, "***%d", nIndex);
-		CS_Say(lpszFaceID);
+		CS_Say(std::format("***{}", nIndex).c_str());
 	}
 }
 

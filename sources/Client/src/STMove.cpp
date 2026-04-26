@@ -89,30 +89,19 @@ void CWaitMoveState::RenderCameraInfo() {
 #if 1
 	CCameraCtrl* pCam = g_pGameApp->GetMainCam();
 
-	static char szBuf[128] = {0};
 	int y(65), step(16), line(5);
 
-	GetRender().FillFrame(0, y - 5, 160, y + 5 + step * line); // 
+	GetRender().FillFrame(0, y - 5, 160, y + 5 + step * line);
 
-	sprintf(szBuf, " CameraRangeXY  = %.2f ", pCam->m_fxy);
-	FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	y += step;
-
-	sprintf(szBuf, " CameraRangeZ   = %.2f ", pCam->m_fz);
-	FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	y += step;
-
-	sprintf(szBuf, " CameraRangeFOV = %.2f ", pCam->m_ffov);
-	FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	y += step;
-
-	sprintf(szBuf, " CameraRotate   = %.2f ", pCam->m_fAngle);
-	FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	y += step;
-
-	sprintf(szBuf, " CameraShowSize = %d ", pCam->m_iShowWidth);
-	FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	y += step;
+	auto drawLine = [&](const std::string& s) {
+		FontManager::Instance().Get(FontSlot::TipText)->DrawText(s.c_str(), 5, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+		y += step;
+	};
+	drawLine(std::format(" CameraRangeXY  = {:.2f} ", pCam->m_fxy));
+	drawLine(std::format(" CameraRangeZ   = {:.2f} ", pCam->m_fz));
+	drawLine(std::format(" CameraRangeFOV = {:.2f} ", pCam->m_ffov));
+	drawLine(std::format(" CameraRotate   = {:.2f} ", pCam->m_fAngle));
+	drawLine(std::format(" CameraShowSize = {} ", pCam->m_iShowWidth));
 #endif
 }
 
@@ -160,7 +149,7 @@ void CWaitMoveState::PushPoint(int x, int y) {
 
 bool CWaitMoveState::IsAllowMove() {
 	if (_pCha->GetChaState()->IsFalse(enumChaStateMove)) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(406).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(406));
 		return false;
 	}
 
@@ -271,7 +260,7 @@ void CMoveState::WriteInfo(S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info) {
 void CMoveState::PushPoint(int x, int y) {
 	int dis = GetDistance(x, y, _pCha->GetCurX(), _pCha->GetCurY());
 	if (dis > 500) {
-		g_pGameApp->AddTipText("%s", SafeVFormat(GetLanguageString(407), dis).c_str());
+		g_pGameApp->AddTipText(SafeVFormat(GetLanguageString(407), dis));
 	}
 }
 

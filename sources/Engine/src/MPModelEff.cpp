@@ -24,7 +24,7 @@ void CEffectCortrol::FillDefaultUV(CEffectModel* pCModel, TEXCOORD& coord) {
 	}
 }
 
-bool CEffPath::LoadPathFromFile(char* pszName) {
+bool CEffPath::LoadPathFromFile(std::string_view pszName) {
 	FILE* stream;
 	char header[4];
 	DWORD version, num;
@@ -32,13 +32,13 @@ bool CEffPath::LoadPathFromFile(char* pszName) {
 	float ftemp;
 
 	header[3] = NULL;
-	stream = fopen(pszName, "rb");
+	stream = fopen(std::string{pszName}.c_str(), "rb");
 	if (!stream)
 		return false;
 
 	// confirm file header.
 	fread(header, sizeof(char), 4, stream);
-	if (strcmp(header, "csf")) {
+	if (std::string_view{header, 3} != "csf") {
 		fclose(stream);
 		return false;
 	}
@@ -68,15 +68,16 @@ bool CEffPath::LoadPathFromFile(char* pszName) {
 	return true;
 }
 
-bool CEffPath::LoadPathFromFileLet(const char* file) {
+bool CEffPath::LoadPathFromFileLet(std::string_view file) {
 	int i, j;
 	lwMatrix44 mat;
 	lwEfxTrack et;
 	lwIAnimDataMatrix* data;
-	if (LW_RESULT r = et.Load(file); LW_FAILED(r)) {
+	const std::string fileStr{file};
+	if (LW_RESULT r = et.Load(fileStr.c_str()); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
 					 "[{}] lwEfxTrack::Load failed: file='{}', ret={}",
-					 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+					 __FUNCTION__, file, static_cast<long long>(r));
 		return false;
 	}
 	data = et.GetData();
@@ -136,9 +137,10 @@ CMPModelEff::~CMPModelEff(void) {
 }
 
 //!
-bool CMPModelEff::SaveToFile(char* pszFileName) {
+bool CMPModelEff::SaveToFile(std::string_view pszFileName) {
+	const std::string fileName{pszFileName};
 	FILE* t_pFile;
-	t_pFile = fopen(pszFileName, "wb");
+	t_pFile = fopen(fileName.c_str(), "wb");
 	if (!t_pFile) {
 		ToLogService("errors", LogLevel::Error, " {},", pszFileName);
 		return false;
@@ -152,14 +154,19 @@ bool CMPModelEff::SaveToFile(char* pszFileName) {
 	t_temp = m_iIdxTech;
 	fwrite(&t_temp, sizeof(int), 1, t_pFile);
 
+	// Имена сохраняются в фиксированном 32-байтном буфере на диске.
 	char t_pszName[32];
 
 	fwrite(&m_bUsePath, sizeof(bool), 1, t_pFile);
-	lstrcpy(t_pszName, m_strPathName.c_str());
+	std::memset(t_pszName, 0, sizeof(t_pszName));
+	std::memcpy(t_pszName, m_strPathName.data(),
+				std::min<std::size_t>(m_strPathName.size(), sizeof(t_pszName) - 1));
 	fwrite(t_pszName, sizeof(char), 32, t_pFile);
 
 	fwrite(&m_bUseSound, sizeof(bool), 1, t_pFile);
-	lstrcpy(t_pszName, m_strSoundName.c_str());
+	std::memset(t_pszName, 0, sizeof(t_pszName));
+	std::memcpy(t_pszName, m_strSoundName.data(),
+				std::min<std::size_t>(m_strSoundName.size(), sizeof(t_pszName) - 1));
 	fwrite(t_pszName, sizeof(char), 32, t_pFile);
 
 	fwrite(&m_bRotating, sizeof(bool), 1, t_pFile);
@@ -181,7 +188,7 @@ bool CMPModelEff::SaveToFile(char* pszFileName) {
 }
 
 //!
-bool CMPModelEff::LoadFromFile(char* pszFileName) {
+bool CMPModelEff::LoadFromFile(std::string_view pszFileName) {
 	return true;
 }
 
@@ -1073,8 +1080,10 @@ bool CMPStrip::SaveToFile(FILE* t_pFile) {
 	fwrite(&_dwColor, sizeof(D3DXCOLOR), 1, t_pFile);
 	fwrite(&_fLife, sizeof(float), 1, t_pFile);
 	fwrite(&_fStep, sizeof(float), 1, t_pFile);
-	char pszName[32];
-	lstrcpy(pszName, _strTexName.c_str());
+	// Имя текстуры — в фиксированном 32-байтном поле на диске.
+	char pszName[32]{};
+	std::memcpy(pszName, _strTexName.data(),
+				std::min<std::size_t>(_strTexName.size(), sizeof(pszName) - 1));
 	fwrite(pszName, sizeof(char), 32, t_pFile);
 	int te = (int)_eSrcBlend;
 	fwrite(&te, sizeof(int), 1, t_pFile);
@@ -1089,19 +1098,15 @@ bool CMPStrip::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 	fread(&_dwColor, sizeof(D3DXCOLOR), 1, t_pFile);
 	fread(&_fLife, sizeof(float), 1, t_pFile);
 	fread(&_fStep, sizeof(float), 1, t_pFile);
-	char pszName[32];
+	char pszName[32]{};
 	fread(pszName, sizeof(char), 32, t_pFile);
 
-	char psname[64];
-	memset(psname, 0, 64);
-
-	if ((strstr(pszName, ".dds") == NULL) && strstr(pszName, ".tga") == NULL) {
-		_strTexName = pszName;
+	std::string_view nameView{pszName};
+	if (nameView.ends_with(".dds") || nameView.ends_with(".tga")) {
+		_strTexName.assign(nameView.substr(0, nameView.size() - 4));
 	}
 	else {
-		int len = lstrlen(pszName);
-		memcpy(psname, pszName, len - 4);
-		_strTexName = psname;
+		_strTexName = nameView;
 	}
 	int te;
 	fread(&te, sizeof(int), 1, t_pFile);
@@ -1343,9 +1348,8 @@ void CMPModelEff::BindingRes(CMPResManger* pResMagr) {
 	int idx = pResMagr->GetEffectID(m_vecEffect[0]->getEffectName());
 
 	if (idx == -1) {
-		char szData[128];
-		sprintf(szData, "(ID%d)", idx);
-		MessageBox(NULL, szData, "Error", MB_OK);
+		const std::string szData = std::format("(ID{})", idx);
+		MessageBox(NULL, szData.c_str(), "Error", MB_OK);
 	}
 
 	EffParameter* pParam = pResMagr->GetEffectParamByID(idx);

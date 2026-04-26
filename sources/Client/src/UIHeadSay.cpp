@@ -88,13 +88,12 @@ bool CHeadSay::Init() {
 	_nShopFontYOff = (_ImgShop[0].GetHeight() - ui::GetHeight(GetLanguageString(489).c_str())) / 2;
 
 	for (int i = 0; i < EVIL_MAX; i++) {
-		char buffer[64] = {0};
-		sprintf(buffer, "texture/icon/evil_lv%d.png", i + 1);
+		const std::string buffer = std::format("texture/icon/evil_lv{}.png", i + 1);
 
 		if (!_pImgEvil)
 			break;
 
-		_pImgEvil[i].LoadImage(buffer, 16, 16, 0, 0, 0, 0.0, 0.0);
+		_pImgEvil[i].LoadImage(buffer.c_str(), 16, 16, 0, 0, 0, 0.0, 0.0);
 	}
 	return true;
 }
@@ -179,13 +178,11 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 					RenderIcon = true;
 				}
 				if (RenderIcon) {
-					char buf[64];
-
-					sprintf(buf, "texture/icon/%s.png",
+					const std::string buf = std::format("texture/icon/{}.png",
 							(IsStatesPerLevel
 								 ? pState->szIcon[cha->GetStateMgr()->GetStateLv(i) - 1]
 								 : pState->szIcon[0]));
-					stateIcon.LoadImage(buf, 32, 32, 0, 0, 0, scale, scale);
+					stateIcon.LoadImage(buf.c_str(), 32, 32, 0, 0, 0, scale, scale);
 
 					int yspace = 0;
 					if (Rendertimer) yspace = 22;
@@ -202,13 +199,11 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 						int minutes = stateData.lTimeRemaining / 60;
 						int seconds = stateData.lTimeRemaining % 60;
 						int centeredX;
-						char szTime[32];
+						const std::string szTime = std::format("{}m", minutes);
 						if (minutes >= 10) {
-							sprintf(szTime, "%dm", minutes);
 							centeredX = (xi + (32 * scale) / 2) - 8;
 						}
 						else {
-							sprintf(szTime, "%dm", minutes);
 							centeredX = (xi + (32 * scale) / 2) - 5;
 						}
 						GetRender().FillFrame(xi, yi + (32 * scale), xi + (32 * scale) + 1,
@@ -286,13 +281,13 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 
 		_pImgLife->RenderAll(x - nLifeWidth / 2 - nOffset, y1 + 20, hpcolour);
 
-		char hpInfo[32];
+		std::string hpInfo;
 
 		if (_ShowPercentages || (_pOwn->GetIsPK() && !isTeamMember)) {
-			sprintf(hpInfo, "%.0f%%", _fLifeW * 100);
+			hpInfo = std::format("{:.0f}%", _fLifeW * 100);
 		}
 		else {
-			sprintf(hpInfo, "%d/%d", _fCurHp, _fMxHp);
+			hpInfo = std::format("{}/{}", _fCurHp, _fMxHp);
 		}
 
 		if (_pOwn->GetStateMgr()->HasSkillState(83)) {
@@ -310,13 +305,13 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 
 					_pImgMana->RenderAll(x - nManaWidth / 2 - nOffset, y1 + 28, spcolour);
 
-					char spInfo[32];
+					std::string spInfo;
 
 					if (_ShowPercentages || (_pOwn->GetIsPK() && !isTeamMember)) {
-						sprintf(spInfo, "%.0f%%", _fManaW * 100);
+						spInfo = std::format("{:.0f}%", _fManaW * 100);
 					}
 					else {
-						sprintf(spInfo, "%d/%d", _fCurSp, _fMxSp);
+						spInfo = std::format("{}/{}", _fCurSp, _fMxSp);
 					}
 					ui::BRender(spInfo, x - nOffset - (ui::GetWidth(spInfo) / 2), y1 + 32, spcolour, COLOR_BLACK);
 				}
@@ -324,6 +319,7 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 		}
 
 		ui::BRender(hpInfo, x - nOffset - (ui::GetWidth(hpInfo) / 2), y1 + 8, hpcolour, COLOR_BLACK);
+
 	}
 
 
@@ -516,15 +512,14 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 					static int nMonsterLevel(0);
 					nMonsterLevel = _pOwn->getGameAttr()->get(ATTR_LV);
 
-					static char szBuf[NAME_LENGTH] = {0};
+					std::string namePart;
 					if (nMonsterLevel - nMainLevel <= 10) {
-						//
-						sprintf(szBuf, "Lv%d %s", nMonsterLevel, _pOwn->getName().c_str());
+						namePart = std::format("Lv{} {}", nMonsterLevel, _pOwn->getName());
 					}
 					else {
-						sprintf(szBuf, "??? %s", _pOwn->getName().c_str());
+						namePart = std::format("??? {}", _pOwn->getName());
 					}
-					strncpy(s_sNamePart[NAME_INDEX], szBuf, NAME_LENGTH);
+					strncpy(s_sNamePart[NAME_INDEX], namePart.c_str(), NAME_LENGTH);
 				}
 			}
 

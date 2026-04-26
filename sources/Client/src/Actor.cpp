@@ -378,9 +378,9 @@ void CMissionTrigger::Exec() {
 	if (pCharRecord) {
 		strncpy(szData, pCharRecord->szName.c_str(), sizeof(szData));
 	}
-	g_pGameApp->ShowMidText("%s", SafeVFormat(GetLanguageString(3), std::string_view(szData),
+	g_pGameApp->ShowMidText(SafeVFormat(GetLanguageString(3), std::string_view(szData),
 											  static_cast<int>(_pData->sCount),
-											  static_cast<int>(_pData->sNum)).c_str());
+											  static_cast<int>(_pData->sNum)));
 }
 
 void CActor::ActionEnd(DWORD pose_id) {

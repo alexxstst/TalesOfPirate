@@ -72,8 +72,6 @@ CCharacter2D* CStartMgr::pTarget = NULL;
 CCharacter* CStartMgr::pLastTarget = nullptr;
 CCharacter* CStartMgr::pChaPointer = nullptr;
 
-static char szBuf[32] = {0};
-
 float g_ExpBonus = 1.0;
 float g_DropBonus = 1.0;
 
@@ -134,19 +132,15 @@ void CStartMgr::SetMonsterInfo() {
 		listMobDrops[i]->AddCommand(rItem);
 		listMobDrops[i]->SetIsEnabled(false);
 
-		const char* item_name = rInfo->szName.c_str();
-		char get_name[128] = {0};
-		sprintf(get_name, "%s", StringLimit(item_name, 16).c_str());
-		LabMobItems[i]->SetCaption(get_name);
+		const std::string get_name = StringLimit(rInfo->szName.c_str(), 16);
+		LabMobItems[i]->SetCaption(get_name.c_str());
 
 		float calcuDrop = (10000 / float(vect[i][1])) * g_DropBonus;
 		if (calcuDrop > 100) {
 			calcuDrop = 100;
 		}
 
-		char item_rate[25];
-		sprintf(item_rate, "%0.2f%%", calcuDrop);
-		LabMobRates[i]->SetCaption(item_rate);
+		LabMobRates[i]->SetCaption(std::format("{:.2f}%", calcuDrop).c_str());
 
 		if (!rInfo)
 			return;
@@ -171,27 +165,16 @@ void CStartMgr::SetMonsterInfo() {
 	}
 
 	double ExpAdd = floor(max(1, charInfo->lCExp / b)) * g_ExpBonus;
-	char buf[64];
-	sprintf(buf, "%d", charInfo->lLv);
-	LabMobLevel->SetCaption(buf);
-	sprintf(buf, "%0.f", ExpAdd);
-	LabMobexp->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lMxHp);
-	LabMobHP->SetCaption(buf);
-	sprintf(buf, "%d/%d", charInfo->lMnAtk, charInfo->lMxAtk);
-	LabMobAttack->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lHit);
-	LabMobHitRate->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lFlee);
-	LabMobDodge->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lDef);
-	LabMobDef->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lPDef);
-	LabMobPR->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lASpd);
-	LabMobAtSpeed->SetCaption(buf);
-	sprintf(buf, "%d", charInfo->lMSpd);
-	LabMobMSpeed->SetCaption(buf);
+	LabMobLevel->SetCaption(std::format("{}", charInfo->lLv).c_str());
+	LabMobexp->SetCaption(std::format("{:.0f}", ExpAdd).c_str());
+	LabMobHP->SetCaption(std::format("{}", charInfo->lMxHp).c_str());
+	LabMobAttack->SetCaption(std::format("{}/{}", charInfo->lMnAtk, charInfo->lMxAtk).c_str());
+	LabMobHitRate->SetCaption(std::format("{}", charInfo->lHit).c_str());
+	LabMobDodge->SetCaption(std::format("{}", charInfo->lFlee).c_str());
+	LabMobDef->SetCaption(std::format("{}", charInfo->lDef).c_str());
+	LabMobPR->SetCaption(std::format("{}", charInfo->lPDef).c_str());
+	LabMobAtSpeed->SetCaption(std::format("{}", charInfo->lASpd).c_str());
+	LabMobMSpeed->SetCaption(std::format("{}", charInfo->lMSpd).c_str());
 
 	frmMonsterInfo->Refresh();
 }
@@ -201,12 +184,10 @@ void CStartMgr::SetTargetInfo(CCharacter* pTargetCha) {
 		return;
 	}
 
-	char chaLv[5];
-	sprintf(chaLv, "%d", pTargetCha->getLv());
 	labTargetInfoName->SetCaption(pTargetCha->getName());
 	targetInfoID = pTargetCha->getHumanID();
 	RefreshTargetLifeNum(pTargetCha->getHP(), pTargetCha->getHPMax());
-	labTargetLevel->SetCaption(chaLv);
+	labTargetLevel->SetCaption(std::format("{}", pTargetCha->getLv()).c_str());
 	frmTargetInfo->Show();
 
 	if (pTargetCha->IsPlayer())
@@ -263,14 +244,10 @@ void CStartMgr::UpdateBackDrop() {
 
 	world->SetOldMainChaInArea(nArea);
 
-	char buf[64];
+	const std::string buf = nArea
+		? std::format("texture/ui/corsairs/npcBackdrop/{}.tga", nArea)
+		: std::string("texture/ui/corsairs/npcBackdrop/sea.tga");
 
-	if (nArea) {
-		sprintf(buf, "texture/ui/corsairs/npcBackdrop/%d.tga", nArea);
-	}
-	else {
-		sprintf(buf, "texture/ui/corsairs/npcBackdrop/sea.tga");
-	}
 	CCompent* imgBackDropPlayer = dynamic_cast<CCompent*>(g_stUIStart.frmDetail->Find("imgBackDropPlayer"));
 	CCompent* imgBackDropTarget = dynamic_cast<CCompent*>(g_stUIStart.frmTargetInfo->Find("imgBackDropTarget"));
 	CCompent* teamBackDrops[4]{};
@@ -283,19 +260,16 @@ void CStartMgr::UpdateBackDrop() {
 		return;
 	}
 	for (int i = 0; i < 4; i++) {
-		char formName[32];
-		char imgName[32];
-		sprintf(formName, "frmTeamMenber%d", i + 1);
-		sprintf(imgName, "imgBackDropTeam%d", i + 1);
-		teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName)->Find(imgName));
+		const std::string formName = std::format("frmTeamMenber{}", i + 1);
+		const std::string imgName = std::format("imgBackDropTeam{}", i + 1);
+		teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName.c_str())->Find(imgName.c_str()));
 		if (!teamBackDrops[i]) {
 			ToLogService("common", "teamBackDrops null not found {}", imgName);
 			return;
 		}
 	}
 
-	//https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c/25450408#25450408 # 3
-	if (GetFileAttributes(buf) == INVALID_FILE_ATTRIBUTES) {
+	if (GetFileAttributes(buf.c_str()) == INVALID_FILE_ATTRIBUTES) {
 		imgBackDropPlayer->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
 		imgBackDropTarget->GetImage()->LoadImage("texture/ui/corsairs/npcBackdrop/0.tga", 55, 44, 0, 0, 0);
 		for (int i = 0; i < 4; i++) {
@@ -303,10 +277,10 @@ void CStartMgr::UpdateBackDrop() {
 		}
 	}
 	else {
-		imgBackDropPlayer->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
-		imgBackDropTarget->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
+		imgBackDropPlayer->GetImage()->LoadImage(buf.c_str(), 55, 44, 0, 0, 0);
+		imgBackDropTarget->GetImage()->LoadImage(buf.c_str(), 55, 44, 0, 0, 0);
 		for (int i = 0; i < 4; i++) {
-			teamBackDrops[i]->GetImage()->LoadImage(buf, 55, 44, 0, 0, 0);
+			teamBackDrops[i]->GetImage()->LoadImage(buf.c_str(), 55, 44, 0, 0, 0);
 		}
 	}
 }
@@ -377,24 +351,20 @@ bool CStartMgr::Init() {
 			listInfo->evtSelectPage = _evtMobPageIndexChange;
 
 			for (int i = 0; i < defCHA_INIT_ITEM_NUM - 1; i++) {
-				char buf_list[25] = {0};
-				sprintf(buf_list, "listMobDrops%d", i);
-				listMobDrops[i] = dynamic_cast<COneCommand*>(frmMonsterInfo->Find(buf_list));
+				const std::string buf_list = std::format("listMobDrops{}", i);
+				listMobDrops[i] = dynamic_cast<COneCommand*>(frmMonsterInfo->Find(buf_list.c_str()));
 				if (!listMobDrops[i]) return false;
 
-				char buf_name[25] = {0};
-				sprintf(buf_name, "LabMobItems%d", i);
-				LabMobItems[i] = dynamic_cast<CLabelEx*>(frmMonsterInfo->Find(buf_name));
+				const std::string buf_name = std::format("LabMobItems{}", i);
+				LabMobItems[i] = dynamic_cast<CLabelEx*>(frmMonsterInfo->Find(buf_name.c_str()));
 				if (!LabMobItems[i]) return false;
 
-				char buf_rate[25] = {0};
-				sprintf(buf_rate, "LabMobRates%d", i);
-				LabMobRates[i] = dynamic_cast<CLabelEx*>(frmMonsterInfo->Find(buf_rate));
+				const std::string buf_rate = std::format("LabMobRates{}", i);
+				LabMobRates[i] = dynamic_cast<CLabelEx*>(frmMonsterInfo->Find(buf_rate.c_str()));
 				if (!LabMobRates[i]) return false;
 
-				char buf_filter[25] = {0};
-				sprintf(buf_filter, "checkDropFilter%d", i);
-				checkDropFilter[i] = static_cast<CCheckBox*>(frmMonsterInfo->Find(buf_filter));
+				const std::string buf_filter = std::format("checkDropFilter{}", i);
+				checkDropFilter[i] = static_cast<CCheckBox*>(frmMonsterInfo->Find(buf_filter.c_str()));
 				if (checkDropFilter[i]) {
 					checkDropFilter[i]->evtCheckChange = _evtCheckLootFilter;
 				}
@@ -596,23 +566,22 @@ bool CStartMgr::Init() {
 
 	frmHelpSystem->evtEntrustMouseEvent = _evtStartFormMouseEvent;
 
-	char szName[64] = {0};
 	for (int i = 0; i < HELP_PICTURE_COUNT; ++i) {
-		sprintf(szName, "imgHelpShow%d_1", i + 1);
-		imgHelpShow1[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if (!imgHelpShow1[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
+		std::string szName = std::format("imgHelpShow{}_1", i + 1);
+		imgHelpShow1[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName.c_str()));
+		if (!imgHelpShow1[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName.c_str());
 
-		sprintf(szName, "imgHelpShow%d_2", i + 1);
-		imgHelpShow2[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if (!imgHelpShow2[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
+		szName = std::format("imgHelpShow{}_2", i + 1);
+		imgHelpShow2[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName.c_str()));
+		if (!imgHelpShow2[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName.c_str());
 
-		sprintf(szName, "imgHelpShow%d_3", i + 1);
-		imgHelpShow3[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if (!imgHelpShow3[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
+		szName = std::format("imgHelpShow{}_3", i + 1);
+		imgHelpShow3[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName.c_str()));
+		if (!imgHelpShow3[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName.c_str());
 
-		sprintf(szName, "imgHelpShow%d_4", i + 1);
-		imgHelpShow4[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName));
-		if (!imgHelpShow4[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName);
+		szName = std::format("imgHelpShow{}_4", i + 1);
+		imgHelpShow4[i] = dynamic_cast<CImage*>(frmHelpSystem->Find(szName.c_str()));
+		if (!imgHelpShow4[i]) return Error(GetLanguageString(45).c_str(), frmHelpSystem->GetName(), szName.c_str());
 
 		if (i > 0) {
 			imgHelpShow1[i]->SetIsShow(false);
@@ -682,20 +651,16 @@ void CStartMgr::UpdateShipSailForm() {
 
 	SGameAttr* pAttr = pMain->getGameAttr();
 
-	char buf[128];
-
-	sprintf(buf, "%d/%d", pAttr->get(ATTR_HP), pAttr->get(ATTR_MXHP));
-	labSailorShow->SetCaption(buf);
+	labSailorShow->SetCaption(std::format("{}/{}", pAttr->get(ATTR_HP), pAttr->get(ATTR_MXHP)).c_str());
 	proSailor->SetRange((float)0, (float)(pAttr->get(ATTR_MXHP)));
 	proSailor->SetPosition((float)(pAttr->get(ATTR_HP)));
 
-	sprintf(buf, "%d/%d", pAttr->get(ATTR_SP), pAttr->get(ATTR_MXSP));
-	labCanonShow->SetCaption(buf);
+	labCanonShow->SetCaption(std::format("{}/{}", pAttr->get(ATTR_SP), pAttr->get(ATTR_MXSP)).c_str());
 	proCanon->SetRange((float)0, (float)(pAttr->get(ATTR_MXSP)));
 	proCanon->SetPosition((float)(pAttr->get(ATTR_SP)));
 
-	labLevelShow->SetCaption(itoa(pAttr->get(ATTR_LV), buf, 10));
-	labExpShow->SetCaption(itoa(pAttr->get(ATTR_CEXP), buf, 10));
+	labLevelShow->SetCaption(std::format("{}", pAttr->get(ATTR_LV)).c_str());
+	labExpShow->SetCaption(std::format("{}", pAttr->get(ATTR_CEXP)).c_str());
 }
 
 void CStartMgr::End() {
@@ -941,11 +906,11 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent* pSender, int nMsgType, int x, 
 		} //	End
 		else {
 			if (pMainCha->IsBoat()) {
-				g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
+				g_pGameApp->SysInfo(GetLanguageString(888));
 			}
 			else {
-				g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
-				g_pGameApp->MsgBox("%s", GetLanguageString(866).c_str()); //	Add by alfred.shi 20080905
+				g_pGameApp->SysInfo(GetLanguageString(866));
+				g_pGameApp->MsgBox(GetLanguageString(866)); //	Add by alfred.shi 20080905
 			}
 		}
 	}
@@ -1117,9 +1082,7 @@ void CStartMgr::_evtChaHeartChange(CGuiData* pSender) {
 	int nIndex = p->GetSelectIndex();
 	if (r) {
 		pCha->GetHeadSay()->SetFaceID(nIndex);
-		char szFaceID[10] = {0};
-		sprintf(szFaceID, "***%d", nIndex);
-		CS_Say(szFaceID);
+		CS_Say(std::format("***{}", nIndex).c_str());
 	}
 }
 
@@ -1211,8 +1174,7 @@ void CStartMgr::RefreshMainName(const std::string& szName) {
 
 void CStartMgr::RefreshLv(long l) {
 	if (labMainLevel) {
-		sprintf(szBuf, "%d", l);
-		labMainLevel->SetCaption(szBuf);
+		labMainLevel->SetCaption(std::format("{}", l).c_str());
 	}
 }
 
@@ -1242,11 +1204,11 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 			}
 			else {
 				// 6
-				g_pGameApp->SysInfo("%s", GetLanguageString(864).c_str());
+				g_pGameApp->SysInfo(GetLanguageString(864));
 			}
 		}
 		else {
-			g_pGameApp->SysInfo("%s", GetLanguageString(765).c_str()); //
+			g_pGameApp->SysInfo(GetLanguageString(765)); //
 		}
 	}
 	else if (str == GetLanguageString(482)) // 
@@ -1260,7 +1222,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			// 7
-			g_pGameApp->SysInfo("%s", GetLanguageString(865).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(865));
 		}
 	}
 	else if (str == GetLanguageString(484)) // 
@@ -1275,7 +1237,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			// 8
-			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(866));
 		}
 
 		return;
@@ -1301,7 +1263,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 			CS_RequestTrade(mission::TRADE_BOAT, mainMouseRight->nTag);
 		}
 		else {
-			g_pGameApp->SysInfo("%s", GetLanguageString(767).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(767));
 		}
 		return;
 	}
@@ -1338,7 +1300,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			// 
-			g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(888));
 		}
 	}
 	else if (str == GetLanguageString(859)) // 
@@ -1351,7 +1313,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			// 
-			g_pGameApp->SysInfo("%s", GetLanguageString(888).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(888));
 		}
 	}
 	else if (str == "Check Eq") {
@@ -1738,15 +1700,8 @@ void CStartMgr::_CloseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD
 	}
 }
 
-void CStartMgr::SysLabel(const char* pszFormat, ...) {
-	char szBuf[2048] = {0};
-
-	va_list list;
-	va_start(list, pszFormat);
-	vsprintf(szBuf, pszFormat, list);
-	va_end(list);
-
-	labFollow->SetCaption(szBuf);
+void CStartMgr::SysLabel(std::string_view text) {
+	labFollow->SetCaption(std::string{text}.c_str());
 	frmFollow->Show();
 }
 
@@ -1802,7 +1757,7 @@ bool CStartMgr::GetIsLeader() {
 }
 
 bool CStartMgr::IsCanTeamAndInfo() const {
-	if (!_IsCanTeam) g_pGameApp->SysInfo("%s", GetLanguageString(772).c_str());
+	if (!_IsCanTeam) g_pGameApp->SysInfo(GetLanguageString(772));
 	return _IsCanTeam;
 }
 
@@ -1825,8 +1780,7 @@ void CStartMgr::RefreshPet() {
 			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON)
 			+ pGrid.GetInstAttr(ITEMATTR_VAL_STA);
 
-		sprintf(szBuf, "%d", nLevel);
-		labPetLv->SetCaption(szBuf);
+		labPetLv->SetCaption(std::format("{}", nLevel).c_str());
 
 		static CGuiPic* Pic = imgPetHead->GetImage();
 		Pic->LoadImage(pInfo->GetIconFile().c_str(),
@@ -1849,8 +1803,7 @@ void CStartMgr::RefreshPet(SItemGrid pGrid, SItemGrid pApp) {
 			+ pGrid.GetInstAttr(ITEMATTR_VAL_CON)
 			+ pGrid.GetInstAttr(ITEMATTR_VAL_STA);
 
-		sprintf(szBuf, "%d", nLevel);
-		labPetLv->SetCaption(szBuf);
+		labPetLv->SetCaption(std::format("{}", nLevel).c_str());
 
 		static CGuiPic* Pic = imgPetHead->GetImage();
 		Pic->LoadImage(pInfo->GetIconFile().c_str(),
@@ -1875,8 +1828,7 @@ void CStartMgr::RefreshPet(CItemCommand* pItem) {
 		+ s_item.sInstAttr[ITEMATTR_VAL_CON]
 		+ s_item.sInstAttr[ITEMATTR_VAL_STA];
 
-	sprintf(szBuf, "%d", nLevel);
-	labPetLv->SetCaption(szBuf);
+	labPetLv->SetCaption(std::format("{}", nLevel).c_str());
 
 	static CGuiPic* Pic = imgPetHead->GetImage();
 	Pic->LoadImage(pInfo->GetIconFile().c_str(),
@@ -1980,8 +1932,6 @@ void CStartMgr::ShowNPCHelper(const char* mapName,bool isShow) {
 			NPCData* p = GetNPCDataInfo(i, npcHelperType);
 			if (p == NULL) continue;
 			if (p && strcmp(p->szMapName, strMapName) == 0) {
-				char buff[1024];
-
 				std::string strName = p->szName;
 				while (strName.length() < 32) {
 					strName += " ";
@@ -1990,8 +1940,8 @@ void CStartMgr::ShowNPCHelper(const char* mapName,bool isShow) {
 				while (strAreaName.length() < 16) {
 					strAreaName += " ";
 				}
-				sprintf(buff, "%s%s(%d,%d)", strName.c_str(), strAreaName.c_str(), p->dwxPos0, p->dwyPos0);
-				lstCurrList->Add(buff);
+				const std::string buff = std::format("{}{}({},{})", strName, strAreaName, p->dwxPos0, p->dwyPos0);
+				lstCurrList->Add(buff.c_str());
 				lstCurrList->Refresh();
 			}
 		}
@@ -2066,10 +2016,10 @@ void CStartMgr::_evtCheckLootFilter(CGuiData* pSender) {
 	bool bCheck = chkDrop->GetIsChecked();
 
 	if (bCheck) {
-		g_pGameApp->SysInfo("Loot Filter: %s is now visible", pInfo->szName);
+		g_pGameApp->SysInfo(std::format("Loot Filter: {} is now visible", pInfo->szName));
 	}
 	else {
-		g_pGameApp->SysInfo("Loot Filter: %s is now hidden", pInfo->szName);
+		g_pGameApp->SysInfo(std::format("Loot Filter: {} is now hidden", pInfo->szName));
 	}
 	pScene->FilterItemsByItemID(itemId, !bCheck);
 }

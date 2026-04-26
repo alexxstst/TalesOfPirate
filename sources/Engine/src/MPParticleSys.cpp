@@ -3265,17 +3265,19 @@ bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 
 	fwrite(&_iType, sizeof(int), 1, t_pFile);
 
-	char t_pszName[32];
-	lstrcpy(t_pszName, _strPartName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, t_pFile);
+	// Имена в .par-файле — фиксированный 32-байтный буфер.
+	auto writeFixedName = [&](std::string_view src) {
+		char t_pszName[32]{};
+		std::memcpy(t_pszName, src.data(),
+					std::min<std::size_t>(src.size(), sizeof(t_pszName) - 1));
+		fwrite(t_pszName, sizeof(char), 32, t_pFile);
+	};
+	writeFixedName(_strPartName);
 
 	fwrite(&_iParNum, sizeof(int), 1, t_pFile);
 
-	lstrcpy(t_pszName, _strTexName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, t_pFile);
-
-	lstrcpy(t_pszName, _strModelName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, t_pFile);
+	writeFixedName(_strTexName);
+	writeFixedName(_strModelName);
 
 	fwrite(&_fRange[0], sizeof(float), 1, t_pFile);
 	fwrite(&_fRange[1], sizeof(float), 1, t_pFile);
@@ -3310,8 +3312,7 @@ bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 	fwrite(&_fStep, sizeof(float), 1, t_pFile);
 
 	fwrite(&_bModelRange, sizeof(bool), 1, t_pFile);
-	lstrcpy(t_pszName, _strVirualModel.c_str());
-	fwrite(t_pszName, sizeof(char), 32, t_pFile);
+	writeFixedName(_strVirualModel);
 
 	fwrite(&_vOffset, sizeof(D3DXVECTOR3), 1, t_pFile);
 	fwrite(&_fDelayTime, sizeof(float), 1, t_pFile);
@@ -3324,8 +3325,7 @@ bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 
 	fwrite(&m_bShade, sizeof(bool), 1, t_pFile);
 
-	lstrcpy(t_pszName, m_strHitEff.c_str());
-	fwrite(t_pszName, sizeof(char), 32, t_pFile);
+	writeFixedName(m_strHitEff);
 
 	if (_bModelRange) {
 		fwrite(&_wVecNum, sizeof(WORD), 1, t_pFile);

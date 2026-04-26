@@ -26,127 +26,122 @@
 #include <d3dx9math.h>
 #include <windows.h>
 #include <string>
+#include <string_view>
 
 namespace ui {
-	inline void Render(int handle, const char* str, int x, int y,
+	inline void Render(int handle, std::string_view str, int x, int y,
 					   DWORD color, float scale = 1.0f) {
 		CMPFont* pFont = FontManager::Instance().Get(handle);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
 		GetRender().DrawConvert(x, y);
-		pFont->DrawText(const_cast<char*>(str), x, y, color, scale);
+		pFont->DrawText(str, x, y, color, scale);
 	}
 
-	inline void Render(FontSlot slot, const char* str, int x, int y,
+	inline void Render(FontSlot slot, std::string_view str, int x, int y,
 					   DWORD color, float scale = 1.0f) {
 		CMPFont* pFont = FontManager::Instance().Get(slot);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
 		GetRender().DrawConvert(x, y);
-		pFont->DrawText(const_cast<char*>(str), x, y, color, scale);
+		pFont->DrawText(str, x, y, color, scale);
 	}
 
-	inline void BRender(int handle, const char* str, int x, int y,
+	inline void BRender(int handle, std::string_view str, int x, int y,
 						DWORD color, DWORD shadowColor) {
 		CMPFont* pFont = FontManager::Instance().Get(handle);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
 		GetRender().DrawConvert(x, y);
-		pFont->DrawTextShadow(const_cast<char*>(str),
-							  x + 1, y + 1, x, y, shadowColor, color);
+		pFont->DrawTextShadow(str, x + 1, y + 1, x, y, shadowColor, color);
 	}
 
-	inline void Render3d(int handle, const char* str,
+	inline void Render3d(int handle, std::string_view str,
 						 D3DXVECTOR3& pos, DWORD color) {
 		CMPFont* pFont = FontManager::Instance().Get(handle);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
-		pFont->Draw3DText(const_cast<char*>(str), pos, color);
+		pFont->Draw3DText(str, pos, color);
 	}
 
-	inline bool GetSize(int handle, const char* str, int& w, int& h) {
+	inline bool GetSize(int handle, std::string_view str, int& w, int& h) {
 		w = 0;
 		h = 0;
 		CMPFont* pFont = FontManager::Instance().Get(handle);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return false;
 		}
 		SIZE sz{};
-		pFont->GetTextSize(std::string{str}, &sz);
+		pFont->GetTextSize(str, &sz);
 		w = static_cast<int>(sz.cx);
 		h = static_cast<int>(sz.cy);
 		return true;
 	}
 
-	inline int GetWidth(int handle, const char* str) {
+	inline int GetWidth(int handle, std::string_view str) {
 		int w = 0, h = 0;
 		GetSize(handle, str, w, h);
 		return w;
 	}
 
-	inline int GetHeight(int handle, const char* str) {
+	inline int GetHeight(int handle, std::string_view str) {
 		int w = 0, h = 0;
 		GetSize(handle, str, w, h);
 		return h;
 	}
 
 	// Удобные перегрузки для "дефолтного" шрифта (FontSlot::TipText).
-	inline int GetWidth(const char* str) {
+	inline int GetWidth(std::string_view str) {
 		CMPFont* pFont = FontManager::Instance().Get(FontSlot::TipText);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return 0;
 		}
 		SIZE sz{};
-		pFont->GetTextSize(std::string{str}, &sz);
+		pFont->GetTextSize(str, &sz);
 		return static_cast<int>(sz.cx);
 	}
 
-	inline int GetWidth(const std::string& str) {
-		return GetWidth(str.c_str());
-	}
-
-	inline int GetHeight(const char* str) {
+	inline int GetHeight(std::string_view str) {
 		CMPFont* pFont = FontManager::Instance().Get(FontSlot::TipText);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return 0;
 		}
 		SIZE sz{};
-		pFont->GetTextSize(std::string{str}, &sz);
+		pFont->GetTextSize(str, &sz);
 		return static_cast<int>(sz.cy);
 	}
 
-	inline void GetSize(const char* str, int& w, int& h) {
+	inline void GetSize(std::string_view str, int& w, int& h) {
 		w = 0;
 		h = 0;
 		CMPFont* pFont = FontManager::Instance().Get(FontSlot::TipText);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
 		SIZE sz{};
-		pFont->GetTextSize(std::string{str}, &sz);
+		pFont->GetTextSize(str, &sz);
 		w = static_cast<int>(sz.cx);
 		h = static_cast<int>(sz.cy);
 	}
 
-	inline void Render(const char* str, int x, int y, DWORD color, float scale = 1.0f) {
+	inline void Render(std::string_view str, int x, int y, DWORD color, float scale = 1.0f) {
 		Render(FontSlot::TipText, str, x, y, color, scale);
 	}
 
-	inline void BRender(const char* str, int x, int y, DWORD color, DWORD shadowColor) {
+	inline void BRender(std::string_view str, int x, int y, DWORD color, DWORD shadowColor) {
 		CMPFont* pFont = FontManager::Instance().Get(FontSlot::TipText);
-		if (!pFont || !str) {
+		if (!pFont) {
 			return;
 		}
 		GetRender().DrawConvert(x, y);
-		pFont->DrawTextShadow(const_cast<char*>(str),
-							  x + 1, y + 1, x, y, shadowColor, color);
+		pFont->DrawTextShadow(str, x + 1, y + 1, x, y, shadowColor, color);
 	}
 
-	inline void FrameRender(const char* str, int x, int y) {
+	inline void FrameRender(std::string_view str, int x, int y) {
 		int w = 0, h = 0;
 		GetSize(str, w, h);
 		const int offx = GetRender().GetScreenWidth() - x - w - 10;
@@ -157,7 +152,7 @@ namespace ui {
 		Render(str, x - 1, y - 1, 0xffffffff);
 	}
 
-	inline void TipRender(const char* str, int x, int y) {
+	inline void TipRender(std::string_view str, int x, int y) {
 		int w = 0, h = 0;
 		GetSize(str, w, h);
 		x -= w / 2;
@@ -166,11 +161,11 @@ namespace ui {
 	}
 
 	// Алиасы для миграции со старого CGuiFont API.
-	inline void RenderScale(const char* str, int x, int y, DWORD color, float scale) {
+	inline void RenderScale(std::string_view str, int x, int y, DWORD color, float scale) {
 		Render(str, x, y, color, scale);
 	}
 
-	inline void RenderScale(int handle, const char* str, int x, int y,
+	inline void RenderScale(int handle, std::string_view str, int x, int y,
 							DWORD color, float scale) {
 		Render(handle, str, x, y, color, scale);
 	}

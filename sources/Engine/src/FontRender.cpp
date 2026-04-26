@@ -138,16 +138,19 @@ void FontRender::ReleaseFont() {
 	_dumpedTexts.clear();
 }
 
-std::wstring FontRender::_ToWide(const char* mbstr) const {
-	if (!mbstr) {
+std::wstring FontRender::_ToWide(std::string_view mbstr) const {
+	if (mbstr.empty()) {
 		return {};
 	}
-	const int len = ::MultiByteToWideChar(_codepage, 0, mbstr, -1, nullptr, 0);
-	if (len <= 1) {
+	// Длиной (не -1), чтобы string_view без null-terminator работал корректно.
+	const int len = ::MultiByteToWideChar(_codepage, 0, mbstr.data(),
+										  static_cast<int>(mbstr.size()), nullptr, 0);
+	if (len <= 0) {
 		return {};
 	}
-	std::wstring out(static_cast<size_t>(len - 1), L'\0');
-	::MultiByteToWideChar(_codepage, 0, mbstr, -1, out.data(), len);
+	std::wstring out(static_cast<size_t>(len), L'\0');
+	::MultiByteToWideChar(_codepage, 0, mbstr.data(),
+						  static_cast<int>(mbstr.size()), out.data(), len);
 	return out;
 }
 
@@ -210,27 +213,25 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 	}
 }
 
-void FontRender::Draw(char* szText, int x, int y, D3DXCOLOR color) {
-	if (!szText) return;
+void FontRender::Draw(std::string_view szText, int x, int y, D3DXCOLOR color) {
+	if (szText.empty()) return;
 	_DrawWide(_ToWide(szText), x, y, color, 1.0f, nullptr);
 }
 
-bool FontRender::DrawText(char* szText, int x, int y, D3DXCOLOR color,
+bool FontRender::DrawText(std::string_view szText, int x, int y, D3DXCOLOR color,
 						  float fScale, DWORD* /*dwTime*/) {
-	if (!szText || !szText[0]) return false;
+	if (szText.empty()) return false;
 	_DrawWide(_ToWide(szText), x, y, color, fScale, nullptr);
 	return true;
 }
 
 bool FontRender::DrawText(int iNumber, int x, int y, D3DXCOLOR color, float fScale) {
-	char buf[32];
-	std::snprintf(buf, sizeof(buf), "%d", iNumber);
-	return DrawText(buf, x, y, color, fScale);
+	return DrawText(std::format("{}", iNumber), x, y, color, fScale);
 }
 
-bool FontRender::DrawTextShadow(char* szText, int x1, int y1, int x2, int y2,
+bool FontRender::DrawTextShadow(std::string_view szText, int x1, int y1, int x2, int y2,
 								D3DXCOLOR color1, D3DXCOLOR color2) {
-	if (!szText) return false;
+	if (szText.empty()) return false;
 	const std::wstring w = _ToWide(szText);
 	if (s_shadowEnabled) {
 		_DrawWide(w, x1, y1, color1, 1.0f, nullptr);
@@ -239,19 +240,19 @@ bool FontRender::DrawTextShadow(char* szText, int x1, int y1, int x2, int y2,
 	return true;
 }
 
-bool FontRender::Draw3DText(char* /*szText*/, D3DXVECTOR3& /*vPos*/,
+bool FontRender::Draw3DText(std::string_view /*szText*/, D3DXVECTOR3& /*vPos*/,
 							D3DXCOLOR /*color*/, float /*fScale*/) {
 	// TODO: проекция 3D-точки на экран + 2D-рендер. Пока заглушка.
 	return false;
 }
 
-void FontRender::DrawTextClipOnce(char* szText, int /*nLen*/,
+void FontRender::DrawTextClipOnce(std::string_view szText, int /*nLen*/,
 								  LPRECT psrc, LPRECT pclip, D3DXCOLOR color) {
-	if (!szText || !psrc) return;
+	if (szText.empty() || !psrc) return;
 	_DrawWide(_ToWide(szText), psrc->left, psrc->top, color, 1.0f, pclip);
 }
 
-SIZE* FontRender::GetTextSize(const std::string& szText, SIZE* pSize, float fScale) {
+SIZE* FontRender::GetTextSize(std::string_view szText, SIZE* pSize, float fScale) {
 	if (!pSize) return nullptr;
 	pSize->cx = 0;
 	pSize->cy = static_cast<long>(_lineHeight * fScale);
@@ -263,10 +264,10 @@ SIZE* FontRender::GetTextSize(const std::string& szText, SIZE* pSize, float fSca
 	// Конверсия в UTF-8, если codepage не UTF-8.
 	std::string utf8;
 	if (_codepage == CP_UTF8) {
-		utf8 = szText;
+		utf8.assign(szText);
 	}
 	else {
-		utf8 = _ToUtf8(_ToWide(szText.c_str()));
+		utf8 = _ToUtf8(_ToWide(szText));
 	}
 	if (utf8.empty()) {
 		return pSize;

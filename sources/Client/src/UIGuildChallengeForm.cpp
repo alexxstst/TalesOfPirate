@@ -48,35 +48,34 @@ namespace GUI {
 		//	return Error("NPC.clu<%s><%s>",
 		//				 frmGuildPK->GetName(), 
 		//				 "lstGuildPK");
-		char szBuf[32];
 		for (int i(0); i < NUM; i++) {
-			sprintf(szBuf, "labGuildName%d", i);
-			labGuildName[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
+			std::string szBuf = std::format("labGuildName{}", i);
+			labGuildName[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf.c_str()));
 			if (!labGuildName[i])
 				return Error(GetLanguageString(561).c_str(),
 							 frmGuildPK->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 
-			sprintf(szBuf, "labChallenger%d", i);
-			labChallenger[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
+			szBuf = std::format("labChallenger{}", i);
+			labChallenger[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf.c_str()));
 			if (!labChallenger[i])
 				return Error(GetLanguageString(561).c_str(),
 							 frmGuildPK->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 
-			sprintf(szBuf, "labMoney%d", i);
-			labMoney[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
+			szBuf = std::format("labMoney{}", i);
+			labMoney[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf.c_str()));
 			if (!labMoney[i])
 				return Error(GetLanguageString(561).c_str(),
 							 frmGuildPK->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 
-			sprintf(szBuf, "btnCharge%d", i);
-			btnCharge[i] = dynamic_cast<CTextButton*>(frmGuildPK->Find(szBuf));
+			szBuf = std::format("btnCharge{}", i);
+			btnCharge[i] = dynamic_cast<CTextButton*>(frmGuildPK->Find(szBuf.c_str()));
 			if (!btnCharge[i])
 				return Error(GetLanguageString(561).c_str(),
 							 frmGuildPK->GetName(),
-							 szBuf);
+							 szBuf.c_str());
 		}
 		btnCharge[FIRST]->evtMouseClick = _FirstChallengeButtonDown;
 		btnCharge[SECOND]->evtMouseClick = _SecondChallengeButtonDown;
@@ -203,13 +202,13 @@ namespace GUI {
 			return;
 
 		if (m_bStart[iIndex]) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(584).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(584));
 			return;
 		}
 
 		if (m_lChargeMoney[iIndex] == -1) {
 			if (GetChallengeMasterIndex(pMainCha->getGuildName()) != -1) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(585).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(585));
 				return;
 			}
 		}
@@ -217,18 +216,18 @@ namespace GUI {
 			int iMasterIndex = GetChallengeMasterIndex(pMainCha->getGuildName());
 			if (iMasterIndex != -1) {
 				if (iIndex == iMasterIndex) {
-					g_pGameApp->MsgBox("%s", GetLanguageString(586).c_str());
+					g_pGameApp->MsgBox(GetLanguageString(586));
 					return;
 				}
 				if (iIndex > iMasterIndex) {
-					g_pGameApp->MsgBox("%s", GetLanguageString(587).c_str());
+					g_pGameApp->MsgBox(GetLanguageString(587));
 					return;
 				}
 			}
 		}
 
-		if (strcmp(labChallenger[iIndex]->GetCaption(), pMainCha->getGuildName()) == 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(588).c_str());
+		if (std::string_view{labChallenger[iIndex]->GetCaption()} == pMainCha->getGuildName()) {
+			g_pGameApp->MsgBox(GetLanguageString(588));
 			return;
 		}
 		m_iSelIndex = iIndex;
@@ -240,10 +239,8 @@ namespace GUI {
 			iNextCharge = m_lChargeMoney[iIndex] + CHARGE_MONEY;
 		}
 
-		char szBuf[64];
 		stNumBox* numBox = CBoxMgr::ShowNumberBox(_enterChargeMoney, -1, GetLanguageString(589).c_str(), false);
-		sprintf(szBuf, "%d", iNextCharge);
-		numBox->edtNumber->SetCaption(szBuf);
+		numBox->edtNumber->SetCaption(std::format("{}", iNextCharge).c_str());
 	}
 
 	//-------------------------------------------------------------------------
@@ -261,20 +258,20 @@ namespace GUI {
 	bool CGuildChallengeMgr::IsValid(int iIndex, long lMoney) {
 		if (m_lChargeMoney[iIndex] == -1) {
 			if (lMoney < FIRST_CHARGE_MONEY[iIndex]) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(590).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(590));
 				return false;
 			}
 		}
 		else {
 			long lMinMoney = m_lChargeMoney[iIndex] + CGuildChallengeMgr::CHARGE_MONEY;
 			if (lMoney < lMinMoney) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(591).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(591));
 				return false;
 			}
 		}
 
 		if (lMoney >= 2000000000) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(592).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(592));
 			return false;
 		}
 		return true;
@@ -283,7 +280,7 @@ namespace GUI {
 	//-------------------------------------------------------------------------
 	int CGuildChallengeMgr::GetChallengeMasterIndex(const char* szName) {
 		for (int i(0); i < NUM; i++) {
-			if (strcmp(labGuildName[i]->GetCaption(), szName) == 0) {
+			if (std::string_view{labGuildName[i]->GetCaption()} == szName) {
 				return i;
 			}
 		}

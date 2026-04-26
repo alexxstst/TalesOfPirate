@@ -1,4 +1,4 @@
-﻿//
+//
 #include "stdafx.h"
 #include "lwD3DSettings.h"
 
@@ -36,82 +36,68 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
+	namespace {
+		// Парсит десятичное число из ini-строки. Возвращает 0 на пустой/невалидный ввод —
+		// прежнее поведение atoi() эквивалентно (для некорректного хвоста atoi брал префикс).
+		int parseIntFromBuf(std::string_view buf) {
+			int result = 0;
+			const char* first = buf.data();
+			const char* last = buf.data() + buf.size();
+			std::from_chars(first, last, result);
+			return result;
+		}
+	}
+
 	LW_RESULT lwLoadD3DSettings(lwD3DCreateParam* param, const char* file) {
 		memset(param, 0, sizeof(lwD3DCreateParam));
 
 		char buf[LW_MAX_NAME];
 
-		GetPrivateProfileString("D3DADAPTER", "adapter", "", buf, LW_MAX_NAME, file);
-		param->adapter = atoi(buf);
+		auto readInt = [&](const char* section, const char* key) {
+			GetPrivateProfileString(section, key, "", buf, LW_MAX_NAME, file);
+			return parseIntFromBuf(buf);
+		};
 
-		GetPrivateProfileString("D3DDEVTYPE", "devtype", "", buf, LW_MAX_NAME, file);
-		param->dev_type = (D3DDEVTYPE)atoi(buf);
-
-		GetPrivateProfileString("BEHAVIOR", "behavior", "", buf, LW_MAX_NAME, file);
-		param->behavior_flag = atoi(buf);
+		param->adapter = readInt("D3DADAPTER", "adapter");
+		param->dev_type = (D3DDEVTYPE)readInt("D3DDEVTYPE", "devtype");
+		param->behavior_flag = readInt("BEHAVIOR", "behavior");
 
 		// present_param
-		GetPrivateProfileString("PRESENT_PARAM", "windowed", "", buf, LW_MAX_NAME, file);
-		param->present_param.Windowed = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "backbuffer_count", "", buf, LW_MAX_NAME, file);
-		param->present_param.BackBufferCount = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "backbuffer_format", "", buf, LW_MAX_NAME, file);
-		param->present_param.BackBufferFormat = (D3DFORMAT)atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "backbuffer_height", "", buf, LW_MAX_NAME, file);
-		param->present_param.BackBufferHeight = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "backbuffer_width", "", buf, LW_MAX_NAME, file);
-		param->present_param.BackBufferWidth = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "enable_depthstencil", "", buf, LW_MAX_NAME, file);
-		param->present_param.EnableAutoDepthStencil = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "depthstencil_format", "", buf, LW_MAX_NAME, file);
-		param->present_param.AutoDepthStencilFormat = (D3DFORMAT)atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "multisample_type", "", buf, LW_MAX_NAME, file);
-		param->present_param.MultiSampleType = (D3DMULTISAMPLE_TYPE)atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "refresh_rate", "", buf, LW_MAX_NAME, file);
-		param->present_param.FullScreen_RefreshRateInHz = atoi(buf);
-
-		GetPrivateProfileString("PRESENT_PARAM", "present_interval", "", buf, LW_MAX_NAME, file);
-		param->present_param.PresentationInterval = atoi(buf);
+		param->present_param.Windowed = readInt("PRESENT_PARAM", "windowed");
+		param->present_param.BackBufferCount = readInt("PRESENT_PARAM", "backbuffer_count");
+		param->present_param.BackBufferFormat = (D3DFORMAT)readInt("PRESENT_PARAM", "backbuffer_format");
+		param->present_param.BackBufferHeight = readInt("PRESENT_PARAM", "backbuffer_height");
+		param->present_param.BackBufferWidth = readInt("PRESENT_PARAM", "backbuffer_width");
+		param->present_param.EnableAutoDepthStencil = readInt("PRESENT_PARAM", "enable_depthstencil");
+		param->present_param.AutoDepthStencilFormat = (D3DFORMAT)readInt("PRESENT_PARAM", "depthstencil_format");
+		param->present_param.MultiSampleType = (D3DMULTISAMPLE_TYPE)readInt("PRESENT_PARAM", "multisample_type");
+		param->present_param.FullScreen_RefreshRateInHz = readInt("PRESENT_PARAM", "refresh_rate");
+		param->present_param.PresentationInterval = readInt("PRESENT_PARAM", "present_interval");
 
 
 		return LW_RET_OK;
 	}
 
 	LW_RESULT lwSaveD3DSettings(const char* file, const lwD3DCreateParam* param) {
-		char buf[LW_MAX_NAME];
+		auto writeInt = [&](const char* section, const char* key, int value) {
+			const std::string s = std::format("{}", value);
+			WritePrivateProfileString(section, key, s.c_str(), file);
+		};
 
-		WritePrivateProfileString("D3DADAPTER", "adapter", itoa(param->adapter, buf, 10), file);
-		WritePrivateProfileString("D3DDEVTYPE", "devtype", itoa(param->dev_type, buf, 10), file);
-		WritePrivateProfileString("BEHAVIOR", "behavior", itoa(param->behavior_flag, buf, 10), file);
+		writeInt("D3DADAPTER", "adapter", param->adapter);
+		writeInt("D3DDEVTYPE", "devtype", param->dev_type);
+		writeInt("BEHAVIOR", "behavior", param->behavior_flag);
 		// present_param
-		WritePrivateProfileString("PRESENT_PARAM", "windowed", itoa(param->present_param.Windowed, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "backbuffer_count",
-								  itoa(param->present_param.BackBufferCount, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "backbuffer_format",
-								  itoa(param->present_param.BackBufferFormat, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "backbuffer_height",
-								  itoa(param->present_param.BackBufferHeight, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "backbuffer_width",
-								  itoa(param->present_param.BackBufferWidth, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "enable_depthstencil",
-								  itoa(param->present_param.EnableAutoDepthStencil, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "depthstencil_format",
-								  itoa(param->present_param.AutoDepthStencilFormat, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "multisample_type",
-								  itoa(param->present_param.MultiSampleType, buf, 10), file);
-		WritePrivateProfileString("PRESENT_PARAM", "refresh_rate",
-								  itoa(param->present_param.FullScreen_RefreshRateInHz, buf, 10), file);
-
-		WritePrivateProfileString("PRESENT_PARAM", "present_interval",
-								  itoa(param->present_param.PresentationInterval, buf, 10), file);
+		writeInt("PRESENT_PARAM", "windowed", param->present_param.Windowed);
+		writeInt("PRESENT_PARAM", "backbuffer_count", param->present_param.BackBufferCount);
+		writeInt("PRESENT_PARAM", "backbuffer_format", param->present_param.BackBufferFormat);
+		writeInt("PRESENT_PARAM", "backbuffer_height", param->present_param.BackBufferHeight);
+		writeInt("PRESENT_PARAM", "backbuffer_width", param->present_param.BackBufferWidth);
+		writeInt("PRESENT_PARAM", "enable_depthstencil", param->present_param.EnableAutoDepthStencil);
+		writeInt("PRESENT_PARAM", "depthstencil_format", param->present_param.AutoDepthStencilFormat);
+		writeInt("PRESENT_PARAM", "multisample_type", param->present_param.MultiSampleType);
+		writeInt("PRESENT_PARAM", "refresh_rate", param->present_param.FullScreen_RefreshRateInHz);
+		writeInt("PRESENT_PARAM", "present_interval", param->present_param.PresentationInterval);
 
 		return LW_RET_OK;
 	}

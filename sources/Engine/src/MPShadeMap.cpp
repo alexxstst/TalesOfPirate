@@ -371,14 +371,17 @@ void CMPShadeMap::Render() {
 }
 
 bool CMPShadeMap::SaveToFile(FILE* pFile) {
-	char t_pszName[32];
-
 	int t_temp;
 	//!
 	fwrite(&_fRadius, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName, _strTexName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, pFile);
+	// Имя текстуры — фиксированный 32-байтный буфер на диске.
+	{
+		char t_pszName[32]{};
+		std::memcpy(t_pszName, _strTexName.data(),
+					std::min<std::size_t>(_strTexName.size(), sizeof(t_pszName) - 1));
+		fwrite(t_pszName, sizeof(char), 32, pFile);
+	}
 
 	//!
 	t_temp = (int)_eSrcBlend;
@@ -601,14 +604,17 @@ void CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float fAngle) {
 }
 
 bool CMPShadeEX::SaveToFile(FILE* pFile) {
-	char t_pszName[32];
-
 	int t_temp;
 	//!
 	fwrite(&_fRadius, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName, _strTexName.c_str());
-	fwrite(t_pszName, sizeof(char), 32, pFile);
+	// Имя текстуры — фиксированный 32-байтный буфер на диске.
+	{
+		char t_pszName[32]{};
+		std::memcpy(t_pszName, _strTexName.data(),
+					std::min<std::size_t>(_strTexName.size(), sizeof(t_pszName) - 1));
+		fwrite(t_pszName, sizeof(char), 32, pFile);
+	}
 
 	fwrite(&_iRow, sizeof(int), 1, pFile);
 	fwrite(&_iCol, sizeof(int), 1, pFile);

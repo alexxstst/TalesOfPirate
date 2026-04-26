@@ -175,7 +175,7 @@ void CMemo::ProcessCaption() {
 	//
 	const char* s = _strCaption.c_str();
 	string strTemp;
-	int length = (int)strlen(s);
+	int length = (int)_strCaption.size();
 	int begin = 0;
 	int end = 0;
 	int i;
@@ -190,8 +190,8 @@ void CMemo::ProcessCaption() {
 			end = i;
 			strTemp = _strCaption.substr(begin, end - begin);
 
-			if ((int)strlen(strTemp.c_str()) > _nMaxNum) {
-				while ((int)strlen(strTemp.c_str()) > _nMaxNum) {
+			if ((int)strTemp.size() > _nMaxNum) {
+				while ((int)strTemp.size() > _nMaxNum) {
 					_str[_nRowNum] = GetSelfString(strTemp, _nMaxNum, true);
 					strTemp = strTemp.substr(_str[_nRowNum].length(), strTemp.length() - _str[_nRowNum].length());
 					_nRowNum += 1;
@@ -211,8 +211,8 @@ void CMemo::ProcessCaption() {
 
 	else if (!bNotFlag) {
 		strTemp = _strCaption;
-		if ((int)strlen(strTemp.c_str()) > _nMaxNum) {
-			while ((int)strlen(strTemp.c_str()) > _nMaxNum) {
+		if ((int)strTemp.size() > _nMaxNum) {
+			while ((int)strTemp.size() > _nMaxNum) {
 				_str[_nRowNum] = GetSelfString(strTemp, _nMaxNum, true);
 				size_t len = strTemp.length() - _str[_nRowNum].length();
 				len = (len > strTemp.length()) ? strTemp.length() : len;
@@ -891,8 +891,7 @@ void CMemoEx::ParseMisPage() {
 				CItemRecord* pItem = GetItemRecordInfo(m_PageInfo.MisNeed[i].wParam1);
 				if (!pItem) {
 					strTemp += GetLanguageString(706);
-					sprintf(szNumber, "0x%X", m_PageInfo.MisNeed[i].wParam1);
-					strTemp += szNumber;
+					strTemp += std::format("0x{:X}", m_PageInfo.MisNeed[i].wParam1);
 					strTemp += "]>";
 				}
 				else {
@@ -900,17 +899,15 @@ void CMemoEx::ParseMisPage() {
 					strTemp += pItem->szName;
 					strTemp += GetLanguageString(708);
 				}
-				szNumber[0] = 0;
-				sprintf(szNumber, "<r%d/%d>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2);
-				size_t nLen = strTemp.length() + strlen(szNumber) - 6;
-				if (nLen > sMaxCom) {
-					strTemp += szNumber;
-				}
-				else {
-					for (int n = 0; n < int(sMaxCom - nLen); n++) {
-						strTemp += " ";
+				{
+					const std::string num = std::format("<r{}/{}>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2);
+					size_t nLen = strTemp.length() + num.size() - 6;
+					if (nLen <= sMaxCom) {
+						for (int n = 0; n < int(sMaxCom - nLen); n++) {
+							strTemp += " ";
+						}
 					}
-					strTemp += szNumber;
+					strTemp += num;
 				}
 			}
 			else if (m_PageInfo.MisNeed[i].byType == mission::MIS_NEED_KILL) {
@@ -918,8 +915,7 @@ void CMemoEx::ParseMisPage() {
 				CChaRecord* pInfo = GetChaRecordInfo(m_PageInfo.MisNeed[i].wParam1);
 				if (!pInfo) {
 					strTemp += GetLanguageString(706);
-					sprintf(szNumber, "0x%X", m_PageInfo.MisNeed[i].wParam1);
-					strTemp += szNumber;
+					strTemp += std::format("0x{:X}", m_PageInfo.MisNeed[i].wParam1);
 					strTemp += "]>";
 				}
 				else {
@@ -927,17 +923,15 @@ void CMemoEx::ParseMisPage() {
 					strTemp += pInfo->szName;
 					strTemp += GetLanguageString(708);
 				}
-				szNumber[0] = 0;
-				sprintf(szNumber, "<r%d/%d>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2);
-				size_t nLen = strTemp.length() + strlen(szNumber) - 6;
-				if (nLen > sMaxCom) {
-					strTemp += szNumber;
-				}
-				else {
-					for (int n = 0; n < int(sMaxCom - nLen); n++) {
-						strTemp += " ";
+				{
+					const std::string num = std::format("<r{}/{}>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2);
+					size_t nLen = strTemp.length() + num.size() - 6;
+					if (nLen <= sMaxCom) {
+						for (int n = 0; n < int(sMaxCom - nLen); n++) {
+							strTemp += " ";
+						}
 					}
-					strTemp += szNumber;
+					strTemp += num;
 				}
 			}
 			else if (m_PageInfo.MisNeed[i].byType == mission::MIS_NEED_DESP) {
@@ -995,9 +989,9 @@ void CMemoEx::ParseMisPage() {
 
 		sRow++;
 		sCom = 1;
-		char szItem[64];
+		std::string szItem;
 		for (int n = 0; n < m_PageInfo.byPrizeNum; n++) {
-			strcpy(szItem, "./texture/ui/system/error.tga");
+			szItem = "./texture/ui/system/error.tga";
 			if (m_PageInfo.MisPrize[n].byType == mission::MIS_PRIZE_ITEM) {
 				m_sNumInfo++;
 				m_MemoInfo[m_sNumInfo].sxPos = sCom;
@@ -1006,11 +1000,11 @@ void CMemoEx::ParseMisPage() {
 				m_MemoInfo[m_sNumInfo].sData = m_PageInfo.MisPrize[n].wParam1;
 				CItemRecord* pItem = GetItemRecordInfo(m_PageInfo.MisPrize[n].wParam1);
 				if (pItem) {
-					strcpy(szItem, pItem->GetIconFile().c_str());
+					szItem = pItem->GetIconFile();
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
-				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem, 32, 32, 0, 0, 1);
+				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem.c_str(), 32, 32, 0, 0, 1);
 
 				// 
 				m_sNumInfo++;
@@ -1025,15 +1019,14 @@ void CMemoEx::ParseMisPage() {
 
 				m_sNumInfo++;
 				if (pItem) {
-					strcpy(szItem, pItem->szName.c_str());
+					szItem = pItem->szName;
 				}
 				else {
-					strncpy_s(szItem, sizeof(szItem),
-							  SafeVFormat(GetLanguageString(713), m_PageInfo.MisPrize[n].wParam1).c_str(), _TRUNCATE);
+					szItem = SafeVFormat(GetLanguageString(713), m_PageInfo.MisPrize[n].wParam1);
 				}
 
 				strncpy_s(szNumber, sizeof(szNumber),
-						  SafeVFormat(GetLanguageString(714), m_PageInfo.MisPrize[n].wParam2, szItem).c_str(),
+						  SafeVFormat(GetLanguageString(714), m_PageInfo.MisPrize[n].wParam2, szItem.c_str()).c_str(),
 						  _TRUNCATE);
 				m_MemoInfo[m_sNumInfo].strDesp = "";
 				m_MemoInfo[m_sNumInfo].dwColor = 0xFF808080;
@@ -1052,11 +1045,11 @@ void CMemoEx::ParseMisPage() {
 				m_MemoInfo[m_sNumInfo].sData = m_PageInfo.MisPrize[n].wParam1;
 				CItemRecord* pItem = GetItemRecordInfo(194);
 				if (pItem) {
-					strcpy(szItem, pItem->GetIconFile().c_str());
+					szItem = pItem->GetIconFile();
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
-				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem, 32, 32, 0, 0, 1);
+				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem.c_str(), 32, 32, 0, 0, 1);
 
 				// 
 				m_sNumInfo++;
@@ -1089,11 +1082,11 @@ void CMemoEx::ParseMisPage() {
 				m_MemoInfo[m_sNumInfo].sData = m_PageInfo.MisPrize[n].wParam1;
 				CItemRecord* pItem = GetItemRecordInfo(195);
 				if (pItem) {
-					strcpy(szItem, pItem->GetIconFile().c_str());
+					szItem = pItem->GetIconFile();
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
-				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem, 32, 32, 0, 0, 1);
+				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem.c_str(), 32, 32, 0, 0, 1);
 
 				// 
 				m_sNumInfo++;
@@ -1126,11 +1119,11 @@ void CMemoEx::ParseMisPage() {
 				m_MemoInfo[m_sNumInfo].sData = m_PageInfo.MisPrize[n].wParam1;
 				CItemRecord* pItem = GetItemRecordInfo(195);
 				if (pItem) {
-					strcpy(szItem, pItem->GetIconFile().c_str());
+					szItem = pItem->GetIconFile();
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
-				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem, 32, 32, 0, 0, 1);
+				m_MemoInfo[m_sNumInfo].pIcon = new CGraph(szItem.c_str(), 32, 32, 0, 0, 1);
 
 				// 
 				m_sNumInfo++;
@@ -1156,9 +1149,9 @@ void CMemoEx::ParseMisPage() {
 				sCom = 1;
 			}
 			else {
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(718), m_PageInfo.MisPrize[n].byType,
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(718), m_PageInfo.MisPrize[n].byType,
 													 m_PageInfo.MisPrize[n].wParam1,
-													 m_PageInfo.MisPrize[n].wParam2).c_str());
+													 m_PageInfo.MisPrize[n].wParam2));
 			}
 		}
 	}

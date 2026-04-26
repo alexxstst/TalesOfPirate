@@ -74,6 +74,6 @@ bool LootFilter::HasFilteredItem(unsigned long itemId) {
 void LootFilter::PrintAllItems() {
 	map<int, bool>::iterator it = lootFilter.begin();
 	for (it = lootFilter.begin(); it != lootFilter.end(); it++) {
-		g_pGameApp->SysInfo("Filtered item %d %d", it->first, it->second);
+		g_pGameApp->SysInfo(std::format("Filtered item {} {}", it->first, it->second));
 	}
 }

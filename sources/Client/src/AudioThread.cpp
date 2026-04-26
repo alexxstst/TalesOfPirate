@@ -22,12 +22,7 @@ void CAudioThread::play(std::uint32_t musID, bool loop) {
 unsigned int CAudioThread::Run() {
 	for (;;) {
 		if (_nCurMusicID) {
-			try {
-				AudioSDL::Instance().Play(_nCurMusicID, _bLoop);
-			}
-			catch (...) {
-			}
-
+			AudioSDL::Instance().Play(_nCurMusicID, _bLoop);
 			_nCurMusicID = 0;
 		}
 		_nLastTime = GetTickCount();

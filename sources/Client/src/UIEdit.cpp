@@ -617,17 +617,12 @@ void CEdit::Render() {
 			}
 			else {
 				if (GetIsMulti()) {
-					try {
-						int maxRows = _str.size() / 15;
-						//_nCursorRow = maxRows;
-						for (int i = 0; i <= maxRows; i++) {
-							char temp[15] = "";
+					const int maxRows = static_cast<int>(_str.size() / 15);
+					for (int i = 0; i <= maxRows; i++) {
+						char temp[15] = "";
 
-							_str.copy(temp, 15, i * 15);
-							ui::Render(temp, GetX() - _nOffset, GetY() + ui::GetHeight("a") * i, _color);
-						}
-					}
-					catch (...) {
+						_str.copy(temp, 15, i * 15);
+						ui::Render(temp, GetX() - _nOffset, GetY() + ui::GetHeight("a") * i, _color);
 					}
 				}
 				else {
@@ -722,18 +717,19 @@ void CEdit::_GetCursorPos(int nCurPos) {
 //	_pFocusEdit=v; 
 //}
 
-void CEdit::SetCaption(const char* str) {
+void CEdit::SetCaption(std::string_view str) {
 	if (GetActive() == this) {
-		if (strlen(str) <= this->GetMaxNum()) // Add by lark.li 20080820
+		if (str.size() <= static_cast<std::size_t>(this->GetMaxNum())) // Add by lark.li 20080820
 		{
-			g_InputBox.SetText(str);
+			const std::string s{str};
+			g_InputBox.SetText(s.c_str());
 			g_InputBox.SetCursorTail();
 			RefreshText();
 			RefreshCursor();
 		}
 	}
 	else {
-		_str = str;
+		_str.assign(str);
 		_nCursorCol = (int)_str.length();
 	}
 	if (evtChange) evtChange(this);
@@ -772,8 +768,8 @@ void CEdit::SetTextColor(DWORD color) {
 	_color = color;
 }
 
-void CEdit::ReplaceSel(const char* str, BOOL bCanUndo) {
+void CEdit::ReplaceSel(std::string_view str, BOOL bCanUndo) {
 	if (GetActive() == this) {
-		g_InputBox.ReplaceSel(str);
+		g_InputBox.ReplaceSel(std::string{str}.c_str());
 	}
 }

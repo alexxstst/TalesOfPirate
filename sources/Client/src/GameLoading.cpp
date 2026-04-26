@@ -12,7 +12,7 @@ using namespace std;
 
 extern HINSTANCE g_hInstance;
 
-bool DrawBMPFile(RECT rect, LPTSTR pszFile, HDC hDC) {
+bool DrawBMPFile(RECT rect, LPCTSTR pszFile, HDC hDC) {
 	HDC hdcCompatible = CreateCompatibleDC(hDC);
 
 	HBITMAP hBitmap;
@@ -58,14 +58,12 @@ LRESULT CALLBACK LoadingProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwndDlg, &ps);
 
-		char buff[MAX_PATH] = {0};
 		extern long g_nCurrentLogNo;
 		srand((unsigned)time(0) * (g_nCurrentLogNo + 1));
 
-		int random = rand();
-		sprintf(buff, "texture\\ui\\loading_%i.bmp", random % 9 + 1);
+		const std::string buff = std::format("texture\\ui\\loading_{}.bmp", rand() % 9 + 1);
 
-		DrawBMPFile(rc, buff, hdc);
+		DrawBMPFile(rc, buff.c_str(), hdc);
 
 		EndPaint(hwndDlg, &ps);
 

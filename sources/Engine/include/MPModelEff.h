@@ -87,8 +87,8 @@ public:
 		return m_fVel;
 	}
 
-	bool LoadPathFromFile(char* pszName);
-	bool LoadPathFromFileLet(const char* file);
+	bool LoadPathFromFile(std::string_view pszName);
+	bool LoadPathFromFileLet(std::string_view file);
 	void SavePath(FILE* pf);
 	void LoadPath(FILE* pf);
 
@@ -229,9 +229,9 @@ public:
 					   D3DXCOLOR& pColor, TEXCOORD& vecCoord, IDirect3DTextureX* lpTex);
 
 	//!
-	bool SaveToFile(char* pszFileName);
+	bool SaveToFile(std::string_view pszFileName);
 	//!
-	bool LoadFromFile(char* pszFileName);
+	bool LoadFromFile(std::string_view pszFileName);
 
 	bool IsLoop() {
 		return m_bLoop;

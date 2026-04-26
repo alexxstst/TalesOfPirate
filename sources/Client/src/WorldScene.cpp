@@ -245,10 +245,10 @@ void CWorldScene::_FrameMove(DWORD dwTimeParam) {
 						GetMainCha()->DespawnMount();
 						GetMainCha()->FightSwitch(true);
 					}
-					g_pGameApp->SysInfo("%s", GetLanguageString(788).c_str());
+					g_pGameApp->SysInfo(GetLanguageString(788));
 				}
 				else {
-					g_pGameApp->SysInfo("%s", GetLanguageString(789).c_str());
+					g_pGameApp->SysInfo(GetLanguageString(789));
 				}
 			}
 
@@ -265,14 +265,14 @@ void CWorldScene::_FrameMove(DWORD dwTimeParam) {
 					static CAreaInfo* pArea;
 					pArea = GetAreaInfo(nArea);
 					if (pArea) {
-						g_pGameApp->ShowBigText("%s", pArea->DataName.c_str());
+						g_pGameApp->ShowBigText(pArea->DataName);
 						g_pGameApp->PlayMusic(pArea->nMusic);
 						g_stUIMap.RefreshMapName(pArea->DataName.c_str());
 					}
 					else if (_pMapInfo) {
 						std::string name = std::string(_pMapInfo->szName) + GetLanguageString(790);
 						g_stUIMap.RefreshMapName(name.c_str());
-						g_pGameApp->ShowBigText("%s", name.c_str());
+						g_pGameApp->ShowBigText(name);
 					}
 				}
 			}
@@ -1035,11 +1035,10 @@ void CWorldScene::_KeyDownEvent(int key) {
 			}
 
 
-			char file[260];
-			sprintf(file, ".\\model\\character\\%010d.lgo", part);
+			const std::string file = std::format(".\\model\\character\\{:010}.lgo", part);
 
 			FILE* fp = NULL;
-			if (fp = fopen(file, "rb")) {
+			if (fp = fopen(file.c_str(), "rb")) {
 				fclose(fp);
 				c->LoadPart(part_id, part);
 
@@ -1096,9 +1095,7 @@ void CWorldScene::_KeyDownEvent(int key) {
 			_cMouseDown.PickItem(GetMainCha());
 			if (g_pGameApp->IsShiftPress()) {
 				_IsAutoPick = !_IsAutoPick;
-				g_pGameApp->SysInfo("%s", _IsAutoPick
-											  ? GetLanguageString(792).c_str()
-											  : GetLanguageString(793).c_str());
+				g_pGameApp->SysInfo(_IsAutoPick ? GetLanguageString(792) : GetLanguageString(793));
 			}
 		}
 
@@ -1128,7 +1125,7 @@ void CWorldScene::_KeyDownEvent(int key) {
 
 		if ((key == 'b' || key == 'B')) {
 			g_IsShowModel = !g_IsShowModel;
-			g_pGameApp->SysInfo("%s", g_IsShowModel ? GetLanguageString(794).c_str() : GetLanguageString(795).c_str());
+			g_pGameApp->SysInfo(g_IsShowModel ? GetLanguageString(794).c_str() : GetLanguageString(795));
 
 			CCharacter* pCha = NULL;
 			for (int i = 0; i < _nChaCnt; i++) {

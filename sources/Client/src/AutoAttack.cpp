@@ -35,12 +35,12 @@ bool CAutoAttack::AttackStart(CCharacter* pMain, CSkillRecord* pSkill, CCharacte
 	}
 
 	if (!g_SkillUse.IsUse(pSkill, pMain, pCha)) {
-		g_pGameApp->SysInfo("%s", g_SkillUse.GetError());
+		g_pGameApp->SysInfo(g_SkillUse.GetError());
 		return false;
 	}
 
-	g_stUIStart.SysLabel("%s", SafeVFormat(GetLanguageString(4),
-										   g_stUIMap.IsPKSilver() ? "??????" : pCha->getName().c_str()).c_str());
+	g_stUIStart.SysLabel(SafeVFormat(GetLanguageString(4),
+										   g_stUIMap.IsPKSilver() ? "??????" : pCha->getName().c_str()));
 
 	_pMain = pMain;
 	_pSkill = pSkill;
@@ -61,11 +61,11 @@ bool CAutoAttack::AttackStart(CCharacter* pMain, CSkillRecord* pSkill, int nScrX
 	}
 
 	if (!g_SkillUse.IsUse(pSkill, pMain, NULL)) {
-		g_pGameApp->SysInfo("%s", g_SkillUse.GetError());
+		g_pGameApp->SysInfo(g_SkillUse.GetError());
 		return false;
 	}
 
-	g_stUIStart.SysLabel("%s", SafeVFormat(GetLanguageString(5), nScrX / 100, nScrY / 100).c_str());
+	g_stUIStart.SysLabel(SafeVFormat(GetLanguageString(5), nScrX / 100, nScrY / 100));
 
 	_pTarget = NULL;
 
@@ -205,8 +205,8 @@ bool CAutoAttack::Follow(CCharacter* pMain, CCharacter* pTarget) {
 	if (pMain == pTarget)
 		return false;
 
-	g_stUIStart.SysLabel("%s", SafeVFormat(GetLanguageString(6),
-										   g_stUIMap.IsPKSilver() ? "??????" : pTarget->getName().c_str()).c_str());
+	g_stUIStart.SysLabel(SafeVFormat(GetLanguageString(6),
+										   g_stUIMap.IsPKSilver() ? "??????" : pTarget->getName().c_str()));
 
 	_pTarget = pTarget;
 	_pMain = pMain;

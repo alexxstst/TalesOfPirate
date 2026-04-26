@@ -120,7 +120,7 @@ bool CMouseDown::PickItem(CCharacter* pMain) {
 	int nCount = _pScene->PickItem();
 	if (nCount > 0) {
 		_pAutoAttack->Cancel();
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(195), nCount).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(195), nCount));
 		return true;
 	}
 	return false;
@@ -434,7 +434,7 @@ bool CMouseDown::ActAttackArea(CCharacter* pCha, CSkillRecord* pSkill, int nScrX
 	if (!pCha || !pSkill) return false;
 
 	if (!pSkill->IsAttackArea()) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(196).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(196));
 		return false;
 	}
 
@@ -506,7 +506,7 @@ bool CMouseDown::ActAttackArea(CCharacter* pCha, CSkillRecord* pSkill, int nScrX
 	attack->SetAttackPoint(nScrX, nScrY);
 	attack->SetCommand(CCommandObj::GetReadyCommand());
 
-	g_pGameApp->AddTipText("AttackPoint: %s", pSkill->szName.c_str());
+	g_pGameApp->AddTipText(std::format("AttackPoint: {}", pSkill->szName));
 	return pCha->GetActor()->SwitchState(attack);
 }
 
@@ -737,7 +737,7 @@ BOOL CALLBACK CMouseDown::_EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 
 	static char szBuf[1024] = {0};
 	GetWindowText(hWnd, szBuf, sizeof(szBuf));
-	if (strlen(szBuf) > 0 && strstr(szBuf, GetLanguageString(197).c_str()) != nullptr) {
+	if (szBuf[0] != '\0' && strstr(szBuf, GetLanguageString(197).c_str()) != nullptr) {
 		extern void CS_Logout();
 		CS_Logout();
 		g_HaveGameMender = true;

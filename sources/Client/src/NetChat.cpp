@@ -94,8 +94,6 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 
 	pTeamMgr->SetTeamLeaderID(pcteam.cha_dbid[0]);
 	ToLogService("common", "TeamID: {}", pcteam.cha_dbid[0]);
-	char buffer[64];
-	char buf[64];
 	if (g_stUIBoat.GetHuman()) {
 		int nID = g_stUIBoat.GetHuman()->getHumanID();
 		for (int i = 0; i < pcteam.count; i++) {
@@ -106,8 +104,8 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 
 	switch (pcteam.kind) {
 	case TEAM_MSG_KICK:
-		g_pGameApp->SysInfo(
-			"%s", SafeVFormat(GetLanguageString(218), std::string_view(pcteam.cha_name[pcteam.count - 1])).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(218),
+										std::string_view(pcteam.cha_name[pcteam.count - 1])));
 	case TEAM_MSG_LEAVE:
 		if (pcteam.count <= 2 || pcteam.cha_dbid[pcteam.count - 1] == 0)
 			pcteam.kind = TEAM_MSG_GROUP_BREAK;
@@ -122,7 +120,7 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 	switch (pcteam.kind) {
 	case TEAM_MSG_GROUP_ADD: // 
 	{
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(219), std::string_view(pcteam.cha_name[0])).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(219), std::string_view(pcteam.cha_name[0])));
 		//g_pGameApp->ShowBottomText(0x8FC944, "Joined party");
 
 		CTeam* pTeam = pTeamMgr->Add(enumTeamGroup);
@@ -133,14 +131,14 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 		}
 
 		if (auto pCha = g_stUIBoat.GetHuman(); pCha) {
-			sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+			const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 					g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
-			sprintf(buf, "In a Party (%d of 5)", pcteam.count);
-			updateDiscordPresence(buffer, buf);
+			const std::string buf = std::format("In a Party ({} of 5)", pcteam.count);
+			updateDiscordPresence(buffer.c_str(), buf.c_str());
 		}
 	}
 	break;
-	case TEAM_MSG_GROUP_BREAK: // 
+	case TEAM_MSG_GROUP_BREAK: //
 	{
 		pTeamMgr->Del(enumTeamGroup);
 		pTeamMgr->SetTeamLeaderID(0);
@@ -151,17 +149,17 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		int nArea = pScene->_pTerrain->GetTile(pCha->GetCurX() / 100, pCha->GetCurY() / 100)->getIsland();
 
-		sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+		const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 				g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
 
-		char buf[64] = {};
+		std::string buf;
 		if (CAreaInfo* pArea = GetAreaInfo(nArea); pArea) {
-			sprintf_s(buf, "In %s", pArea->DataName.c_str());
+			buf = std::format("In {}", pArea->DataName);
 		}
 
-		updateDiscordPresence(buffer, buf);
+		updateDiscordPresence(buffer.c_str(), buf.c_str());
 	}
-		g_pGameApp->SysInfo("%s", GetLanguageString(220).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(220));
 		//g_pGameApp->ShowBottomText(0x8FC944, "Party disbanded");
 		break;
 	case TEAM_MSG_ADD: // :
@@ -172,21 +170,21 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 					   pcteam.motto[pcteam.count - 1], pcteam.cha_icon[pcteam.count - 1]);
 		}
 		//g_pGameApp->ShowBottomText(0x8FC944, "%s has joined the party", pcteam.cha_name[pcteam.count-1] );
-		g_pGameApp->SysInfo(
-			"%s", SafeVFormat(GetLanguageString(221), std::string_view(pcteam.cha_name[pcteam.count - 1])).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(221),
+										std::string_view(pcteam.cha_name[pcteam.count - 1])));
 
 		if (auto pCha = g_stUIBoat.GetHuman(); pCha) {
-			sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+			const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 					g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
-			sprintf(buf, "In a Party (%d of 5)", pcteam.count);
-			updateDiscordPresence(buffer, buf);
+			const std::string buf = std::format("In a Party ({} of 5)", pcteam.count);
+			updateDiscordPresence(buffer.c_str(), buf.c_str());
 		}
 	}
 	break;
 	//case TEAM_MSG_OFFLINE:      // :
 	case TEAM_MSG_LEAVE: // :
-		g_pGameApp->SysInfo(
-			"%s", SafeVFormat(GetLanguageString(222), std::string_view(pcteam.cha_name[pcteam.count - 1])).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(222),
+										std::string_view(pcteam.cha_name[pcteam.count - 1])));
 	//g_pGameApp->ShowBottomText(0x8FC944, "%s has left the party", pcteam.cha_name[pcteam.count-1] );
 	case TEAM_MSG_KICK: {
 		CTeam* pTeam = pTeamMgr->Find(enumTeamGroup);
@@ -195,10 +193,10 @@ void NetPCTeam(stNetPCTeam& pcteam) {
 		}
 
 		if (auto pCha = g_stUIBoat.GetHuman(); pCha) {
-			sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
+			const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 					g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
-			sprintf(buf, "In a Party (%d of 5)", pcteam.count);
-			updateDiscordPresence(buffer, buf);
+			const std::string buf = std::format("In a Party ({} of 5)", pcteam.count);
+			updateDiscordPresence(buffer.c_str(), buf.c_str());
 		}
 	}
 	break;
@@ -215,19 +213,19 @@ void NetTeamCancel(unsigned long inviter_chaid, char reason) {
 	//  dev-only  test_group
 	switch (reason) {
 	case MSG_TEAM_CANCLE_BUSY:
-		g_pGameApp->SysInfo("%s", GetLanguageString(225).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(225));
 		break;
 	case MSG_TEAM_CANCLE_TIMEOUT:
-		g_pGameApp->SysInfo("%s", GetLanguageString(226).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(226));
 		break;
 	case MSG_TEAM_CANCLE_OFFLINE:
-		g_pGameApp->SysInfo("%s", GetLanguageString(227).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(227));
 		break;
 	case MSG_TEAM_CANCLE_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(228).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(228));
 		break;
 	case MSG_TEAM_CANCLE_CANCEL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(229).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(229));
 		break;
 	}
 	g_stTeamInviteFormMgr.RemoveInviteForm(inviter_chaid);
@@ -242,22 +240,22 @@ void NetFrndCancel(unsigned long inviter_chaid, char reason) {
 	//  dev-only  test_frnd
 	switch (reason) {
 	case MSG_FRND_CANCLE_BUSY:
-		g_pGameApp->SysInfo("%s", GetLanguageString(232).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(232));
 		break;
 	case MSG_FRND_CANCLE_TIMEOUT:
-		g_pGameApp->SysInfo("%s", GetLanguageString(226).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(226));
 		break;
 	case MSG_FRND_CANCLE_OFFLINE:
-		g_pGameApp->SysInfo("%s", GetLanguageString(227).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(227));
 		break;
 	case MSG_FRND_CANCLE_INVITER_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(233).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(233));
 		break;
 	case MSG_FRND_CANCLE_SELF_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(234).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(234));
 		break;
 	case MSG_FRND_CANCLE_CANCEL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(235).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(235));
 		break;
 	}
 	g_stFrndInviteFormMgr.RemoveInviteForm(inviter_chaid);
@@ -269,7 +267,7 @@ void NetFrndOnline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamFrnd)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(true);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(237), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(237), pMember->GetName()));
 	}
 	//g_stUIChat.ReceiveMsg(enumSCM_FRND_ONLINE,0,cha_id);
 }
@@ -279,7 +277,7 @@ void NetFrndOffline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamFrnd)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(false);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(239), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(239), pMember->GetName()));
 	}
 	//g_stUIChat.ReceiveMsg(enumSCM_FRND_OFFLINE,0,cha_id);
 }
@@ -312,7 +310,7 @@ void NetGMAdd(unsigned long cha_id, const char* cha_name, const char* motto, uns
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamGM)->Find(cha_id);
 	if (!pMember) {
 		g_stUIChat.GetTeamMgr()->Find(enumTeamGM)->Add(cha_id, cha_name, motto, icon_id);
-		g_pGameApp->SysInfo("GM [%s] is now Online!", cha_name);
+		g_pGameApp->SysInfo(std::format("GM [{}] is now Online!", cha_name));
 	}
 }
 
@@ -322,7 +320,7 @@ void NetGMOnline(unsigned long cha_id) {
 		pMember->SetOnline(true);
 		CTreeGridNode* pNode = (CTreeGridNode*)pMember->GetTeam()->GetPointer();
 		g_stUIChat.SortOnlineFrnd(pNode);
-		g_pGameApp->SysInfo("GM [%s] is now Online!", pMember->GetName());
+		g_pGameApp->SysInfo(std::format("GM [{}] is now Online!", pMember->GetName()));
 	}
 }
 
@@ -332,14 +330,14 @@ void NetGMOffline(unsigned long cha_id) {
 		pMember->SetOnline(false);
 		CTreeGridNode* pNode = (CTreeGridNode*)pMember->GetTeam()->GetPointer();
 		g_stUIChat.SortOnlineFrnd(pNode);
-		g_pGameApp->SysInfo("GM [%s] is now Offline.", pMember->GetName());
+		g_pGameApp->SysInfo(std::format("GM [{}] is now Offline.", pMember->GetName()));
 	}
 }
 
 void NetGMDel(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamGM)->Find(cha_id);
 	if (pMember) {
-		g_pGameApp->SysInfo("GM [%s] is now Offline.", pMember->GetName());
+		g_pGameApp->SysInfo(std::format("GM [{}] is now Offline.", pMember->GetName()));
 		g_stUIChat.GetTeamMgr()->Find(enumTeamGM)->Del(cha_id);
 	}
 }
@@ -492,7 +490,7 @@ void NetMasterOnline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamMaster)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(true);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(884), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(884), pMember->GetName()));
 	}
 }
 
@@ -501,7 +499,7 @@ void NetMasterOffline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamMaster)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(false);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(885), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(885), pMember->GetName()));
 	}
 }
 
@@ -533,22 +531,22 @@ void NetMasterCancel(unsigned long inviter_chaid, char reason) {
 	//  dev-only  test_frnd
 	switch (reason) {
 	case MSG_FRND_CANCLE_BUSY:
-		g_pGameApp->SysInfo("%s", GetLanguageString(232).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(232));
 		break;
 	case MSG_FRND_CANCLE_TIMEOUT:
-		g_pGameApp->SysInfo("%s", GetLanguageString(226).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(226));
 		break;
 	case MSG_FRND_CANCLE_OFFLINE:
-		g_pGameApp->SysInfo("%s", GetLanguageString(227).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(227));
 		break;
 	case MSG_FRND_CANCLE_INVITER_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(233).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(233));
 		break;
 	case MSG_FRND_CANCLE_SELF_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(234).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(234));
 		break;
 	case MSG_FRND_CANCLE_CANCEL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(235).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(235));
 		break;
 	}
 	g_stFrndInviteFormMgr.RemoveInviteForm(inviter_chaid);
@@ -577,7 +575,7 @@ void NetPrenticeOnline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamPrentice)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(true);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(886), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(886), pMember->GetName()));
 	}
 }
 
@@ -586,7 +584,7 @@ void NetPrenticeOffline(unsigned long cha_id) {
 	CMember* pMember = g_stUIChat.GetTeamMgr()->Find(enumTeamPrentice)->Find(cha_id);
 	if (pMember) {
 		pMember->SetOnline(false);
-		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(887), pMember->GetName()).c_str());
+		g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(887), pMember->GetName()));
 	}
 }
 
@@ -618,22 +616,22 @@ void NetPrenticeCancel(unsigned long inviter_chaid, char reason) {
 	//  dev-only  test_frnd
 	switch (reason) {
 	case MSG_FRND_CANCLE_BUSY:
-		g_pGameApp->SysInfo("%s", GetLanguageString(232).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(232));
 		break;
 	case MSG_FRND_CANCLE_TIMEOUT:
-		g_pGameApp->SysInfo("%s", GetLanguageString(226).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(226));
 		break;
 	case MSG_FRND_CANCLE_OFFLINE:
-		g_pGameApp->SysInfo("%s", GetLanguageString(227).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(227));
 		break;
 	case MSG_FRND_CANCLE_INVITER_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(233).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(233));
 		break;
 	case MSG_FRND_CANCLE_SELF_ISFULL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(234).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(234));
 		break;
 	case MSG_FRND_CANCLE_CANCEL:
-		g_pGameApp->SysInfo("%s", GetLanguageString(235).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(235));
 		break;
 	}
 	g_stFrndInviteFormMgr.RemoveInviteForm(inviter_chaid);

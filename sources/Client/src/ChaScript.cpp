@@ -10,9 +10,8 @@
 int GetChaPhotoTexID(int nTypeID) {
 	CChaRecord* pInfo = GetChaRecordInfo(nTypeID);
 	if (pInfo) {
-		char szPhoto[80] = {0};
-		sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szIconName.c_str());
-		return GetTextureID(szPhoto);
+		const std::string szPhoto = std::format("texture/photo/{}.bmp", pInfo->szIconName);
+		return GetTextureID(szPhoto.c_str());
 	}
 	return 0;
 }

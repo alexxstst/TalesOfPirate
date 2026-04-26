@@ -41,7 +41,7 @@ using namespace GUI;
 //---------------------------------------------------------------------------
 // class CItemCommand
 //---------------------------------------------------------------------------
-static char buf[256] = {0};
+// Был static char buf[256] — заменён на локальные std::string по месту через std::format.
 
 const DWORD VALID_COLOR = COLOR_RED;
 const DWORD GENERIC_COLOR = COLOR_WHITE;
@@ -127,6 +127,7 @@ CItemCommand::~CItemCommand() {
 void CItemCommand::PUSH_HINT(const char* str, int value, DWORD color) {
 	if (value == 0) return;
 
+	char buf[256] = {0};
 	FmtLang(buf, sizeof(buf), str, value);
 	PushHint(buf, color);
 }
@@ -142,46 +143,43 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 	_pImage->Render(nX, nY, _ItemData.IsValid() ? _dwColor : (DWORD)0xff757575);
 
 	short sType = _pItem->sType;
+	std::string buf;
 	// render gem level on icon
 	if (sType == 49 || sType == 50) {
 		static SItemHint item;
 		memset(&item, 0, sizeof(SItemHint));
 		item.Convert(_ItemData, _pItem);
-		sprintf(buf, "Lv%d", item.sEnergy[1]);
+		const std::string lvBuf = std::format("Lv{}", item.sEnergy[1]);
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize(lvBuf, w, h);
 		GetRender().FillFrame(x + xOffset, y + h + 8 + yOffset, x + w + xOffset, y + h + h + 8 + yOffset, 0xE0ADF6F7);
-		ui::Render(buf, x + xOffset, y + h + 8 + yOffset, COLOR_BLACK);
+		ui::Render(lvBuf, x + xOffset, y + h + 8 + yOffset, COLOR_BLACK);
 	}
 
 	bool renderText = false;
 	if (_ItemData.sNum > 1) {
-		sprintf(buf, "%d", _ItemData.sNum);
+		buf = std::format("{}", _ItemData.sNum);
 		renderText = true;
 	}
 	else if (_ItemData.sEndure[1] == 25000 && _ItemData.sEnergy[1] == 0) {
-		//render "App" on apparels.
-		sprintf(buf, "App");
+		buf = "App";
 		renderText = true;
 	}
 	else if (_ItemData.sEndure[1] < 25000 && _ItemData.sEnergy[1] >= 1000 && sType != 59 && sType < 29) {
-		//render "EQP" on items.
-		sprintf(buf, "EQP");
+		buf = "EQP";
 		renderText = true;
 	}
-	else if ((sType < 29 && sType != 12 && sType != 13 && sType != 17 && sType != 18 && sType != 19 /*&& sType != 20*/
+	else if ((sType < 29 && sType != 12 && sType != 13 && sType != 17 && sType != 18 && sType != 19
 		&& sType != 21) || (sType == 81 && sType == 82 && sType == 83)) {
-		// rendering forge level on icons
 		SItemForge& Forge = GetForgeInfo();
 		if (Forge.IsForge) {
 			if (Forge.nLevel > 0) {
-				sprintf(buf, "+%d", Forge.nLevel);
+				buf = std::format("+{}", Forge.nLevel);
 				renderText = true;
 			}
 		}
 	}
 	else if (sType == 59 && _ItemData.sEndure[1] != 25000) {
-		// render fairy level on icon
 		static SItemHint item;
 		memset(&item, 0, sizeof(SItemHint));
 		item.Convert(_ItemData, _pItem);
@@ -192,7 +190,7 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 			+ item.sInstAttr[ITEMATTR_VAL_CON]
 			+ item.sInstAttr[ITEMATTR_VAL_STA];
 
-		sprintf(buf, "Lv%d", nLevel);
+		buf = std::format("Lv{}", nLevel);
 		renderText = true;
 	}
 
@@ -213,7 +211,8 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 		static char szBuf2[128] = {0};
 		static int nEnter = 0;
 		strncpy(szBuf1, _pItem->szName.c_str(), sizeof(szBuf1));
-		nEnter = (int)strlen(szBuf1) / 2;
+		szBuf1[sizeof(szBuf1) - 1] = '\0';
+		nEnter = (int)std::string_view{szBuf1}.size() / 2;
 		// UTF-8: не разрываем codepoint — если szBuf1[nEnter] — continuation-
 		// байт (10xxxxxx), отступаем назад до starter-байта включительно.
 		while (nEnter > 0
@@ -236,23 +235,24 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 		ui::Render(_pItem->szName.c_str(), x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
 	}
 
+	std::string priceBuf;
 	if (_nPrice > 2000000000) {
 		int price = _nPrice - 2000000000;
 		int quantity = price / 100000;
 		int itemID = price - (quantity * 100000);
 		CItemRecord* pInfo = GetItemRecordInfo(itemID);
 		if (pInfo) {
-			sprintf(buf, "%dx %s", quantity, pInfo->szName.c_str());
+			priceBuf = std::format("{}x {}", quantity, pInfo->szName);
 		}
 		else {
-			sprintf(buf, "%dx Invalid ID [ %d]", quantity, itemID);
+			priceBuf = std::format("{}x Invalid ID [ {}]", quantity, itemID);
 		}
 	}
 	else {
-		sprintf(buf, "$%s", StringSplitNum(_nPrice));
+		priceBuf = std::format("${}", StringSplitNum(_nPrice));
 	}
-	ui::GetSize(buf, w, h);
-	ui::Render(buf, x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
+	ui::GetSize(priceBuf, w, h);
+	ui::Render(priceBuf, x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
 }
 
 void CItemCommand::Render(int x, int y) {
@@ -277,67 +277,60 @@ void CItemCommand::Render(int x, int y) {
 		memset(&item, 0, sizeof(SItemHint));
 		item.Convert(_ItemData, _pItem);
 
-		sprintf(buf, "Lv%d", item.sEnergy[1]);
+		const std::string lvBuf = std::format("Lv{}", item.sEnergy[1]);
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize(lvBuf, w, h);
 
 		GetRender().FillFrame(x, y + h + 8, x + w, y + h + h + 8, 0xE0ADF6F7);
-		ui::Render(buf, x, y + h + 8, COLOR_BLACK);
+		ui::Render(lvBuf, x, y + h + 8, COLOR_BLACK);
 	}
 
 	if (_ItemData.dwDBID) {
-		sprintf(buf, "Lock");
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize("Lock", w, h);
 
 		GetRender().FillFrame(x, y, x + w, y + h, 0xAA000000);
-		ui::Render(buf, x, y, 0xFFFFA500);
+		ui::Render("Lock", x, y, 0xFFFFA500);
 	}
 
 	if (_ItemData.sNum > 1) {
-		sprintf(buf, "%d", _ItemData.sNum);
+		const std::string numBuf = std::format("{}", _ItemData.sNum);
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize(numBuf, w, h);
 
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		ui::Render(buf, x, y, COLOR_BLACK);
+		ui::Render(numBuf, x, y, COLOR_BLACK);
 	}
 
 	// rendering forge level on icons
-	if ((sType < 29 && sType != 12 && sType != 13 && sType != 17 && sType != 18 && sType != 19 /*&& sType != 20*/ &&
+	if ((sType < 29 && sType != 12 && sType != 13 && sType != 17 && sType != 18 && sType != 19 &&
 		sType != 21) || (sType == 81 && sType == 82 && sType == 83)) {
 		SItemForge& Forge = GetForgeInfo();
 		if (Forge.IsForge) {
 			if (Forge.nLevel > 0) {
-				sType != 26 && sType != 25 ? sprintf(buf, "EQP+%d", Forge.nLevel) : sprintf(buf, "+%d", Forge.nLevel);
+				const std::string forgeBuf = (sType != 26 && sType != 25)
+					? std::format("EQP+{}", Forge.nLevel)
+					: std::format("+{}", Forge.nLevel);
 				static int w, h;
-				ui::GetSize(buf, w, h);
+				ui::GetSize(forgeBuf, w, h);
 
 				x += ITEM_WIDTH - w;
 				y += ITEM_HEIGHT - h;
 				GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-				ui::Render(buf, x, y, COLOR_BLACK);
+				ui::Render(forgeBuf, x, y, COLOR_BLACK);
 			}
 		}
-		/*
-		//render hammer on near-broken equips
-		if(_ItemData.sEndure[0] <= 0.1*_ItemData.sEndure[1]){
-			CGuiPic* repairIcon = new CGuiPic;
-			repairIcon->LoadImage( "Texture/UI/Corsairs/Repair.png", 32, 32, 0, 0, 0, 0.8f, 0.8f );
-			repairIcon->Render(x+8,y+8);
-		}*/
 		//render "Eqp" on Eqp. Forge.nLevel
 		if (_ItemData.sEndure[1] < 25000 && _ItemData.sEnergy[1] >= 1000 && sType < 29 && sType != 59 && sType != 25 &&
 			sType != 26 && Forge.nLevel == 0) {
-			sprintf(buf, "EQP");
 			static int w, h;
-			ui::GetSize(buf, w, h);
+			ui::GetSize("EQP", w, h);
 			x += ITEM_WIDTH - w;
 			y += ITEM_HEIGHT - h;
 			GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-			ui::Render(buf, x, y, COLOR_BLACK);
+			ui::Render("EQP", x, y, COLOR_BLACK);
 		}
 	}
 
@@ -353,25 +346,24 @@ void CItemCommand::Render(int x, int y) {
 			+ item.sInstAttr[ITEMATTR_VAL_CON]
 			+ item.sInstAttr[ITEMATTR_VAL_STA];
 
-		sprintf(buf, "Lv%d", nLevel);
+		const std::string lvBuf = std::format("Lv{}", nLevel);
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize(lvBuf, w, h);
 
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		ui::Render(buf, x, y, COLOR_BLACK);
+		ui::Render(lvBuf, x, y, COLOR_BLACK);
 	}
 
 	//render "App" on apparels.
 	if (_ItemData.sEndure[1] == 25000 && _ItemData.sEnergy[1] == 0) {
-		sprintf(buf, "App");
 		static int w, h;
-		ui::GetSize(buf, w, h);
+		ui::GetSize("App", w, h);
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		ui::Render(buf, x, y, COLOR_BLACK);
+		ui::Render("App", x, y, COLOR_BLACK);
 	}
 }
 
@@ -385,13 +377,13 @@ void CItemCommand::OwnDefRender(int x, int y, int nWidth, int nHeight) {
 
 	if (_ItemData.sNum >= 0) {
 		static int xNum, yNum;
-		sprintf(buf, "%d", _ItemData.sNum);
-		ui::GetSize(buf, w, h);
+		const std::string numBuf = std::format("{}", _ItemData.sNum);
+		ui::GetSize(numBuf, w, h);
 
 		xNum = nX + ITEM_WIDTH - w;
 		yNum = nY + ITEM_HEIGHT - h;
 		GetRender().FillFrame(xNum, yNum, xNum + w, yNum + h, 0xE0ADF6F7);
-		ui::Render(buf, xNum, yNum, COLOR_BLACK);
+		ui::Render(numBuf, xNum, yNum, COLOR_BLACK);
 	}
 
 	ui::GetSize(_pItem->szName.c_str(), w, h);
@@ -400,7 +392,8 @@ void CItemCommand::OwnDefRender(int x, int y, int nWidth, int nHeight) {
 		static char szBuf2[128] = {0};
 		static int nEnter = 0;
 		strncpy(szBuf1, _pItem->szName.c_str(), sizeof(szBuf1));
-		nEnter = (int)strlen(szBuf1) / 2;
+		szBuf1[sizeof(szBuf1) - 1] = '\0';
+		nEnter = (int)std::string_view{szBuf1}.size() / 2;
 		// UTF-8: не разрываем codepoint — если szBuf1[nEnter] — continuation-
 		// байт (10xxxxxx), отступаем назад до starter-байта включительно.
 		while (nEnter > 0
@@ -437,11 +430,13 @@ void CItemCommand::RenderEnergy(int x, int y) {
 }
 
 void CItemCommand::_AddDescriptor() {
+	char buf[256] = {0};
 	StringNewLine(buf, 40, _pItem->szDescriptor.c_str(), (unsigned int)_pItem->szDescriptor.size());
 	PushHint(buf);
 }
 
 void CItemCommand::AddHint(int x, int y) {
+	char buf[256] = {0};  // буфер для FmtLang / StringNewLine (требуют char*)
 	bool isMain = false;
 
 	if (GetParent()) {
@@ -488,19 +483,16 @@ void CItemCommand::AddHint(int x, int y) {
 		sType == 84);
 	if (isWeapon || isDefenceType || isJewelery || isEquip) {
 		if (_ItemData.GetItemLevel() > 0) {
-			sprintf(buf, "Lv%d %s", _ItemData.GetItemLevel(), GetName());
+			PushHint(std::format("Lv{} {}", _ItemData.GetItemLevel(), GetName()), COLOR_WHITE, 5, 1);
 		}
 		else {
-			sprintf(buf, "%s", GetName());
+			PushHint(GetName(), COLOR_WHITE, 5, 1);
 		}
-		PushHint(buf, COLOR_WHITE, 5, 1); //0xFF000000
-		//PushHint( buf, (DWORD)(COLOR_WHITE ^ 0xFF000000), 5, 1, -1, true, -16777216);
 
 		if (_pItem->lID == 1034) {
 			FmtLang(buf, sizeof(buf), GetLanguageString(862), _ItemData.sEndure[0] * 10 - 1000,
 					_ItemData.sEndure[1] * 10 - 1000); //
 			PushHint(buf, COLOR_WHITE, 5, 1);
-			//return;
 		}
 
 		if (_pItem->sType == 2) {
@@ -535,10 +527,8 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 
 
-		//if ( _ItemData.GetItemLevel() > 0 ){
 		if (_pItem->Id != 1034) {
-			sprintf(buf, "Effectiveness (%d%%)", _ItemData.GetItemLevel());
-			PushHint(buf, GENERIC_COLOR);
+			PushHint(std::format("Effectiveness ({}%)", _ItemData.GetItemLevel()), GENERIC_COLOR);
 		}
 		//}
 
@@ -562,8 +552,7 @@ void CItemCommand::AddHint(int x, int y) {
 			+ item.sInstAttr[ITEMATTR_VAL_CON]
 			+ item.sInstAttr[ITEMATTR_VAL_STA];
 
-		sprintf(buf, "Lv%d %s", nLevel, GetName());
-		PushHint(buf, COLOR_WHITE, 5, 1);
+		PushHint(std::format("Lv{} {}", nLevel, GetName()), COLOR_WHITE, 5, 1);
 
 		AddHintHeight();
 
@@ -581,8 +570,7 @@ void CItemCommand::AddHint(int x, int y) {
 
 		AddHintHeight();
 
-		if (!isStore) //
-		{
+		if (!isStore) {
 			FmtLang(buf, sizeof(buf), GetLanguageString(662), _ItemData.sEndure[0] / 50, _ItemData.sEndure[1] / 50);
 			PushHint(buf);
 
@@ -621,9 +609,9 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 
 		if (_ItemData.expiration != 0) {
-			char buf[64];
-			char buf2[64];
-			DWORD color;
+			char timeBuf[64] = {0};
+			std::string buf2;
+			DWORD color = COLOR_RED;
 			const time_t timeNow = std::time(0);
 			time_t timedif = timeNow - _ItemData.expiration;
 			time_t seconds = abs(timedif % 86400);
@@ -631,22 +619,22 @@ void CItemCommand::AddHint(int x, int y) {
 
 			if (_ItemData.expiration) {
 				if (timedif < 0 && days >= 1) {
-					strftime(buf, sizeof(buf), "%H:%M:%S", gmtime(&seconds));
-					sprintf(buf2, "%d day(s), %s remaining", days, buf);
+					strftime(timeBuf, sizeof(timeBuf), "%H:%M:%S", gmtime(&seconds));
+					buf2 = std::format("{} day(s), {} remaining", days, timeBuf);
 					color = COLOR_GREEN;
 				}
 				else if (timedif < 0 && days < 1) {
-					strftime(buf, sizeof(buf), "%H:%M:%S", gmtime(&seconds));
-					sprintf(buf2, "%s remaining", buf);
+					strftime(timeBuf, sizeof(timeBuf), "%H:%M:%S", gmtime(&seconds));
+					buf2 = std::format("{} remaining", timeBuf);
 					color = COLOR_ORANGE;
 				}
 				else if (timedif >= 0) {
-					sprintf(buf2, "Item expired");
+					buf2 = "Item expired";
 					color = COLOR_RED;
 				}
 			}
 
-			PUSH_HINT(buf2, -1, color);
+			PUSH_HINT(buf2.c_str(), -1, color);
 		}
 
 
@@ -916,15 +904,13 @@ void CItemCommand::AddHint(int x, int y) {
 		for (int i = 0; i < count; i++) {
 			value = item.sInstAttr[show_attr[i]];
 			item.sInstAttr[show_attr[i]] = 0;
-			sprintf(buf, "%s:%d", show_text[i].c_str(), value);
-			PushHint(buf, GENERIC_COLOR);
+			PushHint(std::format("{}:{}", show_text[i], value), GENERIC_COLOR);
 		}
 
 		FmtLang(buf, sizeof(buf), GetLanguageString(655), _ItemData.sEndure[1]);
 		PushHint(buf, GENERIC_COLOR);
 
-		sprintf(buf, "%s:%d", GetLanguageString(848).c_str(), _ItemData.sEnergy[1]); //
-		PushHint(buf, GENERIC_COLOR);
+		PushHint(std::format("{}:{}", GetLanguageString(848), _ItemData.sEnergy[1]), GENERIC_COLOR);
 
 		_AddDescriptor();
 	}
@@ -952,8 +938,7 @@ void CItemCommand::AddHint(int x, int y) {
 	{
 		// Add by lark.li 20080320 begin
 		if (5724 == _pItem->lID) {
-			sprintf(buf, "Prison Term Remaining : %d mins", item.sEnergy[0] / 60);
-			PushHint(buf);
+			PushHint(std::format("Prison Term Remaining : {} mins", item.sEnergy[0] / 60));
 
 			SetHintIsCenter(false);
 			_AddDescriptor();
@@ -1014,22 +999,14 @@ void CItemCommand::AddHint(int x, int y) {
 			}
 
 			if (_pItem->lID == 2911 || _pItem->lID == 2952 || _pItem->lID == 3066 || _pItem->lID == 3078) {
-				sprintf(buf, "%s: %d", GetLanguageString(916).c_str(), nMonth);
-				PushHint(buf);
-
-				sprintf(buf, "%s: %d", GetLanguageString(917).c_str(), nDay);
-				PushHint(buf);
-
-				sprintf(buf, "%s: %d", GetLanguageString(918).c_str(), nHour);
-				PushHint(buf);
-
-				sprintf(buf, "%s: %d", GetLanguageString(919).c_str(), nMinute);
-				PushHint(buf);
+				PushHint(std::format("{}: {}", GetLanguageString(916), nMonth));
+				PushHint(std::format("{}: {}", GetLanguageString(917), nDay));
+				PushHint(std::format("{}: {}", GetLanguageString(918), nHour));
+				PushHint(std::format("{}: {}", GetLanguageString(919), nMinute));
 			}
 
 			if (_pItem->lID != 3066 && _pItem->lID != 3078) {
-				sprintf(buf, "%s: %d", GetLanguageString(920).c_str(), nSecond);
-				PushHint(buf);
+				PushHint(std::format("{}: {}", GetLanguageString(920), nSecond));
 			}
 
 			AddHintHeight();
@@ -1048,8 +1025,7 @@ void CItemCommand::AddHint(int x, int y) {
 				}
 			}
 
-			sprintf(buf, "%s: %d", GetLanguageString(933).c_str(), nCount); // ""
-			PushHint(buf);
+			PushHint(std::format("{}: {}", GetLanguageString(933), nCount));
 
 			AddHintHeight();
 			_AddDescriptor();
@@ -1067,8 +1043,9 @@ void CItemCommand::AddHint(int x, int y) {
 		//Add by sunny.sun 20080528
 		//Begin
 		else if (_pItem->Id == 5803 || _pItem->Id == 6373) {
+			std::string hintStr;
 			if (_pItem->Id == 5803) {
-				sprintf(buf, "%s:%d", GetLanguageString(651).c_str(), item.sInstAttr[ITEMATTR_VAL_STR]);
+				hintStr = std::format("{}:{}", GetLanguageString(651), item.sInstAttr[ITEMATTR_VAL_STR]);
 			}
 			if (_pItem->Id == 6373) {
 				int nCount = 0;
@@ -1079,10 +1056,10 @@ void CItemCommand::AddHint(int x, int y) {
 					}
 				}
 
-				sprintf(buf, "%d", nCount);
+				hintStr = std::format("{}", nCount);
 			}
 
-			PushHint(buf, GENERIC_COLOR);
+			PushHint(hintStr, GENERIC_COLOR);
 			_AddDescriptor();
 
 			return;
@@ -1204,14 +1181,15 @@ void CItemCommand::AddHint(int x, int y) {
 
 			CItemRecord* pInfo = GetItemRecordInfo(ID);
 
+			std::string tradeStr;
 			if (pInfo) {
-				sprintf(buf, "Trade Value: %dx %s", num, pInfo->szName.c_str());
+				tradeStr = std::format("Trade Value: {}x {}", num, pInfo->szName);
 			}
 			else {
-				sprintf(buf, "Trade Value: %dx [Unknown]", num);
+				tradeStr = std::format("Trade Value: {}x [Unknown]", num);
 			}
 			AddHintHeight();
-			PushHint(buf, COLOR_WHITE);
+			PushHint(tradeStr, COLOR_WHITE);
 		}
 		else if (_nPrice != 0) {
 			AddHintHeight();
@@ -1260,14 +1238,15 @@ void CItemCommand::AddHint(int x, int y) {
 
 			CItemRecord* pInfo = GetItemRecordInfo(ID);
 
+			std::string tradeStr;
 			if (pInfo) {
-				sprintf(buf, "Trade Value: %dx %s", num, pInfo->szName.c_str());
+				tradeStr = std::format("Trade Value: {}x {}", num, pInfo->szName);
 			}
 			else {
-				sprintf(buf, "Trade Value: %dx [Unknown]", num);
+				tradeStr = std::format("Trade Value: {}x [Unknown]", num);
 			}
 			AddHintHeight();
-			PushHint(buf, COLOR_WHITE);
+			PushHint(tradeStr, COLOR_WHITE);
 		}
 		else if (_nPrice != 0) {
 			AddHintHeight();
@@ -1324,16 +1303,12 @@ void CItemCommand::AddHint(int x, int y) {
 	else if (_pItem->sType == 36 && _pItem->lID == 15006) {
 		DWORD color = 0xDC143C;
 		short active = _ItemData.GetAttr(55);
-		if (active) {
-			color = 0x00FF00;
-			sprintf(buf, "%s (%s)", _pItem->szName.c_str(), "enable");
-		}
-		else {
-			color = 0xDC143C;
-			sprintf(buf, "%s (%s)", _pItem->szName.c_str(), "disable");
-		}
+		const std::string activeStr = active
+			? std::format("{} (enable)", _pItem->szName)
+			: std::format("{} (disable)", _pItem->szName);
+		color = active ? 0x00FF00 : 0xDC143C;
 
-		PushHint(buf, (DWORD)(color ^ 0xFF000000), 5, 1, -1, true, -16777216);
+		PushHint(activeStr, (DWORD)(color ^ 0xFF000000), 5, 1, -1, true, -16777216);
 		SetHintIsCenter(false);
 		_AddDescriptor();
 		return;
@@ -1417,12 +1392,10 @@ void CItemCommand::AddHint(int x, int y) {
 
 	if (_hints.GetCount() > 0 && (_pItem->sType <= 27 || _pItem->sType == 44) && _pItem->sType != 18 && _pItem->sType !=
 		19 && _pItem->sType != 21) {
-		// ,
-		char szBuf[16] = {0};
-		sprintf(szBuf, "%09d", _ItemData.sEnergy[1] / 10); // 4,
-		char szHundred[2] = {szBuf[6], 0};
-		int nHundred = atoi(szHundred);
-		int nTen = atoi(&szBuf[7]);
+		// формат %09d даёт 9 цифр с ведущими нулями
+		const std::string szBuf = std::format("{:09}", _ItemData.sEnergy[1] / 10);
+		const int nHundred = szBuf[6] - '0';
+		const int nTen = atoi(szBuf.c_str() + 7);
 
 		DWORD dwNameColor = COLOR_BLACK;
 		switch (nHundred) {
@@ -1450,18 +1423,13 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 
 		CItemPreInfo* pInfo = GetItemPreInfo(nTen);
-		if (pInfo && strcmp(pInfo->DataName.c_str(), "0") != 0) {
+		if (pInfo && pInfo->DataName != "0") {
 			//if (_pItem->lID >= CItemRecord::enumItemFusionStart && _pItem->lID < CItemRecord::enumItemFusionEnd)
 			//{
 			//if ( CItemRecord::IsVaildFusionID(_pItem)
 			//&& _ItemData.GetFusionItemID() > 0 ){
 			if (_ItemData.GetItemLevel() > 0) {
-				sprintf(buf, "Lv%d %s%s", _ItemData.GetItemLevel(), pInfo->DataName.c_str(), GetName());
-
-				//if (_ItemData.dwDBID)
-				//_hints.GetHint(1)->hint = buf;
-				//else
-				_hints.GetHint(0)->hint = buf;
+				_hints.GetHint(0)->hint = std::format("Lv{} {}{}", _ItemData.GetItemLevel(), pInfo->DataName, GetName());
 			}
 			else {
 				//if (_ItemData.dwDBID)
@@ -1500,16 +1468,7 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 
 		if (Forge.nLevel > 0) {
-			/*if ( _ItemData.dwDBID )
-			{
-				sprintf( buf, "%s +%d", _hints.GetHint(1)->hint.c_str(), Forge.nLevel );
-				_hints.GetHint(1)->hint = buf;
-			}
-			else*/
-			{
-				sprintf(buf, "%s +%d", _hints.GetHint(0)->hint.c_str(), Forge.nLevel);
-				_hints.GetHint(0)->hint = buf;
-			}
+			_hints.GetHint(0)->hint = std::format("{} +{}", _hints.GetHint(0)->hint, Forge.nLevel);
 		}
 	}
 	//mothannakh trade/throw/stack/delete hint
@@ -1535,8 +1494,7 @@ void CItemCommand::AddHint(int x, int y) {
 		PUSH_HINT("Delete", -1, _pItem->chIsDel != 0 ? COLOR_GREEN : COLOR_RED);
 
 		// max stack for item
-		sprintf(buf, "Stack: %d", _pItem->nPileMax);
-		PushHint(buf, COLOR_WHITE);
+		PushHint(std::format("Stack: {}", _pItem->nPileMax), COLOR_WHITE);
 	}
 	// end
 	if (_nPrice > 2000000000) {
@@ -1546,14 +1504,15 @@ void CItemCommand::AddHint(int x, int y) {
 
 		CItemRecord* pInfo = GetItemRecordInfo(ID);
 
+		std::string tradeStr;
 		if (pInfo) {
-			sprintf(buf, "Trade Value: %dx %s", num, pInfo->szName.c_str());
+			tradeStr = std::format("Trade Value: {}x {}", num, pInfo->szName);
 		}
 		else {
-			sprintf(buf, "Trade Value: %dx [Unknown]", num);
+			tradeStr = std::format("Trade Value: {}x [Unknown]", num);
 		}
 		AddHintHeight();
-		PushHint(buf, COLOR_WHITE);
+		PushHint(tradeStr, COLOR_WHITE);
 	}
 	else if (_nPrice != 0) {
 		AddHintHeight();
@@ -1647,19 +1606,20 @@ void CItemCommand::_PushItemAttr(int attr, SItemHint& item, DWORD color) {
 	if (item.sInstAttr[attr] == 0)
 		return;
 
+	std::string text;
 	if (attr <= ITEMATTR_COE_PDEF) {
 		if (!(item.sInstAttr[attr] % 10)) {
-			sprintf(buf, "%s:%+d%%", g_GetItemAttrExplain(attr), item.sInstAttr[attr] / 10);
+			text = std::format("{}:{:+}%", g_GetItemAttrExplain(attr), item.sInstAttr[attr] / 10);
 		}
 		else {
 			float f = (float)item.sInstAttr[attr] / 10.0f;
-			sprintf(buf, "%s:%+.1f%%", g_GetItemAttrExplain(attr), f);
+			text = std::format("{}:{:+.1f}%", g_GetItemAttrExplain(attr), f);
 		}
 	}
 	else {
-		sprintf(buf, "%s:%+d", g_GetItemAttrExplain(attr), item.sInstAttr[attr]);
+		text = std::format("{}:{:+}", g_GetItemAttrExplain(attr), item.sInstAttr[attr]);
 	}
-	PushHint(buf, color);
+	PushHint(text, color);
 
 	item.sInstAttr[attr] = 0;
 }
@@ -1702,7 +1662,7 @@ static void _evtSelectYesNoEvent(CCompent* pSender, int nMsgType, int x, int y, 
 	//
 	string name = pSender->GetName();
 
-	if (!strcmp(name.c_str(), "btnYes")) {
+	if (name == "btnYes") {
 		//
 		//CS_DropLock(	_lock_pos_,	_lock_item_id_,	_lock_grid_id_,	_lock_fusion_item_id_	);
 		CS_DropLock(_lock_grid_id_);
@@ -1728,7 +1688,7 @@ bool CItemCommand::MouseDown() {
 	if (CRepairState* pState = dynamic_cast<CRepairState*>(pCha->GetActor()->GetCurState())) {
 		//
 		if (_pItem->sType >= 31) {
-			g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(675), _pItem->szName.c_str()).c_str());
+			g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(675), _pItem->szName.c_str()));
 			return false;
 		}
 
@@ -1753,7 +1713,7 @@ bool CItemCommand::MouseDown() {
 	else if (CFeedState* pState = dynamic_cast<CFeedState*>(pCha->GetActor()->GetCurState())) {
 		//
 		if (_pItem->sType != enumItemTypePet) {
-			g_pGameApp->SysInfo("%s", GetLanguageString(676).c_str());
+			g_pGameApp->SysInfo(GetLanguageString(676));
 			return false;
 		}
 
@@ -1841,7 +1801,7 @@ bool CItemCommand::UseCommand(bool isRightClick) {
 
 
 	if (pCha->GetChaState()->IsFalse(enumChaStateUseItem)) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(678).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(678));
 		return false;
 	}
 
@@ -1891,13 +1851,13 @@ bool CItemCommand::UseCommand(bool isRightClick) {
 
 			//
 			if (pCha->IsBoat() && pSkill->chSrcType != 2) {
-				g_pGameApp->SysInfo("%s", GetLanguageString(879).c_str());
+				g_pGameApp->SysInfo(GetLanguageString(879));
 				return false;
 			}
 
 			//
 			if (!pCha->IsBoat() && pSkill->chSrcType != 1) {
-				g_pGameApp->SysInfo("%s", GetLanguageString(880).c_str());
+				g_pGameApp->SysInfo(GetLanguageString(880));
 				return false;
 			}
 
@@ -1909,7 +1869,7 @@ bool CItemCommand::UseCommand(bool isRightClick) {
 
 				if (it != _mapCoolDown.end() && it->second + nCoolDownTime >= nCurTickCount) {
 					// cooldown
-					g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(898),
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(898),
 														  (it->second + nCoolDownTime - nCurTickCount) / 1000 + 1).
 										c_str()); //" %d "
 					return false;
@@ -1976,10 +1936,10 @@ bool CItemCommand::StartCommand() {
 			_dwPlayTime = CGameApp::GetCurTick() + _GetSkillTime();
 
 			_pAniClock->Play(_GetSkillTime());
-			g_pGameApp->AddTipText("CItemCommand::Exec[%s]", _pItem->szName.c_str());
+			g_pGameApp->AddTipText(std::format("CItemCommand::Exec[{}]", _pItem->szName));
 			return true;
 		}
-		g_pGameApp->AddTipText("CItemCommand::Exec[%s] Failed", _pItem->szName.c_str());
+		g_pGameApp->AddTipText(std::format("CItemCommand::Exec[{}] Failed", _pItem->szName));
 		return false;
 	}
 	return true;
@@ -2003,17 +1963,17 @@ bool CItemCommand::IsAllowUse() {
 				if (_pSkill->GetIsActive()) return true;
 
 				if (g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow()) {
-					g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str());
+					g_pGameApp->SysInfo(GetLanguageString(748));
 					return false;
 				}
 
 				if (pCha->GetChaState()->IsFalse(enumChaStateUseSkill)) {
-					g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str());
+					g_pGameApp->SysInfo(GetLanguageString(748));
 					return false;
 				}
 
 				if (!g_SkillUse.IsValid(_pSkill, pCha)) {
-					g_pGameApp->SysInfo("%s", g_SkillUse.GetError());
+					g_pGameApp->SysInfo(g_SkillUse.GetError());
 					return false;
 				}
 
@@ -2083,7 +2043,7 @@ bool CItemCommand::ReadyUse() {
 }
 
 void CItemCommand::Error() {
-	g_pGameApp->AddTipText("Item [%s] encounter an error!", _pItem->szName.c_str());
+	g_pGameApp->AddTipText(std::format("Item [{}] encounter an error!", _pItem->szName));
 }
 
 //int CItemCommand::_GetValue( int nItemAttrType, SItemGrid& item )
@@ -2147,7 +2107,8 @@ const char* CItemCommand::GetName() {
 	}
 	else {
 		static char szBuf[128] = {0};
-		sprintf(szBuf, "Lv%d %s", _ItemData.chForgeLv, _pItem->szName.c_str());
+		auto r = std::format_to_n(szBuf, sizeof(szBuf) - 1, "Lv{} {}", _ItemData.chForgeLv, _pItem->szName);
+		*r.out = 0;
 		return szBuf;
 	}
 }
@@ -2155,7 +2116,7 @@ const char* CItemCommand::GetName() {
 void CItemCommand::_ShowWork(CItemRecord* pItem, SGameAttr* pAttr) {
 	bool isFind = false;
 	bool isSame = false;
-
+	char buf[256] = {0};
 
 	for (int i = 0; i < MAX_JOB_TYPE; i++) {
 		if (pItem->szWork[i] < 0)
@@ -2189,6 +2150,7 @@ void CItemCommand::_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquip
 	int iEquipIndex = -1;
 	bool isSame = false;
 	CItemRecord* pItem(0);
+	char buf[256] = {0};
 
 	if (pAppearItem->szWork[0] > pEquipItem->szWork[0]) {
 		pItem = pAppearItem;
@@ -2226,6 +2188,7 @@ void CItemCommand::_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquip
 void CItemCommand::_ShowWork(xShipInfo* pInfo, SGameAttr* pAttr) {
 	bool isFind = false;
 	bool isSame = false;
+	char buf[256] = {0};
 
 	for (int i = 0; i < MAX_JOB_TYPE; i++) {
 		if (pInfo->sPfLimit[i] == (USHORT)-1)
@@ -2243,7 +2206,7 @@ void CItemCommand::_ShowWork(xShipInfo* pInfo, SGameAttr* pAttr) {
 			string name("");
 			g_GetJobName(pInfo->sPfLimit[i]);
 			if (name.compare(g_GetJobName(pInfo->sPfLimit[i])) == 0) {
-				sprintf(buf, "%s", "");
+				buf[0] = '\0';
 				//PushHint( buf, VALID_COLOR );
 			}
 			else {

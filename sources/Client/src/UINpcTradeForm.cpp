@@ -394,14 +394,13 @@ void CNpcTradeMgr::LocalBuyFromNpc(CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, 
 			nMax = pBuy->GetItemInfo()->nPileMax;
 
 		if (nMax == 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(459).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(459));
 			return;
 		}
 	}
-	char buf[256] = {0};
-	sprintf(buf, "%s[%s$]?", pBuy->GetName(), StringSplitNum(pBuy->GetPrice()));
+	const std::string buf = std::format("{}[{}$]?", pBuy->GetName(), StringSplitNum(pBuy->GetPrice()));
 	if (pBuy->GetIsPile() && (_sBuy.pBox = g_stUIBox.
-		ShowTradeBox(_BuyTradeEvent, (float)pBuy->GetPrice(), nMax, buf))) {
+		ShowTradeBox(_BuyTradeEvent, (float)pBuy->GetPrice(), nMax, buf.c_str()))) {
 		_sBuy.dwNpcID = _dwNpcID;
 		_sBuy.nBuyGrid = nBuyGrid;
 		_sBuy.nDragIndex = pNpcGrid->GetDragIndex();
@@ -431,9 +430,8 @@ void CNpcTradeMgr::LocalSaleToNpc(CGoodsGrid* pNpcGrid, CGoodsGrid* pSelfGrid, i
 
 	int nPrice = (int)((float)pSaleItem->GetPrice() / 2.0f);
 	if (pSaleItem->GetIsPile() && pSaleItem->GetTotalNum() > 1) {
-		char buf[256] = {0};
-		sprintf(buf, "%s[%s$]", pSaleItem->GetItemInfo()->szName, StringSplitNum(nPrice));
-		if (_sSale.pBox = g_stUIBox.ShowTradeBox(_SaleTradeEvent, (float)nPrice, pItem->GetTotalNum(), buf)) {
+		const std::string buf = std::format("{}[{}$]", pSaleItem->GetItemInfo()->szName, StringSplitNum(nPrice));
+		if (_sSale.pBox = g_stUIBox.ShowTradeBox(_SaleTradeEvent, (float)nPrice, pItem->GetTotalNum(), buf.c_str())) {
 			_sSale.dwNpcID = _dwNpcID;
 			_sSale.nIndex = pSelfGrid->GetDragIndex();
 			return;

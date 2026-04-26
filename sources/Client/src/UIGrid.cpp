@@ -38,7 +38,7 @@ void CGrid::_Copy(const CGrid& rhs) {
 
 	evtSelectChange = rhs.evtSelectChange;
 
-	strcpy(_strPage, rhs._strPage);
+	_strPage = rhs._strPage;
 	_nStrX = rhs._nStrX;
 	_nStrY = rhs._nStrY;
 	_nStrWidth = rhs._nStrWidth;
@@ -143,7 +143,7 @@ void CGrid::Render() {
 	}
 
 	if (_pPriorPage->GetIsShow()) _pPriorPage->Render();
-	ui::Render(_strPage, _nStrX, _nStrY, _clPageTextColor);
+	ui::Render(_strPage.c_str(), _nStrX, _nStrY, _clPageTextColor);
 	if (_pNextPage->GetIsShow()) _pNextPage->Render();
 	if (_pSizeImg->GetIsShow()) _pSizeImg->Render();
 }

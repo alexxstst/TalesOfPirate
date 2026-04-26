@@ -142,14 +142,18 @@ CCharacter* CGameScene::AddCharacter(int nScriptID) {
 		// ???????
 		MPChaLoadInfo load_info;
 
-		sprintf(load_info.bone, "%04d.lab", pInfo->sModel);
+		{
+			auto r = std::format_to_n(load_info.bone, sizeof(load_info.bone) - 1, "{:04}.lab", pInfo->sModel);
+			*r.out = 0;
+		}
 
 		for (DWORD i = 0; i < 5; i++) {
 			if (pInfo->sSkinInfo[i] == 0)
 				continue;
 
 			DWORD file_id = pInfo->sModel * 1000000 + pInfo->sSuitID * 10000 + i;
-			sprintf(load_info.part[i], "%010d.lgo", file_id);
+			auto r = std::format_to_n(load_info.part[i], sizeof(load_info.part[i]) - 1, "{:010}.lgo", file_id);
+			*r.out = 0;
 		}
 
 		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0) {

@@ -169,7 +169,7 @@ void NetLoginFailure(unsigned short Errno) {
 			DWORD dwLast = error_time[dwCount];
 			DWORD dwFirst = error_time[dwCount - 3];
 			if (dwLast - dwFirst <= 60 * 1000) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(251).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(251));
 				g_pGameApp->SetIsRun(false);
 			}
 			return;
@@ -177,11 +177,11 @@ void NetLoginFailure(unsigned short Errno) {
 		return;
 	}
 	case ERR_AP_BANUSER: {
-		g_pGameApp->MsgBox(GetLanguageString(252).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(252));
 		return;
 	}
 	case ERR_AP_INVALIDUSER: {
-		g_pGameApp->MsgBox(GetLanguageString(253).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(253));
 		return;
 	}
 
@@ -293,7 +293,7 @@ void NetDelCha(unsigned short Errno) // Look up errno in NetRetCode.h
 	switch (Errno) {
 	case ERR_PT_INVALID_PW2: {
 		CGameApp::Waiting(false);
-		g_pGameApp->MsgBox("%s", GetLanguageString(802).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(802));
 		return;
 	}
 	case ERR_PT_MULTICHA:
@@ -330,15 +330,15 @@ void NetCreatePassword2(unsigned short Errno) {
 	}
 	else if (Errno == ERR_PT_SERVERBUSY) {
 		// System busy
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(172), "").c_str());
+		g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(172), ""));
 	}
 	else if (Errno == ERR_PT_INVALID_PW2) {
 		// Secondary password already exists
-		g_pGameApp->MsgBox("%s", GetLanguageString(801).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(801));
 	}
 	else {
 		// Unknown error
-		g_pGameApp->MsgBox("%s", GetLanguageString(375).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(375));
 	}
 }
 
@@ -353,15 +353,15 @@ void NetUpdatePassword2(unsigned short Errno) {
 	}
 	else if (Errno == ERR_PT_SERVERBUSY) {
 		// System busy
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(172), "").c_str());
+		g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(172), ""));
 	}
 	else if (Errno == ERR_PT_INVALID_PW2) {
 		// Secondary password already exists
-		g_pGameApp->MsgBox("%s", GetLanguageString(801).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(801));
 	}
 	else {
 		// Unknown error
-		g_pGameApp->MsgBox("%s", GetLanguageString(375).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(375));
 	}
 }
 
@@ -455,8 +455,6 @@ void stNetActorCreate::SetValue(CCharacter* pCha) {
 	pCha->setIsPlayerCha(chIsPlayer == 1);
 
 #ifdef _LOG_NAME_
-	char pszLogName[256];
-	sprintf(pszLogName, "%s+%u", szName.c_str(), ulWorldID);
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SeeType:{}, Create Cha:{}, Type:{}",
 																	static_cast<int>(chSeeType), pCha->getName(),
 																	pCha->GetDefaultChaInfo()->szName));
@@ -1105,7 +1103,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 	if (switchmap.sEnterRet != ERR_SUCCESS) {
 		if (switchmap.sEnterRet == ERR_MC_ENTER_ERROR) // Character still online, cannot enter for 15 minutes
 		{
-			g_pGameApp->MsgBox("%s", GetLanguageString(271).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(271));
 			CGameApp::Waiting(false);
 		}
 		else {
@@ -1390,7 +1388,7 @@ void NetMapMask(unsigned int nID, BYTE* pMask, long lLen) {
 	}
 	else {
 		g_stUIMap.GetBigmapForm()->Hide();
-		g_pGameApp->SysInfo("%s", GetLanguageString(277).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(277));
 	}
 
 	g_pGameApp->Waiting(false);
@@ -2042,21 +2040,20 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			if (SKitbag.chBagType != 1 && nMarginNum > 0) // modify by Philip.Wu  2006-06-21  Picking 0 items BUG fix
 			{
 				switch (chType) {
-				case enumSYN_KITBAG_PICK: g_pGameApp->SysInfo(
-						"%s", SafeVFormat(GetLanguageString(283), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_PICK:
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(283), item->szName, nMarginNum));
 					break;
-				//case enumSYN_KITBAG_FROM_NPC:	g_pGameApp->SysInfo("NPC gave [%s x %d]!", item->szName, nMarginNum );	break;
-				case enumSYN_KITBAG_SYSTEM: g_pGameApp->SysInfo(
-						"%s", SafeVFormat(GetLanguageString(284), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_SYSTEM:
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(284), item->szName, nMarginNum));
 					break;
-				case enumSYN_KITBAG_TRADE: g_pGameApp->SysInfo(
-						"%s", SafeVFormat(GetLanguageString(285), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_TRADE:
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(285), item->szName, nMarginNum));
 					break;
-				case enumSYN_KITBAG_FORGES: g_pGameApp->SysInfo(
-						"%s", SafeVFormat(GetLanguageString(286), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_FORGES:
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(286), item->szName, nMarginNum));
 					break;
-				case enumSYN_KITBAG_FORGEF: g_pGameApp->SysInfo(
-						"%s", SafeVFormat(GetLanguageString(287), item->szName, nMarginNum).c_str());
+				case enumSYN_KITBAG_FORGEF:
+					g_pGameApp->SysInfo(SafeVFormat(GetLanguageString(287), item->szName, nMarginNum));
 					break;
 				}
 			}
@@ -2258,7 +2255,7 @@ void NetTriggerAction(stNetNpcMission& info) {
 		if (pItem) {
 			strncpy(szData, pItem->szName.c_str(), sizeof(szData));
 		}
-		g_pGameApp->ShowMidText("%s", SafeVFormat(GetLanguageString(289), szData, info.sCount, info.sNum).c_str());
+		g_pGameApp->ShowMidText(SafeVFormat(GetLanguageString(289), szData, info.sCount, info.sNum));
 	}
 	break;
 	case mission::TE_GAME_TIME:
@@ -2270,7 +2267,7 @@ void NetTriggerAction(stNetNpcMission& info) {
 	}
 	break;
 	default: {
-		g_pGameApp->ShowMidText("%s", SafeVFormat(GetLanguageString(290), info.sID, info.sCount, info.sNum).c_str());
+		g_pGameApp->ShowMidText(SafeVFormat(GetLanguageString(290), info.sID, info.sCount, info.sNum));
 	}
 	break;
 	}
@@ -2672,7 +2669,7 @@ void NetCancelExit() {
 void NetKitbagCheckAnswer(bool bLock) {
 	if (g_stUIEquip.GetIsLock() && bLock) {
 		// Forge failed
-		g_pGameApp->MsgBox("%s", GetLanguageString(802).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(802));
 	}
 	else if (g_stUIEquip.GetIsLock() && !bLock) {
 		// Forge succeeded

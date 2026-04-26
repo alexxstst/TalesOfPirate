@@ -37,18 +37,15 @@ bool CTeamInviteFormMgr::AddInviteForm(DWORD id, string inviterName) {
 	dupe.SetSample(frmAcceptGroup);
 	node->pForm = dupe.Clone();
 	//node->pForm=dynamic_cast<CForm*>(frmAcceptGroup->Clone());
-	char str[256];
-	sprintf(str, "frmAcceptGroup_Arcol_%d", id);
-	node->pForm->SetName(str);
+	node->pForm->SetName(std::format("frmAcceptGroup_Arcol_{}", id).c_str());
 	m_FormLink.push_back(node);
 	//node->pForm->SetPos(200,200);
 	//node->pForm->Refresh();
 	CLabelEx* labGroupName = dynamic_cast<CLabelEx*>(node->pForm->Find("labGroupName"));
 	if (labGroupName) {
-		auto _str = SafeVFormat(GetLanguageString(62), inviterName.data());
-		strncpy_s(str, sizeof(str), _str.c_str(), _TRUNCATE);
+		const std::string _str = SafeVFormat(GetLanguageString(62), inviterName.data());
 		//labGroupName->SetIsCenter(true);
-		labGroupName->SetCaption(str);
+		labGroupName->SetCaption(_str.c_str());
 	}
 	CLabelEx* labGroup = dynamic_cast<CLabelEx*>(node->pForm->Find("labGroup"));
 	if (labGroup) {

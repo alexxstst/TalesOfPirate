@@ -22,16 +22,13 @@ LW_BEGIN
 			goto __ret;
 
 		{
-			char file_path[260];
-			char file_spec[64];
-
-			strcpy(file_path, file);
-			char* p = strrchr(file_path, '\\');
-			if (p == 0)
+			std::string file_path{file};
+			const auto sep = file_path.rfind('\\');
+			if (sep == std::string::npos)
 				goto __ret;
 
-			strcpy(file_spec, &p[1]);
-			p[1] = '\0';
+			const std::string file_spec = file_path.substr(sep + 1);
+			file_path.resize(sep + 1);
 
 			do {
 				if (wfd.cFileName[0] == '.') {
@@ -42,7 +39,7 @@ LW_BEGIN
 				}
 
 				if ((!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) && (flag & DIR_BROWSE_FILE)) {
-					if (LW_RESULT r = (*_proc)(file_path, &wfd, _param); LW_FAILED(r)) {
+					if (LW_RESULT r = (*_proc)(file_path.c_str(), &wfd, _param); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] callback (file) returned failure: file_path={}, name={}, ret={}",
 									 __FUNCTION__, file_path, wfd.cFileName, static_cast<long long>(r));
@@ -51,7 +48,7 @@ LW_BEGIN
 					}
 				}
 				else if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && (flag & DIR_BROWSE_DIRECTORY)) {
-					if (LW_RESULT r = (*_proc)(file_path, &wfd, _param); LW_FAILED(r)) {
+					if (LW_RESULT r = (*_proc)(file_path.c_str(), &wfd, _param); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] callback (directory) returned failure: file_path={}, name={}, ret={}",
 									 __FUNCTION__, file_path, wfd.cFileName, static_cast<long long>(r));
@@ -59,10 +56,9 @@ LW_BEGIN
 						goto __ret;
 					}
 
-					char sub_file[260];
-					sprintf(sub_file, "%s%s\\%s", file_path, wfd.cFileName, file_spec);
+					const std::string sub_file = std::format("{}{}\\{}", file_path, wfd.cFileName, file_spec);
 
-					if ((ret = _Go(sub_file, flag)) == LW_RET_OK_1)
+					if ((ret = _Go(sub_file.c_str(), flag)) == LW_RET_OK_1)
 						goto __ret;
 				}
 			}

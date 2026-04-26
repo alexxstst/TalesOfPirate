@@ -88,7 +88,7 @@ void CMissionMgr::_MouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWO
 			if (g_stUIMission.m_pMisInfo->IsSelPrize()) {
 				bySel = g_stUIMission.m_pMisInfo->GetSelPrize();
 				if (bySel == (BYTE)-1) {
-					g_pGameApp->MsgBox("%s", GetLanguageString(741).c_str());
+					g_pGameApp->MsgBox(GetLanguageString(741));
 					return;
 				}
 			}

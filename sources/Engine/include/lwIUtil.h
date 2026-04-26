@@ -31,8 +31,6 @@ LW_BEGIN
 
 	lwPoseInfo* lwAnimCtrlAgentGetPoseInfo(lwIAnimCtrlAgent* agent, DWORD subset, DWORD stage, DWORD type, DWORD id);
 
-	void lwMessageBox(const char* fmt, ...);
-
 	void lwReleaseTreeNodeList(lwITreeNode* node);
 	int lwTreeNodeEnumPreOrder(lwITreeNode* node, lwTreeNodeEnumProc proc, void* param);
 	int lwTreeNodeEnumInOrder(lwITreeNode* node, lwTreeNodeEnumProc proc, void* param);

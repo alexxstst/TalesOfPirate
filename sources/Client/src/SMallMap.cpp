@@ -20,14 +20,11 @@
 CMaskData* CMaskData::g_MaskData = NULL;
 
 HRESULT _DbgOuts(TCHAR* strFile, DWORD dwLine, HRESULT hr, TCHAR* strMsg) {
-	TCHAR buffer[256];
-	wsprintf(buffer, _T("%s(%ld): "), strFile, dwLine);
-	OutputDebugString(buffer);
+	OutputDebugString(std::format("{}({}): ", strFile, dwLine).c_str());
 	OutputDebugString(strMsg);
 
 	if (hr) {
-		wsprintf(buffer, _T("(hr=%08lx)\n"), hr);
-		OutputDebugString(buffer);
+		OutputDebugString(std::format("(hr={:08x})\n", static_cast<unsigned long>(hr)).c_str());
 	}
 
 	OutputDebugString(_T("\n"));
@@ -595,8 +592,6 @@ void CSMallMap2D::RenderScene() {
 	if (sx > 0) sx -= 1;
 	if (sy > 0) sy -= 1;
 
-	char filename[128];
-
 	if (_sx == sx && _sy == sy) {
 	}
 	else {
@@ -613,10 +608,10 @@ void CSMallMap2D::RenderScene() {
 	int temp = sx;
 	for (m = 0; m < 3; m++) {
 		for (int n = 0; n < 3; n++) {
-			sprintf(filename, "texture\\minimap\\%s\\sm%d%d.bmp",
+			const std::string filename = std::format("texture\\minimap\\{}\\sm{}{}.bmp",
 					m_pScene->GetTerrainName(), _sx + n, _sy + m);
 
-			if (_access(filename, 0) == -1) {
+			if (_access(filename.c_str(), 0) == -1) {
 #ifdef MGR
 				g_Render.SetTexture(0, _pTexDefault->GetTex());
 #else
@@ -629,10 +624,10 @@ void CSMallMap2D::RenderScene() {
 
 #ifdef MGR
 					lwLoadTex(&_pTex[n][m].pTex, g_Render.GetInterfaceMgr()->res_mgr,
-							  filename, 0, D3DFMT_A8R8G8B8);
+							  filename.c_str(), 0, D3DFMT_A8R8G8B8);
 #else
 					D3DXCreateTextureFromFileEx(m_pDev,
-												filename, //
+												filename.c_str(), //
 												0,
 												0,
 												1, //mipmap1
@@ -1493,14 +1488,18 @@ void CCharacter2D::LoadCha(DWORD dwID, bool IsMonster) {
 	else {
 		MPChaLoadInfo load_info;
 
-		sprintf(load_info.bone, "%04d.lab", pInfo->sModel);
+		{
+			auto r = std::format_to_n(load_info.bone, sizeof(load_info.bone) - 1, "{:04}.lab", pInfo->sModel);
+			*r.out = 0;
+		}
 
 		for (DWORD i = 0; i < 5; i++) {
 			if (pInfo->sSkinInfo[i] == 0)
 				continue;
 
 			DWORD file_id = pInfo->sModel * 1000000 + pInfo->sSuitID * 10000 + i;
-			sprintf(load_info.part[i], "%010d.lgo", file_id);
+			auto r = std::format_to_n(load_info.part[i], sizeof(load_info.part[i]) - 1, "{:010}.lgo", file_id);
+			*r.out = 0;
 		}
 
 		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0) {
@@ -1667,12 +1666,11 @@ void CBigMap::Create() {
 
 	_pTex = new MPITex*[4 * 3];
 
-	char filename[128];
 	for (int m = 0; m < 3; ++m) {
 		for (int n = 0; n < 4; ++n) {
-			sprintf(filename, "texture\\bigmap\\%d%d.bmp", m, n + 1);
+			const std::string filename = std::format("texture\\bigmap\\{}{}.bmp", m, n + 1);
 			lwLoadTex(&_pTex[m * 4 + n], g_Render.GetInterfaceMgr()->res_mgr,
-					  filename, 0, D3DFMT_A8R8G8B8);
+					  filename.c_str(), 0, D3DFMT_A8R8G8B8);
 		}
 	}
 }
@@ -1863,12 +1861,11 @@ void CMinimap::InitScene() {
 
 	m_pScene = g_pGameApp->GetCurScene();
 	if (m_pScene) {
-		char filename[128];
-		sprintf(filename, "texture\\minimap\\%s\\%s.pk",
+		const std::string filename = std::format("texture\\minimap\\{}\\{}.pk",
 				m_pScene->GetTerrainName(), m_pScene->GetTerrainName());
 		SAFE_DELETE(_pMiniPack);
 
-		if (_access(filename, 0) != -1) {
+		if (_access(filename.c_str(), 0) != -1) {
 			_pMiniPack = new CMiniPack;
 			if (!_pMiniPack->Init((char*)m_pScene->GetTerrainName()))
 				delete _pMiniPack;
@@ -1969,8 +1966,6 @@ void CMinimap::RenderScene() {
 
 	int lenw = (_rcWnd.right - _rcWnd.left) / 2;
 
-	char filename[128];
-
 	_sx = sx;
 	_sy = sy;
 	/////
@@ -2065,10 +2060,10 @@ void CMinimap::RenderScene() {
 			}
 			else {
 				if (!_pMiniPack) {
-					sprintf(filename, "texture\\minimap\\%s\\sm_%d_%d.bmp",
+					const std::string filename = std::format("texture\\minimap\\{}\\sm_{}_{}.bmp",
 							m_pScene->GetTerrainName(), _sx + n, _sy + m);
 
-					if (_access(filename, 0) == -1) {
+					if (_access(filename.c_str(), 0) == -1) {
 						g_Render.SetTexture(0, _pTexDefault->GetTex());
 					}
 					else {
@@ -2076,7 +2071,7 @@ void CMinimap::RenderScene() {
 							_pTex[n][m].ReleaseTex();
 
 							lwLoadTex(&_pTex[n][m].pTex, g_Render.GetInterfaceMgr()->res_mgr,
-									  filename, 0, D3DFMT_A8R8G8B8);
+									  filename.c_str(), 0, D3DFMT_A8R8G8B8);
 							if (_pTex[n][m].pTex) {
 								_pTex[n][m].x = _sx + n;
 								_pTex[n][m].y = _sy + m;
@@ -2370,12 +2365,11 @@ void CLargerMap::InitScene() {
 
 	m_pScene = g_pGameApp->GetCurScene();
 	if (m_pScene) {
-		char filename[128];
-		sprintf(filename, "texture\\minimap\\%s\\%s.pk",
+		const std::string filename = std::format("texture\\minimap\\{}\\{}.pk",
 				m_pScene->GetTerrainName(), m_pScene->GetTerrainName());
 
 		SAFE_DELETE(_pMiniPack);
-		if (_access(filename, 0) != -1) {
+		if (_access(filename.c_str(), 0) != -1) {
 			_pMiniPack = new CMiniPack;
 			if (!_pMiniPack->Init((char*)m_pScene->GetTerrainName()))
 				delete _pMiniPack;
@@ -2474,7 +2468,6 @@ void CLargerMap::Update(int x, int y) {
 
 
 	RECT rc, rct;
-	char filename[128];
 
 	constexpr DWORD iColor = 0xffffffff;
 	//if(CMaskData::g_MaskData)
@@ -2546,12 +2539,12 @@ void CLargerMap::Update(int x, int y) {
 				}
 
 				if (!_pMiniPack) {
-					sprintf(filename, "texture\\minimap\\%s\\sm_%d_%d.bmp",
+					const std::string filename = std::format("texture\\minimap\\{}\\sm_{}_{}.bmp",
 							m_pScene->GetTerrainName(), _sx + n, _sy + m);
 
 					// If this texture not in video memory, load it.
-					if (!_pTex[idx] || strcmp(_pTex[idx]->GetFileName(), filename) != 0) {
-						if (_access(filename, 0) == -1) {
+					if (!_pTex[idx] || strcmp(_pTex[idx]->GetFileName(), filename.c_str()) != 0) {
+						if (_access(filename.c_str(), 0) == -1) {
 							if (_pTex[idx] != _pTexDefault) {
 								SAFE_RELEASE(_pTex[idx]);
 								_pTex[idx] = _pTexDefault;
@@ -2562,7 +2555,7 @@ void CLargerMap::Update(int x, int y) {
 								SAFE_RELEASE(_pTex[idx]);
 							}
 							lwLoadTex(&_pTex[idx], g_Render.GetInterfaceMgr()->res_mgr,
-									  filename, 0, D3DFMT_A8R8G8B8);
+									  filename.c_str(), 0, D3DFMT_A8R8G8B8);
 						}
 					}
 				}
@@ -2621,16 +2614,12 @@ void CLargerMap::Update(int x, int y) {
 
 //End
 void CSMNpc::Render(/*int iType,int nx,int ny,int wh = 8*/) {
-	try {
-		if (_pTex[_iCurTex])
-			g_Render.SetTexture(0, _pTex[_iCurTex]->GetTex());
-		else
-			g_Render.SetTexture(0, NULL);
+	if (_pTex[_iCurTex])
+		g_Render.SetTexture(0, _pTex[_iCurTex]->GetTex());
+	else
+		g_Render.SetTexture(0, NULL);
 
-		g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &_vWndVer, sizeof(M2D_AVER));
-	}
-	catch (const std::exception&) {
-	}
+	g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &_vWndVer, sizeof(M2D_AVER));
 }
 
 void CLargerMap::RenderScene() {

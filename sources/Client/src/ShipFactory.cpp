@@ -427,20 +427,15 @@ BOOL xShipFactory::UpdateShipPart(CGuiData* sender) {
 		prop_cap[0] = prop_cap[1];
 	}
 
-	char buf[128];
-	sprintf(buf, "%d / %d", prop_att[0], prop_att[1]);
-	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-	sprintf(buf, "%d / %d", prop_res[0], prop_res[1]);
-	sbf.lbl_prop[SBF_TEXT_RESISTANCE]->SetCaption(buf);
-	sprintf(buf, "%d / %d", prop_supply[0], prop_supply[1]);
-	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
-	sprintf(buf, "%d / %d", prop_cap[0], prop_cap[1]);
-	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(buf);
+	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{} / {}", prop_att[0], prop_att[1]).c_str());
+	sbf.lbl_prop[SBF_TEXT_RESISTANCE]->SetCaption(std::format("{} / {}", prop_res[0], prop_res[1]).c_str());
+	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{} / {}", prop_supply[0], prop_supply[1]).c_str());
+	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(std::format("{} / {}", prop_cap[0], prop_cap[1]).c_str());
 
-	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(prop_def, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(prop_speed, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(itoa(prop_cd, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(prop_dis, buf, 10));
+	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", prop_def).c_str());
+	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", prop_speed).c_str());
+	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(std::format("{}", prop_cd).c_str());
+	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", prop_dis).c_str());
 
 	//
 	if(j <= 2)
@@ -466,12 +461,12 @@ BOOL xShipFactory::CheckShipName() {
 	strcpy(ship_name, sbf.name->GetCaption());
 	size_t l = _tcslen(ship_name);
 	if (l == 0) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(390).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(390));
 		return 0;
 	}
 	else if (l < MIN_LENGTH || l > MAX_LENGTH) {
-		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(391), static_cast<int>(MIN_LENGTH),
-											 static_cast<int>(MAX_LENGTH)).c_str());
+		g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(391), static_cast<int>(MIN_LENGTH),
+											 static_cast<int>(MAX_LENGTH)));
 		return 0;
 	}
 
@@ -479,7 +474,7 @@ BOOL xShipFactory::CheckShipName() {
 	string sBoatName(sbf.name->GetCaption());
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sBoatName) ||
 		!IsValidName(sBoatName)) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(51));
 		return 0;
 	}
 
@@ -507,12 +502,12 @@ BOOL xShipFactory::GetCabinByID() {
 	// The boat cabin form is shared, so check whether it is in use by the user
 	CForm* pTradeForm = g_stUIBourse.GetForm();
 	if (pTradeForm && pTradeForm->GetIsShow() && pForm == pTradeForm) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(392).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(392));
 		return FALSE;
 	}
 	CForm* pChangeForm = g_stUITrade.GetForm();
 	if (pChangeForm && pChangeForm->GetIsShow() && pForm == pChangeForm) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(392).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(392));
 		return FALSE;
 	}
 
@@ -592,8 +587,6 @@ BOOL xShipFactory::Update(xShipBuildInfo* info, BOOL flag, const char* name) {
 		sbf.btn_cancel->SetIsShow(false);
 	} //end of if
 
-	char buf[128];
-
 	// Set ship model info
 	if (!SetShipModelInfo(info->dwBuf, sizeof(info->dwBuf)))
 		return 0;
@@ -603,25 +596,21 @@ BOOL xShipFactory::Update(xShipBuildInfo* info, BOOL flag, const char* name) {
 	item_id[ITEM_WEAPON] = info->byCannon;
 	item_id[ITEM_GOODS] = info->byEquipment;
 
-	sprintf(buf, "%d/%d", info->dwMinAttack, info->dwMaxAttack);
-	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-	sprintf(buf, "%d/%d", info->dwCurEndure, info->dwMaxEndure);
-	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(buf);
-	sprintf(buf, "%d/%d", info->dwCurSupply, info->dwMaxSupply);
-	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
-	sprintf(buf, "%d/%d", 0, info->sCapacity);
-	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(buf);
+	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{}/{}", info->dwMinAttack, info->dwMaxAttack).c_str());
+	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(std::format("{}/{}", info->dwCurEndure, info->dwMaxEndure).c_str());
+	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{}/{}", info->dwCurSupply, info->dwMaxSupply).c_str());
+	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(std::format("{}/{}", 0, info->sCapacity).c_str());
 
-	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(info->dwDefence, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(info->dwSpeed, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(itoa(info->dwAttackTime, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(info->dwConsume, buf, 10));
+	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", info->dwDefence).c_str());
+	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", info->dwSpeed).c_str());
+	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(std::format("{}", info->dwAttackTime).c_str());
+	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", info->dwConsume).c_str());
 	sbf.lbl_prop[SBF_TEXT_BODY]->SetCaption(info->szBody);
 	sbf.lbl_prop[SBF_TEXT_HEAD]->SetCaption(info->szHeader);
 	sbf.lbl_prop[SBF_TEXT_POWER]->SetCaption(info->szEngine);
 	sbf.lbl_prop[SBF_TEXT_WEAPON]->SetCaption(info->szCannon);
 	sbf.lbl_prop[SBF_TEXT_SIGN]->SetCaption(info->szEquipment);
-	sbf.lbl_prop[SBF_TEXT_MONEY]->SetCaption(itoa(info->dwMoney, buf, 10));
+	sbf.lbl_prop[SBF_TEXT_MONEY]->SetCaption(std::format("{}", info->dwMoney).c_str());
 
 	ShowFlipBtn(flag, name);
 
@@ -709,32 +698,24 @@ BOOL xShipFactory::UpdateBoatFreedomTrade(const char* name, DWORD* dwModelInfo, 
 
 //---------------------------------------------------------------------------
 void xShipFactory::SetBoatAttr() {
-	char buf[128];
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwMinAttack, m_pkBoatInfo->dwMaxAttack);
-	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwCurEndure, m_pkBoatInfo->dwMaxEndure);
-	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(buf);
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwCurSupply, m_pkBoatInfo->dwMaxSupply);
-	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
+	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwMinAttack, m_pkBoatInfo->dwMaxAttack).c_str());
+	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwCurEndure, m_pkBoatInfo->dwMaxEndure).c_str());
+	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwCurSupply, m_pkBoatInfo->dwMaxSupply).c_str());
 
-	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(m_pkBoatInfo->dwSpeed, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(m_pkBoatInfo->dwDistance, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(m_pkBoatInfo->dwDefence, buf, 10));
+	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", m_pkBoatInfo->dwSpeed).c_str());
+	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", m_pkBoatInfo->dwDistance).c_str());
+	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", m_pkBoatInfo->dwDefence).c_str());
 }
 
 //---------------------------------------------------------------------------
 void xShipFactory::SetManBoatAttr() {
-	char buf[128];
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwMinAttack, m_pkBoatInfo->dwMaxAttack);
-	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwCurEndure, m_pkBoatInfo->dwMaxEndure);
-	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(buf);
-	sprintf(buf, "%d/%d", m_pkBoatInfo->dwCurSupply, m_pkBoatInfo->dwMaxSupply);
-	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
+	sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwMinAttack, m_pkBoatInfo->dwMaxAttack).c_str());
+	sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwCurEndure, m_pkBoatInfo->dwMaxEndure).c_str());
+	sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{}/{}", m_pkBoatInfo->dwCurSupply, m_pkBoatInfo->dwMaxSupply).c_str());
 
-	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(m_pkBoatInfo->dwSpeed, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(m_pkBoatInfo->dwDistance, buf, 10));
-	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(m_pkBoatInfo->dwDefence, buf, 10));
+	sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", m_pkBoatInfo->dwSpeed).c_str());
+	sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", m_pkBoatInfo->dwDistance).c_str());
+	sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", m_pkBoatInfo->dwDefence).c_str());
 }
 
 //---------------------------------------------------------------------------
@@ -827,51 +808,42 @@ void xShipFactory::UpdateBoatAttr() {
 		return;
 	}
 
-	char buf[128];
 	if (sbf.chkShip->GetIsChecked()) {
 		/* Show ship base attributes */
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_BMNATK), pkAttr->get(ATTR_BMXATK));
-		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_BMXHP));
-		sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(buf);
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_SP), pkAttr->get(ATTR_BMXSP));
-		sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
+		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_BMNATK), pkAttr->get(ATTR_BMXATK)).c_str());
+		sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_BMXHP)).c_str());
+		sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_SP), pkAttr->get(ATTR_BMXSP)).c_str());
 
-		sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(pkAttr->get(ATTR_BMSPD), buf, 10));
-		sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(pkAttr->get(ATTR_BDEF), buf, 10));
-		sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(pkAttr->get(ATTR_BSREC), buf, 10));
+		sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", pkAttr->get(ATTR_BMSPD)).c_str());
+		sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", pkAttr->get(ATTR_BDEF)).c_str());
+		sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", pkAttr->get(ATTR_BSREC)).c_str());
 	}
 	else {
 		/* Show ship actual attributes (affected by sailors) */
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_MNATK), pkAttr->get(ATTR_MXATK));
-		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_MXHP));
-		sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(buf);
-		sprintf(buf, "%d/%d", pkAttr->get(ATTR_SP), pkAttr->get(ATTR_MXSP));
-		sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(buf);
+		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_MNATK), pkAttr->get(ATTR_MXATK)).c_str());
+		sbf.lbl_prop[SBF_TEXT_ENDURE]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_MXHP)).c_str());
+		sbf.lbl_prop[SBF_TEXT_SUPPLY]->SetCaption(std::format("{}/{}", pkAttr->get(ATTR_SP), pkAttr->get(ATTR_MXSP)).c_str());
 
-		sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(itoa(pkAttr->get(ATTR_MSPD), buf, 10));
-		sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(itoa(pkAttr->get(ATTR_DEF), buf, 10));
-		sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(pkAttr->get(ATTR_SREC), buf, 10));
+		sbf.lbl_prop[SBF_TEXT_SPEED]->SetCaption(std::format("{}", pkAttr->get(ATTR_MSPD)).c_str());
+		sbf.lbl_prop[SBF_TEXT_DEFENCE]->SetCaption(std::format("{}", pkAttr->get(ATTR_DEF)).c_str());
+		sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(std::format("{}", pkAttr->get(ATTR_SREC)).c_str());
 	}
 
 	CGoodsGrid* grd = g_stUIBoat.FindBoat(m_dwBoatID)->GetGoodsGrid();
 	int nCurCapacity = grd->GetCurNum();
 	int nMaxCapacity = grd->GetMaxNum();
-	sprintf(buf, "%d/%d", nCurCapacity, nMaxCapacity);
-	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(buf); // Cargo capacity
+	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(std::format("{}/{}", nCurCapacity, nMaxCapacity).c_str());
 
 	// Attack cooldown
 	int v = pkAttr->get(ATTR_ASPD);
 	if (v == 0)
-		sprintf(buf, "-1");
+		sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption("-1");
 	else
-		sprintf(buf, "%d", 100000 / v);
-	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(buf);
+		sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(std::format("{}", 100000 / v).c_str());
 
 	// Ship level and experience
-	sbf.lbl_ship_level->SetCaption(itoa(pkAttr->get(ATTR_LV), buf, 10));
-	sbf.lbl_ship_exp->SetCaption(itoa(pkAttr->get(ATTR_CEXP), buf, 10));
+	sbf.lbl_ship_level->SetCaption(std::format("{}", pkAttr->get(ATTR_LV)).c_str());
+	sbf.lbl_ship_exp->SetCaption(std::format("{}", pkAttr->get(ATTR_CEXP)).c_str());
 
 	//
 	//sbf.lbl_prop[SBF_TEXT_BODY]->SetCaption(info->szBody);

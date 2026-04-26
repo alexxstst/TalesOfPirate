@@ -1,6 +1,6 @@
 ﻿//{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by kop.rc
+// Used by game.rc
 //
 #define IDC_MYICON                      2
 #define IDCLEAR                         3

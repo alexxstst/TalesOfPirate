@@ -192,12 +192,11 @@ void CMPPartCtrl::CopyPartCtrl(CMPPartCtrl* pPart) {
 	}
 	m_iModelNum = pPart->m_iModelNum;
 	CChaModel* pModel;
-	char psID[32];
 	m_vecModel.resize(m_iModelNum);
 	for (int n = 0; n < m_iModelNum; n++) {
 		pModel = pPart->m_vecModel[n];
 		m_vecModel[n] = new CChaModel;
-		sprintf(psID, "%d", pModel->GetID());
+		const std::string psID = std::format("{}", pModel->GetID());
 		if (!m_vecModel[n]->LoadScript(psID)) {
 			ToLogService("errors", LogLevel::Error, "LoadScript {}", psID);
 		}
@@ -295,14 +294,10 @@ void CMPPartCtrl::Render() {
 	}
 }
 
-bool CMPPartCtrl::SaveToFile(char* pszName) {
-	if (strcmp(pszName, "no") == 0 || strcmp(pszName, "yes") == 0) {
-		int i;
-		i = 1;
-	}
-
+bool CMPPartCtrl::SaveToFile(std::string_view pszName) {
+	const std::string nameStr{pszName};
 	FILE* t_pFile;
-	t_pFile = fopen(pszName, "wb");
+	t_pFile = fopen(nameStr.c_str(), "wb");
 	if (!t_pFile) {
 		ToLogService("errors", LogLevel::Error, " {},", pszName);
 		return false;
@@ -312,8 +307,10 @@ bool CMPPartCtrl::SaveToFile(char* pszName) {
 	DWORD t_dwVersion = CMPPartCtrl::ParVersion;
 	fwrite(&t_dwVersion, sizeof(t_dwVersion), 1, t_pFile);
 
-	char pszPartName[32];
-	lstrcpy(pszPartName, m_strName.c_str());
+	// Имя partctrl — фиксированное 32-байтное поле в файле.
+	char pszPartName[32]{};
+	std::memcpy(pszPartName, m_strName.data(),
+				std::min<std::size_t>(m_strName.size(), sizeof(pszPartName) - 1));
 	fwrite(pszPartName, sizeof(char), 32, t_pFile);
 
 	fwrite(&m_iPartNum, sizeof(int), 1, t_pFile);
@@ -335,17 +332,14 @@ bool CMPPartCtrl::SaveToFile(char* pszName) {
 	return true;
 }
 
-bool CMPPartCtrl::LoadFromFile(char* pszName) {
-	FILE* t_pFile;;
-	if ((t_pFile = fopen(pszName, "rb")) == NULL) {
+bool CMPPartCtrl::LoadFromFile(std::string_view pszName) {
+	const std::string nameStr{pszName};
+	FILE* t_pFile;
+	if ((t_pFile = fopen(nameStr.c_str(), "rb")) == NULL) {
 		ToLogService("errors", LogLevel::Error, "[{}] was not opened.(CMPPartCtrl::LoadFromFile)", pszName);
 		return false;
 	}
-	if (strcmp(pszName, "no") == 0 || strcmp(pszName, "yes") == 0) {
-		int i;
-		i = 1;
-	}
-	string sName = pszName;
+	const std::string sName = nameStr;
 
 	//!
 	DWORD t_dwVersion;
@@ -414,8 +408,6 @@ bool CMPPartCtrl::LoadFromFile(char* pszName) {
 
 void CMPPartCtrl::GetRes(CMPResManger* pResMagr, std::vector<INT>& vecTex, std::vector<INT>& vecModel,
 						 std::vector<INT>& vecEff) {
-	char pszPath[MAX_PATH];
-	char pszNewPath[MAX_PATH];
 	std::vector<INT>::iterator it;
 	int id = -1;
 
@@ -430,9 +422,9 @@ void CMPPartCtrl::GetRes(CMPResManger* pResMagr, std::vector<INT>& vecTex, std::
 				it = std::find(vecTex.begin(), vecTex.end(), id);
 				if (it == vecTex.end()) {
 					vecTex.push_back(id);
-					sprintf(pszPath, "texture/effect/%s", strName.c_str());
-					sprintf(pszNewPath, "effect/new/texture/%s", strName.c_str());
-					if (!::CopyFile(pszPath, pszNewPath,FALSE)) {
+					const std::string pszPath = std::format("texture/effect/{}", strName);
+					const std::string pszNewPath = std::format("effect/new/texture/{}", strName);
+					if (!::CopyFile(pszPath.c_str(), pszNewPath.c_str(), FALSE)) {
 					}
 				}
 			}
@@ -504,7 +496,7 @@ static void keyframe_proc(DWORD type, DWORD pose_id, DWORD key_id, DWORD key_fra
 }
 
 bool CChaModel::LoadScript(const s_string& strModel) {
-	int charType = atoi((char*)(LPCSTR)strModel.c_str());
+	int charType = std::stoi(strModel);
 	_iID = charType;
 
 	const CCharacterModelInfo* modelInfo = CharacterModelStore::Instance()->Get(charType);
@@ -546,7 +538,7 @@ bool CChaModel::LoadScript(const s_string& strModel) {
 
 
 bool CChaModel::LoadChaModel(MPChaLoadInfo& info) {
-	if (strlen(info.bone) <= 0)
+	if (info.bone[0] == '\0')
 		return false;
 	if (HRESULT hr = MPCharacter::Load(&info); FAILED(hr)) {
 		ToLogService("errors", LogLevel::Error,
@@ -640,8 +632,7 @@ void CChaModel::LoadFromFile(FILE* file) {
 	_eDestBlend = (D3DBLEND)eblend;
 	fread(&_dwCurColor, sizeof(D3DXCOLOR), 1, file);
 
-	char psID[32];
-	sprintf(psID, "%d", _iID);
+	const std::string psID = std::format("{}", _iID);
 	LoadScript(psID);
 	SetVel((int)(_fVel * 1000));
 	SetPlayType(_iPlayType);
@@ -651,7 +642,8 @@ void CChaModel::LoadFromFile(FILE* file) {
 
 
 bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, int iDummy2,
-					 char* pszTex, int iTexNum, CMPResManger* pResMgr, D3DXVECTOR3* pEyePos, MPRender* pDev) {
+					 std::string_view pszTex, int iTexNum, CMPResManger* pResMgr, D3DXVECTOR3* pEyePos,
+					 MPRender* pDev) {
 	m_pDev = pDev;
 	_pCEffFile = pResMgr->GetEffectFile();
 	_fDailTime = pResMgr->GetDailTime();
@@ -677,14 +669,11 @@ bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, i
 	_iDummy1 = iDummy1;
 	_iDummy2 = iDummy2;
 
-	char pszName[32];
 	_pTex = new lwITex*[iTexNum];
-	s_string strName;
 	int id;
 	for (n = 0; n < iTexNum; n++) {
 		_pTex[n] = NULL;
-		sprintf(pszName, "%s%d", pszTex, n);
-		strName = pszName;
+		const s_string strName = std::format("{}{}", pszTex, n);
 		id = pResMgr->GetTextureID(strName);
 		if (id < 0)
 			return false;

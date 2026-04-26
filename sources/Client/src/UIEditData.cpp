@@ -98,9 +98,8 @@ void CEditArticle::Clear() {
 void CEditArticle::Render() {
 	_pStrategy->Render();
 
-	char szBuf[10];
-	sprintf(szBuf, "%d, %d, %d", _nCursor, _nSelStart, _nSelEnd);
-	ui::Render(szBuf, 100, 100, COLOR_BLACK);
+	const std::string szBuf = std::format("{}, {}, {}", _nCursor, _nSelStart, _nSelEnd);
+	ui::Render(szBuf.c_str(), 100, 100, COLOR_BLACK);
 }
 
 bool CEditArticle::_AddObj(CEditObj* pObj) {

@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 #include "GameApp.h"
+#include "DebugStateSystem.h"
 
 #include "Character.h"
 #include "SceneObj.h"
@@ -225,16 +226,21 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove) //Vim
 	if (GlobalAppConfig.IsEditor()) {
 		g_Editor.FrameMove(dwTimeParam);
 
+		auto& dbg = DebugStateSystem::Instance();
 		if (_pCurScene->GetTerrain()) {
-			g_Render.Print(INFO_DEBUG, 290, 120, "showcenter = %f,%f", _pCurScene->GetTerrain()->GetShowCenterX(),
-						   _pCurScene->GetTerrain()->GetShowCenterY());
+			dbg.SetFmt(DebugStateSystem::Category::Debug, 290, 120,
+					   "showcenter = {:f},{:f}",
+					   _pCurScene->GetTerrain()->GetShowCenterX(),
+					   _pCurScene->GetTerrain()->GetShowCenterY());
 		}
 
 		if (pCha) {
-			g_Render.Print(INFO_DEBUG, 290, 410, "cha pos = %f,%f,%f", pCha->GetPos().x * 100, pCha->GetPos().y * 100,
-						   pCha->GetPos().z * 100);
-			g_Render.Print(INFO_DEBUG, 290, 430, "cha angle = %d",
-						   (int)(int(((float)pCha->getYaw() * 0.01745329f /*+ D3DX_PI*/) * 57.29577f) % 360));
+			dbg.SetFmt(DebugStateSystem::Category::Debug, 290, 410,
+					   "cha pos = {:f},{:f},{:f}",
+					   pCha->GetPos().x * 100, pCha->GetPos().y * 100, pCha->GetPos().z * 100);
+			dbg.SetFmt(DebugStateSystem::Category::Debug, 290, 430,
+					   "cha angle = {}",
+					   (int)(int(((float)pCha->getYaw() * 0.01745329f) * 57.29577f) % 360));
 		}
 	}
 

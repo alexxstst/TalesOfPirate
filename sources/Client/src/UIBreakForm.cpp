@@ -165,10 +165,9 @@ namespace GUI {
 		}
 		btnForgeNo->SetIsEnabled(false);
 
-		char buff[32] = {0};
 		for (int i = 0; i < BREAK_COUNT; i++) {
-			sprintf(buff, "cmdItemBase%i", (i + 1));
-			cmdBreak[i] = dynamic_cast<COneCommand*>(frmBreak->Find(buff));
+			const std::string buff = std::format("cmdItemBase{}", (i + 1));
+			cmdBreak[i] = dynamic_cast<COneCommand*>(frmBreak->Find(buff.c_str()));
 			if (!cmdBreak[i]) {
 				ToLogService("common", "frmBreak::{} not found.", buff);
 				return false;
@@ -269,7 +268,6 @@ namespace GUI {
 
 	void CBreakMgr::FrameMove(DWORD dwTime) {
 		if (bRnd) {
-			static char buff[16] = {0};
 			if (frmBreak && frmBreak->GetIsShow()) {
 				DWORD dwCurrTickCount = g_pGameApp->GetCurTick();
 
@@ -277,8 +275,8 @@ namespace GUI {
 					m_dwLastTickCount = dwCurrTickCount;
 
 					int rnd = (rand() % (99999 - 10000 + 1)) + 10000;
-					sprintf(buff, "%i", rnd);
-					labUsrInput->SetCaption(buff);
+					const std::string buff = std::format("{}", rnd);
+					labUsrInput->SetCaption(buff.c_str());
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Scene.h"
+#include "DebugStateSystem.h"
 
 #include "Character.h"
 #include "SceneObj.h"
@@ -32,7 +33,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam) {
 	//}
 
 
-	g_Render.ClearPrint(INFO_GAME);
+	DebugStateSystem::Instance().Clear(DebugStateSystem::Category::Game);
 
 	if (_pTerrain) {
 		MPTimer tMap;

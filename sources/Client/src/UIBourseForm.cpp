@@ -284,13 +284,13 @@ DWORD CBourseMgr::GetSalePriceById(USHORT sId) {
 //---------------------------------------------------------------------------
 void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt) {
 	if (nFreeCnt == 0) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(457).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(457));
 		return;
 	}
 
 	int iNum = int(rkBuy.GetData().sNum);
 	if (iNum == 0) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(458).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(458));
 		return;
 	} //end of if 
 
@@ -304,7 +304,7 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt) {
 		nMax = CGameScene::GetMainCha()->getGameAttr()->get(ATTR_GD) / rkBuy.GetPrice();
 
 		if (nMax == 0) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(459).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(459));
 			return;
 		}
 	}
@@ -577,7 +577,7 @@ void CBourseMgr::BuyItem(CGoodsGrid& rkToGoodsGrid, CCommandObj& rkItem,
 	CItemCommand* pkBuyCmd = dynamic_cast<CItemCommand*>(&rkItem);
 	if (!pkBuyCmd) return;
 	if (!(pkBuyCmd->GetIsValid())) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(463).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(463));
 		return;
 	}
 	CItemRecord* pkBuyRecord = pkBuyCmd->GetItemInfo();
@@ -804,9 +804,8 @@ void CBlackTradeMgr::SetItem(stBlackTrade* pBlackTrade) {
 
 	pInfo = GetItemRecordInfo(pBlackTrade->sSrcID);
 	if (pInfo) {
-		char szBuffer[128] = {0};
-		sprintf(szBuffer, "%d x %s", pBlackTrade->sSrcNum, pInfo->szName.c_str());
-		pItem->SetOwnDefText(szBuffer);
+		const std::string szBuffer = std::format("{} x {}", pBlackTrade->sSrcNum, pInfo->szName);
+		pItem->SetOwnDefText(szBuffer.c_str());
 	}
 
 	grdItemSale->SetItem(pBlackTrade->sIndex, pItem);

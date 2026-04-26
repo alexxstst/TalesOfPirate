@@ -286,7 +286,7 @@ void CContainer::SetAlpha(BYTE alpha) {
 
 CCompent* CContainer::Find(const char* str) {
 	for (items::iterator it = _items.begin(); it != _items.end(); it++) {
-		if (strcmp((*it)->GetName(), str) == 0)
+		if (std::string_view{(*it)->GetName()} == str)
 			return *it;
 	}
 

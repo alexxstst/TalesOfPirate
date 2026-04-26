@@ -131,11 +131,11 @@ bool CSkillCommand::StartCommand() {
 			_dwPlayTime = CGameApp::GetCurTick() + _GetSkillTime() + 30;
 
 			_pAniClock->Play(_GetSkillTime());
-			g_pGameApp->AddTipText("CSkillCommand::Exec[%s]", _pSkill->szName.c_str());
+			g_pGameApp->AddTipText(std::format("CSkillCommand::Exec[{}]", _pSkill->szName));
 			g_pGameApp->SetSkillClock(_pSkill->sID, _dwPlayTime);
 			return true;
 		}
-		g_pGameApp->AddTipText("CSkillCommand::Exec[%s] Failed", _pSkill->szName.c_str());
+		g_pGameApp->AddTipText(std::format("CSkillCommand::Exec[{}] Failed", _pSkill->szName));
 		return false;
 	}
 	return true;
@@ -149,17 +149,17 @@ bool CSkillCommand::IsAllowUse() {
 
 	if (g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow()) // 
 	{
-		g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(748));
 		return false;
 	}
 
 	if (pCha->GetChaState()->IsFalse(enumChaStateUseSkill)) {
-		g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str());
+		g_pGameApp->SysInfo(GetLanguageString(748));
 		return false;
 	}
 
 	if (!g_SkillUse.IsValid(_pSkill, pCha)) {
-		g_pGameApp->SysInfo("%s", g_SkillUse.GetError());
+		g_pGameApp->SysInfo(g_SkillUse.GetError());
 		return false;
 	}
 
@@ -179,9 +179,8 @@ bool CSkillCommand::IsAllowUse() {
 		if (dwtmp == 0)
 			return false;
 
-		g_pGameApp->SysInfo("Skill:[%s] in cooldown mode, remaining time is %d sec(s)",
-							_pSkill->szName.c_str(),
-							dwtmp);
+		g_pGameApp->SysInfo(std::format("Skill:[{}] in cooldown mode, remaining time is {} sec(s)",
+										_pSkill->szName, dwtmp));
 		_dwRecordTime = dwtmp;
 		return false;
 	}
@@ -198,14 +197,13 @@ bool CSkillCommand::ReadyUse() {
 }
 
 void CSkillCommand::Error() {
-	g_pGameApp->AddTipText("%s", SafeVFormat(GetLanguageString(750), _pSkill->szName.c_str()).c_str());
+	g_pGameApp->AddTipText(SafeVFormat(GetLanguageString(750), _pSkill->szName.c_str()));
 }
 
 void CSkillCommand::AddHint(int x, int y) {
 	const unsigned int HINT_WIDTH = 24;
 
-	sprintf(szBuf, "%s", _pSkill->szName.c_str());
-	PushHint(szBuf, COLOR_WHITE, 5, 1);
+	PushHint(_pSkill->szName, COLOR_WHITE, 5, 1);
 
 	CCharacter* pMain = CGameScene::GetMainCha();
 	if (pMain) {
@@ -264,15 +262,13 @@ bool CSkillCommand::_WriteNeed(int nType, int nValue, const char* szStr) {
 	if (nType == enumSKILL_ITEM_NEED_TYPE) {
 		CItemTypeInfo* pInfo = GetItemTypeInfo(nValue);
 		if (pInfo) {
-			sprintf(szBuf, "%s %s", szStr, pInfo->DataName.c_str());
-			PushHint(szBuf, COLOR_RED);
+			PushHint(std::format("{} {}", szStr, pInfo->DataName), COLOR_RED);
 		}
 	}
 	else {
 		CItemRecord* pInfo = GetItemRecordInfo(nValue);
 		if (pInfo) {
-			sprintf(szBuf, "%s %s", szStr, pInfo->DataName.c_str());
-			PushHint(szBuf, COLOR_RED);
+			PushHint(std::format("{} {}", szStr, pInfo->DataName), COLOR_RED);
 		}
 	}
 	return true;
@@ -282,14 +278,11 @@ const char* CSkillCommand::GetName() {
 	return _pSkill->szName.c_str();
 }
 
-const char* CSkillCommand::GetSkillName() {
+std::string CSkillCommand::GetSkillName() {
 	if (_pSkill->chType == 1) {
-		sprintf(szBuf, "%s\nLV:%d, SP:%d", _pSkill->szName.c_str(), _pSkill->GetLevel(), _pSkill->GetSPExpend());
+		return std::format("{}\nLV:{}, SP:{}", _pSkill->szName, _pSkill->GetLevel(), _pSkill->GetSPExpend());
 	}
-	else {
-		sprintf(szBuf, "%s\nLV:%d", _pSkill->szName.c_str(), _pSkill->GetLevel());
-	}
-	return szBuf;
+	return std::format("{}\nLV:{}", _pSkill->szName, _pSkill->GetLevel());
 }
 
 

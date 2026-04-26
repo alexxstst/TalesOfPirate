@@ -34,14 +34,12 @@ struct MPTexRect {
 	}
 };
 
-inline void __cdecl LGX(const char* format, ...) {
-	char buf[512]{};
-	va_list args;
-	va_start(args, format);
-	_vsntprintf(buf, 512, format, args);
-	va_end(args);
-
-	g_logManager.InternalLog(LogLevel::Error, "errors", buf);
+// Логгирование ошибок движка через std::format (без variadic ...).
+// Формат-строки в стиле std::format ({} вместо %s/%d), формат проверяется
+// компилятором. Поддерживается передача только литералов или constexpr-строк.
+template <class... Args>
+inline void LGX(std::format_string<Args...> fmt, Args&&... args) {
+	g_logManager.InternalLog(LogLevel::Error, "errors", std::format(fmt, std::forward<Args>(args)...));
 }
 
 #ifndef USE_LG_MSGBOX

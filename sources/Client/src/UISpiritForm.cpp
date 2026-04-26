@@ -87,12 +87,10 @@ namespace GUI {
 			return false;
 		}
 
-		char szName[32] = {0};
 		for (int i = 0; i < 9; ++i) {
-			// 
 			for (int j = 0; j < ERNIE_IMAGE_COUNT; ++j) {
-				sprintf(szName, "imgLine%d_%d", i + 1, j + 1);
-				imgLine[i][j] = dynamic_cast<CImage*>(frmSpiritErnie->Find(szName));
+				const std::string szName = std::format("imgLine{}_{}", i + 1, j + 1);
+				imgLine[i][j] = dynamic_cast<CImage*>(frmSpiritErnie->Find(szName.c_str()));
 
 				if (!imgLine[i][j]) {
 					ToLogService("common", "main.clu   frmSpiritErnie:{} not found.", szName);
@@ -103,38 +101,33 @@ namespace GUI {
 		}
 
 		for (int i = 0; i < 3; ++i) {
-			// 
 			for (int j = 0; j < 3; ++j) {
 				int nSeq = i * 3 + j;
-				sprintf(szName, "cmdItemTiger%d", nSeq + 1);
-				cmdItem[nSeq] = dynamic_cast<COneCommand*>(frmSpiritErnie->Find(szName));
+				const std::string szName = std::format("cmdItemTiger{}", nSeq + 1);
+				cmdItem[nSeq] = dynamic_cast<COneCommand*>(frmSpiritErnie->Find(szName.c_str()));
 				if (!cmdItem[nSeq]) {
 					ToLogService("common", "main.clu   frmSpiritErnie:{} not found.", szName);
 					return false;
 				}
-				//cmdItem[nSeq]->SetIsShow(false);
 				cmdItem[nSeq]->SetIsDrag(false);
 			}
 
-			//  Check
-			sprintf(szName, "chkSetmoney%d", i + 1);
-			chkSetmoney[i] = dynamic_cast<CCheckBox*>(frmSpiritErnie->Find(szName));
+			std::string szName = std::format("chkSetmoney{}", i + 1);
+			chkSetmoney[i] = dynamic_cast<CCheckBox*>(frmSpiritErnie->Find(szName.c_str()));
 			if (!chkSetmoney[i]) {
 				ToLogService("common", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
 			}
 
-			// 
-			sprintf(szName, "labUsemoney%d", i + 1);
-			labUsemoney[i] = dynamic_cast<CLabelEx*>(frmSpiritErnie->Find(szName));
+			szName = std::format("labUsemoney{}", i + 1);
+			labUsemoney[i] = dynamic_cast<CLabelEx*>(frmSpiritErnie->Find(szName.c_str()));
 			if (!labUsemoney[i]) {
 				ToLogService("common", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
 			}
 
-			// 
-			sprintf(szName, "btnStop%d", i + 1);
-			btnStop[i] = dynamic_cast<CTextButton*>(frmSpiritErnie->Find(szName));
+			szName = std::format("btnStop{}", i + 1);
+			btnStop[i] = dynamic_cast<CTextButton*>(frmSpiritErnie->Find(szName.c_str()));
 			if (!btnStop[i]) {
 				ToLogService("common", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
@@ -420,9 +413,7 @@ namespace GUI {
 			nMoney = (60 - nLevel1) * (60 - nLevel2) * 100;
 		}
 
-		char szBuffer[64] = {0};
-		sprintf(szBuffer, "%d", nMoney);
-		labMoneyShow->SetCaption(szBuffer);
+		labMoneyShow->SetCaption(std::format("{}", nMoney).c_str());
 
 		pItemCommand = dynamic_cast<CItemCommand*>(cmdSpiritMarry[SPIRIT_MARRY_ITEM]->GetCommand());
 		if (!pItemCommand) return;
@@ -456,7 +447,7 @@ namespace GUI {
 			g_stUISpirit.SetSpiritUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(698).c_str()); // ""
+			g_pGameApp->MsgBox(GetLanguageString(698)); // ""
 		}
 	}
 
@@ -472,12 +463,12 @@ namespace GUI {
 		CItemCommand* pStoneItem = dynamic_cast<CItemCommand*>(g_stUISpirit.cmdSpiritMarry[SPIRIT_MARRY_ITEM]->
 			GetCommand());
 		if (NULL == pStoneItem) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(826).c_str()); //
+			g_pGameApp->MsgBox(GetLanguageString(826)); //
 			return;
 		}
 
 		if (!pItemCommand->GetIsValid()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(899).c_str()); //
+			g_pGameApp->MsgBox(GetLanguageString(899)); //
 			return;
 		}
 
@@ -486,7 +477,7 @@ namespace GUI {
 			g_stUISpirit.SetSpiritUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(827).c_str()); //20
+			g_pGameApp->MsgBox(GetLanguageString(827)); //20
 		}
 	}
 
@@ -502,12 +493,12 @@ namespace GUI {
 		CItemCommand* pStoneItem = dynamic_cast<CItemCommand*>(g_stUISpirit.cmdSpiritMarry[SPIRIT_MARRY_ITEM]->
 			GetCommand());
 		if (NULL == pStoneItem) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(826).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(826));
 			return;
 		}
 
 		if (!pItemCommand->GetIsValid()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(899).c_str()); //
+			g_pGameApp->MsgBox(GetLanguageString(899)); //
 			return;
 		}
 
@@ -516,7 +507,7 @@ namespace GUI {
 			g_stUISpirit.SetSpiritUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(827).c_str()); //20
+			g_pGameApp->MsgBox(GetLanguageString(827)); //20
 		}
 	}
 
@@ -604,10 +595,9 @@ namespace GUI {
 			//
 			// 
 			//
-			char szBuffer[32] = {0};
-			sprintf(szBuffer, "%d", ERNIE_COIN_COUNT);
+			const std::string szBuffer = std::format("{}", ERNIE_COIN_COUNT);
 			for (int i = 0; i < 3; ++i) {
-				labUsemoney[i]->SetCaption(chkSetmoney[i]->GetIsChecked() ? szBuffer : "");
+				labUsemoney[i]->SetCaption(chkSetmoney[i]->GetIsChecked() ? szBuffer.c_str() : "");
 			}
 		}
 	}
@@ -628,7 +618,7 @@ namespace GUI {
 			if (!g_stUISpirit.chkSetmoney[0]->GetIsChecked() &&
 				!g_stUISpirit.chkSetmoney[1]->GetIsChecked() &&
 				!g_stUISpirit.chkSetmoney[2]->GetIsChecked()) {
-				g_pGameApp->MsgBox("%s", GetLanguageString(844).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(844));
 				return;
 			}
 
@@ -644,20 +634,20 @@ namespace GUI {
 				g_stUISpirit.chkSetmoney[1]->SetIsChecked(false);
 				g_stUISpirit.chkSetmoney[2]->SetIsChecked(false);
 
-				g_pGameApp->MsgBox("%s", GetLanguageString(881).c_str());
+				g_pGameApp->MsgBox(GetLanguageString(881));
 				return;
 			}
 
 			int nEmptyCount = g_stUIEquip.GetGoodsGrid()->GetEmptyGridCount();
 			if (ERNIE_EMPTY_COUNT > nEmptyCount) //  5 
 			{
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(890), ERNIE_EMPTY_COUNT).c_str());
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(890), ERNIE_EMPTY_COUNT));
 				return;
 			}
 
 			if (g_stUIEquip.GetIsLock()) // 
 			{
-				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(894), ERNIE_EMPTY_COUNT).c_str());
+				g_pGameApp->MsgBox(SafeVFormat(GetLanguageString(894), ERNIE_EMPTY_COUNT));
 				return;
 			}
 
@@ -717,10 +707,10 @@ namespace GUI {
 
 	// 
 	void CSpiritMgr::UpdateErnieString(const char* szText) {
-		if (0 == strlen(labLastshow1->GetCaption())) {
+		if (std::string_view{labLastshow1->GetCaption()}.empty()) {
 			labLastshow1->SetCaption(szText);
 		}
-		else if (0 == strlen(labLastshow2->GetCaption())) {
+		else if (std::string_view{labLastshow2->GetCaption()}.empty()) {
 			labLastshow2->SetCaption(szText);
 		}
 		else {

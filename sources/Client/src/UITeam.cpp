@@ -166,7 +166,7 @@ CMember* CTeam::Add(unsigned long nID, const char* szName, const char* szMotto, 
 			CTextGraph* pItem = static_cast<CTextGraph*>(pGuildMember->GetPointer());
 			if (pItem) {
 				string str = pGuildMember->GetName();
-				if (strlen(szMotto) > 0) {
+				if (!std::string_view{szMotto}.empty()) {
 					str += "(" + string(szMotto) + ")";
 				}
 				pItem->SetHint(str.c_str());

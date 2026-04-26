@@ -308,14 +308,10 @@ void CLoginScene::__cha_render_event(C3DCompent* pSender, int x, int y) {
 	char szMD5[33] = {0};
 	md5string(modelLook, szMD5);
 
-	char file[32];
-	if (!modelMode) {
-		sprintf(file, "./player/%s.png", szMD5);
-	}
-	else {
-		sprintf(file, "./icon/%s.png", szMD5);
-	}
-	g_Render.CaptureScreen(file);
+	const std::string file = !modelMode
+								 ? std::format("./player/{}.png", szMD5)
+								 : std::format("./icon/{}.png", szMD5);
+	g_Render.CaptureScreen(file.c_str());
 	g_ChaExitOnTime.ExitApp();
 }
 
@@ -766,7 +762,7 @@ void CLoginScene::CloseNewChaFrm() {
 
 bool CLoginScene::IsValidCheckChaName(const std::string& name) {
 	if (!::IsValidName(name)) {
-		CGameApp::MsgBox("%s", GetLanguageString(51).c_str());
+		CGameApp::MsgBox(GetLanguageString(51));
 		return false;
 	}
 	return true;
@@ -789,14 +785,14 @@ bool CLoginScene::_CheckAccount() {
 	}
 
 	if (strlen(edtID->GetCaption()) == 0) {
-		CGameApp::MsgBox("%s", GetLanguageString(174).c_str());
+		CGameApp::MsgBox(GetLanguageString(174));
 		return false;
 	}
 	if (!IsValidCheckChaName(edtID->GetCaption()))
 		return false;
 
 	if (strlen(edtPassword->GetCaption()) <= 4) {
-		CGameApp::MsgBox("%s", GetLanguageString(175).c_str());
+		CGameApp::MsgBox(GetLanguageString(175));
 		return false;
 	}
 
@@ -824,8 +820,8 @@ void CLoginScene::_Connect() {
 	std::string selectGateIP;
 
 	if (useAutoLogin2) {
-		int region = atoi(Region);
-		int server = atoi(Server);
+		const int region = std::stoi(std::string{Region});
+		const int server = std::stoi(std::string{Server});
 
 		if (selectGateIP.empty()) selectGateIP = SelectGroupIP(region - 1, server - 1);
 		useAutoLogin2 = false;
@@ -931,7 +927,7 @@ void CLoginScene::Error(int error_no, const std::string& error_info) {
 		return;
 	}
 
-	CGameApp::MsgBox("%s", g_GetServerError(error_no));
+	CGameApp::MsgBox(g_GetServerError(error_no));
 }
 
 void CLoginScene::ReSetNewCha() {

@@ -836,7 +836,7 @@ LW_BEGIN
 	void lwDeviceObject::_ClearStreamBuffer() {
 #if(defined ON_DEVELOP)
 		if (_svb_head || _sib_head) {
-			lwMessageBox("resource leak in stream buffer");
+			LG_MSGBOX("resource leak in stream buffer");
 		}
 #endif
 

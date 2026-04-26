@@ -53,12 +53,10 @@ bool CMiniMapMgr::Init() {
 	MinimatRect = dynamic_cast<CCompent*>(frmMinimap->Find("imgMinimapRect"));
 	if (!MinimatRect) return Error(GetLanguageString(45).c_str(), frmMinimap->GetName(), "imgMinimapRect");
 
-	char szName[32] = {0};
 	for (int i = 0; i < MAP_POS_MAX; i++) {
-		sprintf(szName, "labMapPos%d", i);
-
-		labMapPosRand[i] = dynamic_cast<CLabelEx*>(frmMinimap->Find(szName)); // 
-		if (!labMapPosRand[i]) return Error(GetLanguageString(45).c_str(), frmMinimap->GetName(), szName);
+		const std::string szName = std::format("labMapPos{}", i);
+		labMapPosRand[i] = dynamic_cast<CLabelEx*>(frmMinimap->Find(szName.c_str()));
+		if (!labMapPosRand[i]) return Error(GetLanguageString(45).c_str(), frmMinimap->GetName(), szName.c_str());
 	}
 	//labMapPos = dynamic_cast<CLabelEx*>(frmMinimap->Find( "labMapPos" )); // 
 	//if( !labMapPos ) return Error("msgui.clu<%s><%s>", frmMinimap->GetName(), "labMapPos");
@@ -230,9 +228,7 @@ void CMiniMapMgr::RefreshChaPos(int x, int y) {
 		labMapPos->SetIsShow(true);
 	}
 
-	static char buf[32] = {0};
-	sprintf(buf, "%d,%d", x / 100, y / 100);
-	labMapPos->SetCaption(buf);
+	labMapPos->SetCaption(std::format("{},{}", x / 100, y / 100).c_str());
 }
 
 void CMiniMapMgr::RefreshMapName(const char* name) {
@@ -414,13 +410,13 @@ void CMiniMapMgr::ClearRadar() {
 
 void CMiniMapMgr::ShowRadar(const char* szX, const char* szY) {
 	if (CHECK_FAILED(CheckCoordinateEdit(szX))) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(720).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(720));
 		edtX->SetCaption("");
 		edtX->SetActive(edtX);
 		return;
 	}
 	if (CHECK_FAILED(CheckCoordinateEdit(szY))) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(720).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(720));
 		edtY->SetCaption("");
 		edtY->SetActive(edtY);
 		return;
@@ -469,13 +465,13 @@ void CMiniMapMgr::ShowRadar() {
 	const char* szX = edtX->GetCaption();
 	const char* szY = edtY->GetCaption();
 	if (CHECK_FAILED(CheckCoordinateEdit(szX))) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(720).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(720));
 		edtX->SetCaption("");
 		edtX->SetActive(edtX);
 		return;
 	}
 	if (CHECK_FAILED(CheckCoordinateEdit(szY))) {
-		g_pGameApp->MsgBox("%s", GetLanguageString(720).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(720));
 		edtY->SetCaption("");
 		edtY->SetActive(edtY);
 		return;
@@ -809,12 +805,10 @@ void CMiniMapMgr::_RenderBigMapHint(void) {
 				nLevelSum += pMonsterInfo[i]->lLv;
 				nMonCount++;
 
-				char szBuf[256] = {0};
-				sprintf(szBuf, " %d. %s   LV:%2d ", nMonCount, pMonsterInfo[i]->szName.c_str(), pMonsterInfo[i]->lLv);
-				strMonsterName[i] = szBuf;
+				strMonsterName[i] = std::format(" {}. {}   LV:{:2} ", nMonCount, pMonsterInfo[i]->szName, pMonsterInfo[i]->lLv);
 
 				SIZE size;
-				FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf, &size);
+				FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(strMonsterName[i].c_str(), &size);
 				if (size.cx > sizeNameMax.cx) sizeNameMax.cx = size.cx;
 				if (size.cy > sizeNameMax.cy) sizeNameMax.cy = size.cy;
 			}
@@ -850,14 +844,13 @@ void CMiniMapMgr::_RenderBigMapHint(void) {
 		}
 
 		//        // 
-		char szBuf[256] = {0};
-		sprintf(szBuf, " Point: %d, %d ", mouse_map_coordinate.x, mouse_map_coordinate.y);
+		const std::string szBuf = std::format(" Point: {}, {} ", mouse_map_coordinate.x, mouse_map_coordinate.y);
 
 		SIZE size;
-		FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf, &size);
+		FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf.c_str(), &size);
 
 		GetRender().FillFrame(ptMouse.x + 32, ptMouse.y, ptMouse.x + 32 + size.cx, ptMouse.y + size.cy);
-		FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, ptMouse.x + 32, ptMouse.y);
+		FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf.c_str(), ptMouse.x + 32, ptMouse.y);
 	}
 }
 

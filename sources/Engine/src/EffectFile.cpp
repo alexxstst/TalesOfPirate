@@ -45,13 +45,12 @@ BOOL CMPEffectFile::LoadEffectFromFile(LPCSTR pszfile) {
 	//	return FALSE;
 
 
-	char t_psz[4];
-	strcpy(t_psz, "t0");
-	while (SUCCEEDED(m_pEffect->FindNextValidTechnique(t_psz, &technique))) {
+	std::string t_psz = "t0";
+	while (SUCCEEDED(m_pEffect->FindNextValidTechnique(t_psz.c_str(), &technique))) {
 		_vecTechniques.push_back(technique);
 		_iTechNum++;
 
-		sprintf(t_psz, "t%d", _iTechNum);
+		t_psz = std::format("t{}", _iTechNum);
 	}
 
 

@@ -98,7 +98,7 @@ void CUIGuildApply::OnConfirm(CCompent* pSender, int nMsgType, int x, int y, DWO
 		return;
 	}
 
-	if (strlen(m_pGuildNameEdit->GetCaption()) > 0) {
+	if (!std::string_view{m_pGuildNameEdit->GetCaption()}.empty()) {
 		string name = m_pGuildNameEdit->GetCaption();
 		bool bEnglishName = true;
 		// Xu qin added for illegal text filtering
@@ -143,7 +143,7 @@ void CUIGuildApply::OnConfirm(CCompent* pSender, int nMsgType, int x, int y, DWO
 
 void CUIGuildApply::OnShowForm(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey) {
 	m_pGuildNameInputForm->ShowModal();
-	if ((strlen(m_pGuildNameEdit->GetCaption()) > 0)) {
+	if (!std::string_view{m_pGuildNameEdit->GetCaption()}.empty()) {
 		m_pGuildPasswordEdit->SetActive(m_pGuildPasswordEdit);
 	}
 }

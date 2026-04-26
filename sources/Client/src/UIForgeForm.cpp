@@ -50,15 +50,13 @@ bool CForgeMgr::Init() {
 		return Error(GetLanguageString(561).c_str(), frmNPCforge->GetName(), "labForgeGold");
 	labForgeGold->SetCaption("");
 
-	// 
-	char szBuf[32];
 	for (int i(0); i < ITEM_NUM; i++) {
-		sprintf(szBuf, "cmdForgeItem%d", i);
-		cmdForgeItem[i] = dynamic_cast<COneCommand*>(frmNPCforge->Find(szBuf));
+		const std::string szBuf = std::format("cmdForgeItem{}", i);
+		cmdForgeItem[i] = dynamic_cast<COneCommand*>(frmNPCforge->Find(szBuf.c_str()));
 		if (!cmdForgeItem[i])
 			return Error(GetLanguageString(561).c_str(),
 						 frmNPCforge->GetName(),
-						 szBuf);
+						 szBuf.c_str());
 	}
 	cmdForgeItem[EQUIP]->evtBeforeAccept = _DragEvtEquip;
 	cmdForgeItem[GEN_STONE]->evtBeforeAccept = _DragEvtGenStone;
@@ -297,7 +295,7 @@ void CForgeMgr::_DragEvtEquip(CGuiData* pSender, CCommandObj* pItem,bool& isAcce
 		g_stUIForge.SetForgeUI();
 	}
 	else {
-		g_pGameApp->MsgBox("%s", GetLanguageString(569).c_str());
+		g_pGameApp->MsgBox(GetLanguageString(569));
 	}
 	return;
 }
@@ -321,7 +319,7 @@ void CForgeMgr::_DragEvtGenStone(CGuiData* pSender, CCommandObj* pItem,bool& isA
 			g_stUIForge.SetForgeUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(570).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(570));
 		}
 	}
 	else {
@@ -331,7 +329,7 @@ void CForgeMgr::_DragEvtGenStone(CGuiData* pSender, CCommandObj* pItem,bool& isA
 			g_stUIForge.SetForgeUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(571).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(571));
 		}
 	}
 	return;
@@ -356,7 +354,7 @@ void CForgeMgr::_DragEvtForgStone(CGuiData* pSender, CCommandObj* pItem,bool& is
 			g_stUIForge.SetForgeUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(572).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(572));
 		}
 	}
 	else {
@@ -366,7 +364,7 @@ void CForgeMgr::_DragEvtForgStone(CGuiData* pSender, CCommandObj* pItem,bool& is
 			g_stUIForge.SetForgeUI();
 		}
 		else {
-			g_pGameApp->MsgBox("%s", GetLanguageString(573).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(573));
 		}
 	}
 	return;

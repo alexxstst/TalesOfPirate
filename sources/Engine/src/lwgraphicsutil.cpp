@@ -9,19 +9,6 @@
 
 
 LW_BEGIN
-#ifndef USE_MINDPOWER
-
-	void lwMessageBox(const char* fmt, ...) {
-		char buf[512];
-
-		va_list args;
-		va_start(args, fmt);
-		_vsntprintf(buf, 512, fmt, args);
-		va_end(args);
-
-		MessageBox(NULL, buf, "error", MB_OK);
-	}
-#endif
 	float lwGetFPS() {
 		static double __tick_frequency_reci = 0.0; // 1000ms
 		static DWORD __last_tick_time = 0;
@@ -228,7 +215,7 @@ LW_BEGIN
 		lwColorValue4b* img_buf;
 
 		if (lwLoadColorValue(&img_buf, (int*)&img_width, (int*)&img_height, file, colorkey_type, colorkey) == 0) {
-			LG_MSGBOX("invalid texture file: %s when called lwLoadTexDataInfo", file);
+			LG_MSGBOX("invalid texture file: {} when called lwLoadTexDataInfo", file);
 			return LW_RET_FAILED;
 		}
 

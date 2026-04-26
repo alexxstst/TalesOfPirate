@@ -62,9 +62,8 @@ namespace GUI {
 		if (!g_stUIBoat.GetHuman()) //  
 			return;
 
-		char szBuf[32];
-		sprintf(szBuf, "%s%s", g_stUIBoat.GetHuman()->getName().c_str(), GetLanguageString(440).c_str()); //
-		labCharName->SetCaption(szBuf); //
+		const std::string szBuf = std::format("{}{}", g_stUIBoat.GetHuman()->getName(), GetLanguageString(440));
+		labCharName->SetCaption(szBuf.c_str());
 
 		frmBank->Show();
 
@@ -115,7 +114,7 @@ namespace GUI {
 			|| pkItemRecord->lID >= 6383 && pkItemRecord->lID <= 6385) // modify by ning.yan 20080820 
 		{
 			//g_pGameApp->MsgBox(GetLanguageString(958));	// ""
-			g_pGameApp->MsgBox("%s", GetLanguageString(958).c_str()); // ""
+			g_pGameApp->MsgBox(GetLanguageString(958)); // ""
 			return false;
 		}
 		if (pkItemCmd->GetItemInfo()->GetIsPile() && pkItemCmd->GetTotalNum() > 1) {

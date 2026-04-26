@@ -46,16 +46,10 @@ namespace GUI {
 			return true;
 		}
 
-		char buff[32] = {0};
 		labName[idx]->SetCaption(szName.c_str());
-
-		sprintf(buff, "%li", sLevel);
-		labLevel[idx]->SetCaption(buff);
-
+		labLevel[idx]->SetCaption(std::format("{}", sLevel).c_str());
 		labJob[idx]->SetCaption(szJob.c_str());
-
-		sprintf(buff, "%li", lPkval);
-		labDate[idx]->SetCaption(buff);
+		labDate[idx]->SetCaption(std::format("{}", lPkval).c_str());
 		return true;
 	}
 
@@ -69,31 +63,30 @@ namespace GUI {
 			return false;
 		}
 
-		char szTitle[32] = {0};
 		for (int i = 0; i < MAX_PKSILVER_PLAYER; i++) {
-			sprintf(szTitle, "labName_%i", i);
-			labName[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
+			std::string szTitle = std::format("labName_{}", i);
+			labName[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle.c_str()));
 			if (!labName[i]) {
 				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
-			sprintf(szTitle, "labLevel_%i", i);
-			labLevel[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
+			szTitle = std::format("labLevel_{}", i);
+			labLevel[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle.c_str()));
 			if (!labLevel[i]) {
 				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
-			sprintf(szTitle, "labJob_%i", i);
-			labJob[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
+			szTitle = std::format("labJob_{}", i);
+			labJob[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle.c_str()));
 			if (!labJob[i]) {
 				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
-			sprintf(szTitle, "labData_%i", i);
-			labDate[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
+			szTitle = std::format("labData_{}", i);
+			labDate[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle.c_str()));
 			if (!labDate[i]) {
 				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;

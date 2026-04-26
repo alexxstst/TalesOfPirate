@@ -594,8 +594,7 @@ void MPRender::EndRender(const bool present) // vim
 			_dwFPS = _dwFrameCnt;
 			_dwFrameCnt = 0;
 			_dwLastTick = dwTick;
-
-			Print(INFO_FPS, 5, 5, "FPS : %d", _dwFPS);
+			// Overlay-публикация FPS — в клиенте (CGameApp::_Render → DebugStateSystem).
 		}
 
 		_dwFrameCnt++;
@@ -603,36 +602,33 @@ void MPRender::EndRender(const bool present) // vim
 		static int g_nAviCnt = 0;
 		static int g_nCapCnt = 0;
 
-		if (_bCaptureScreen) // 
+		if (_bCaptureScreen) //
 		{
 			static int g_nScreenCap = 0;
-			char fileName[64];
 			Util_MakeDir("screenshot\\");
-
-			char pszName[64];
 
 			struct tm* newtime;
 			__int64 ltime;
-			char buff[80];
 			_time64(&ltime);
 			newtime = _gmtime64(&ltime);
-			sprintf(pszName, "screenshot/%04d-%02d-%02d/", newtime->tm_year + 1900, newtime->tm_mon + 1,
-					newtime->tm_mday);
-			Util_MakeDir(pszName);
+			const std::string pszName = std::format("screenshot/{:04}-{:02}-{:02}/",
+													newtime->tm_year + 1900,
+													newtime->tm_mon + 1,
+													newtime->tm_mday);
+			Util_MakeDir(pszName.c_str());
 
-			sprintf(fileName, "%scap%05d.png", pszName, g_nScreenCap);
-			g_Render.CaptureScreen(fileName);
+			const std::string fileName = std::format("{}cap{:05}.png", pszName, g_nScreenCap);
+			g_Render.CaptureScreen(fileName.c_str());
 			g_nScreenCap++;
 			_bCaptureScreen = FALSE;
 		}
 
-		if (_bEnableCaptureAVI) // 
+		if (_bEnableCaptureAVI) //
 		{
 			static int g_nAviCnt = 0;
-			char szFileName[64];
 			Util_MakeDir("screenshot/");
-			_snprintf_s(szFileName, _TRUNCATE, "avi%06d.bmp", g_nAviCnt);
-			CaptureScreen(szFileName);
+			const std::string szFileName = std::format("avi{:06}.bmp", g_nAviCnt);
+			CaptureScreen(szFileName.c_str());
 			g_nAviCnt++;
 		}
 
@@ -660,26 +656,6 @@ void MPRender::RenderAllLines() {
 	_LineList.clear();
 }
 
-
-void MPRender::RenderDebugInfo() {
-	// No-op. Ранее метод рисовал накопленный INFO_* текст через _pFont,
-	// но _pFont никогда не инициализировался и вызывал AV. Шрифт хранить
-	// в поле MPRender некорректно — owner это FontManager в клиенте.
-	// можно вернуть аналогично — в клиенте, если понадобится.
-	// Метод оставлен для обратной совместимости: внешний код может
-	// продолжать вызывать Print(INFO_*) — данные накапливаются в _InfoIdx
-	// без отрисовки.
-}
-
-void MPRender::Print(int nInfoType, int x, int y, const char* szFormat, ...) {
-	va_list list;
-	va_start(list, szFormat);
-	vsprintf(_szInfo, szFormat, list);
-	va_end(list);
-
-	int nIdx = y * 2000 + x; // 
-	_InfoIdx[nInfoType][nIdx] = _szInfo;
-}
 
 // Render States Routines
 void MPRender::EnableMipmap(BOOL bEnable) {

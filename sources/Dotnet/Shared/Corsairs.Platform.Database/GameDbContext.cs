@@ -162,8 +162,10 @@ public class GameDbContext : DbContext
                         v => (DateTimeOffset?)new DateTimeOffset(
                             DateTime.SpecifyKind(v, DateTimeKind.Utc))));
             e.Property(c => c.EstopTime).HasColumnName("estoptime");
-            // Расширенные данные (nullable в БД)
-            e.Property(c => c.ExtendData).HasColumnName("extend").HasMaxLength(2048);
+            // Расширенные данные. Колонка [extend] — NOT NULL без default'а в БД,
+            // тип varchar(MAX) (длина не ограничена), поэтому HasMaxLength не выставляем.
+            // Entity имеет дефолт "" (см. CharacterEntities.cs).
+            e.Property(c => c.ExtendData).HasColumnName("extend").IsRequired();
             e.Property(c => c.Imp).HasColumnName("IMP");
 
             // Свойства без legacy-колонок

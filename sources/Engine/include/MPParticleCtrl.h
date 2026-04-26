@@ -59,7 +59,7 @@ public:
 	}
 
 	bool Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, int iDummy2,
-				char* pszTex, int iTexNum, CMPResManger* pResMgr, D3DXVECTOR3* pEyePos, MPRender* pDev);
+				std::string_view pszTex, int iTexNum, CMPResManger* pResMgr, D3DXVECTOR3* pEyePos, MPRender* pDev);
 
 	void FrameMove();
 
@@ -377,10 +377,10 @@ public:
 				std::vector<INT>& vecEff);
 	void GetHitRes(CMPResManger* pResMagr, std::vector<s_string>& vecPar);
 
-	//!	
-	bool SaveToFile(char* pszName);
 	//!
-	bool LoadFromFile(char* pszName);
+	bool SaveToFile(std::string_view pszName);
+	//!
+	bool LoadFromFile(std::string_view pszName);
 
 public:
 	s_string m_strName;

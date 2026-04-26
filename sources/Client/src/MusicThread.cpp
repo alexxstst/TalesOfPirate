@@ -143,11 +143,7 @@ UINT CMusicThread::Run() {
 	//	if( m_ThreadPriority != TPri_Normal )
 	//		SetThreadPriority( m_ThreadPriority );
 
-	try {
-		AudioSDL::Instance().Play(m_dwMusicID, m_bLoop);
-	}
-	catch (...) {
-	}
+	AudioSDL::Instance().Play(m_dwMusicID, m_bLoop);
 
 	/*	bool LoopEnd = false;
 		while( !GThreadLoopEnd && !LoopEnd )

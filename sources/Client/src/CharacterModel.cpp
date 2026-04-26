@@ -199,9 +199,8 @@ int CCharacterModel::LoadCha(DWORD type_id, DWORD bone_id, const DWORD* part_buf
 
 	// load bone
 	StartLoad();
-	char str[260];
-	sprintf(str, "%04d.lab", bone_id);
-	if (FAILED(LoadBone( str )))
+	const std::string str = std::format("{:04}.lab", bone_id);
+	if (FAILED(LoadBone( str.c_str() )))
 		return 0;
 
 	_BoneID = bone_id;
@@ -284,17 +283,21 @@ int CCharacterModel::ReCreate(DWORD type_id) {
 		}
 #endif
 #if 0  //
-		// 
+		//
 		MPChaLoadInfo load_info;
 
-		sprintf(load_info.bone, "%04d.lab", pInfo->sModel);
+		{
+			auto r = std::format_to_n(load_info.bone, sizeof(load_info.bone) - 1, "{:04}.lab", pInfo->sModel);
+			*r.out = 0;
+		}
 
 		for (DWORD i = 0; i < 5; i++) {
 			if (pInfo->sSkinInfo[i] == 0)
 				continue;
 
 			DWORD file_id = pInfo->sModel * 1000000 + pInfo->sSuitID * 10000 + i;
-			sprintf(load_info.part[i], "%010d.lgo", file_id);
+			auto r = std::format_to_n(load_info.part[i], sizeof(load_info.part[i]) - 1, "{:010}.lgo", file_id);
+			*r.out = 0;
 		}
 
 		if (LoadCha(&load_info) == 0) {
@@ -337,17 +340,21 @@ int CCharacterModel::ReCreate(DWORD type_id) {
 		}
 	}
 	else {
-		// 
+		//
 		MPChaLoadInfo load_info;
 
-		sprintf(load_info.bone, "%04d.lab", pInfo->sModel);
+		{
+			auto r = std::format_to_n(load_info.bone, sizeof(load_info.bone) - 1, "{:04}.lab", pInfo->sModel);
+			*r.out = 0;
+		}
 
 		for (DWORD i = 0; i < 5; i++) {
 			if (pInfo->sSkinInfo[i] == 0)
 				continue;
 
 			DWORD file_id = pInfo->sModel * 1000000 + pInfo->sSuitID * 10000 + i;
-			sprintf(load_info.part[i], "%010d.lgo", file_id);
+			auto r = std::format_to_n(load_info.part[i], sizeof(load_info.part[i]) - 1, "{:010}.lgo", file_id);
+			*r.out = 0;
 		}
 
 		if (LoadCha(&load_info) == 0) {
@@ -378,11 +385,9 @@ int CCharacterModel::LoadPart(DWORD part_id, DWORD id) {
 	if (_PartID[part_id] == id)
 		return 1;
 
-	char file[260];
-	sprintf(file, "%010d.lgo", id);
+	const std::string file = std::format("{:010}.lgo", id);
 
-
-	if (LoadPart(part_id, file) == 0)
+	if (LoadPart(part_id, file.c_str()) == 0)
 		return 0;
 
 
@@ -463,21 +468,21 @@ int CCharacterModel::ChangePart(DWORD part_id, DWORD tab_id) {
 	if (sx == _PartFile[part_id])
 		return 1;
 
-	char str[260];
-	sprintf(str, "%s.lgo", sx);
-	if (FAILED(LoadPart( part_id, str ))) {
-		ToLogService("common", "msgLoadPart Failed with file: {}, call sean!", str);
-		return 0;
+	{
+		const std::string str = std::format("{}.lgo", sx);
+		if (FAILED(LoadPart( part_id, str.c_str() ))) {
+			ToLogService("common", "msgLoadPart Failed with file: {}, call sean!", str);
+			return 0;
+		}
 	}
-
 
 	if (_ModelType == MODEL_WARSHIP) {
 		if (part_id == 0) {
 			if (ir->sShipFlag > 0) {
 				// logo
 				ir = GetItemRecordInfo(ir->sShipFlag);
-				sprintf(str, "%s.lgo", ir->chModule[0].c_str());
-				LoadPart(3, str);
+				const std::string str = std::format("{}.lgo", ir->chModule[0]);
+				LoadPart(3, str.c_str());
 
 				_PartID[3] = ir->sShipFlag;
 			}
@@ -496,9 +501,9 @@ int CCharacterModel::ChangePart(DWORD part_id, DWORD tab_id) {
 					return 0;
 				}
 
-				sprintf(str, "%s.lgo", iiir->chModule[0].c_str());
+				const std::string str = std::format("{}.lgo", iiir->chModule[0]);
 
-				if (FAILED(LoadPart( 4 + i, str ))) {
+				if (FAILED(LoadPart( 4 + i, str.c_str() ))) {
 					ToLogService("common", "msgLoadPart no model file: {}, call sean!", str);
 					return 0;
 				}
@@ -1239,10 +1244,9 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id) {
 		if (caps->MaxTextureBlendStages < 4 || caps->MaxSimultaneousTextures < 4)
 			return 1;
 
-		char file[260];
-		sprintf(file, "%s.lgo", _PartFile[part_id]);
+		const std::string file = std::format("{}.lgo", _PartFile[part_id]);
 
-		const LitEntryRecord* l = LitEntryStore::Instance()->Find(0, file);
+		const LitEntryRecord* l = LitEntryStore::Instance()->Find(0, file.c_str());
 		if (l == nullptr)
 			return 0;
 

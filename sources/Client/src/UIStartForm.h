@@ -95,7 +95,7 @@ namespace GUI {
 			_IsNewer = v;
 		}
 
-		void SysLabel(const char* pszFormat, ...);
+		void SysLabel(std::string_view text);
 		void SysHide();
 
 		void AskTeamFight(const char* str);

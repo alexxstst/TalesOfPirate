@@ -147,15 +147,10 @@ void CStateMgr::RefreshStateFrm() {
 	SGameAttr* pCChaAttr = pCha->getGameAttr();
 	if (!pCChaAttr) return;
 
-	char pszCha[256] = {0};
-
-	// 
 	if (labStateHP) {
-		sprintf(pszCha, "%d/%d", pCChaAttr->get(ATTR_HP), pCChaAttr->get(ATTR_MXHP));
-		labStateHP->SetCaption(pszCha);
+		labStateHP->SetCaption(std::format("{}/{}", pCChaAttr->get(ATTR_HP), pCChaAttr->get(ATTR_MXHP)).c_str());
 	}
 
-	// 
 	int num = pCChaAttr->get(ATTR_CEXP);
 	int curlev = pCChaAttr->get(ATTR_CLEXP);
 	int nextlev = pCChaAttr->get(ATTR_NLEXP);
@@ -167,28 +162,21 @@ void CStateMgr::RefreshStateFrm() {
 
 	if (labStateEXP) {
 		if (max != 0)
-			sprintf(pszCha, "%4.2f%%", num * 100.0f / max);
+			labStateEXP->SetCaption(std::format("{:.2f}%", num * 100.0f / max).c_str());
 		else
-			sprintf(pszCha, "0.00%");
-
-		labStateEXP->SetCaption(pszCha);
+			labStateEXP->SetCaption("0.00%");
 	}
 
-	// 
 	num = pCChaAttr->get(ATTR_SP);
 	max = pCChaAttr->get(ATTR_MXSP);
 	if (labStateSP) {
-		sprintf(pszCha, "%d/%d", num, max);
-		labStateSP->SetCaption(pszCha);
+		labStateSP->SetCaption(std::format("{}/{}", num, max).c_str());
 	}
 
-	//
 	if (labStateName) {
-		sprintf(pszCha, "%s", pCha->getName().c_str());
-		labStateName->SetCaption((const char*)pszCha);
+		labStateName->SetCaption(pCha->getName().c_str());
 	}
 
-	//
 	if (labGuildName) {
 		if (CGuildData::GetGuildID()) {
 			labGuildName->SetCaption(CGuildData::GetGuildName().c_str());
@@ -198,27 +186,20 @@ void CStateMgr::RefreshStateFrm() {
 		}
 	}
 
-	//
 	if (labStateJob) {
-		sprintf(pszCha, "%s", g_GetJobName((short)pCChaAttr->get(ATTR_JOB)));
-		labStateJob->SetCaption((const char*)pszCha);
+		labStateJob->SetCaption(g_GetJobName((short)pCChaAttr->get(ATTR_JOB)));
 	}
 
-	//
 	if (labStateLevel) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_LV)); //
-		labStateLevel->SetCaption((const char*)pszCha);
+		labStateLevel->SetCaption(std::format("{}", pCChaAttr->get(ATTR_LV)).c_str());
 	}
 
-	//
 	if (labStatePoint) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_AP)); //			
-		labStatePoint->SetCaption((const char*)pszCha);
+		labStatePoint->SetCaption(std::format("{}", pCChaAttr->get(ATTR_AP)).c_str());
 	}
 
 	if (labSkillPoint) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_TP)); //		
-		labSkillPoint->SetCaption((const char*)pszCha);
+		labSkillPoint->SetCaption(std::format("{}", pCChaAttr->get(ATTR_TP)).c_str());
 	}
 
 	//06
@@ -240,101 +221,71 @@ void CStateMgr::RefreshStateFrm() {
 	}
 	//6
 	if (labStrshow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_STR));
-		labStrshow->SetCaption((const char*)pszCha);
+		labStrshow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_STR)).c_str());
 	}
 
 	if (labDexshow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_DEX));
-		labDexshow->SetCaption((const char*)pszCha);
+		labDexshow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_DEX)).c_str());
 	}
 
 	if (labAgishow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_AGI));
-		labAgishow->SetCaption((const char*)pszCha);
+		labAgishow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_AGI)).c_str());
 	}
 
 	if (labConshow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_CON));
-		labConshow->SetCaption((const char*)pszCha);
+		labConshow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_CON)).c_str());
 	}
 
 	if (labStashow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_STA));
-		labStashow->SetCaption((const char*)pszCha);
+		labStashow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_STA)).c_str());
 	}
 
 	if (labSailLevel) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_SAILLV));
-		labSailLevel->SetCaption((const char*)pszCha);
+		labSailLevel->SetCaption(std::format("{}", pCChaAttr->get(ATTR_SAILLV)).c_str());
 	}
 
 	if (labSailEXP) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_CSAILEXP));
-		labSailEXP->SetCaption((const char*)pszCha);
+		labSailEXP->SetCaption(std::format("{}", pCChaAttr->get(ATTR_CSAILEXP)).c_str());
 	}
 
-	//if(labLukshow)		labLukshow->SetCaption( (const char* ) pszCha);
-
-	//8
 	if (labMinAtackShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_MNATK)); // 		
-		labMinAtackShow->SetCaption((const char*)pszCha);
+		labMinAtackShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_MNATK)).c_str());
 	}
 
 	if (labMaxAtackShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_MXATK)); // 
-		labMaxAtackShow->SetCaption((const char*)pszCha);
+		labMaxAtackShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_MXATK)).c_str());
 	}
 
 	if (labFleeShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_FLEE)); // 
-		labFleeShow->SetCaption((const char*)pszCha);
+		labFleeShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_FLEE)).c_str());
 	}
 
 	if (labAspeedShow) {
 		int v = pCChaAttr->get(ATTR_ASPD);
 		if (v == 0)
-			sprintf(pszCha, "-1");
+			labAspeedShow->SetCaption("-1");
 		else
-			sprintf(pszCha, "%d", 100000 / v); // 
-
-		labAspeedShow->SetCaption((const char*)pszCha);
+			labAspeedShow->SetCaption(std::format("{}", 100000 / v).c_str());
 	}
 
 	if (labMspeedShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_MSPD));
-		labMspeedShow->SetCaption((const char*)pszCha);
+		labMspeedShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_MSPD)).c_str());
 	}
 
 	if (labHitShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_HIT)); // 
-		labHitShow->SetCaption((const char*)pszCha);
+		labHitShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_HIT)).c_str());
 	}
 
 	if (labDefenceShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_DEF)); // 
-		labDefenceShow->SetCaption((const char*)pszCha);
+		labDefenceShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_DEF)).c_str());
 	}
 
-	//if(labCriticalShow)		
-	//{
-	//	labCriticalShow->SetCaption( (const char* ) pszCha);
-	//}
-
-	//if(labMfShow)			
-	//{
-	//	labMfShow->SetCaption( (const char* ) pszCha);
-	//}
-
 	if (labPhysDefineShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_PDEF)); // 
-		labPhysDefineShow->SetCaption((const char*)pszCha);
+		labPhysDefineShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_PDEF)).c_str());
 	}
 
 	if (labFameShow) {
-		sprintf(pszCha, "%d", pCChaAttr->get(ATTR_FAME)); // 
-		labFameShow->SetCaption((const char*)pszCha);
+		labFameShow->SetCaption(std::format("{}", pCChaAttr->get(ATTR_FAME)).c_str());
 	}
 }
 

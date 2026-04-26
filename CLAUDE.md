@@ -121,7 +121,7 @@ msbuild sources/talesofpirates.sln /p:Configuration=Release /p:Platform=x64
 ```
 
 Individual project `.vcxproj` files:
-- Client: `sources/Client/kop.vcxproj`
+- Client: `sources/Client/Game.vcxproj`
 - Engine: `sources/Engine/MindPower3D.vcxproj`
 - GameServer: `sources/Server/GameServer/GameServer.vcxproj`
 

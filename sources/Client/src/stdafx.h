@@ -19,6 +19,7 @@
 
 // STL
 #include <string>
+#include <string_view>
 #include <list>
 #include <map>
 #include <vector>
@@ -31,6 +32,8 @@
 #include <tuple>
 #include <functional>
 #include <fstream>
+#include <format>
+#include <charconv>
 
 namespace GUI //
 {

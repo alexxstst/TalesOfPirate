@@ -141,10 +141,9 @@ namespace GUI {
 		}
 		btnForgeNo->SetIsEnabled(false);
 
-		char buff[32] = {0};
 		for (int i = 0; i < COOKING_COUNT; i++) {
-			sprintf(buff, "cmdItemBase%i", (i + 1));
-			cmdCooking[i] = dynamic_cast<COneCommand*>(frmCooking->Find(buff));
+			const std::string buff = std::format("cmdItemBase{}", (i + 1));
+			cmdCooking[i] = dynamic_cast<COneCommand*>(frmCooking->Find(buff.c_str()));
 			if (!cmdCooking[i]) {
 				ToLogService("common", "frmCooking::{} not found.", buff);
 				return false;
@@ -283,7 +282,7 @@ namespace GUI {
 
 	void CCookingMgr::_evtDragItemBase1(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUICooking.cmdCooking[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -315,7 +314,7 @@ namespace GUI {
 
 	void CCookingMgr::_evtDragItemBase3(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		if (!g_stUICooking.cmdCooking[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -334,7 +333,7 @@ namespace GUI {
 	void CCookingMgr::_evtDragItemBase4(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  1
 		if (!g_stUICooking.cmdCooking[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -355,7 +354,7 @@ namespace GUI {
 	void CCookingMgr::_evtDragItemBase5(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  2
 		if (!g_stUICooking.cmdCooking[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);
@@ -376,7 +375,7 @@ namespace GUI {
 	void CCookingMgr::_evtDragItemBase6(CGuiData* pSender, CCommandObj* pItem,bool& isAccept) {
 		//  3
 		if (!g_stUICooking.cmdCooking[1]->GetCommand()) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
+			g_pGameApp->MsgBox(GetLanguageString(896));
 			return;
 		}
 		CItemCommand* pItemCommand = dynamic_cast<CItemCommand*>(pItem);

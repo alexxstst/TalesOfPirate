@@ -194,7 +194,7 @@ bool CScriptMgr::DoString(const char* szLuaString) {
 	ToLogService("lua", "DoString({})", szLuaString);
 	FILE* fp = fopen("luaexec.txt", "wt");
 	if (fp == NULL) return false;
-	fwrite(szLuaString, strlen(szLuaString), 1, fp);
+	fwrite(szLuaString, std::string_view{szLuaString}.size(), 1, fp);
 	fclose(fp);
 	return luaL_dofile(_pLuaState, "luaexec.tmp") != 0;
 }

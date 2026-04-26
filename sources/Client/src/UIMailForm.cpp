@@ -76,8 +76,8 @@ namespace GUI {
 
 
 	void CMailMgr::ShowAnswerForm(const char* szTitle, const char* szContent) {
-		string strAnswer("");
-		if (strlen(szTitle) > 0) {
+		string strAnswer;
+		if (!std::string_view{szTitle}.empty()) {
 			strAnswer += szTitle;
 			strAnswer += "\n";
 		}
@@ -92,8 +92,8 @@ namespace GUI {
 
 
 	void CMailMgr::SubmitQuestion() {
-		if (strlen(edtQuestionTitle->GetCaption()) < 16) {
-			g_pGameApp->MsgBox("%s", GetLanguageString(914).c_str()); // 816
+		if (std::string_view{edtQuestionTitle->GetCaption()}.size() < 16) {
+			g_pGameApp->MsgBox(GetLanguageString(914)); // 816
 			return;
 		}
 

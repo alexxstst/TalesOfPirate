@@ -564,7 +564,7 @@ public:
 						  CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack = false,
 						  bool bmain = false);
 
-	void SetRenderText(char* pszText);
+	void SetRenderText(std::string_view pszText);
 
 	void RenderEffectFont(D3DXMATRIX* pmat);
 	void RenderEffectFontBack(D3DXMATRIX* pmat);

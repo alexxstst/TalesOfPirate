@@ -89,13 +89,14 @@ LW_BEGIN
 		}
 		else {
 		__a:
-			char path[LW_MAX_PATH];
-			sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_ITEM), file);
+			const std::string path = std::format("{}{}", path_info->GetPath(PATH_TYPE_MODEL_ITEM), file);
 
 			lwResFile res;
 			res.obj_id = 0;
 			res.res_type = RES_FILE_TYPE_GEOMETRY;
-			_tcscpy(res.file_name, path);
+			std::memset(res.file_name, 0, sizeof(res.file_name));
+			std::memcpy(res.file_name, path.data(),
+						std::min<std::size_t>(path.size(), sizeof(res.file_name) - 1));
 
 			// create new item object
 			lwPrimitive* imp = LW_NEW(lwPrimitive( _res_mgr ));
@@ -104,7 +105,7 @@ LW_BEGIN
 			// begin load mesh
 			lwGeomObjInfo info;
 
-			if (LW_RESULT r = info.Load(path); LW_FAILED(r)) {
+			if (LW_RESULT r = info.Load(path.c_str()); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] info.Load failed: path={}, ret={}",
 							 __FUNCTION__, path, static_cast<long long>(r));
