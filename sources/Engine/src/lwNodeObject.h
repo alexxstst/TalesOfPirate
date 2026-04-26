@@ -176,10 +176,10 @@ LW_BEGIN
 
 
 		LW_RESULT Destroy();
-		LW_RESULT Load(lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadMesh(lwMeshInfo* info);
-		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path);
-		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path);
+		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci);
 		LW_RESULT Copy(lwINodePrimitive* src_obj);
 
@@ -522,7 +522,7 @@ LW_BEGIN
 		LW_RESULT QueryTreeNode(lwModelNodeQueryInfo* info);
 		LW_RESULT InsertTreeNode(lwITreeNode* parent_node, lwITreeNode* prev_node, lwITreeNode* node);
 		LW_RESULT RemoveTreeNode(lwITreeNode* node);
-		LW_RESULT Load(const char* file, DWORD flag, lwITreeNode* parent_node);
+		LW_RESULT Load(std::string_view file, DWORD flag, lwITreeNode* parent_node);
 	};
 
 	// assistant method
@@ -536,7 +536,7 @@ LW_BEGIN
 	LW_RESULT lwNodeObject_PlayDefaultPose(lwINodeObject* obj);
 	LW_RESULT lwNode_ShowBoundingObject(lwINode* obj, DWORD flag);
 	LW_RESULT lwNodeObject_ShowBoundingObject(lwINodeObject* obj, DWORD flag);
-	LW_RESULT lwNodeObject_DumpObjectTree(lwINodeObject* obj, const char* file);
+	LW_RESULT lwNodeObject_DumpObjectTree(lwINodeObject* obj, std::string_view file);
 	LW_RESULT lwNodeObject_GetPrimitiveCullingNum(lwINodeObject* obj, DWORD* num);
 
 LW_END

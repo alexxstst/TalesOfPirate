@@ -11,7 +11,7 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const char* file, const char* tex_path, D3DFORMAT fmt) {
+	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, std::string_view file, std::string_view tex_path, D3DFORMAT fmt) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwITex* tex;
@@ -19,7 +19,7 @@ LW_BEGIN
 		if (LW_RESULT r = res_mgr->CreateTex(&tex); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] res_mgr->CreateTex failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -31,12 +31,12 @@ LW_BEGIN
 		tex_info.level = D3DX_DEFAULT;
 		tex_info.format = fmt;
 		tex_info.pool = D3DPOOL_DEFAULT;
-		_tcscpy(tex_info.file_name, file);
+		{const auto _s = std::string{file}; _tcscpy(tex_info.file_name, _s.c_str());}
 
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: file={}, tex_path={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", tex_path ? tex_path : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), (tex_path.empty() ? std::string_view{"(null)"} : tex_path),
 						 static_cast<long long>(r));
 			goto __ret;
 		}
@@ -44,7 +44,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadVideoMemory failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -77,7 +77,7 @@ LW_BEGIN
 		if (user_data)
 			tex->SetUserData(user_data);
 
-		if (LW_RESULT r = tex->LoadTexInfo(info, 0); LW_FAILED(r)) {
+		if (LW_RESULT r = tex->LoadTexInfo(info, std::string_view{}); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: type={}, ret={}",
 						 __FUNCTION__, info ? info->type : 0u, static_cast<long long>(r));
@@ -386,7 +386,7 @@ LW_BEGIN
 		lwTexUVAnim4,
 	};
 
-	LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_path, DWORD color_op,
+	LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, std::string_view file, std::string_view tex_path, DWORD color_op,
 								DWORD anim_type) {
 		// ----begin----
 		lwITex* tex;
@@ -402,7 +402,7 @@ LW_BEGIN
 		tex_info.pool = D3DPOOL_DEFAULT;
 		tex_info.colorkey_type = COLORKEY_TYPE_NONE;
 
-		_tcscpy(tex_info.file_name, file);
+		{const auto _s = std::string{file}; _tcscpy(tex_info.file_name, _s.c_str());}
 
 		RSA_VALUE(&tex_info.tss_set[0], D3DTSS_COLOROP, color_op);
 		RSA_VALUE(&tex_info.tss_set[1], D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -414,7 +414,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
-						 __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 		}
 
 		lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
@@ -463,7 +463,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_path, DWORD anim_type) {
+	LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, std::string_view file, std::string_view tex_path, DWORD anim_type) {
 		// ----begin----
 		lwITex* tex;
 		lwIResourceMgr* res_mgr = p->GetResourceMgr();
@@ -477,7 +477,7 @@ LW_BEGIN
 		tex_info.pool = D3DPOOL_DEFAULT;
 		tex_info.colorkey_type = COLORKEY_TYPE_NONE;
 
-		_tcscpy(tex_info.file_name, file);
+		{const auto _s = std::string{file}; _tcscpy(tex_info.file_name, _s.c_str());}
 
 		RSA_VALUE(&tex_info.tss_set[0], D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		RSA_VALUE(&tex_info.tss_set[1], D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -488,7 +488,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
-						 __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 		}
 
 		lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
@@ -553,7 +553,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char* tex_file, const char* tex_path,
+	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char* tex_file, std::string_view tex_path,
 								 DWORD anim_type) {
 		// ----begin----
 		lwITex* tex;
@@ -584,7 +584,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
-						 __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 		}
 
 		mtltex_agent = p->GetMtlTexAgent(0);
@@ -615,7 +615,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
-						 __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 		}
 
 		mtltex_agent = p->GetMtlTexAgent(0);
@@ -636,7 +636,7 @@ LW_BEGIN
 		RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
 		res_mgr->CreateTex(&tex);
-		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r)) {
+		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, std::string_view{}); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path=NULL, ret={}",
 						 __FUNCTION__, static_cast<long long>(r));
@@ -686,7 +686,7 @@ LW_BEGIN
 #endif
 
 #if 1
-	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, const char* tex_path, DWORD anim_type) {
+	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, std::string_view tex_path, DWORD anim_type) {
 		// ----begin----
 		lwITex* tex;
 		lwITex* ret_tex = 0;
@@ -716,7 +716,7 @@ LW_BEGIN
 		if (LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
-						 __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 		}
 
 		mtltex_agent = p->GetMtlTexAgent(0);

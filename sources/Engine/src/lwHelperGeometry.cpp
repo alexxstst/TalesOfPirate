@@ -47,7 +47,7 @@ LW_BEGIN
 		obj->AllocateMtlTexAgentSeq(subset_num);
 
 		for (DWORD i = 0; i < subset_num; i++) {
-			if (LW_RESULT r = obj->LoadMtlTex(i, &mti, NULL); LW_FAILED(r)) {
+			if (LW_RESULT r = obj->LoadMtlTex(i, &mti, std::string_view{}); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] obj->LoadMtlTex failed: name={}, i={}, subset_num={}, ret={}",
 							 __FUNCTION__, name ? name : "(null)", i, subset_num, static_cast<long long>(r));
@@ -105,7 +105,7 @@ LW_BEGIN
 
 		mti.mtl = mtl;
 
-		if (LW_RESULT r = obj->LoadMtlTex(0, &mti, NULL); LW_FAILED(r)) {
+		if (LW_RESULT r = obj->LoadMtlTex(0, &mti, std::string_view{}); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] obj->LoadMtlTex failed: name={}, ret={}",
 						 __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
@@ -161,7 +161,7 @@ LW_BEGIN
 		mti.mtl = mtl;
 
 		for (DWORD i = 0; i < subset_num; i++) {
-			if (LW_RESULT r = obj->LoadMtlTex(i, &mti, NULL); LW_FAILED(r)) {
+			if (LW_RESULT r = obj->LoadMtlTex(i, &mti, std::string_view{}); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] obj->LoadMtlTex (subset overload) failed: name={}, i={}, subset_num={}, ret={}",
 							 __FUNCTION__, name ? name : "(null)", i, subset_num, static_cast<long long>(r));
@@ -463,7 +463,7 @@ LW_BEGIN
 
 		mti.mtl = mtl;
 
-		if (LW_RESULT r = obj->LoadMtlTex(0, &mti, NULL); LW_FAILED(r)) {
+		if (LW_RESULT r = obj->LoadMtlTex(0, &mti, std::string_view{}); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] obj->LoadMtlTex (Plane) failed: ret={}",
 						 __FUNCTION__, static_cast<long long>(r));

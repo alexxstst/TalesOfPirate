@@ -16,15 +16,15 @@ LW_BEGIN
 	LW_RESULT lwPrimitiveSetVertexShader(lwIPrimitive* p, DWORD shader_type);
 	LW_RESULT lwPrimitiveGetObjHeight(lwIPrimitive* p, float* out_height);
 
-	LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_path, DWORD color_op,
+	LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, std::string_view file, std::string_view tex_path, DWORD color_op,
 								DWORD anim_type);
-	LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_path, DWORD anim_type);
-	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char* tex_file, const char* tex_path,
+	LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, std::string_view file, std::string_view tex_path, DWORD anim_type);
+	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char* tex_file, std::string_view tex_path,
 								 DWORD anim_type);
-	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, const char* tex_path, DWORD anim_type);
+	LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, std::string_view tex_path, DWORD anim_type);
 	LW_RESULT lwPrimitiveTexUnLitA(lwIPrimitive* p);
 
-	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const char* file, const char* tex_path, D3DFORMAT fmt);
+	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, std::string_view file, std::string_view tex_path, D3DFORMAT fmt);
 	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info);
 	// Для TEX_TYPE_DATA: пользовательский указатель пробрасывается параметром,
 	LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info, void* user_data);

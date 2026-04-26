@@ -99,7 +99,7 @@ inline void _SetItemScale(CCharacterModel* model, CSceneItem* item) {
 
 // ==================================
 CCharacterModel::CCharacterModel()
-	: _ModelType(MODEL_INVALID), _PoseType(0),
+	: _ModelType(MODEL_INVALID), _PoseType(0), _TypeID(0),
 	  cha_type_id(-1) {
 	_UIScaleDis = 20.0f;
 	_UIYaw = 0;
@@ -161,11 +161,25 @@ void CCharacterModel::Destroy() {
 	_SmallPoseID = -1;
 	_KeyFrameProc = 0;
 	_ProcParam = 0;
+	_TypeID = 0;
 	cha_type_id = -1;
 	memset(_PartID, 0, sizeof(_PartID));
 	memset(_PartFile, 0, sizeof(_PartFile));
 
 	MPCharacter::Destroy();
+}
+
+//  Overload с явным type_id. Что было: legacy callsite'ы (см. GameAppMsg.cpp,
+//  SceneCreateNode.cpp) звали LoadCha(&load_info) без передачи id архетипа,
+//  и `_TypeID` оставался неинициализированным (`0xCDCDCDCD` в Debug). Каждый
+//  кадр Cull() уходил в GetChaRecordInfo(0xCDCDCDCD) → MISS и засорял канал
+//  store_miss. Что исправили: ввели overload, который принимает type_id
+//  отдельно и проставляет `_TypeID` до вызова базовой загрузки. По
+//  архитектурным причинам поле type_id в Engine'овую `MPChaLoadInfo` не
+//  кладём — Engine не должен знать gameplay-id'ы character'ов.
+int CCharacterModel::LoadCha(const MPChaLoadInfo* info, DWORD type_id) {
+	_TypeID = type_id;
+	return LoadCha(info);
 }
 
 int CCharacterModel::LoadCha(const MPChaLoadInfo* info) {
@@ -396,7 +410,7 @@ int CCharacterModel::LoadPart(DWORD part_id, DWORD id) {
 	return 1;
 }
 
-int CCharacterModel::LoadPart(DWORD part_id, const char* file) {
+int CCharacterModel::LoadPart(DWORD part_id, std::string_view file) {
 	if (FAILED(MPCharacter::LoadPart(part_id, file)))
 		return 0;
 
@@ -608,7 +622,7 @@ int CCharacterModel::LoadPose(int cha_type) {
 	return 1;
 }
 
-int CCharacterModel::ChangePart(DWORD id, const char* file) {
+int CCharacterModel::ChangePart(DWORD id, std::string_view file) {
 	return SUCCEEDED(LoadPart( id, file )) ? 1 : 0;
 }
 
@@ -1281,6 +1295,12 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id) {
 }
 
 BOOL CCharacterModel::Cull() {
+	//  Защита от вызова до первого LoadCha/LoadShip/LoadTower: модель ещё не
+	//  получила type_id, лезть в CChaRecord-store не имеет смысла.
+	if (_TypeID == 0) {
+		return 0;
+	}
+
 	CChaRecord* pInfo = GetChaRecordInfo(_TypeID);
 	if (pInfo == 0)
 		return 0;

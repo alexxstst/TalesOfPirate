@@ -85,6 +85,9 @@ void GameConfig::SetDefault() {
 	_consoleEnabled = false;
 	_consoleRequireSuperKey = true;
 	_textureLogEnabled = false;
+	_streamPoolDiag = false;
+	_sceneLoadDiag = false;
+	_moveDiag = false;
 	_moveClient = true;
 
 	_fontName1.clear();
@@ -210,6 +213,13 @@ void GameConfig::Load() {
 	{
 		auto& sec = g_SystemIni["TextureLog"];
 		_textureLogEnabled = sec.GetInt64("enabled", 0) != 0;
+	}
+
+	{
+		auto& sec = g_SystemIni["Logging"];
+		_streamPoolDiag = sec.GetInt64("streampool", 0) != 0;
+		_sceneLoadDiag = sec.GetInt64("sceneload", 0) != 0;
+		_moveDiag = sec.GetInt64("move", 0) != 0;
 	}
 
 	{

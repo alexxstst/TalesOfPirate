@@ -80,7 +80,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwModel::Load(const char* file, DWORD model_id) {
+	LW_RESULT lwModel::Load(std::string_view file, DWORD model_id) {
 		LW_RESULT ret = LW_RET_OK;
 
 		if (_obj_num > 0) {
@@ -123,7 +123,7 @@ LW_BEGIN
 					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(&handle, path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] RegisterModelObjInfo failed: file={}, path={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
 						return LW_RET_FAILED;
 					}
 
@@ -131,7 +131,7 @@ LW_BEGIN
 						LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] GetModelObjInfo(handle) failed: file={}, handle={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)", handle, static_cast<long long>(r));
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), handle, static_cast<long long>(r));
 						return LW_RET_FAILED;
 					}
 				}
@@ -143,7 +143,7 @@ LW_BEGIN
 					if (LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(model_id, path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] RegisterModelObjInfo(model_id) failed: file={}, model_id={}, path={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)", model_id, path, static_cast<long long>(r));
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), model_id, path, static_cast<long long>(r));
 						return LW_RET_FAILED;
 					}
 
@@ -176,7 +176,7 @@ LW_BEGIN
 																	 create_helper_primitive); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] LoadHelperInfo failed: file={}, path={}, helper_type={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)", path,
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path,
 									 static_cast<int>(model_info_ptr->helper_data.type), static_cast<long long>(r));
 						LG_MSGBOX("load helper object error with file:{}", path);
 						return LW_RET_FAILED;
@@ -404,7 +404,7 @@ LW_BEGIN
 	}
 
 	LW_RESULT lwModel::HitTestPrimitiveHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-												  const char* type_name) {
+												  std::string_view type_name) {
 		lwPickInfo u, v;
 		v.obj_id = LW_INVALID_INDEX;
 
@@ -434,7 +434,7 @@ LW_BEGIN
 	}
 
 	LW_RESULT lwModel::HitTestPrimitiveHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-												 const char* type_name) {
+												 std::string_view type_name) {
 		lwPickInfo u, v;
 		v.obj_id = LW_INVALID_INDEX;
 
@@ -497,7 +497,7 @@ LW_BEGIN
 	// LW_RET_FAILED: hit test failed
 	// LW_RET_OK: hit test succeeded
 	LW_RESULT lwModel::HitTestHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-										 const char* type_name) {
+										 std::string_view type_name) {
 		lwPickInfo u;
 
 		LW_RESULT ret = LW_RET_FAILED;
@@ -530,7 +530,7 @@ LW_BEGIN
 	// LW_RET_FAILED: hit test failed
 	// LW_RET_OK: hit test succeeded
 	LW_RESULT lwModel::HitTestHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-										const char* type_name) {
+										std::string_view type_name) {
 		if (_helper_object == 0)
 			return LW_RET_FAILED_2;
 

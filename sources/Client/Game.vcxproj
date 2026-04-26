@@ -191,6 +191,7 @@
         <ClCompile Include="src\GameAppNet.cpp"/>
         <ClCompile Include="src\GameAppRender.cpp"/>
         <ClCompile Include="src\GameConfig.cpp"/>
+        <ClCompile Include="src\GameDiagnostic.cpp"/>
         <ClCompile Include="src\GameLoading.cpp"/>
         <ClCompile Include="src\GameMovie.cpp"/>
         <ClCompile Include="src\GameWG.cpp"/>
@@ -398,6 +399,7 @@
         <ClInclude Include="src\GameApp.h"/>
         <ClInclude Include="src\GameAppMsg.h"/>
         <ClInclude Include="src\GameConfig.h"/>
+        <ClInclude Include="src\GameDiagnostic.h"/>
         <ClInclude Include="src\GameLoading.h"/>
         <ClInclude Include="src\GameMovie.h"/>
         <ClInclude Include="src\GameWG.h"/>

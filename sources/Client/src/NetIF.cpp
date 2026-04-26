@@ -377,14 +377,6 @@ bool NetIF::InitAesKey() {
 //  ITcpClientHandler 
 
 void NetIF::OnPacket(net::RPacket& packet) {
-	unsigned short sCmdType = packet.GetCmd();
-
-	if (sCmdType != CMD_MC_PING) {
-		ToLogService("common", "{}", sCmdType);
-		// [IN]      SESS-
-		//EnsureConsole();
-	}
-
 	HandlePacketMessage(packet);
 }
 
@@ -488,15 +480,6 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 
 	// WPE:       SESS ( 2-5)
 	pk.WriteSess(m_ulPacketCount++);
-
-	{
-		unsigned short cmd = pk.GetCmd();
-		if (cmd != CMD_CM_PING) {
-			EnsureConsole();
-			ToLogService("network", "[OUT] CMD={:5} {:40} SESS={:10} SIZE={}", cmd, GetCmdName(cmd), pk.GetSess(),
-						 pk.GetPacketSize());
-		}
-	}
 
 	if (!_client.Send(pk)) {
 		ToLogService("common", "msgSendData Error!");

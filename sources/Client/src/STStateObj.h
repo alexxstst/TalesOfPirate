@@ -1,6 +1,9 @@
 ﻿#pragma once
 
-#define  _STATE_DEBUG
+//  Раньше тут был #define _STATE_DEBUG, под который был обёрнут диагностический
+//  лог состояний actor'а (Start/End/Cancel) и отрисовка точек пути на карте.
+//  Перенесено на runtime-флаг GameDiagnostic::IsMoveEnabled (ini [Logging] move),
+//  канал "movie". Это позволяет включать/выключать без пересборки.
 
 #include "HMSynchroObj.h"
 
@@ -179,14 +182,16 @@ private:
 	path _path;
 };
 
-//
+//  Установка серверного ID состояния. Случай повторного присвоения (когда
+//  у состояния уже есть _nServerID, и сервер прислал ещё один) — это
+//  диагностический сигнал рассинхронизации client/server, пишем в "movie".
 inline void CActionState::SetServerID(int n) {
 	if (_nServerID == INT_MAX) {
 		_nServerID = n;
 	}
 	else {
-		std::string value{GetExplain()};
-		g_logManager.InternalLog(LogLevel::Debug, "common",
-								 SafeVFormat(GetLanguageString(409), value, n));
+		ToLogService("movie", LogLevel::Debug,
+					 "SetServerID: duplicate assign on '{}' — old={}, new={}",
+					 GetExplain(), _nServerID, n);
 	}
 }

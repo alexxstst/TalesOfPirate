@@ -48,13 +48,14 @@ LW_BEGIN
 		}
 	}
 
-	LW_RESULT lwLoadD3DSettings(lwD3DCreateParam* param, const char* file) {
+	LW_RESULT lwLoadD3DSettings(lwD3DCreateParam* param, std::string_view file) {
 		memset(param, 0, sizeof(lwD3DCreateParam));
 
 		char buf[LW_MAX_NAME];
 
+		const std::string fileStr{file};
 		auto readInt = [&](const char* section, const char* key) {
-			GetPrivateProfileString(section, key, "", buf, LW_MAX_NAME, file);
+			GetPrivateProfileString(section, key, "", buf, LW_MAX_NAME, fileStr.c_str());
 			return parseIntFromBuf(buf);
 		};
 
@@ -78,10 +79,11 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwSaveD3DSettings(const char* file, const lwD3DCreateParam* param) {
+	LW_RESULT lwSaveD3DSettings(std::string_view file, const lwD3DCreateParam* param) {
+		const std::string fileStr{file};
 		auto writeInt = [&](const char* section, const char* key, int value) {
 			const std::string s = std::format("{}", value);
-			WritePrivateProfileString(section, key, s.c_str(), file);
+			WritePrivateProfileString(section, key, s.c_str(), fileStr.c_str());
 		};
 
 		writeInt("D3DADAPTER", "adapter", param->adapter);

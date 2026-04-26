@@ -96,7 +96,7 @@ BOOL CSceneItem::_Create(int nObjTypeID, int nType) {
 	return TRUE;
 }
 
-int CSceneItem::Load(const char* file) {
+int CSceneItem::Load(std::string_view file) {
 	_IsSystem = false;
 	_IsShowName = false;
 	_nCharacterID = -1;

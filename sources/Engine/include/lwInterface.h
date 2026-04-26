@@ -79,8 +79,8 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIPoseCtrl : public lwInterface {
 	public:
-		virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		virtual LW_RESULT Save(const char* file) const PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT Save(std::string_view file) const PURE_METHOD;
 
 		virtual LW_RESULT InsertPose(DWORD id, const lwPoseInfo* pi, int num) PURE_METHOD;
 		virtual LW_RESULT ReplacePose(DWORD id, const lwPoseInfo* pi) PURE_METHOD;
@@ -111,8 +111,8 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataBone : public lwIAnimData {
 	public:
-		virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		virtual LW_RESULT Save(const char* file) const PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT Save(std::string_view file) const PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataMatrix : public lwIAnimData {
@@ -167,8 +167,8 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT CreateRunTimeDataBuffer() PURE_METHOD;
 		virtual LW_RESULT EnableRunTimeFrameBuffer(DWORD frame, DWORD flag) PURE_METHOD;
 		virtual LW_RESULT ExtractAnimData(lwIAnimDataBone* out_data) PURE_METHOD;
-		virtual LW_RESULT DumpRunTimeBoneData(const char* file) PURE_METHOD;
-		virtual LW_RESULT DumpInitInvMat(const char* file) PURE_METHOD;
+		virtual LW_RESULT DumpRunTimeBoneData(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT DumpInitInvMat(std::string_view file) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimCtrlMatrix : public lwIAnimCtrl {
@@ -204,15 +204,15 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIGeomObjInfo : public lwInterface {
 	public:
-		virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		virtual LW_RESULT Save(const char* file) PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT Save(std::string_view file) PURE_METHOD;
 		virtual lwMeshInfo* GetMeshInfo() PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIModelObjInfo : public lwInterface {
 	public:
-		virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		virtual LW_RESULT Save(const char* file) PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT Save(std::string_view file) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIHelperDummyObjInfo : public lwInterface {
@@ -221,11 +221,11 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIPrimitive : public lwInterface {
 	public:
-		virtual LW_RESULT Load(lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(lwMeshInfo* info) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(const lwResFileMesh* info) PURE_METHOD;
-		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path) PURE_METHOD;
-		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) PURE_METHOD;
+		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci) PURE_METHOD;
 
 		virtual LW_RESULT ExtractGeomObjInfo(lwIGeomObjInfo* info) PURE_METHOD;
@@ -273,7 +273,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual BYTE GetState(DWORD state) const PURE_METHOD;
 		virtual LW_RESULT SetTextureLOD(DWORD level) PURE_METHOD;
 		virtual LW_RESULT PlayDefaultAnimation(bool IsGlitched = false) PURE_METHOD;
-		virtual LW_RESULT ResetTexture(DWORD subset, DWORD stage, const char* file, const char* tex_path) PURE_METHOD;
+		virtual LW_RESULT ResetTexture(DWORD subset, DWORD stage, std::string_view file, std::string_view tex_path) PURE_METHOD;
 
 		virtual void setPixelShader(const std::string& filename) PURE_METHOD;
 	};
@@ -285,8 +285,8 @@ LW_STD_GETINTERFACE( cls )
 
 		virtual LW_RESULT Destroy() PURE_METHOD;
 
-		virtual LW_RESULT LoadBone(const char* file) PURE_METHOD;
-		virtual LW_RESULT LoadPrimitive(DWORD part_id, const char* file) PURE_METHOD;
+		virtual LW_RESULT LoadBone(std::string_view file) PURE_METHOD;
+		virtual LW_RESULT LoadPrimitive(DWORD part_id, std::string_view file) PURE_METHOD;
 		virtual LW_RESULT LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info) PURE_METHOD;
 		virtual LW_RESULT DestroyPrimitive(DWORD part_id) PURE_METHOD;
 		virtual LW_RESULT CheckPrimitive(DWORD part_id) PURE_METHOD;
@@ -330,7 +330,7 @@ LW_STD_GETINTERFACE( cls )
 	class LW_DECLSPEC_NOVTABLE lwIModel : public lwInterface {
 	public:
 		virtual LW_RESULT Load(lwIModelObjInfo* info) PURE_METHOD;
-		virtual LW_RESULT Load(const char* file, DWORD model_id = LW_INVALID_INDEX) PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file, DWORD model_id = LW_INVALID_INDEX) PURE_METHOD;
 		virtual LW_RESULT Update() PURE_METHOD;
 		virtual LW_RESULT Render() PURE_METHOD;
 		virtual LW_RESULT RenderPrimitive(DWORD id) PURE_METHOD;
@@ -344,14 +344,14 @@ LW_STD_GETINTERFACE( cls )
 
 		virtual LW_RESULT HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray) PURE_METHOD;
 		virtual LW_RESULT HitTestHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-										   const char* type_name) PURE_METHOD;
+										   std::string_view type_name) PURE_METHOD;
 		virtual LW_RESULT HitTestHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-											const char* type_name) PURE_METHOD;
+											std::string_view type_name) PURE_METHOD;
 		virtual LW_RESULT HitTestPrimitive(lwPickInfo* info, const lwVector3* org, const lwVector3* ray) PURE_METHOD;
 		virtual LW_RESULT HitTestPrimitiveHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-													const char* type_name) PURE_METHOD;
+													std::string_view type_name) PURE_METHOD;
 		virtual LW_RESULT HitTestPrimitiveHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-													 const char* type_name) PURE_METHOD;
+													 std::string_view type_name) PURE_METHOD;
 
 		virtual LW_RESULT PlayDefaultAnimation(bool IsGlitched = false) PURE_METHOD;
 
@@ -385,7 +385,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual void SetMatrix(const lwMatrix44* mat) PURE_METHOD;
 
 		virtual LW_RESULT Load(lwIGeomObjInfo* info) PURE_METHOD;
-		virtual LW_RESULT Load(const char* file, int arbitrary_flag = 0) PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file, int arbitrary_flag = 0) PURE_METHOD;
 		virtual LW_RESULT Update() PURE_METHOD;
 		virtual LW_RESULT Render() PURE_METHOD;
 		virtual LW_RESULT Destroy() PURE_METHOD;
@@ -678,7 +678,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT ScreenToWorld(lwVector3* org, lwVector3* ray, int x, int y) PURE_METHOD;
 		virtual LW_RESULT WorldToScreen(int* x, int* y, float* z, const lwVector3* v) PURE_METHOD;
 
-		virtual LW_RESULT DumpRenderState(const char* file) PURE_METHOD;
+		virtual LW_RESULT DumpRenderState(std::string_view file) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwITex : public lwInterface {
@@ -686,7 +686,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual int AddRef(int i) PURE_METHOD;
 		virtual int GetRef() PURE_METHOD;
 
-		virtual LW_RESULT LoadTexInfo(const lwTexInfo* info, const char* tex_path) PURE_METHOD;
+		virtual LW_RESULT LoadTexInfo(const lwTexInfo* info, std::string_view tex_path) PURE_METHOD;
 		// User-defined texture data (TEX_TYPE_DATA). Раньше пробрасывалось через
 		// `lwTexInfo::data`, но это поле было `void*` разного размера на x86/x64
 		// и ломало бинарный формат `.lgo/.lmo`. Теперь — отдельный API.
@@ -778,8 +778,8 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT BeginSet() PURE_METHOD;
 		virtual LW_RESULT EndSet() PURE_METHOD;
 
-		virtual LW_RESULT LoadMtlTex(lwMtlTexInfo* info, const char* tex_path) PURE_METHOD;
-		virtual LW_RESULT LoadTextureStage(const lwTexInfo* info, const char* tex_path) PURE_METHOD;
+		virtual LW_RESULT LoadMtlTex(lwMtlTexInfo* info, std::string_view tex_path) PURE_METHOD;
+		virtual LW_RESULT LoadTextureStage(const lwTexInfo* info, std::string_view tex_path) PURE_METHOD;
 		virtual LW_RESULT ExtractMtlTex(lwMtlTexInfo* info) PURE_METHOD;
 
 		virtual LW_RESULT DestroyTextureStage(DWORD stage) PURE_METHOD;
@@ -950,7 +950,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual lwIShaderDeclMgr* GetShaderDeclMgr() PURE_METHOD;
 		virtual LW_RESULT Init(DWORD vs_buf_size, DWORD decl_buf_size, DWORD ps_buf_size) PURE_METHOD;
 		virtual LW_RESULT RegisterVertexShader(DWORD type, BYTE* data, DWORD size) PURE_METHOD;
-		virtual LW_RESULT RegisterVertexShader(DWORD type, const char* file, DWORD binary_flag,
+		virtual LW_RESULT RegisterVertexShader(DWORD type, std::string_view file, DWORD binary_flag,
 											   const D3DXMACRO* defines = NULL) PURE_METHOD;
 		virtual LW_RESULT RegisterVertexDeclaration(DWORD type, D3DVERTEXELEMENT9* data) PURE_METHOD;
 		virtual LW_RESULT QueryVertexShader(IDirect3DVertexShaderX** ret_obj, DWORD type) PURE_METHOD;
@@ -965,12 +965,12 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT Destroy() PURE_METHOD;
 		virtual LW_RESULT RegisterSysMemTex(LW_HANDLE* handle, const lwSysMemTexInfo* info) PURE_METHOD;
 		virtual LW_RESULT QuerySysMemTex(lwSysMemTexInfo* info) PURE_METHOD;
-		virtual LW_RESULT QuerySysMemTex(lwSysMemTexInfo** info, const char* file) PURE_METHOD;
+		virtual LW_RESULT QuerySysMemTex(lwSysMemTexInfo** info, std::string_view file) PURE_METHOD;
 		virtual LW_RESULT GetSysMemTex(lwSysMemTexInfo** info, LW_HANDLE handle) PURE_METHOD;
 		virtual LW_RESULT UnregisterSysMemTex(LW_HANDLE handle) PURE_METHOD;
-		virtual LW_RESULT RegisterModelObjInfo(LW_HANDLE* handle, const char* file) PURE_METHOD;
-		virtual LW_RESULT RegisterModelObjInfo(LW_HANDLE handle, const char* file) PURE_METHOD;
-		virtual LW_RESULT QueryModelObjInfo(lwIModelObjInfo** info, const char* file) PURE_METHOD;
+		virtual LW_RESULT RegisterModelObjInfo(LW_HANDLE* handle, std::string_view file) PURE_METHOD;
+		virtual LW_RESULT RegisterModelObjInfo(LW_HANDLE handle, std::string_view file) PURE_METHOD;
+		virtual LW_RESULT QueryModelObjInfo(lwIModelObjInfo** info, std::string_view file) PURE_METHOD;
 		virtual LW_RESULT GetModelObjInfo(lwIModelObjInfo** info, LW_HANDLE handle) PURE_METHOD;
 		virtual LW_RESULT UnregisterModelObjInfo(LW_HANDLE handle) PURE_METHOD;
 		virtual void SetLimitModelObjInfo(DWORD lmt_size, DWORD lmt_time) PURE_METHOD;
@@ -1039,12 +1039,12 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_ULONG QueryTexRefCnt(lwITex* obj) PURE_METHOD;
 
 		virtual LW_RESULT QueryMesh(DWORD* ret_id, const lwResFileMesh* info) PURE_METHOD;
-		virtual LW_RESULT QueryTex(DWORD* ret_id, const char* file_name) PURE_METHOD;
+		virtual LW_RESULT QueryTex(DWORD* ret_id, std::string_view file_name) PURE_METHOD;
 		virtual LW_RESULT QueryAnimCtrl(DWORD* ret_id, const lwResFileAnimData* info) PURE_METHOD;
 
 		virtual LW_RESULT RegisterObject(DWORD* ret_id, void* obj, DWORD type) PURE_METHOD;
 		virtual LW_RESULT UnregisterObject(void** ret_obj, DWORD id, DWORD type) PURE_METHOD;
-		virtual LW_RESULT QueryObject(void** ret_obj, DWORD type, const char* file_name) PURE_METHOD;
+		virtual LW_RESULT QueryObject(void** ret_obj, DWORD type, std::string_view file_name) PURE_METHOD;
 		virtual LW_RESULT QueryModelObject(void** ret_obj, DWORD model_id) PURE_METHOD;
 		virtual LW_RESULT LoseDevice() PURE_METHOD;
 		virtual LW_RESULT ResetDevice() PURE_METHOD;
@@ -1355,10 +1355,10 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT GetSubsetNum(DWORD* subset_num) PURE_METHOD;
 
 		virtual LW_RESULT Destroy() PURE_METHOD;
-		virtual LW_RESULT Load(lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(lwMeshInfo* info) PURE_METHOD;
-		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path) PURE_METHOD;
-		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) PURE_METHOD;
+		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci) PURE_METHOD;
 		virtual LW_RESULT Copy(lwINodePrimitive* src_obj) PURE_METHOD;
 
@@ -1418,7 +1418,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT InsertTreeNode(lwITreeNode* parent_node, lwITreeNode* prev_node, lwITreeNode* node)
 		PURE_METHOD;
 		virtual LW_RESULT RemoveTreeNode(lwITreeNode* node) PURE_METHOD;
-		virtual LW_RESULT Load(const char* file, DWORD flag, lwITreeNode* parent_node) PURE_METHOD;
+		virtual LW_RESULT Load(std::string_view file, DWORD flag, lwITreeNode* parent_node) PURE_METHOD;
 	};
 
 
@@ -1501,12 +1501,12 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIFile : public lwInterface {
 	public:
-		virtual LW_RESULT CreateFile(const char* file, DWORD access_flag, DWORD share_mode,
+		virtual LW_RESULT CreateFile(std::string_view file, DWORD access_flag, DWORD share_mode,
 									 LPSECURITY_ATTRIBUTES secu_attr, DWORD creation_flag,
 									 DWORD attributes_flag = FILE_FLAG_SEQUENTIAL_SCAN) PURE_METHOD;
-		virtual LW_RESULT CreateDirectory(const char* path, LPSECURITY_ATTRIBUTES attr) PURE_METHOD;
-		virtual LW_RESULT LoadFileBuffer(const char* file, lwIBuffer* buf) PURE_METHOD;
-		virtual LW_RESULT SaveFileBuffer(const char* file, lwIBuffer* buf) PURE_METHOD;
+		virtual LW_RESULT CreateDirectory(std::string_view path, LPSECURITY_ATTRIBUTES attr) PURE_METHOD;
+		virtual LW_RESULT LoadFileBuffer(std::string_view file, lwIBuffer* buf) PURE_METHOD;
+		virtual LW_RESULT SaveFileBuffer(std::string_view file, lwIBuffer* buf) PURE_METHOD;
 		virtual LW_RESULT Close() PURE_METHOD;
 		virtual LW_RESULT Read(void* buf, DWORD in_size, DWORD* out_size) PURE_METHOD;
 		virtual LW_RESULT Write(const void* buf, DWORD in_size, DWORD* out_size) PURE_METHOD;
@@ -1514,7 +1514,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual HANDLE GetHandle() const PURE_METHOD;
 		virtual const std::string& GetFileName() PURE_METHOD;
 		virtual LW_RESULT GetCreationTime(SYSTEMTIME* st) PURE_METHOD;
-		virtual LW_RESULT CheckExisting(const char* path, DWORD check_directory) PURE_METHOD;
+		virtual LW_RESULT CheckExisting(std::string_view path, DWORD check_directory) PURE_METHOD;
 
 		// Seek Description
 		// flag[in]: FILE_BEGIN / FILE_CURRENT / FILE_END
@@ -1545,29 +1545,17 @@ LW_STD_GETINTERFACE( cls )
 	public:
 		virtual void SetDevice(IDirect3DDeviceX* dev) PURE_METHOD;
 		virtual LW_RESULT Clear() PURE_METHOD;
-		virtual LW_RESULT LoadOriginTexture(const char* file, DWORD mip_level, D3DFORMAT format, DWORD colorkey)
+		virtual LW_RESULT LoadOriginTexture(std::string_view file, DWORD mip_level, D3DFORMAT format, DWORD colorkey)
 		PURE_METHOD;
-		virtual LW_RESULT Convert(const char* file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level,
+		virtual LW_RESULT Convert(std::string_view file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level,
 								  DWORD src_colorkey) PURE_METHOD;
-		virtual LW_RESULT Save(const char* file) PURE_METHOD;
+		virtual LW_RESULT Save(std::string_view file) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIDirectoryBrowser : public lwInterface {
 	public:
 		virtual void SetBrowseProc(lwDirectoryBrowserProc proc, void* param) PURE_METHOD;
-		virtual LW_RESULT Browse(const char* file, DWORD flag) PURE_METHOD;
-	};
-
-	class LW_DECLSPEC_NOVTABLE lwIConsole : public lwInterface {
-	public:
-		virtual LW_RESULT Alloc() PURE_METHOD;
-		virtual LW_RESULT Create(DWORD desired_access = GENERIC_READ | GENERIC_WRITE, DWORD share_mode = 0,
-								 const SECURITY_ATTRIBUTES* security_attr = 0) PURE_METHOD;
-		virtual LW_RESULT Destroy() PURE_METHOD;
-		virtual LW_RESULT Write(const char* str, ...) PURE_METHOD;
-		virtual LW_RESULT SetBufferSize(DWORD row, DWORD column) PURE_METHOD;
-		virtual HANDLE GetHandle() const PURE_METHOD;
-		virtual BOOL SetActive() PURE_METHOD;
+		virtual LW_RESULT Browse(std::string_view file, DWORD flag) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIThreadPool : public lwInterface {
@@ -1613,30 +1601,6 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT BindDevice() PURE_METHOD;
 		virtual lwIndexBufferInfo* GetBufferInfo() PURE_METHOD;
 		virtual IDirect3DIndexBufferX* GetStreamBuffer() PURE_METHOD;
-	};
-
-	class LW_DECLSPEC_NOVTABLE lwITextFileLoader : public lwInterface {
-	public:
-		virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		virtual LW_RESULT Close() PURE_METHOD;
-		virtual LW_RESULT Eof() const PURE_METHOD;
-		virtual LW_RESULT SeekWord(const char* str, const char* termi = 0) PURE_METHOD;
-		virtual int SkipSpace() PURE_METHOD;
-		virtual int SkipLine(int num = 1) PURE_METHOD;
-		virtual int SkipWord(int num = 1) PURE_METHOD;
-		virtual char* GetWord(char* buf, int be_remove = 1) PURE_METHOD;
-		virtual char* GetLine(char* buf, int len = 256) PURE_METHOD;
-		virtual int GetWordSeq(char* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(short* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(int* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(long* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(float* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(double* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(char** buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(unsigned int* buf, int num) PURE_METHOD;
-		virtual int GetWordSeq(unsigned long* buf, int num) PURE_METHOD;
-		virtual int GetStringChunk(char* buf, int len, const char* termi) PURE_METHOD;
-		virtual int GetIntWithStrHex() PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwISystemInfo : public lwInterface {
@@ -1703,7 +1667,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT GetBoneIndexSequence(DWORD** data_seq, DWORD* data_num) PURE_METHOD;
 		virtual LW_RESULT LoadFile(lwIFileStream* fs) PURE_METHOD;
 		virtual LW_RESULT SaveFile(lwIFileStream* fs) PURE_METHOD;
-		virtual LW_RESULT DumpData(const char* file) PURE_METHOD;
+		virtual LW_RESULT DumpData(std::string_view file) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwICoordinateSys : public lwInterface {
@@ -1738,7 +1702,7 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIFileStream : public lwInterface {
 	public:
-		virtual LW_RESULT Open(const char* file, const lwFileStreamOpenInfo* info) PURE_METHOD;
+		virtual LW_RESULT Open(std::string_view file, const lwFileStreamOpenInfo* info) PURE_METHOD;
 		virtual LW_RESULT Close() PURE_METHOD;
 		virtual LW_RESULT Read(void* buf, DWORD in_size, DWORD* out_size) PURE_METHOD;
 		virtual LW_RESULT Write(const void* buf, DWORD in_size, DWORD* out_size) PURE_METHOD;

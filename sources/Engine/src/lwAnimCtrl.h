@@ -141,8 +141,8 @@ LW_BEGIN
 		LW_RESULT EnableRunTimeFrameBuffer(DWORD frame, DWORD flag);
 
 		LW_RESULT ExtractAnimData(lwIAnimDataBone* out_data);
-		LW_RESULT DumpRunTimeBoneData(const char* file);
-		LW_RESULT DumpInitInvMat(const char* file);
+		LW_RESULT DumpRunTimeBoneData(std::string_view file);
+		LW_RESULT DumpInitInvMat(std::string_view file);
 	};
 
 	class lwAnimCtrlMatrix : public lwIAnimCtrlMatrix, public lwAnimDataMatrix, public lwAnimCtrl {
@@ -354,9 +354,9 @@ LW_BEGIN
 		LW_RESULT GetRunTimeOpacity(float* opacity);
 	};
 
-	LW_RESULT lwLoadAnimCtrlFromGenericFile(lwAnimCtrl* ctrl, DWORD ctrl_type, const char* file);
-	LW_RESULT lwLoadAnimCtrlFromGeometryFile(lwAnimCtrl* ctrl, DWORD ctrl_type, const char* file);
-	LW_RESULT lwLoadAnimCtrlFromModelFile(lwAnimCtrl* ctrl, DWORD ctrl_type, const char* file, DWORD obj_id);
+	LW_RESULT lwLoadAnimCtrlFromGenericFile(lwAnimCtrl* ctrl, DWORD ctrl_type, std::string_view file);
+	LW_RESULT lwLoadAnimCtrlFromGeometryFile(lwAnimCtrl* ctrl, DWORD ctrl_type, std::string_view file);
+	LW_RESULT lwLoadAnimCtrlFromModelFile(lwAnimCtrl* ctrl, DWORD ctrl_type, std::string_view file, DWORD obj_id);
 
 	struct lwLight {
 		DWORD type;
@@ -390,7 +390,7 @@ LW_BEGIN
 			LW_SAFE_DELETE_A(_data_seq);
 		}
 
-		LW_RESULT Load(const char* file);
+		LW_RESULT Load(std::string_view file);
 	};
 
 	class lwAnimCtrlLight : /*public lwAnimCtrl, public lwIAnimCtrlLight,*/ public lwAnimDataLight {

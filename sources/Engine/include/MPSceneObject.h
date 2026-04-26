@@ -20,7 +20,7 @@ LW_BEGIN
 		MPSceneObject(lwISysGraphics* sys_graphics);
 		virtual ~MPSceneObject();
 
-		LW_RESULT Load(const char* file, DWORD model_id = LW_INVALID_INDEX);
+		LW_RESULT Load(std::string_view file, DWORD model_id = LW_INVALID_INDEX);
 
 
 		void FrameMove();
@@ -35,14 +35,14 @@ LW_BEGIN
 								 float start_frame = 0.0f, float velocity = 1.0f);
 
 		LW_RESULT HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray);
-		LW_RESULT HitTestHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const char* type_name);
+		LW_RESULT HitTestHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray, std::string_view type_name);
 		LW_RESULT HitTestHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-									const char* type_name);
+									std::string_view type_name);
 		LW_RESULT HitTestPrimitive(lwPickInfo* info, const lwVector3* org, const lwVector3* ray);
 		LW_RESULT HitTestPrimitiveHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-											const char* type_name);
+											std::string_view type_name);
 		LW_RESULT HitTestPrimitiveHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-											 const char* type_name);
+											 std::string_view type_name);
 
 		lwIPrimitive* GetPrimitive(DWORD id);
 

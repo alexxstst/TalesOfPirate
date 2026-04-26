@@ -4,6 +4,9 @@
 #include "lwDeviceObject.h"
 #include "lwErrorCode.h"
 #include "lwStdInc.h"
+#include "EngineDiag.h"
+
+using Corsairs::Engine::Diagnostic::EngineDiag;
 
 LW_BEGIN
 	LW_RESULT lwStreamObject::Init(DWORD buffer_size) {
@@ -837,11 +840,13 @@ LW_BEGIN
 	lwDynamicStream::~lwDynamicStream() {
 	}
 
-	LW_RESULT lwDynamicStream::GetEntryOffset(DWORD* offset, DWORD size, DWORD stride) {
+	LW_RESULT lwDynamicStream::GetEntryOffset(DWORD* offset, DWORD size, DWORD stride, int* fail_branch) {
 		DWORD v_size = GetValidSize();
 
-		if (v_size < size)
+		if (v_size < size) {
+			if (fail_branch) *fail_branch = 1;
 			return LW_RET_FAILED;
+		}
 
 		DWORD o = (GetFreeAddr() / stride) * stride;
 
@@ -850,11 +855,14 @@ LW_BEGIN
 		}
 
 
-		if ((o + size) >= GetTotalSize())
+		if ((o + size) >= GetTotalSize()) {
+			if (fail_branch) *fail_branch = 2;
 			return LW_RET_FAILED;
+		}
 
 		*offset = o;
 
+		if (fail_branch) *fail_branch = 0;
 		return LW_RET_OK;
 	}
 
@@ -886,6 +894,12 @@ LW_BEGIN
 		_free_addr = 0;
 		_fvf = fmt;
 
+		if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+			ToLogService("vbstream", LogLevel::Debug,
+						 "[VB::Create] total={}, fvf=0x{:08X}",
+						 buf_size, static_cast<std::uint32_t>(fmt));
+		}
+
 		return ResetDevice();
 	}
 
@@ -908,17 +922,33 @@ LW_BEGIN
 		DWORD lock_flag = D3DLOCK_NOOVERWRITE;
 		D3DLOCK_TYPE* lock_buf = 0;
 
-		if (LW_RESULT r = GetEntryOffset(&offset, size, stride); LW_FAILED(r)) {
-			ToLogService("errors", LogLevel::Warning,
-						 "[{}] GetEntryOffset(VB first) failed; resetting and retrying: size={}, stride={}, ret={}",
-						 __FUNCTION__, size, stride, static_cast<long long>(r));
+		int fail_branch = 0;
+		//  Wrap кольцевого VB — штатная часть алгоритма dynamic VB в DX9.
+		//  Логируется в канал "vbstream" уровня Debug только при
+		//  EngineDiag::IsStreamPoolEnabled() (флаг [Logging] streampool в ini).
+		//  Без флага — никаких ToLogService в hot-path.
+		const DWORD pre_free_addr = _free_addr;
+		const DWORD pre_free_size = _free_size;
+
+		if (LW_RESULT r = GetEntryOffset(&offset, size, stride, &fail_branch); LW_FAILED(r)) {
+			if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+				ToLogService("vbstream", LogLevel::Debug,
+							 "[VB::Bind] wrap: branch={}, total={}, free_addr_before={}, free_size_before={}, size={}, stride={}",
+							 fail_branch == 1 ? "A" : (fail_branch == 2 ? "B" : "?"),
+							 _total_size, pre_free_addr, pre_free_size, size, stride);
+			}
+
 			_free_addr = 0;
 			_free_size = _total_size;
 
-			if (LW_RESULT r2 = GetEntryOffset(&offset, size, stride); LW_FAILED(r2)) {
-				ToLogService("errors", LogLevel::Error,
-							 "[{}] GetEntryOffset(VB retry) failed: size={}, stride={}, ret={}",
-							 __FUNCTION__, size, stride, static_cast<long long>(r2));
+			int retry_branch = 0;
+			if (LW_RESULT r2 = GetEntryOffset(&offset, size, stride, &retry_branch); LW_FAILED(r2)) {
+				if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+					ToLogService("vbstream", LogLevel::Debug,
+								 "[VB::Bind] retry failed: branch={}, total={}, size={}, stride={}",
+								 retry_branch == 1 ? "A" : (retry_branch == 2 ? "B" : "?"),
+								 _total_size, size, stride);
+				}
 				return LW_RET_FAILED;
 			}
 
@@ -966,6 +996,12 @@ LW_BEGIN
 		_free_addr = 0;
 		_fvf = fmt;
 
+		if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+			ToLogService("vbstream", LogLevel::Debug,
+						 "[IB::Create] total={}, fmt=0x{:08X}",
+						 buf_size, static_cast<std::uint32_t>(fmt));
+		}
+
 		return ResetDevice();
 	}
 
@@ -988,17 +1024,30 @@ LW_BEGIN
 		DWORD lock_flag = D3DLOCK_NOOVERWRITE;
 		D3DLOCK_TYPE* lock_buf = 0;
 
-		if (LW_RESULT r = GetEntryOffset(&offset, size, stride); LW_FAILED(r)) {
-			ToLogService("errors", LogLevel::Warning,
-						 "[{}] GetEntryOffset(IB first) failed; resetting and retrying: size={}, stride={}, ret={}",
-						 __FUNCTION__, size, stride, static_cast<long long>(r));
+		int fail_branch = 0;
+		//  Wrap кольцевого IB — см. комментарий в lwDynamicStreamVB::Bind.
+		const DWORD pre_free_addr = _free_addr;
+		const DWORD pre_free_size = _free_size;
+
+		if (LW_RESULT r = GetEntryOffset(&offset, size, stride, &fail_branch); LW_FAILED(r)) {
+			if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+				ToLogService("vbstream", LogLevel::Debug,
+							 "[IB::Bind] wrap: branch={}, total={}, free_addr_before={}, free_size_before={}, size={}, stride={}",
+							 fail_branch == 1 ? "A" : (fail_branch == 2 ? "B" : "?"),
+							 _total_size, pre_free_addr, pre_free_size, size, stride);
+			}
+
 			_free_addr = 0;
 			_free_size = _total_size;
 
-			if (LW_RESULT r2 = GetEntryOffset(&offset, size, stride); LW_FAILED(r2)) {
-				ToLogService("errors", LogLevel::Error,
-							 "[{}] GetEntryOffset(IB retry) failed: size={}, stride={}, ret={}",
-							 __FUNCTION__, size, stride, static_cast<long long>(r2));
+			int retry_branch = 0;
+			if (LW_RESULT r2 = GetEntryOffset(&offset, size, stride, &retry_branch); LW_FAILED(r2)) {
+				if (EngineDiag::Instance().IsStreamPoolEnabled()) {
+					ToLogService("vbstream", LogLevel::Debug,
+								 "[IB::Bind] retry failed: branch={}, total={}, size={}, stride={}",
+								 retry_branch == 1 ? "A" : (retry_branch == 2 ? "B" : "?"),
+								 _total_size, size, stride);
+				}
 				return LW_RET_FAILED;
 			}
 

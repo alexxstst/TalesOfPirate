@@ -87,7 +87,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD file_flag,
+	LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, std::string_view file, DWORD file_flag,
 												 const D3DXMACRO* defines) {
 		LW_RESULT ret = LW_RET_FAILED;
 
@@ -98,7 +98,7 @@ LW_BEGIN
 		ID3DXBuffer* buf_code = 0;
 		ID3DXBuffer* buf_error = 0;
 
-		FILE* fp = fopen(file, "rb");
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			goto __ret;
 
@@ -131,7 +131,7 @@ LW_BEGIN
 					&buf_error); FAILED(hr)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] D3DXAssembleShaderFromFile failed: file={}, hr=0x{:08X}",
-								 __FUNCTION__, file ? file : "(null)", static_cast<std::uint32_t>(hr));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<std::uint32_t>(hr));
 					goto __ret;
 				}
 			}
@@ -148,7 +148,7 @@ LW_BEGIN
 					NULL); FAILED(hr)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] D3DXCompileShaderFromFile failed: file={}, hr=0x{:08X}",
-								 __FUNCTION__, file ? file : "(null)", static_cast<std::uint32_t>(hr));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<std::uint32_t>(hr));
 					goto __ret;
 				}
 			}
@@ -159,7 +159,7 @@ LW_BEGIN
 					FAILED(hr)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] D3DXAssembleShader failed: file={}, size={}, hr=0x{:08X}",
-								 __FUNCTION__, file ? file : "(null)", size, static_cast<std::uint32_t>(hr));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), size, static_cast<std::uint32_t>(hr));
 					goto __ret;
 				}
 			}
@@ -188,7 +188,7 @@ LW_BEGIN
 											  : "(no error buffer)";
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] D3DXCompileShader failed: file={}, size={}, hr=0x{:08X}, err={}",
-								 __FUNCTION__, file ? file : "(null)", size, static_cast<std::uint32_t>(hr), err_msg);
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), size, static_cast<std::uint32_t>(hr), err_msg);
 					goto __ret;
 				}
 			}

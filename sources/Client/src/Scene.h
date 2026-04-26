@@ -49,15 +49,15 @@ struct stSceneInitParam {
 	stSceneInitParam() : nUITemplete(-1), nMaxCha(0), nMaxObj(0), nMaxItem(0), nMaxEff(0), nTypeID(0) {
 	}
 
-	std::string strName; //
-	int nTypeID; //
-	std::string strMapFile; //
-	int nUITemplete; // UI
+	std::string strName{}; //
+	int nTypeID{}; //
+	std::string strMapFile{}; //
+	int nUITemplete{}; // UI
 
-	int nMaxCha; // ,,
-	int nMaxObj; //
-	int nMaxItem; //
-	int nMaxEff; //
+	int nMaxCha{}; // ,,
+	int nMaxObj{}; //
+	int nMaxItem{}; //
+	int nMaxEff{}; //
 };
 
 
@@ -289,7 +289,7 @@ public:
 	// nType:
 	//  0:; 1:1223142
 	CSceneItem* AddSceneItem(int nScriptID, int nType);
-	CSceneItem* AddSceneItem(const char* file);
+	CSceneItem* AddSceneItem(std::string_view file);
 
 	CSceneObj* GetSceneObj(int nArrayID);
 	CSceneItem* GetSceneItem(int nArrayID);
@@ -387,7 +387,7 @@ public:
 		return _nShowChair;
 	}
 
-	bool LoadMap(const char* file);
+	bool LoadMap(std::string_view file);
 
 	//@lemon add for search path;
 	//BYTE*			GetTempTerrain(int iCurX, int iCurY);
@@ -539,11 +539,11 @@ public:
 	std::unique_ptr<CPugMgr> _pcPugMgr;
 
 	SceneLight* _pSceneLightArray{};
-	BOOL _bLightEnable[3]; // 0: parallel light, 1&2: point light
-	std::list<int> _SceneObjIdx[MAX_SCENEOBJ_TYPE];
+	BOOL _bLightEnable[3]{}; // 0: parallel light, 1&2: point light
+	std::list<int> _SceneObjIdx[MAX_SCENEOBJ_TYPE]{};
 
 	//lemon add@2004.10.29
-	S_BVECTOR<int> _vecTempShade;
+	S_BVECTOR<int> _vecTempShade{};
 
 	std::size_t _nShadeCnt{};
 	std::size_t _nEffCnt{};
@@ -552,8 +552,8 @@ public:
 	std::size_t _nSceneItemCnt{};
 	std::size_t _nSceneLightCnt{};
 
-	D3DXVECTOR3 _vMousePos;
-	int _nMouseX, _nMouseY; // ,
+	D3DXVECTOR3 _vMousePos{};
+	int _nMouseX{}, _nMouseY{}; // ,
 
 	static e3DMouseState _e3DMouseState;
 	static BOOL _bShowMinimap;
@@ -567,18 +567,18 @@ public:
 	static float _fSoundSize; //
 	static bool _IsUseSound;
 
-	BOOL _bShowTerrain;
-	DWORD _dwChaTEXFilter;
-	BOOL _bShowSceneObj;
-	BOOL _bShowSceneItem;
-	BOOL _bEnableSceneObjCulling;
+	BOOL _bShowTerrain{};
+	DWORD _dwChaTEXFilter{};
+	BOOL _bShowSceneObj{};
+	BOOL _bShowSceneItem{};
+	BOOL _bEnableSceneObjCulling{};
 
-	int _nShowChair;
-	POINT _HitBuf;
+	int _nShowChair{};
+	POINT _HitBuf{};
 
 protected: //
-	stSceneInitParam _stInit;
-	int _nSceneTypeID;
+	stSceneInitParam _stInit{};
+	int _nSceneTypeID{};
 
 protected:
 	static CCharacter* _pMainCha;

@@ -276,7 +276,7 @@ UI_LoadButtonImage( btnClose, "texture/ui/PublicC.tga", 14, 14, 116, 175, TRUE )
 UI_SetButtonModalResult( btnClose, BUTTON_CLOSE )
 
 labOwnerName = UI_CreateCompent( frmNPCstorage, LABELEX_TYPE, "labOwnerName", 119, 12, 54, 42 )
-UI_SetCaption( labOwnerName, "�;;;;;;;�ר��" )
+UI_SetCaption( labOwnerName, "Personal Storage" )
 UI_SetTextColor( labOwnerName, COLOR_BLACK )
 UI_SetLabelExFont( labOwnerName, DEFAULT_FONT, TRUE, COLOR_WHITE )
 

@@ -1,6 +1,9 @@
 ﻿#include "stdafx.h"
 #include "Scene.h"
 #include "DebugStateSystem.h"
+#include "EngineDiag.h"
+
+using Corsairs::Engine::Diagnostic::EngineDiag;
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneItem.h"
@@ -147,9 +150,20 @@ void CGameScene::_RecordRBO() {
 }
 
 void CGameScene::_ReadRBO() {
-	// bug//by clp
+	const std::string rboPath = "map\\" + _stInit.strMapFile + ".rbo";
+	if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+		ToLogService("scene", LogLevel::Debug, "_ReadRBO: opening {}", rboPath);
+	}
+
 	_reallyBigObjectList.clear();
-	ifstream file(("map\\" + _stInit.strMapFile + ".rbo").c_str());
+	ifstream file(rboPath.c_str());
+	if (!file.is_open()) {
+		if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+			ToLogService("scene", LogLevel::Debug, "_ReadRBO: file not found, skipping");
+		}
+		return;
+	}
+
 	struct ReallyBigObjectInfo info;
 	char c1 = file.get();
 	char c2 = file.get();
@@ -162,11 +176,12 @@ void CGameScene::_ReadRBO() {
 		file.putback(c1);
 	}
 
+	std::int32_t loaded = 0;
+	std::int32_t skipped = 0;
 	while (file >> info) {
 		CSceneObjInfo* pInfo = GetSceneObjInfo(info.typeID);
 		CSceneObj* pObj = AddSceneObj(info.typeID);
 
-		//
 		if (pObj) {
 			AddRBO(pObj);
 			pObj->setHeightOff(info.position.z);
@@ -179,9 +194,16 @@ void CGameScene::_ReadRBO() {
 			if (nonVisible) {
 				pObj->SetHide(TRUE);
 			}
+			++loaded;
+		}
+		else {
+			++skipped;
 		}
 	}
 	file.close();
+	if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+		ToLogService("scene", LogLevel::Debug, "_ReadRBO: done, loaded={}, skipped={}", loaded, skipped);
+	}
 }
 
 void CGameScene::SetupVertexFog(MPIDeviceObject* dev_obj, float Start, float End, DWORD Color, DWORD Mode,
@@ -1149,12 +1171,12 @@ int CGameScene::GetValidSceneObjCnt() {
 }
 
 bool CGameScene::_CreateMemory() {
-	ToLogService("common", "Create - Map {}, Eff: {}, Cha: {}, Obj: {}, Item: {}", _stInit.strMapFile.c_str(),
+	ToLogService("common", "Create - Map {}, Eff: {}, Cha: {}, Obj: {}, Item: {}", _stInit.strMapFile,
 				 _stInit.nMaxEff, _stInit.nMaxCha, _stInit.nMaxObj, _stInit.nMaxItem);
-	ToLogService("common", "Creatememory {}", _stInit.strMapFile.c_str());
+	ToLogService("common", "Creatememory {}", _stInit.strMapFile);
 	_pMainCha = NULL;
 
-	LoadMap(_stInit.strMapFile.c_str());
+	LoadMap(_stInit.strMapFile);
 
 	_nChaCnt = 0;
 	_nSceneObjCnt = 0;
@@ -1269,11 +1291,7 @@ bool CGameScene::_CreateMemory() {
 	_pcPugMgr = std::make_unique<CPugMgr>();
 	_pcPugMgr->InitMemory(GetTerrain());
 
-	ToLogService("common", "CreateShadeArray");
-	ToLogService("common", "init ok");
-
 	_ReadRBO();
-
 	return true;
 }
 
@@ -1619,11 +1637,11 @@ void CGameScene::Reload() {
 	_Init();
 }
 
-bool CGameScene::LoadMap(const char* file) {
-	string strMapFile = file;
+bool CGameScene::LoadMap(std::string_view file) {
+	string strMapFile{file};
 	if (strMapFile.empty()) return false;
 
-	_pMapInfo = ::GetMapInfo(file);
+	_pMapInfo = ::GetMapInfo(std::string{file}.c_str());
 
 	_pTerrain = std::make_unique<MPTerrain>();
 	// g_ObjInfluence.SetTerrain( _pTerrain );

@@ -88,7 +88,7 @@ public:
 		LW_SAFE_DELETE(dummy_obj);
 	}
 
-	BOOL CreateDrunkDummy(const char* file) {
+	BOOL CreateDrunkDummy(std::string_view file) {
 		dummy_obj = LW_NEW(MPSceneItem);
 		dummy_obj->Load(file);
 		dummy_obj->PlayDefaultAnimation();
@@ -188,11 +188,12 @@ public:
 	void Destroy();
 	virtual int LoadCha(DWORD type_id, DWORD bone_id, const DWORD* part_buf);
 	virtual int LoadCha(const MPChaLoadInfo* info);
-	virtual int ChangePart(DWORD id, const char* file);
+	virtual int LoadCha(const MPChaLoadInfo* info, DWORD type_id);
+	virtual int ChangePart(DWORD id, std::string_view file);
 	virtual int ChangePart(DWORD part_id, DWORD tab_id);
 	virtual int ChangePart(DWORD tab_id);
 	virtual int ReCreate(DWORD type_id);
-	virtual int LoadPart(DWORD part_id, const char* file);
+	virtual int LoadPart(DWORD part_id, std::string_view file);
 	virtual int LoadPart(DWORD part_id, DWORD id);
 	int LoadPose();
 	virtual int DestroyPart(DWORD id);

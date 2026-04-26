@@ -444,8 +444,8 @@ LW_BEGIN
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file) const;
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file) const;
 		LW_RESULT Destroy();
 
 		LW_RESULT Copy(const lwAnimDataBone* src);
@@ -515,8 +515,8 @@ LW_BEGIN
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file) const;
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file) const;
 		LW_RESULT Copy(const lwAnimDataMatrix* src);
 
 		DWORD GetDataSize() const;
@@ -591,8 +591,8 @@ LW_BEGIN
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file) const;
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file) const;
 
 		LW_RESULT Copy(const lwAnimDataTexUV* src);
 
@@ -631,8 +631,8 @@ LW_BEGIN
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file) const;
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file) const;
 
 		DWORD GetDataSize() const;
 	};
@@ -764,8 +764,8 @@ LW_BEGIN
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp);
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file);
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file);
 		DWORD GetDataSize() const;
 
 		virtual lwMeshInfo* GetMeshInfo() {
@@ -806,14 +806,14 @@ LW_BEGIN
 			}
 		}
 
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file);
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file);
 
 		LW_RESULT SortGeomObjInfoWithID();
 
 		DWORD GetDataSize();
 
-		static LW_RESULT GetHeader(lwModelObjInfoHeader* header_seq, DWORD* header_num, const char* file);
+		static LW_RESULT GetHeader(lwModelObjInfoHeader* header_seq, DWORD* header_num, std::string_view file);
 	};
 
 	typedef lwModelObjInfo::lwModelObjInfoHeader lwModelObjInfoHeader;
@@ -928,8 +928,8 @@ LW_BEGIN
 		virtual ~lwModelInfo();
 
 		LW_RESULT Destroy();
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file);
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file);
 		LW_RESULT SortChildWithID();
 	};
 

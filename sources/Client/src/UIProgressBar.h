@@ -51,7 +51,7 @@ namespace GUI {
 		void Start(DWORD time);
 
 		// 
-		bool LoadImage(const char* file, int w = 32, int h = 32, bool isHorizontal = true);
+		bool LoadImage(std::string_view file, int w = 32, int h = 32, bool isHorizontal = true);
 
 		virtual void SetAlpha(BYTE alpha) {
 			_pImage->SetAlpha(alpha);

@@ -67,12 +67,12 @@ LW_BEGIN
 		void EndLoad();
 		bool IsLoaded();
 
-		BOOL InitBone(const char* file);
-		LW_RESULT LoadBone(const char* file);
+		BOOL InitBone(std::string_view file);
+		LW_RESULT LoadBone(std::string_view file);
 		LW_RESULT Load(DWORD obj_id, DWORD group_id, DWORD* skin_id_seq, int load_bone = 1);
 		LW_RESULT Load(const MPChaLoadInfo* info);
 		LW_RESULT LoadPart(DWORD part_id, DWORD file_id);
-		LW_RESULT LoadPart(DWORD part_id, const char* file);
+		LW_RESULT LoadPart(DWORD part_id, std::string_view file);
 		LW_RESULT DestroyPart(DWORD part_id);
 
 		LW_RESULT PlayPose(const lwPlayPoseInfo* info);

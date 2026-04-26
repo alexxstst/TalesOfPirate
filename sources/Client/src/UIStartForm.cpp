@@ -1604,7 +1604,12 @@ void CStartMgr::FrameMove(DWORD dwTime) {
 		if (g_stUIBoat.GetHuman()) {
 			SItemGrid Data = g_stUIBoat.GetHuman()->GetPart().SLink[enumEQUIP_FAIRY];
 			if (Data.IsValid() && CGameScene::GetMainCha()) {
-				CItemRecord* pItemInfo = GetItemRecordInfo(Data.sID);
+				//  Слот SLink[enumEQUIP_FAIRY] может быть структурно валидным,
+				//  но содержать sID=0 (питомец не экипирован). Без этой проверки
+				//  GetItemRecordInfo(0) каждые 300мс генерирует MISS в канал
+				//  store_miss — поведение нормальное (питомца нет → форма
+				//  скрыта), но канал засоряется штатной проверкой.
+				CItemRecord* pItemInfo = (Data.sID != 0) ? GetItemRecordInfo(Data.sID) : nullptr;
 				if (!pItemInfo || pItemInfo->sType != enumItemTypePet) {
 					if (frmMainPet->GetIsShow()) {
 						frmMainPet->Hide();

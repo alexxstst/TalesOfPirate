@@ -1,5 +1,5 @@
 -- Create character selection scene
-nScene = SN_CreateScene( enumSelectChaScene, "ѡ������", "", FORM_SELECT, 100, 2, 2000, 300 )
+nScene = SN_CreateScene( enumSelectChaScene, "Character Selection Scene", "", FORM_SELECT, 100, 2, 2000, 300 )
 GP_GotoScene( nScene )
 
 SN_SetIsShowMinimap( FALSE )

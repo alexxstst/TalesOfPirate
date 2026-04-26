@@ -61,7 +61,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwItem::Load(const char* file, int arbitrary_flag) {
+	LW_RESULT lwItem::Load(std::string_view file, int arbitrary_flag) {
 		if (_obj) {
 			return LW_RET_FAILED;
 		}
@@ -115,7 +115,7 @@ LW_BEGIN
 			if (LW_RESULT r = imp->Load(&info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str(), &res); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->Load failed: path={}, file={}, ret={}",
-							 __FUNCTION__, path, file ? file : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, path, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 				return LW_RET_FAILED;
 			}
 

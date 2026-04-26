@@ -163,6 +163,7 @@
         <ClInclude Include="include\MPTerrainSet.h"/>
         <ClInclude Include="include\MPTextureSet.h"/>
         <ClInclude Include="include\TextureLog.h"/>
+        <ClInclude Include="include\EngineDiag.h"/>
         <ClInclude Include="include\TextureManager.h"/>
         <ClInclude Include="include\MPTile.h"/>
         <ClInclude Include="include\mygraph.h"/>
@@ -173,7 +174,6 @@
         <ClInclude Include="src\lwAnimCtrlObj.h"/>
         <ClInclude Include="src\lwAnimKeySetPRS.h"/>
         <ClInclude Include="src\lwCamera.h"/>
-        <ClInclude Include="src\lwConsole.h"/>
         <ClInclude Include="src\lwCoordinateSys.h"/>
         <ClInclude Include="src\lwD3DSettings.h"/>
         <ClInclude Include="src\lwDDS.h"/>
@@ -224,7 +224,6 @@
     </ItemGroup>
     <ItemGroup>
         <ClCompile Include="src\d3dutil.cpp"/>
-        <ClCompile Include="src\dxutil.cpp"/>
         <ClCompile Include="src\EffectFile.cpp"/>
         <ClCompile Include="src\I_Effect.cpp"/>
         <ClCompile Include="src\ImageLoader.cpp"/>
@@ -237,7 +236,6 @@
             <WarningLevel>TurnOffAllWarnings</WarningLevel>
         </ClCompile>
         <ClCompile Include="src\lwCamera.cpp"/>
-        <ClCompile Include="src\lwConsole.cpp"/>
         <ClCompile Include="src\lwCoordinateSys.cpp"/>
         <ClCompile Include="src\lwD3DSettings.cpp"/>
         <ClCompile Include="src\lwDDSFile.cpp"/>
@@ -302,6 +300,7 @@
         <ClCompile Include="src\InputSystem.cpp"/>
         <ClCompile Include="src\MPGameApp.cpp"/>
         <ClCompile Include="src\TextureLog.cpp"/>
+        <ClCompile Include="src\EngineDiag.cpp"/>
         <ClCompile Include="src\TextureManager.cpp"/>
         <ClCompile Include="src\MPMap.cpp"/>
         <ClCompile Include="src\MPMapData.cpp"/>

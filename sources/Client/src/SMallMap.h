@@ -266,7 +266,7 @@ public:
 		//MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 		for (int n = 0; n < TEXNUM; n++) {
 #ifdef MGR
-			if (FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A8R8G8B8))) {
+			if (FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], std::string_view{}, D3DFMT_A8R8G8B8))) {
 				ToLogService("errors", LogLevel::Error, "msg{}", pszName[n]);
 				return FALSE;
 			}
@@ -741,7 +741,7 @@ public:
 		};
 		MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 		for (int n = 0; n < TEXNUM; n++) {
-			if (FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A8R8G8B8))) {
+			if (FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], std::string_view{}, D3DFMT_A8R8G8B8))) {
 				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(395), pszName[n]));
 				//return FALSE;
 				_pTex[n] = NULL;

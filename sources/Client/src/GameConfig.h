@@ -123,6 +123,28 @@ public:
 		return _textureLogEnabled;
 	}
 
+	//  [Logging] streampool — диагностический канал для lwDynamicStreamVB/IB.
+	//  При включении пишет в канал "vbstream" события Create/wrap с параметрами
+	//  кольцевого буфера (total/free_addr/free_size, branch=A|B). Нужно для
+	//  понимания, штатный ли это wrap-around или реальная нехватка места.
+	bool IsStreamPoolDiagEnabled() const {
+		return _streamPoolDiag;
+	}
+
+	//  [Logging] sceneload — диагностика загрузки сцены (канал "scene").
+	//  Срабатывает на CreateScene/CreateMemory/_ReadRBO раз на смену карты;
+	//  не спам, но включается только под отладку.
+	bool IsSceneLoadDiagEnabled() const {
+		return _sceneLoadDiag;
+	}
+
+	//  [Logging] move — диагностика ходьбы main_cha (канал "movie").
+	//  Каждый setPos главного героя пишет pos/target/dis/Tick/FPS.
+	//  Шумно — только под отладку механики передвижения.
+	bool IsMoveDiagEnabled() const {
+		return _moveDiag;
+	}
+
 	bool IsMoveClient() const {
 		return _moveClient;
 	}
@@ -388,6 +410,9 @@ private:
 	bool _consoleEnabled;
 	bool _consoleRequireSuperKey;
 	bool _textureLogEnabled;
+	bool _streamPoolDiag;
+	bool _sceneLoadDiag;
+	bool _moveDiag;
 
 	bool _moveClient;
 

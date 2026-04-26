@@ -17,7 +17,7 @@ SCameraMode CameraMode[4];
 int SN_CreateScene(int type, const std::string& name, const std::string& map_name, int ui, int max_cha, int max_obj,
 				   int max_item, int max_eff) {
 	if (type >= 0 && type < enumSceneEnd) {
-		stSceneInitParam param;
+		stSceneInitParam param{};
 		param.nTypeID = type;
 		param.strName = name;
 		param.strMapFile = map_name;

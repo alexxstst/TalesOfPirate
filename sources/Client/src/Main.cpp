@@ -45,6 +45,11 @@
 #include "ItemLitStore.h"
 #include "FontManager.h"
 #include "lwSystemInfo.h"
+#include "EngineDiag.h"
+#include "GameDiagnostic.h"
+
+using Corsairs::Engine::Diagnostic::EngineDiag;
+using Corsairs::Client::Diagnostic::GameDiagnostic;
 
 
 dbc::IniFile g_SystemIni;
@@ -133,6 +138,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	//  _resourcePreload + [Resources] preload_at_start). Должно быть до
 	//  любого вызова InitRes/InitRes3 у MPResManger.
 	CMPResManger::SetResourcePreload(GlobalAppConfig.IsResourcePreload());
+
+	//  Диагностические тоглы Engine из секции [Logging] system.ini.
+	EngineDiag::Instance().SetStreamPoolEnabled(GlobalAppConfig.IsStreamPoolDiagEnabled());
+	EngineDiag::Instance().SetSceneLoadEnabled(GlobalAppConfig.IsSceneLoadDiagEnabled());
+
+	//  Диагностические тоглы клиентской gameplay-части из той же секции.
+	GameDiagnostic::Instance().SetMoveEnabled(GlobalAppConfig.IsMoveDiagEnabled());
 
 	//  TextureLog (диагностический канал "textures") — runtime-тогл из
 	//  [TextureLog] enabled. По умолчанию выключен; при включении регистрируем

@@ -3,6 +3,9 @@
 #include "Scene.h"
 #include "GameApp.h"
 #include "actor.h"
+#include "GameDiagnostic.h"
+
+using Corsairs::Client::Diagnostic::GameDiagnostic;
 #include "NetProtocol.h"
 #include "PacketCmd.h"
 #include "GameAppMsg.h"
@@ -978,9 +981,6 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 	net::msg::deserialize(pk, msg);
 
 	uLong l_id = static_cast<uLong>(msg.worldId);
-	long lPacketId = static_cast<long>(msg.packetId);
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", lPacketId));
-
 	{
 		using namespace net::msg;
 
@@ -993,35 +993,45 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			SMoveInfo.nPointNum = static_cast<int>(move.waypoints.size()) / sizeof(Point);
 			memcpy(SMoveInfo.SPos, move.waypoints.data(), move.waypoints.size());
 
-			// log
-			long lDistX, lDistY, lDist = 0;
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("===Recieve(Move):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", SMoveInfo.nPointNum));
-			// :     (  )
+			// log — диагностика приёма Move-пакета. Раньше всё писалось в "common"
+			// безусловно, что засоряло общий лог при активном движении любого
+			// игрока в радиусе видимости. Теперь — канал "movie" уровня Debug
+			// под флагом GameDiagnostic::IsMoveEnabled (ini [Logging] move).
+			// Туда же ушла и визуальная отрисовка точек пути на карте, которая
+			// раньше жила под #ifdef _STATE_DEBUG (см. цикл for ниже).
 			CCharacter* pMainDbg = CGameScene::GetMainCha();
 			bool isMainCha = pMainDbg && pMainDbg->getAttachID() == l_id;
+			const bool moveDiag = GameDiagnostic::Instance().IsMoveEnabled();
+
+			long lDistX, lDistY, lDist = 0;
+			if (moveDiag) {
+				ToLogService("movie", LogLevel::Debug,
+							 "===Receive(Move): Tick=[{}], actor={}, isMain={}, points={}, state=0x{:x}",
+							 GetTickCount(), l_id, isMainCha, SMoveInfo.nPointNum, SMoveInfo.sState);
+			}
 			for (int i = 0; i < SMoveInfo.nPointNum; i++) {
-#ifdef _STATE_DEBUG
-				if (isMainCha) {
+				//  Визуальная отладка: красные точки пути на карте, чёрная —
+				//  endpoint при stop-state. Под общим флагом move-диагностики.
+				if (moveDiag && isMainCha) {
 					g_pGameApp->GetDrawPoints()->Add(SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, 0xffff0000, 0.5f);
 					if (SMoveInfo.sState && i == SMoveInfo.nPointNum - 1) {
 						g_pGameApp->GetDrawPoints()->Add(SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, 0xff000000, 0.3f);
 					}
 				}
-#endif
 
 				if (i > 0) {
 					lDistX = SMoveInfo.SPos[i].x - SMoveInfo.SPos[i - 1].x;
 					lDistY = SMoveInfo.SPos[i].y - SMoveInfo.SPos[i - 1].y;
 					lDist = (long)sqrt((double)lDistX * lDistX + lDistY * lDistY);
 				}
-				g_logManager.InternalLog(LogLevel::Debug, "common",
-										 std::format("\t{}, {}\t{}", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist));
+				if (moveDiag) {
+					ToLogService("movie", LogLevel::Debug,
+								 "\t{}, {}\t{}", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist);
+				}
 			}
-			if (SMoveInfo.sState)
-				g_logManager.InternalLog(LogLevel::Debug, "common",
-										 std::format("@@@End Move\tState:0x{:x}", SMoveInfo.sState));
+			if (moveDiag && SMoveInfo.sState) {
+				ToLogService("movie", LogLevel::Debug, "@@@End Move\tState:0x{:x}", SMoveInfo.sState);
+			}
 
 
 			if (SMoveInfo.sState & enumMSTATE_CANCEL) {
@@ -1032,8 +1042,10 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 							SMoveInfo.SPos[SMoveInfo.nPointNum - 1].x)
 						+ (pCMainCha->GetCurY() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y) * (pCMainCha->GetCurY() -
 							SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y);
-					g_logManager.InternalLog(LogLevel::Debug, "common",
-											 std::format("++++++++++++++Distance: {}", (long)sqrt(double(lDist))));
+					if (moveDiag) {
+						ToLogService("movie", LogLevel::Debug,
+									 "++++++++++++++Distance: {}", (long)sqrt(double(lDist)));
+					}
 				}
 			}
 			//

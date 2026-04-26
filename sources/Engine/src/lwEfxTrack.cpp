@@ -12,8 +12,8 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwEfxTrack::Load(const char* file) {
-		FILE* fp = fopen(file, "rb");
+	LW_RESULT lwEfxTrack::Load(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
@@ -25,15 +25,15 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwEfxTrack::Save(const char* file) {
-		FILE* fp = fopen(file, "wb");
+	LW_RESULT lwEfxTrack::Save(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
 		if (LW_RESULT r = _data->Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _data->Save failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 		}
 
 		fclose(fp);

@@ -33,15 +33,16 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwDDSFile::LoadOriginTexture(const char* file, DWORD mip_level, D3DFORMAT format, DWORD colorkey) {
+	LW_RESULT lwDDSFile::LoadOriginTexture(std::string_view file, DWORD mip_level, D3DFORMAT format, DWORD colorkey) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		IDirect3DTextureX* tex = 0;
 
 		{
+			const std::string fileStr{file};
 			HRESULT hr = D3DXCreateTextureFromFileEx(
 				_dev,
-				file,
+				fileStr.c_str(),
 				D3DX_DEFAULT,
 				D3DX_DEFAULT,
 				mip_level,
@@ -57,7 +58,7 @@ LW_BEGIN
 			if (FAILED(hr)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] D3DXCreateTextureFromFileEx failed: file='{}', mip_level={}, format={}, hr=0x{:08X}",
-							 __FUNCTION__, file ? file : "(null)",
+							 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 							 static_cast<long long>(mip_level), static_cast<long long>(format),
 							 static_cast<std::uint32_t>(hr));
 				goto __ret;
@@ -324,14 +325,14 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwDDSFile::Convert(const char* file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level,
+	LW_RESULT lwDDSFile::Convert(std::string_view file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level,
 								 DWORD src_colorkey) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (LW_RESULT r = LoadOriginTexture(file, mip_level, src_fmt, src_colorkey); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] LoadOriginTexture failed: file='{}', mip_level={}, src_fmt={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(mip_level), static_cast<long long>(src_fmt),
 						 static_cast<long long>(r));
 			goto __ret;
@@ -350,20 +351,20 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwDDSFile::Save(const char* file) {
+	LW_RESULT lwDDSFile::Save(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		FILE* fp = 0;
 
 		IDirect3DBaseTextureX* ptex = (_dds_tex == NULL ? _origin_tex : _dds_tex);
 
-		if ((fp = fopen(file, "wb")) == 0)
+		if ((fp = fopen(std::string{file}.c_str(), "wb")) == 0)
 			goto __ret;
 
 		if (LW_RESULT r = SaveDDSHeader(ptex, fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] SaveDDSHeader failed: file='{}', ret={}",
-						 __FUNCTION__, file ? file : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
 		}
@@ -372,7 +373,7 @@ LW_BEGIN
 			if (HRESULT hr = SaveAllVolumeSurfaces((IDirect3DVolumeTextureX*)ptex, fp); FAILED(hr)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] SaveAllVolumeSurfaces failed: file='{}', hr=0x{:08X}",
-							 __FUNCTION__, file ? file : "(null)",
+							 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 							 static_cast<std::uint32_t>(hr));
 				goto __ret;
 			}

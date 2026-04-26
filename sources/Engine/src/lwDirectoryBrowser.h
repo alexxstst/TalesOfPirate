@@ -16,7 +16,7 @@ LW_BEGIN
 		void* _param;
 
 	private:
-		LW_RESULT _Go(const char* file, DWORD flag);
+		LW_RESULT _Go(std::string_view file, DWORD flag);
 
 	public:
 		lwDirectoryBrowser();
@@ -26,7 +26,7 @@ LW_BEGIN
 			_param = param;
 		}
 
-		LW_RESULT Browse(const char* file, DWORD flag);
+		LW_RESULT Browse(std::string_view file, DWORD flag);
 	};
 
 

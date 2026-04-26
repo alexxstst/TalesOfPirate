@@ -37,7 +37,7 @@ namespace GUI {
 					  bool shadow = false, DWORD scolor = 0);
 		void AddHintHeight(int height = 6);
 
-		int WriteText(const char* file);
+		int WriteText(std::string_view file);
 
 	public:
 		struct stHint {

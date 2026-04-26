@@ -79,6 +79,10 @@ namespace net {
 	TcpClient::TcpClient()
 		: _socket(INVALID_SOCKET), _connected(false), _pendingDisconnect(false),
 		  _handler(nullptr), _crypto(nullptr), _appPtr(nullptr), _peerPort(0) {
+		//   PollPackets,
+		//        game thread'.
+		_recvBatch.reserve(kPollBatchReserve);
+		_rpcBatch.reserve(kPollBatchReserve);
 	}
 
 	TcpClient::~TcpClient() {
@@ -249,7 +253,7 @@ namespace net {
 
 		//   pending RPC   
 		{
-			std::lock_guard<std::mutex> lock(_callsMtx);
+			std::scoped_lock lock(_callsMtx);
 			for (auto& call : _pendingCalls) {
 				RPacket empty;
 				call.callback(empty);
@@ -273,7 +277,7 @@ namespace net {
 
 		TCP_LOG << "[TcpClient] " << packet.PrintCommand() << std::endl;
 
-		std::lock_guard<std::mutex> lock(_sendMtx);
+		std::scoped_lock lock(_sendMtx);
 
 		int pktSize = packet.GetPacketSize();
 
@@ -325,7 +329,7 @@ namespace net {
 
 		//  callback
 		{
-			std::lock_guard<std::mutex> lock(_callsMtx);
+			std::scoped_lock lock(_callsMtx);
 			PendingCall pc;
 			pc.sess = sess;
 			pc.callback = std::move(callback);
@@ -336,7 +340,7 @@ namespace net {
 		// 
 		if (!Send(request)) {
 			//  pending call
-			std::lock_guard<std::mutex> lock(_callsMtx);
+			std::scoped_lock lock(_callsMtx);
 			_pendingCalls.erase(
 				std::remove_if(_pendingCalls.begin(), _pendingCalls.end(),
 							   [sess](const PendingCall& c) {
@@ -353,24 +357,27 @@ namespace net {
 
 	int TcpClient::PollPackets(int maxPackets) {
 		// 1.  RPC- (dispatch callbacks)
-		RPacket rpcPkt;
-		while (_rpcResponseQueue.Pop(rpcPkt)) {
-			uint32_t sess = rpcPkt.GetSess() & ~SESS_FLAG;
-			std::lock_guard<std::mutex> lock(_callsMtx);
-			auto it = std::find_if(_pendingCalls.begin(), _pendingCalls.end(),
-								   [sess](const PendingCall& c) {
-									   return c.sess == sess;
-								   });
-			if (it != _pendingCalls.end()) {
-				auto cb = std::move(it->callback);
-				_pendingCalls.erase(it);
-				cb(rpcPkt);
-			}
-		}
+		//   reserve'   _rpcBatch:
+		//      ;     PacketPool-,
+		//        
+		if (!_rpcResponseQueue.IsEmpty()) {
+			_rpcResponseQueue.PopAll(_rpcBatch);
 
-		// 2.   pending RPC
-		{
-			std::lock_guard<std::mutex> lock(_callsMtx);
+			std::scoped_lock lock(_callsMtx);
+			for (auto& rpcPkt : _rpcBatch) {
+				uint32_t sess = rpcPkt.GetSess() & ~SESS_FLAG;
+				auto it = std::find_if(_pendingCalls.begin(), _pendingCalls.end(),
+					[sess](const PendingCall& c) {
+						return c.sess == sess;
+					});
+				if (it != _pendingCalls.end()) {
+					auto cb = std::move(it->callback);
+					_pendingCalls.erase(it);
+					cb(rpcPkt);
+				}
+			}
+
+			// 2.   pending RPC
 			uint32_t now = GetTickCount();
 			for (auto it = _pendingCalls.begin(); it != _pendingCalls.end();) {
 				if (now >= it->deadline) {
@@ -383,17 +390,22 @@ namespace net {
 					++it;
 				}
 			}
+
+			_rpcBatch.clear();
 		}
 
-		// 3.   
+		// 3.
 		if (!_handler) return 0;
 
 		int processed = 0;
-		RPacket pkt;
+		if (!_recvQueue.IsEmpty()) {
+			_recvQueue.PopUpTo(_recvBatch, maxPackets);
+			for (auto& pkt : _recvBatch) {
+				_handler->OnPacket(pkt);
+			}
 
-		while (processed < maxPackets && _recvQueue.Pop(pkt)) {
-			_handler->OnPacket(pkt);
-			++processed;
+			processed = static_cast<int>(_recvBatch.size());
+			_recvBatch.clear();
 		}
 
 		//       recv thread
@@ -407,7 +419,7 @@ namespace net {
 
 			//   pending RPC
 			{
-				std::lock_guard<std::mutex> lock(_callsMtx);
+				std::scoped_lock lock(_callsMtx);
 				for (auto& call : _pendingCalls) {
 					RPacket empty;
 					call.callback(empty);

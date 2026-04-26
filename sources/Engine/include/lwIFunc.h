@@ -44,7 +44,7 @@ LW_BEGIN
 	LW_RESULT lwUnregisterOutputLoseDeviceProc(lwOutputLoseDeviceProc proc);
 	LW_RESULT lwUnregisterOutputResetDeviceProc(lwOutputResetDeviceProc proc);
 
-	LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, const char* file);
+	LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, std::string_view file);
 
 	struct lwInterfaceMgr {
 		lwISystem* sys;

@@ -29,7 +29,7 @@ inline SIZE GetTextureSizeByID(int nID) {
 
 inline int GetTextureID(const char* pDataName) {
 	if (TextureManager::I())
-		return TextureManager::I()->GetOrCreateID(pDataName);
+		return TextureManager::I()->GetOrCreateID(pDataName ? pDataName : std::string_view{});
 	return 0;
 }
 

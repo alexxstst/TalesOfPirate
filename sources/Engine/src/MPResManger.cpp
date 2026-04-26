@@ -286,7 +286,7 @@ lwITex* CMPResManger::GetTextureByIDlw(int iID) {
 #endif
 		lwITex* tex;
 
-		if (LW_RESULT r = lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile.c_str(), 0, D3DFMT_A8R8G8B8);
+		if (LW_RESULT r = lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, std::string_view{}, D3DFMT_A8R8G8B8);
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwLoadTex failed: id={}, file={}, ret={}",

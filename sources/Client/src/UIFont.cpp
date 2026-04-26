@@ -246,8 +246,8 @@ void CTextHint::Clear() {
 
 #include <fstream>
 
-int CTextHint::WriteText(const char* file) {
-	ofstream out(file, ios::app);
+int CTextHint::WriteText(std::string_view file) {
+	ofstream out(std::string{file}.c_str(), ios::app);
 
 	int nLines = 0;
 	hints::iterator it = _hint.begin();

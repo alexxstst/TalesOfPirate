@@ -87,7 +87,7 @@ public:
 	}
 
 
-	int Load(const char* file);
+	int Load(std::string_view file);
 	int UpdateObject(SceneLight* ret_obj);
 	void SetData(IndexDataSceneLight* buf, DWORD num);
 };

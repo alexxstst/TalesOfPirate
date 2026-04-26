@@ -76,7 +76,7 @@ LW_BEGIN
 			return _ref;
 		}
 
-		LW_RESULT LoadTexInfo(const lwTexInfo* info, const char* tex_path);
+		LW_RESULT LoadTexInfo(const lwTexInfo* info, std::string_view tex_path);
 		LW_RESULT LoadSystemMemory();
 		LW_RESULT LoadVideoMemory();
 		LW_RESULT LoadVideoMemoryMT();
@@ -388,8 +388,8 @@ LW_BEGIN
 		LW_RESULT EndSet();
 
 		LW_RESULT SetTex(DWORD stage, lwITex* obj, lwITex** ret_obj);
-		LW_RESULT LoadMtlTex(lwMtlTexInfo* info, const char* tex_path);
-		LW_RESULT LoadTextureStage(const lwTexInfo* info, const char* tex_path);
+		LW_RESULT LoadMtlTex(lwMtlTexInfo* info, std::string_view tex_path);
+		LW_RESULT LoadTextureStage(const lwTexInfo* info, std::string_view tex_path);
 
 		LW_RESULT ExtractMtlTex(lwMtlTexInfo* info);
 
@@ -483,13 +483,13 @@ LW_BEGIN
 		LW_RESULT Destroy();
 		LW_RESULT RegisterSysMemTex(LW_HANDLE* handle, const lwSysMemTexInfo* info);
 		LW_RESULT QuerySysMemTex(lwSysMemTexInfo* info);
-		LW_RESULT QuerySysMemTex(lwSysMemTexInfo** info, const char* file);
+		LW_RESULT QuerySysMemTex(lwSysMemTexInfo** info, std::string_view file);
 		LW_RESULT GetSysMemTex(lwSysMemTexInfo** info, LW_HANDLE handle);
 		LW_RESULT UnregisterSysMemTex(LW_HANDLE handle);
 
-		LW_RESULT RegisterModelObjInfo(LW_HANDLE handle, const char* file);
-		LW_RESULT RegisterModelObjInfo(LW_HANDLE* handle, const char* file);
-		LW_RESULT QueryModelObjInfo(lwIModelObjInfo** info, const char* file);
+		LW_RESULT RegisterModelObjInfo(LW_HANDLE handle, std::string_view file);
+		LW_RESULT RegisterModelObjInfo(LW_HANDLE* handle, std::string_view file);
+		LW_RESULT QueryModelObjInfo(lwIModelObjInfo** info, std::string_view file);
 		LW_RESULT GetModelObjInfo(lwIModelObjInfo** info, LW_HANDLE handle);
 		LW_RESULT UnregisterModelObjInfo(LW_HANDLE handle);
 
@@ -673,14 +673,14 @@ LW_BEGIN
 		LW_ULONG QueryTexRefCnt(lwITex* obj);
 
 		LW_RESULT QueryMesh(DWORD* ret_id, const lwResFileMesh* rfm);
-		LW_RESULT QueryTex(DWORD* ret_id, const char* file_name);
+		LW_RESULT QueryTex(DWORD* ret_id, std::string_view file_name);
 		// RegisterAnimDataRES_FILE_TYPE_GENERICRES_FILE_TYPE_GEOMETRY
 		LW_RESULT QueryAnimCtrl(DWORD* ret_id, const lwResFileAnimData* info);
 
 		LW_VOID ReleaseObject();
 		LW_RESULT RegisterObject(DWORD* ret_id, void* obj, DWORD type);
 		LW_RESULT UnregisterObject(void** ret_obj, DWORD id, DWORD type);
-		LW_RESULT QueryObject(void** ret_obj, DWORD type, const char* file_name);
+		LW_RESULT QueryObject(void** ret_obj, DWORD type, std::string_view file_name);
 		LW_RESULT QueryModelObject(void** ret_obj, DWORD model_id);
 
 		LW_RESULT LoseDevice();

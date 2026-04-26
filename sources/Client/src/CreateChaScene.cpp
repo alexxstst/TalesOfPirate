@@ -92,7 +92,7 @@ struct PoseConfigInfo {
 	float velocity;
 };
 
-int LoginScene_CreateCha::_CreateArrowItem(const char* file) {
+int LoginScene_CreateCha::_CreateArrowItem(std::string_view file) {
 	LW_IF_RELEASE(_arrow);
 
 	_res_mgr->CreateItem(&_arrow);
@@ -254,7 +254,7 @@ void LoginScene_CreateCha::Render() {
 	}
 }
 
-int LoginScene_CreateCha::LoadModelLXO(const char* file) {
+int LoginScene_CreateCha::LoadModelLXO(std::string_view file) {
 	_res_mgr->CreateNodeObject(&_model_lxo);
 
 	lwAssObjInfo assinfo;
@@ -406,7 +406,7 @@ int LoginScene_CreateCha::LoadModelLXO(const char* file) {
 	return 1;
 }
 
-int LoginScene_CreateCha::LoadModelLMO(const char* file) {
+int LoginScene_CreateCha::LoadModelLMO(std::string_view file) {
 	_res_mgr->CreateModel(&_model_lmo);
 
 	_model_lmo->Load(file);
@@ -486,7 +486,7 @@ int LoginScene_CreateCha::LoadModelLMO(const char* file) {
 	return 1;
 }
 
-int LoginScene_CreateCha::LoadArrowItem(const char* file, const lwVector3* offset_pos4) {
+int LoginScene_CreateCha::LoadArrowItem(std::string_view file, const lwVector3* offset_pos4) {
 	if (_CreateArrowItem(file) == 0)
 		return 0;
 

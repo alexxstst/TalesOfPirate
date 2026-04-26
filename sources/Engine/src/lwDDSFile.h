@@ -49,9 +49,9 @@ LW_BEGIN
 		}
 
 		LW_RESULT Clear();
-		LW_RESULT LoadOriginTexture(const char* file, DWORD mip_level, D3DFORMAT format, DWORD colorkey);
-		LW_RESULT Convert(const char* file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level, DWORD src_colorkey);
-		LW_RESULT Save(const char* file);
+		LW_RESULT LoadOriginTexture(std::string_view file, DWORD mip_level, D3DFORMAT format, DWORD colorkey);
+		LW_RESULT Convert(std::string_view file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level, DWORD src_colorkey);
+		LW_RESULT Save(std::string_view file);
 	};
 
 LW_END

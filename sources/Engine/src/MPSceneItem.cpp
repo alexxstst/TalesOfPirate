@@ -42,14 +42,14 @@ LW_BEGIN
 		}
 	}
 
-	LW_RESULT MPSceneItem::Load(const char* file, int arbitrary_flag) {
+	LW_RESULT MPSceneItem::Load(std::string_view file, int arbitrary_flag) {
 		LW_RESULT ret;
 		ret = _obj->Load(file, arbitrary_flag);
 		if (LW_FAILED(ret)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _obj->Load failed: file={}, arbitrary_flag={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", arbitrary_flag, static_cast<long long>(ret));
-			LG_MSGBOX("Load MPSceneItem {} error", file ? file : "(null)");
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), arbitrary_flag, static_cast<long long>(ret));
+			LG_MSGBOX("Load MPSceneItem {} error", (file.empty() ? std::string_view{"(null)"} : file));
 		}
 
 		return ret;

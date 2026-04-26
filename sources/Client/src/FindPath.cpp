@@ -460,8 +460,6 @@ bool PointPointRange(int px1, int py1, int px2, int py2, int range) {
 // nCurX,nCurY,nTargetX,nTargetY
 BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSelfY, int nTargetX, int nTargetY,
 						 bool& IsWalkLine) {
-	ToLogService("map", "Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY,
-				 pCha->GetCurX(), pCha->GetCurY());
 	if (nSelfX < 0 || nSelfY < 0 || nTargetX < 0 || nTargetY < 0) {
 		ToLogService("map", "msginput coordinate less than 0, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX,
 					 nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());

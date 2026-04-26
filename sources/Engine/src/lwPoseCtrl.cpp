@@ -23,8 +23,8 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPoseCtrl::Load(const char* file) {
-		FILE* fp = fopen(file, "rb");
+	LW_RESULT lwPoseCtrl::Load(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 
 		if (fp == NULL)
 			return ERR_INVALID_PARAM;
@@ -41,8 +41,8 @@ LW_BEGIN
 		return 1;
 	}
 
-	LW_RESULT lwPoseCtrl::Save(const char* file) const {
-		FILE* fp = fopen(file, "wb");
+	LW_RESULT lwPoseCtrl::Save(std::string_view file) const {
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == 0)
 			return ERR_INVALID_PARAM;
 

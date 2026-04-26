@@ -15,7 +15,7 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwSysCharacter::QuerySkeleton(DWORD* ret_id, const char* file) {
+	LW_RESULT lwSysCharacter::QuerySkeleton(DWORD* ret_id, std::string_view file) {
 		return LW_RET_OK;
 	}
 

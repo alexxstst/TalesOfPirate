@@ -218,8 +218,8 @@ LW_BEGIN
 	lwIPoseCtrl* lwIAnimCtrlObj_GetPoseCtrl(lwIAnimCtrlObj* ctrl_obj);
 	lwPlayPoseInfo* lwIAnimCtrlObj_GetPlayPoseInfo(lwIAnimCtrlObj* ctrl_obj);
 	DWORD lwGetBlendWeightNum(DWORD fvf);
-	LW_RESULT LoadFileInMemory(lwIBuffer* buf, const char* file, const char* load_flag);
-	LW_RESULT LoadFileInMemory(BYTE** data_seq, DWORD* data_size, const char* file, const char* load_flag);
+	LW_RESULT LoadFileInMemory(lwIBuffer* buf, std::string_view file, const char* load_flag);
+	LW_RESULT LoadFileInMemory(BYTE** data_seq, DWORD* data_size, std::string_view file, const char* load_flag);
 	int lwHexStrToInt(const char* str);
 
 LW_END

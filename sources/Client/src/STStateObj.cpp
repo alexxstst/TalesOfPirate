@@ -4,6 +4,9 @@
 #include "PacketCmd.h"
 #include "Character.h"
 #include "Actor.h"
+#include "GameDiagnostic.h"
+
+using Corsairs::Client::Diagnostic::GameDiagnostic;
 
 //---------------------------------------------------------------------------
 // class CActionState
@@ -23,16 +26,13 @@ void CActionState::Cancel() {
 
 	if (_IsSend) CS_EndAction(this);
 
-#ifdef _STATE_DEBUG
-	if (GetActor()->GetCha() == g_pGameApp->GetCurScene()->GetMainCha()) {
-		if (_pParent)
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("  \t{}-cancel, Tick:{}", GetExplain(), GetTickCount()));
-		else
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("  {}-cancel, Tick:{}", GetExplain(), GetTickCount()));
+	if (GameDiagnostic::Instance().IsMoveEnabled()
+		&& GetActor()->GetCha() == g_pGameApp->GetCurScene()->GetMainCha()) {
+		ToLogService("movie", LogLevel::Debug,
+					 "{}{}-cancel, Tick:{}, srvID:{}",
+					 _pParent ? "  \t" : "  ",
+					 GetExplain(), GetTickCount(), _nServerID);
 	}
-#endif
 }
 
 void CActionState::FrameMove() {
@@ -43,16 +43,14 @@ void CActionState::End() {
 	if (_IsInit)
 		_End(); // ,
 
-#ifdef _STATE_DEBUG
-	if (GetActor()->GetCha()->IsMainCha()) {
-		if (_pParent)
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("\t{}-end, Tick:{}", GetExplain(), GetTickCount()));
-		else
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("{}-end, Tick:{}\n", GetExplain(), GetTickCount()));
+	if (GameDiagnostic::Instance().IsMoveEnabled() && GetActor()->GetCha()->IsMainCha()) {
+		ToLogService("movie", LogLevel::Debug,
+					 "{}{}-end, Tick:{}, srvID:{}, isOver={}, isCancel={}{}",
+					 _pParent ? "\t" : "",
+					 GetExplain(), GetTickCount(), _nServerID,
+					 _IsOver, _IsCancel,
+					 _pParent ? "" : "\n");
 	}
-#endif
 }
 
 void CActionState::Start() {
@@ -63,39 +61,27 @@ void CActionState::Start() {
 		return;
 	}
 
-#ifdef _STATE_DEBUG
-	static bool isMain;
-	isMain = GetActor()->GetCha()->IsMainCha();
-	if (isMain) {
-		if (_pParent)
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("\t{}-start, Tick:{}", GetExplain(), GetTickCount()));
-		else
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("{}-start, Tick:{}", GetExplain(), GetTickCount()));
+	const bool moveDiag = GameDiagnostic::Instance().IsMoveEnabled();
+	const bool isMain = GetActor()->GetCha()->IsMainCha();
+
+	if (moveDiag && isMain) {
+		ToLogService("movie", LogLevel::Debug,
+					 "{}{}-start, Tick:{}, isSend={}",
+					 _pParent ? "\t" : "",
+					 GetExplain(), GetTickCount(), _IsSend);
 	}
-#endif
 
 	_IsInit = _Start();
 
-#ifdef _STATE_DEBUG
 	if (!_IsInit) {
 		_StartFailed();
-		if (isMain) {
-			if (_pParent)
-				g_logManager.InternalLog(LogLevel::Debug, "common",
-										 std::format("\t{}-Not Start, Tick:{}", GetExplain(), GetTickCount()));
-			else
-				g_logManager.InternalLog(LogLevel::Debug, "common",
-										 std::format("{}-Not Start, Tick:{}", GetExplain(), GetTickCount()));
-			return;
+		if (moveDiag && isMain) {
+			ToLogService("movie", LogLevel::Debug,
+						 "{}{}-Not Start, Tick:{}",
+						 _pParent ? "\t" : "",
+						 GetExplain(), GetTickCount());
 		}
 	}
-#else
-	if (!_IsInit) {
-		_StartFailed();
-	}
-#endif
 }
 
 bool CActionState::_IsAllowCancel() {

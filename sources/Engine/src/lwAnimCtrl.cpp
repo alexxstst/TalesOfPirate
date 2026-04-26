@@ -475,14 +475,14 @@ LW_BEGIN
 		return a->Copy(&_data);
 	}
 
-	LW_RESULT lwAnimCtrlBone::DumpRunTimeBoneData(const char* file) {
+	LW_RESULT lwAnimCtrlBone::DumpRunTimeBoneData(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_rtbuf_seq == 0)
 			goto __ret;
 
 		{
-			FILE* fp = fopen(file, "wt");
+			FILE* fp = fopen(std::string{file}.c_str(), "wt");
 			if (fp == NULL)
 				goto __ret;
 			{
@@ -515,14 +515,14 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwAnimCtrlBone::DumpInitInvMat(const char* file) {
+	LW_RESULT lwAnimCtrlBone::DumpInitInvMat(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_rtbuf_seq == 0)
 			goto __ret;
 
 		{
-			FILE* fp = fopen(file, "wt");
+			FILE* fp = fopen(std::string{file}.c_str(), "wt");
 			if (fp == NULL)
 				goto __ret;
 

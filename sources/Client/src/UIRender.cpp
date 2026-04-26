@@ -631,7 +631,7 @@ void UIRender::SetScreen(int w, int h, bool isFull) {
 //---------------------------------------------------------------------------
 // class CGuiPic
 //---------------------------------------------------------------------------
-bool CGuiPic::LoadImage(MPTexRect* pTex, const char* file, int w, int h, int tx, int ty, float scale_x, float scale_y) {
+bool CGuiPic::LoadImage(MPTexRect* pTex, std::string_view file, int w, int h, int tx, int ty, float scale_x, float scale_y) {
 	if (!pTex) return false;
 
 	pTex->nTexSX = tx;
@@ -640,12 +640,12 @@ bool CGuiPic::LoadImage(MPTexRect* pTex, const char* file, int w, int h, int tx,
 	pTex->nTexH = h;
 	pTex->fScaleX = scale_x;
 	pTex->fScaleY = scale_y;
-	pTex->nTextureNo = GetTextureID(file);
+	pTex->nTextureNo = GetTextureID(std::string{file}.c_str());
 	return pTex->nTextureNo != -1;
 }
 
-bool CGuiPic::LoadAllImage(const char* file, int w, int h, int tx, int ty) {
-	int id = GetTextureID(file);
+bool CGuiPic::LoadAllImage(std::string_view file, int w, int h, int tx, int ty) {
+	int id = GetTextureID(std::string{file}.c_str());
 	for (unsigned int i = 0; i < _max; i++) {
 		LoadImage(i, id, tx, ty, w, h);
 		tx += w;
@@ -653,16 +653,16 @@ bool CGuiPic::LoadAllImage(const char* file, int w, int h, int tx, int ty) {
 	return id != -1;
 }
 
-bool CGuiPic::LoadImage(const char* file, int w, int h, int frame, int tx, int ty, float scalex, float scaley) {
-	int id = GetTextureID(file);
+bool CGuiPic::LoadImage(std::string_view file, int w, int h, int frame, int tx, int ty, float scalex, float scaley) {
+	int id = GetTextureID(std::string{file}.c_str());
 	if (id == -1) return false;
 
 	LoadImage(frame, id, tx, ty, w, h, scalex, scaley);
 	return true;
 }
 
-bool CGuiPic::LoadImage(const char* file) {
-	int id = GetTextureID(file);
+bool CGuiPic::LoadImage(std::string_view file) {
+	int id = GetTextureID(std::string{file}.c_str());
 	if (id == -1) return false;
 
 	SIZE sz;
@@ -870,7 +870,7 @@ bool CFramePic::LoadImage(ePicPos p, int nTextureID, int tx, int ty, int tw, int
 	return true;
 }
 
-bool CFramePic::LoadImage(const char* client, int cw, int ch, int tx, int ty, const char* file, int w, int h) {
+bool CFramePic::LoadImage(const char* client, int cw, int ch, int tx, int ty, std::string_view file, int w, int h) {
 	int id = GetTextureID(client);
 	if (id != -1) {
 		LoadImage(ppClient, id, tx, ty, cw, ch);
@@ -878,7 +878,7 @@ bool CFramePic::LoadImage(const char* client, int cw, int ch, int tx, int ty, co
 
 	if (!_bIsShowFrame) return true;
 
-	id = GetTextureID(file);
+	id = GetTextureID(std::string{file}.c_str());
 	if (id == -1) return false;
 
 	int w2 = w + w, h2 = h + h;
@@ -896,10 +896,10 @@ bool CFramePic::LoadImage(const char* client, int cw, int ch, int tx, int ty, co
 //---------------------------------------------------------------------------
 // class CTextButton
 //---------------------------------------------------------------------------
-bool CTextButton::LoadImage(const char* file, int w, int h, int tx, int ty, bool isHorizontal) {
+bool CTextButton::LoadImage(std::string_view file, int w, int h, int tx, int ty, bool isHorizontal) {
 	if (!_pImage) return false;
 
-	int id = GetTextureID(file);
+	int id = GetTextureID(std::string{file}.c_str());
 	if (id == -1) return false;
 
 	if (isHorizontal) {
@@ -1011,10 +1011,10 @@ void CProgressBar::Init() {
 	_pImage->Refresh();
 }
 
-bool CProgressBar::LoadImage(const char* file, int w, int h, bool isHorizontal) {
+bool CProgressBar::LoadImage(std::string_view file, int w, int h, bool isHorizontal) {
 	if (!_pImage) return false;
 
-	int id = GetTextureID(file);
+	int id = GetTextureID(std::string{file}.c_str());
 	if (id == -1) return false;
 
 	if (isHorizontal) {

@@ -16,6 +16,9 @@
 #include "STAttack.h"
 #include "AreaRecord.h"
 #include "MountRecord.h"
+#include "GameDiagnostic.h"
+
+using Corsairs::Client::Diagnostic::GameDiagnostic;
 
 //---------------------------------------------------------------------------
 // class CWaitMoveState
@@ -220,10 +223,13 @@ bool CMoveState::_Start() {
 	_pCha->MoveTo(_stPathInfo.pos_buf[1].x, _stPathInfo.pos_buf[1].y);
 
 
-#ifdef _STATE_DEBUG
-	ToLogService("common", "start SelfPos:{}, {}, Target: {}, {} Tick - {}", GetActor()->GetCha()->GetCurX(),
-				 GetActor()->GetCha()->GetCurY(), _nTargetX, _nTargetY, GetTickCount());
-#endif
+	if (GameDiagnostic::Instance().IsMoveEnabled()) {
+		ToLogService("movie", LogLevel::Debug,
+					 "CMoveState::Start SelfPos:{}, {}, ServerPos:{}, {}, Target:{}, {}, walkLine={}, Tick:{}",
+					 GetActor()->GetCha()->GetCurX(), GetActor()->GetCha()->GetCurY(),
+					 GetActor()->GetCha()->GetServerX(), GetActor()->GetCha()->GetServerY(),
+					 _nTargetX, _nTargetY, _IsWalkLine, GetTickCount());
+	}
 
 	if (_IsSend) {
 		if (isServer) {
@@ -400,9 +406,11 @@ void CServerMoveState::PreMove() {
 			GetMoveList()->PushPoint(SPos[i].x, SPos[i].y);
 		}
 
-#ifdef _STATE_DEBUG
-		g_pGameApp->GetDrawPoints()->Add(SPos[num - 1].x, SPos[num - 1].y, 0xff00ff00, 0.1f);
-#endif
+		//  Визуальная отладка: точка PreMove на карте (зелёная, маленькая).
+		//  Отображается только при включённой move-диагностике.
+		if (GameDiagnostic::Instance().IsMoveEnabled()) {
+			g_pGameApp->GetDrawPoints()->Add(SPos[num - 1].x, SPos[num - 1].y, 0xff00ff00, 0.1f);
+		}
 	}
 }
 
@@ -522,8 +530,6 @@ bool COneMoveState::ContinueMove(int nTargetX, int nTargetY, bool isWalkLine, bo
 		}
 	}
 
-	ToLogService("common", "ContinueMove( {}, {}, {} )", nTargetX, nTargetY, isWalkLine);
-
 	bool rv = true;
 
 	//According to the parameters, the new moving path can be segmented into multiple moving paths
@@ -577,8 +583,6 @@ bool COneMoveState::SendInfo() {
 
 	ChaRun();
 
-	ToLogService("common", "SendInfo: ServerPos[{}, {}], Target[{}, {}]", _pCha->GetServerX(), _pCha->GetServerY(),
-				 _nTargetX, _nTargetY);
 	_nSendCount++;
 
 	stNetMoveInfo stPathInfo;
@@ -620,7 +624,6 @@ bool COneMoveState::SendInfo() {
 	}
 
 	_fRate = RefreshRate(nLocal, _nServerDis);
-	ToLogService("common", "SendInfo:{}", _fRate);
 	return true;
 }
 
@@ -717,7 +720,6 @@ void COneMoveState::PushPoint(int x, int y) {
 			}
 		}
 	}
-	ToLogService("common", "PushPoint:{}", _fRate);
 }
 
 
@@ -729,8 +731,6 @@ bool COneMoveState::StartMove(int nTargetX, int nTargetY, bool isWalkLine) {
 	if (!g_cFindPath.Find(_pCha->GetScene(), _pCha, _pCha->GetCurX(), _pCha->GetCurY(), nTargetX, nTargetY, isWalkLine))
 		return false;
 
-	ToLogService("common", "StartMove Target[{}, {}], StartCount:{}, SendCount:{}, EndCount:{}", _nTargetX, _nTargetY,
-				 _nStartCount, _nSendCount, _nEndCount);
 	_nMoveCount++;
 	if (_nStartCount == _nSendCount) {
 		_nStartCount++;
@@ -763,7 +763,6 @@ bool COneMoveState::StartMove(int nTargetX, int nTargetY, bool isWalkLine) {
 						 isWalkLine)) {
 		_fRate = RefreshRate(_nLocalDis, g_cFindPath.GetLength());
 	}
-	ToLogService("common", "StartMove:{}", _fRate);
 	return true;
 }
 
@@ -771,7 +770,6 @@ float COneMoveState::RefreshRate(int nLocalLen, int nServerLen) {
 	float fRate = (float)nLocalLen / (float)(nServerLen) / 0.95f;
 	if (fRate > 10.30f) fRate = 10.30f;
 	if (fRate < 0.85f) fRate = 0.85f;
-	ToLogService("common", "RefreshRate({}, {}) Rate:{}", nLocalLen, nServerLen, _fRate);
 	return fRate;
 }
 
@@ -807,7 +805,6 @@ void COneMoveState::SynchroPos(int x, int y) {
 
 void COneMoveState::MoveEnd(int x, int y, int nState) {
 	// End of server move
-	ToLogService("common", "MoveEnd( {}, {}, {} )", x, y, nState);
 	_nEndCount++;
 
 	_IsSendCancel = false;
@@ -849,13 +846,8 @@ void COneMoveState::WriteInfo(S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info)
 	for (int i = 0; i < n; i++) {
 		info.pos_buf[i].x = (long)(path[i]->x * 100.0f) / 50 * 50 + 25;
 		info.pos_buf[i].y = (long)(path[i]->y * 100.0f) / 50 * 50 + 25;
-		ToLogService("common", "Path:[{}, {}]", info.pos_buf[i].x, info.pos_buf[i].y);
-		if (info.pos_buf[i].x != (long)(path[i]->x * 100.0f) || info.pos_buf[i].y != (long)(path[i]->y * 100.0f))
-			ToLogService("common", "###########FindPath:[{}, {}]", (long)(path[i]->x * 100.0f),
-						 (long)(path[i]->y * 100.0f));
 	}
 	info.pos_num = n;
-	ToLogService("common", "Count:{}", info.pos_num);
 }
 
 bool COneMoveState::IsSameServerPos(int x, int y) {

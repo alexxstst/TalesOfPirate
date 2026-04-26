@@ -240,9 +240,9 @@ LW_BEGIN
 
 
 			if (LW_RESULT r = lwHitTestBox(&u, org, ray, &box, &mat); LW_FAILED(r)) {
-				ToLogService("errors", LogLevel::Error,
-							 "[{}] lwHitTestBox failed: j={}, ret={}",
-							 __FUNCTION__, j, static_cast<long long>(r));
+				//ToLogService("errors", LogLevel::Error,
+				//			 "[{}] lwHitTestBox failed: j={}, ret={}",
+				//			 __FUNCTION__, j, static_cast<long long>(r));
 				continue;
 			}
 
@@ -647,7 +647,7 @@ LW_BEGIN
 
 			mti.mtl = mtl;
 
-			if (LW_RESULT r = _obj->LoadMtlTex(i, &mti, NULL); LW_FAILED(r)) {
+			if (LW_RESULT r = _obj->LoadMtlTex(i, &mti, std::string_view{}); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _obj->LoadMtlTex failed: i={}, ret={}",
 							 __FUNCTION__, i, static_cast<long long>(r));
@@ -673,7 +673,7 @@ LW_BEGIN
 	// LW_RET_FAILED: hit test failed
 	// LW_RET_OK: hit test succeeded
 	LW_RESULT lwHelperMesh::HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-									const lwMatrix44* mat_parent, const char* type_name) {
+									const lwMatrix44* mat_parent, std::string_view type_name) {
 		// USE_INVERSE_MAThit test
 #ifdef USE_INVERSE_MAT
 		////if(xx == 1)
@@ -698,8 +698,8 @@ LW_BEGIN
 		DWORD type_obj = 0;
 
 		for (DWORD k = 0; k < _obj_num; k++) {
-			if (type_name) {
-				if (_tcscmp(_obj_seq[k].name, type_name))
+			if (!type_name.empty()) {
+				if (_obj_seq[k].name != type_name)
 					continue;
 			}
 
@@ -771,8 +771,8 @@ LW_BEGIN
 		DWORD type_obj = 0;
 
 		for (DWORD k = 0; k < _obj_num; k++) {
-			if (type_name) {
-				if (_tcscmp(_obj_seq[k].name, type_name))
+			if (!type_name.empty()) {
+				if (_obj_seq[k].name != type_name)
 					continue;
 			}
 
@@ -931,7 +931,7 @@ LW_BEGIN
 	}
 
 	LW_RESULT lwHelperBox::HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-								   const lwMatrix44* mat_parent, const char* type_name) {
+								   const lwMatrix44* mat_parent, std::string_view type_name) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwMatrix44 mat;
@@ -944,8 +944,8 @@ LW_BEGIN
 
 
 		for (DWORD j = 0; j < _obj_num; j++) {
-			if (type_name) {
-				if (_tcscmp(_obj_seq[j].name, type_name))
+			if (!type_name.empty()) {
+				if (_obj_seq[j].name != type_name)
 					continue;
 			}
 

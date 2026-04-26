@@ -176,7 +176,7 @@ namespace GUI {
 			if (f >= 0.0f && f <= 1.0f) _fScale = f;
 		}
 
-		static void LoadImage(const char* file, int w, int h, int tx = 0, int ty = 0);
+		static void LoadImage(std::string_view file, int w, int h, int tx = 0, int ty = 0);
 
 	protected:
 		static CGuiPic* _pBar;

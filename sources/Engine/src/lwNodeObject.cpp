@@ -40,7 +40,7 @@ LW_BEGIN
 		lwIResourceMgr* res_mgr = (lwIResourceMgr*)param;
 		lwModelNodeInfo* node_info = (lwModelNodeInfo*)node->GetData();
 
-		const char* tex_path = res_mgr->GetTexturePath().c_str();
+		const std::string& tex_path = res_mgr->GetTexturePath();
 
 		lwINode* model_node = 0;
 		if (LW_RESULT r = res_mgr->CreateNode(&model_node, node_info->_type); LW_FAILED(r)) {
@@ -65,7 +65,7 @@ LW_BEGIN
 				LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] NodePrimitive::Load failed: id={}, tex_path={}, ret={}",
-							 __FUNCTION__, node_info->_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, node_info->_id, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 				goto __ret;
 			}
 			break;
@@ -253,7 +253,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwNodePrimitive::Load(lwIGeomObjInfo* geom_info, const char* tex_path, const lwResFile* res) {
+	LW_RESULT lwNodePrimitive::Load(lwIGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD i;
@@ -286,7 +286,7 @@ LW_BEGIN
 			if (LW_RESULT r = LoadMtlTex(i, &info->mtl_seq[i], tex_path); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadMtlTex failed: mtl_id={}, tex_path={}, ret={}",
-							 __FUNCTION__, i, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, i, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -362,7 +362,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwNodePrimitive::LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path) {
+	LW_RESULT lwNodePrimitive::LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (mtl_id < 0 || mtl_id >= LW_MAX_SUBSET_NUM)
@@ -378,7 +378,7 @@ LW_BEGIN
 		if (LW_RESULT r = _mtltex_agent_seq[mtl_id]->LoadMtlTex(info, tex_path); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _mtltex_agent_seq[mtl_id]->LoadMtlTex failed: mtl_id={}, tex_path={}, ret={}",
-						 __FUNCTION__, mtl_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, mtl_id, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -387,7 +387,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwNodePrimitive::LoadAnimData(lwIAnimDataInfo* data_info, const char* tex_path, const lwResFile* res) {
+	LW_RESULT lwNodePrimitive::LoadAnimData(lwIAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwAnimDataInfo* info = (lwAnimDataInfo*)data_info;
@@ -570,7 +570,7 @@ LW_BEGIN
 					type_info.data[0] = i;
 					type_info.data[1] = j;
 
-					_tcscpy(info->anim_img[i][j]->_tex_path, tex_path);
+					{const auto _t = std::string{tex_path}; _tcscpy(info->anim_img[i][j]->_tex_path, _t.c_str());}
 
 					if (LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type);
 						LW_FAILED(r)) {
@@ -2134,7 +2134,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwNodeObject::Load(const char* file, DWORD flag, lwITreeNode* parent_node) {
+	LW_RESULT lwNodeObject::Load(std::string_view file, DWORD flag, lwITreeNode* parent_node) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwModelInfo info;
@@ -2149,7 +2149,7 @@ LW_BEGIN
 		if (LW_RESULT r = info.Load(file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] info.Load failed: file={}, flag={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", flag, static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), flag, static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -2157,7 +2157,7 @@ LW_BEGIN
 		if (LW_RESULT r = lwLoadModelInfo(&tree_node, &info, _res_mgr); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwLoadModelInfo failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -2166,7 +2166,7 @@ LW_BEGIN
 				if (LW_RESULT r = Destroy(); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] Destroy failed: file={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 					goto __ret;
 				}
 			}
@@ -2180,7 +2180,7 @@ LW_BEGIN
 				if (LW_RESULT r = InsertTreeNode(parent_node, 0, child_node); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] InsertTreeNode(child) failed: file={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 					goto __ret;
 				}
 
@@ -2194,7 +2194,7 @@ LW_BEGIN
 			if (LW_RESULT r = InsertTreeNode(parent_node, 0, tree_node); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] InsertTreeNode(merge2) failed: file={}, ret={}",
-							 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -2490,10 +2490,10 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwNodeObject_DumpObjectTree(lwINodeObject* obj, const char* file) {
+	LW_RESULT lwNodeObject_DumpObjectTree(lwINodeObject* obj, std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "wt");
+		FILE* fp = fopen(std::string{file}.c_str(), "wt");
 		if (fp == 0)
 			goto __ret;
 

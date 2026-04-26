@@ -14,7 +14,7 @@ UI_LoadButtonImage( btnClose, "texture/ui/PublicC.tga", 14, 14, 116, 175, TRUE )
 UI_SetButtonModalResult( btnClose, BUTTON_CLOSE )
 
 labName = UI_CreateCompent( frmTrade, LABELEX_TYPE, "labName", 95, 13, 20, 4 )
-UI_SetCaption( labName, "�;;;;;;;�" )
+UI_SetCaption( labName, "Trade" )
 UI_SetTextColor( labName, COLOR_BLACK )
 UI_SetLabelExFont( labName, DEFAULT_FONT, TRUE, COLOR_WHITE )
 
@@ -258,7 +258,7 @@ UI_LoadImage( imgBakRightD, "texture/ui2009/tongyongX2.tga", NORMAL, 109, 19, 54
 
 -- Form title
 labtitle = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labtitle", 261, 12, 22, 12 )
-UI_SetCaption( labtitle, "��������ת��" )
+UI_SetCaption( labtitle, "Refining Stone Transfer" )
 UI_SetTextColor( labtitle, COLOR_WHITE )
 UI_SetLabelExFont( labtitle, DEFAULT_FONT, TRUE, COLOR_BLACK )
 
@@ -273,12 +273,12 @@ UI_LoadImage( imgElf0, "texture/ui2009/BakGhost3.tga", NORMAL, 47, 47, 86, 135 )
 
 -- Item description 1
 labtitle1 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labtitle1", 261, 12, 140, 127 )
-UI_SetCaption( labtitle1, "ʯ����" )
+UI_SetCaption( labtitle1, "Catalyst" )
 UI_SetTextColor( labtitle1, COLOR_BLACK )
 UI_SetLabelExFont( labtitle1, DEFAULT_FONT, FALSE, COLOR_BLACK )
 
 cmdStore1 = UI_CreateCompent( frmforgeMove, COMMAND_ONE_TYPE, "cmdStore1", 32, 32, 140, 117 )	-- Catalyst
-UI_SetHint( cmdStore1, "�������" )
+UI_SetHint( cmdStore1, "Place catalyst" )
 
 -- Equipment 1 slot
 imgStore1 = UI_CreateCompent( frmforgeMove, IMAGE_TYPE, "imgStore1", 47, 47, 24, 45 )
@@ -286,12 +286,12 @@ UI_LoadImage( imgStore1, "texture/ui2009/BakGhost3.tga", NORMAL, 47, 47, 86, 135
 
 -- Item description 2
 labtitle2 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labtitle2", 261, 12, 30, 61 )
-UI_SetCaption( labtitle2, "װ��һ" )
+UI_SetCaption( labtitle2, "Equipment 1" )
 UI_SetTextColor( labtitle2, COLOR_BLACK )
 UI_SetLabelExFont( labtitle2, DEFAULT_FONT, FALSE, COLOR_BLACK )
 
 cmdElf0 = UI_CreateCompent( frmforgeMove, COMMAND_ONE_TYPE, "cmdElf0", 32, 32, 30, 51 )	-- Combine item
-UI_SetHint( cmdElf0, "����װ��һ" )
+UI_SetHint( cmdElf0, "Place equipment 1" )
 
 -- Arrow 1
 imgjiantou1 = UI_CreateCompent( frmforgeMove, IMAGE_TYPE, "imgjiantou1", 84, 48, 49, 92 )
@@ -303,12 +303,12 @@ UI_LoadImage( imgEquip2, "texture/ui2009/BakGhost3.tga", NORMAL, 47, 47, 86, 135
 
 -- Item description 3
 labtitle3 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labtitle3", 261, 12, 249, 61 )
-UI_SetCaption( labtitle3, "װ����" )
+UI_SetCaption( labtitle3, "Equipment 2" )
 UI_SetTextColor( labtitle3, COLOR_BLACK )
 UI_SetLabelExFont( labtitle3, DEFAULT_FONT, FALSE, COLOR_BLACK )
 
 cmdEquip2 = UI_CreateCompent( frmforgeMove, COMMAND_ONE_TYPE, "cmdEquip2", 32, 32, 249, 51 )	-- Combine item
-UI_SetHint( cmdEquip2, "����װ����" )
+UI_SetHint( cmdEquip2, "Place equipment 2" )
 
 -- Arrow 2
 imgjiantou2 = UI_CreateCompent( frmforgeMove, IMAGE_TYPE, "imgjiantou2", 84, 41, 181, 96 )
@@ -323,19 +323,19 @@ UI_LoadImage( imgTxtHelp2, "texture/ui2009/tongyongX2.tga", NORMAL, 78, 60, 54, 
 
 -- Help text block 1
 labTxthelp1 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labTxthelp1", 261, 12, 24, 180 )
-UI_SetCaption( labTxthelp1, "ת�ƺ�װ��һ������ʧ" )
+UI_SetCaption( labTxthelp1, "After transfer Equipment 1 enchants will be lost" )
 UI_SetTextColor( labTxthelp1, COLOR_BLACK )
 UI_SetLabelExFont( labTxthelp1, DEFAULT_FONT, FALSE, COLOR_WHITE )
 
 -- Help text block 2
 labTxthelp2 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labTxthelp2", 261, 12, 24, 195 )
-UI_SetCaption( labTxthelp2, "һ��װ��Ҳ���������շ�" )
+UI_SetCaption( labTxthelp2, "Both items must be of the same equipment type" )
 UI_SetTextColor( labTxthelp2, COLOR_BLACK )
 UI_SetLabelExFont( labTxthelp2, DEFAULT_FONT, FALSE, COLOR_WHITE )
 
 -- Help text block 3
 labTxthelp3 = UI_CreateCompent( frmforgeMove, LABELEX_TYPE, "labTxthelp3", 261, 12, 24, 210 )
-UI_SetCaption( labTxthelp3, "ת����Ҫ���ľ���������ʯ���Σ��̳ǵ��ߣ�" )
+UI_SetCaption( labTxthelp3, "Transfer requires a Refining Stone (NPC item)" )
 UI_SetTextColor( labTxthelp3, COLOR_BLACK )
 UI_SetLabelExFont( labTxthelp3, DEFAULT_FONT, FALSE, COLOR_WHITE )
 

@@ -99,7 +99,7 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwPrimitive::LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path) {
+	LW_RESULT lwPrimitive::LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (mtl_id < 0 || mtl_id >= LW_MAX_SUBSET_NUM)
@@ -116,7 +116,7 @@ LW_BEGIN
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] LoadMtlTex failed: mtl_id={}, tex_path='{}', ret={}",
 						 __FUNCTION__, static_cast<long long>(mtl_id),
-						 tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -125,7 +125,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::Load(lwIGeomObjInfo* geom_info, const char* tex_path, const lwResFile* res) {
+	LW_RESULT lwPrimitive::Load(lwIGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD i;
@@ -157,7 +157,7 @@ LW_BEGIN
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadMtlTex failed: i={}, tex_path='{}', ret={}",
 							 __FUNCTION__, static_cast<long long>(i),
-							 tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -198,7 +198,7 @@ LW_BEGIN
 			if (LW_RESULT r = LoadAnimData(&info->anim_data, tex_path, res); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadAnimData failed: tex_path='{}', ret={}",
-							 __FUNCTION__, tex_path ? tex_path : "(null)",
+							 __FUNCTION__, (tex_path.empty() ? std::string_view{"(null)"} : tex_path),
 							 static_cast<long long>(r));
 				goto __ret;
 			}
@@ -288,7 +288,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::LoadAnimData(lwIAnimDataInfo* data_info, const char* tex_path, const lwResFile* res) {
+	LW_RESULT lwPrimitive::LoadAnimData(lwIAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwAnimDataInfo* info = (lwAnimDataInfo*)data_info;
@@ -485,7 +485,7 @@ LW_BEGIN
 					type_info.data[0] = i;
 					type_info.data[1] = j;
 
-					_tcscpy(info->anim_img[i][j]->_tex_path, tex_path);
+					{const auto _t = std::string{tex_path}; _tcscpy(info->anim_img[i][j]->_tex_path, _t.c_str());}
 
 					lwIAnimCtrlTexImg* ctrl = NULL;
 					lwIAnimCtrlObjTexImg* ctrl_obj = NULL;
@@ -1122,7 +1122,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPrimitive::ResetTexture(DWORD subset, DWORD stage, const char* file, const char* tex_path) {
+	LW_RESULT lwPrimitive::ResetTexture(DWORD subset, DWORD stage, std::string_view file, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwTexInfo tex_info;
@@ -1139,7 +1139,7 @@ LW_BEGIN
 				goto __ret;
 
 			tex->GetTexInfo(&tex_info);
-			_tcscpy(tex_info.file_name, file);
+			{const auto _f = std::string{file}; _tcscpy(tex_info.file_name, _f.c_str());}
 			tex_info.level = D3DX_DEFAULT;
 			tex_info.type = TEX_TYPE_FILE;
 

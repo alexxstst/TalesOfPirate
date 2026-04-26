@@ -66,11 +66,11 @@ LW_BEGIN
 		LW_RESULT Destroy();
 
 
-		LW_RESULT Load(lwIGeomObjInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadMesh(lwMeshInfo* info);
 		LW_RESULT LoadMesh(const lwResFileMesh* info);
-		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, const char* tex_path);
-		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, const char* tex_path, const lwResFile* res);
+		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path);
+		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci);
 
 		LW_RESULT ExtractGeomObjInfo(lwIGeomObjInfo* info);
@@ -146,7 +146,7 @@ LW_BEGIN
 
 		LW_RESULT SetTextureLOD(DWORD level);
 		LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
-		LW_RESULT ResetTexture(DWORD subset, DWORD stage, const char* file, const char* tex_path);
+		LW_RESULT ResetTexture(DWORD subset, DWORD stage, std::string_view file, std::string_view tex_path);
 
 		void setPixelShader(const std::string& filename) {
 			_render_agent->setPixelShader(filename);

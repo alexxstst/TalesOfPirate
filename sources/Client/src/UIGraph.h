@@ -10,7 +10,7 @@ namespace GUI {
 	// 
 	class CGraph : public CItemObj {
 	public:
-		CGraph(const char* file, int w, int h, int sx, int sy, int maxframe) : nTag(0) {
+		CGraph(std::string_view file, int w, int h, int sx, int sy, int maxframe) : nTag(0) {
 			_pImage = new CGuiPic(NULL, maxframe);
 			_pImage->LoadAllImage(file, w, h, sx, sy);
 		}

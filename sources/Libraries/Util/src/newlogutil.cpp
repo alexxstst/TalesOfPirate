@@ -11,6 +11,8 @@
 #include "logutil.h"
 #include "ConsoleColor.h"
 #include <cstdio>
+#include <io.h>
+#include <fcntl.h>
 #include "CrushSystem.h"
 
 namespace TalesOfPirate::Utils::Logs {
@@ -173,8 +175,9 @@ namespace TalesOfPirate::Utils::Logs {
 		AddLogger("ui");
 		AddLogger("terrain");
 		AddLogger("textures");
+		AddLogger("perf");
 
-		//  :       
+		//  :
 		_logThread = std::thread([this]() {
 			Crush::SetPerThreadCRTExceptionBehavior();
 			::SetThreadName("logger");
@@ -190,7 +193,7 @@ namespace TalesOfPirate::Utils::Logs {
 					while (!_logsQueue.empty()) {
 						lg = _logsQueue.front();
 
-						//      
+						//
 						std::erase_if(lg.LogSystem,
 									  [](auto const& c) -> bool {
 										  return !std::isalnum(c) && c != '_' && c != '-';
@@ -202,7 +205,7 @@ namespace TalesOfPirate::Utils::Logs {
 							continue;
 						}
 
-						//   ,    
+						//   ,
 						if (_enabledGlobalConsole) {
 							PrintConsoleMessage(lg);
 						}
@@ -256,8 +259,44 @@ namespace TalesOfPirate::Utils::Logs {
 		_logsQueue.push(logEntry);
 	}
 
+	//  Выделение Win32-консоли для GUI-приложения. Без этого std::cout уходит
+	//  в никуда. Запускается при первом включении глобальной консоли; повторные
+	//  вызовы — no-op.
+	static void EnsureWin32Console() {
+		static std::once_flag s_consoleOnce{};
+		std::call_once(s_consoleOnce, []() {
+			//  Если у процесса уже есть консоль (например, запущен из cmd) —
+			//  AttachConsole сам подцепит её; иначе AllocConsole создаёт новую.
+			if (::GetConsoleWindow() == nullptr) {
+				if (!::AttachConsole(ATTACH_PARENT_PROCESS)) {
+					::AllocConsole();
+				}
+			}
+
+			::SetConsoleTitleA("TalesOfPirate — log console");
+			::SetConsoleOutputCP(CP_UTF8);
+
+			//  Перенаправляем stdout/stderr/stdin на консоль. freopen_s — стандартный
+			//  способ для C runtime, std::cout пойдёт через тот же FILE*.
+			FILE* dummy = nullptr;
+			freopen_s(&dummy, "CONOUT$", "w", stdout);
+			freopen_s(&dummy, "CONOUT$", "w", stderr);
+			freopen_s(&dummy, "CONIN$", "r", stdin);
+
+			//  Синхронизация iostream с C-stdio чтобы перевод stdout
+			//  применился и для std::cout.
+			std::cout.clear();
+			std::cerr.clear();
+			std::cin.clear();
+			std::ios::sync_with_stdio(true);
+		});
+	}
+
 	void LogManager::EnableGlobalConsole(bool status) {
 		_enabledGlobalConsole = status;
+		if (status) {
+			EnsureWin32Console();
+		}
 	}
 
 	//         

@@ -32,7 +32,7 @@ public:
 		return _nCharacterID;
 	}
 
-	int Load(const char* file);
+	int Load(std::string_view file);
 	HRESULT LitResetTexture(DWORD item_id, DWORD lit_id);
 	HRESULT LitUnresetTexture();
 

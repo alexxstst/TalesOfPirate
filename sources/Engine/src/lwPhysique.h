@@ -31,11 +31,11 @@ LW_BEGIN
 		lwGeomManager();
 		~lwGeomManager();
 
-		lwGeomObjInfo* GetGeomObjInfo(const char file[]);
-		bool LoadGeomobj(const char file[]);
+		lwGeomObjInfo* GetGeomObjInfo(std::string_view file);
+		bool LoadGeomobj(std::string_view file);
 
-		lwIAnimDataBone* GetBoneData(const char file[]);
-		bool LoadBoneData(const char file[]);
+		lwIAnimDataBone* GetBoneData(std::string_view file);
+		bool LoadBoneData(std::string_view file);
 
 	private:
 		typedef std::map<std::string, lwGeomObjInfo*> GEOMOBJ_MAP;
@@ -79,10 +79,10 @@ LW_BEGIN
 
 		LW_RESULT Destroy();
 		LW_RESULT LoadBoneCatch(lwPhysiqueBoneInfo& info);
-		LW_RESULT LoadBone(const char* file);
+		LW_RESULT LoadBone(std::string_view file);
 		LW_RESULT LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info);
 		LW_RESULT LoadPriCatch(const lwPhysiquePriInfo& info);
-		LW_RESULT LoadPrimitive(DWORD part_id, const char* file);
+		LW_RESULT LoadPrimitive(DWORD part_id, std::string_view file);
 		LW_RESULT DestroyPrimitive(DWORD part_id);
 
 		LW_RESULT CheckPrimitive(DWORD part_id) {

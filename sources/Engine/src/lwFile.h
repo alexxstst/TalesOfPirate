@@ -17,7 +17,7 @@ LW_BEGIN
 		std::string _file;
 
 	private:
-		LW_RESULT _CheckDirectory(const char* path);
+		LW_RESULT _CheckDirectory(std::string_view path);
 
 	public:
 		lwFile() : _handle(INVALID_HANDLE_VALUE) {
@@ -31,11 +31,11 @@ LW_BEGIN
 		// access_flag[in]: GENERIC_READ / GENERIC_WRITE
 		// share_model[in]: 0 / FILE_SHARE_DELETE / FILE_SHARE_READ / FILE_SHARE_WRITE
 		// creation_flag[in]: CREATE_NEW / CREATE_ALWAYS / OPEN_EXISTING / OPEN_ALWAYS / TRUNCATE_EXISTING
-		LW_RESULT CreateFile(const char* file, DWORD access_flag, DWORD share_mode, LPSECURITY_ATTRIBUTES secu_attr,
+		LW_RESULT CreateFile(std::string_view file, DWORD access_flag, DWORD share_mode, LPSECURITY_ATTRIBUTES secu_attr,
 							 DWORD creation_flag, DWORD attributes_flag = FILE_FLAG_SEQUENTIAL_SCAN);
-		LW_RESULT CreateDirectory(const char* path, LPSECURITY_ATTRIBUTES attr);
-		LW_RESULT LoadFileBuffer(const char* file, lwIBuffer* buf);
-		LW_RESULT SaveFileBuffer(const char* file, lwIBuffer* buf);
+		LW_RESULT CreateDirectory(std::string_view path, LPSECURITY_ATTRIBUTES attr);
+		LW_RESULT LoadFileBuffer(std::string_view file, lwIBuffer* buf);
+		LW_RESULT SaveFileBuffer(std::string_view file, lwIBuffer* buf);
 		LW_RESULT Close();
 		LW_RESULT Read(void* buf, DWORD in_size, DWORD* out_size);
 		LW_RESULT Write(const void* buf, DWORD in_size, DWORD* out_size);
@@ -49,7 +49,7 @@ LW_BEGIN
 		}
 
 		LW_RESULT GetCreationTime(SYSTEMTIME* st);
-		LW_RESULT CheckExisting(const char* path, DWORD check_directory);
+		LW_RESULT CheckExisting(std::string_view path, DWORD check_directory);
 
 		// Seek Description
 		// flag[in]: FILE_BEGIN / FILE_CURRENT / FILE_END

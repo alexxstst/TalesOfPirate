@@ -26,8 +26,8 @@ TextureManager::~TextureManager() {
 // GetOrCreateID — аналог CRawDataSet::GetRawDataID
 // ============================================================================
 
-int TextureManager::GetOrCreateID(const char* path) {
-	if (!path || !path[0]) return 0;
+int TextureManager::GetOrCreateID(std::string_view path) {
+	if (path.empty()) return 0;
 
 	// Нормализация: lowercase
 	std::string key(path);
@@ -252,7 +252,7 @@ lwITex* TextureManager::LoadTexture(Entry& entry) {
 		}
 	}
 
-	if (LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r)) {
+	if (LW_RESULT r = tex->LoadTexInfo(&tex_info, std::string_view{}); LW_FAILED(r)) {
 		ToLogService("errors", LogLevel::Error,
 					 "[{}] tex->LoadTexInfo failed: file={}, ret={}",
 					 __FUNCTION__, tex_info.file_name, static_cast<long long>(r));

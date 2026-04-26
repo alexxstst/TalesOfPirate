@@ -73,8 +73,8 @@ void AnimCtrlLight::SetData(IndexDataSceneLight* buf, DWORD num) {
 	_pose_ctrl->InsertPose(0, &pi, 1);
 }
 
-int AnimCtrlLight::Load(const char* file) {
-	FILE* fp = fopen(file, "rt");
+int AnimCtrlLight::Load(std::string_view file) {
+	FILE* fp = fopen(std::string{file}.c_str(), "rt");
 	if (fp == NULL)
 		return 0;
 

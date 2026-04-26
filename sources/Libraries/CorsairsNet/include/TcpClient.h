@@ -99,13 +99,18 @@ namespace net {
 		//  .   crypto .    send().
 		bool Send(WPacket& packet);
 
-		//   ( game thread) 
+		//   ( game thread)
 
 		//   maxPackets   .
 		// : RPC-  dispatch callback'.
 		// :    handler->OnPacket().
 		//    pending RPC .
 		//  -   .
+		//
+		//   :    game thread'.
+		//      _recvBatch / _rpcBatch ( ),
+		// reentrant- (   OnPacket   PollPackets
+		//   TcpClient,    ).
 		int PollPackets(int maxPackets = 1);
 
 		//  AsyncCall (lambda-based RPC) 
@@ -185,11 +190,41 @@ namespace net {
 			}
 
 			bool Pop(RPacket& out) {
+				if (packets.empty()) 
+					return false;
+				
 				std::lock_guard<std::mutex> lock(mtx);
-				if (packets.empty()) return false;
 				out = std::move(packets.front());
 				packets.pop();
 				return true;
+			}
+
+			//      .
+			void PopAll(std::vector<RPacket>& out) {
+				std::lock_guard<std::mutex> lock(mtx);
+				out.reserve(out.size() + packets.size());
+				while (!packets.empty()) {
+					out.push_back(std::move(packets.front()));
+					packets.pop();
+				}
+			}
+
+			//   maxCount    .
+			void PopUpTo(std::vector<RPacket>& out, int maxCount) {
+				if (maxCount <= 0) {
+					return;
+				}
+				std::lock_guard<std::mutex> lock(mtx);
+				int taken = 0;
+				while (taken < maxCount && !packets.empty()) {
+					out.push_back(std::move(packets.front()));
+					packets.pop();
+					++taken;
+				}
+			}
+
+			bool IsEmpty() {
+				return packets.empty();
 			}
 
 			void Clear() {
@@ -200,6 +235,12 @@ namespace net {
 
 		PacketQueue _recvQueue; //   (SESS  FLAG)
 		PacketQueue _rpcResponseQueue; // RPC- (SESS  FLAG)
+
+		//      PollPackets,    .
+		//   game thread'  PollPackets, reentrant- (. ).
+		std::vector<RPacket> _recvBatch;
+		std::vector<RPacket> _rpcBatch;
+		static constexpr std::size_t kPollBatchReserve = 64;
 
 		//  
 		std::mutex _sendMtx;

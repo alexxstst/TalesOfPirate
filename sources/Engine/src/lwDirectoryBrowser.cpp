@@ -11,12 +11,12 @@ LW_BEGIN
 		: _proc(0), _param(0) {
 	}
 
-	LW_RESULT lwDirectoryBrowser::_Go(const char* file, DWORD flag) {
+	LW_RESULT lwDirectoryBrowser::_Go(std::string_view file, DWORD flag) {
 		LW_RESULT ret = LW_RET_OK;
 
 		WIN32_FIND_DATA wfd;
 
-		HANDLE handle = ::FindFirstFile(file, &wfd);
+		HANDLE handle = ::FindFirstFile(std::string{file}.c_str(), &wfd);
 
 		if (handle == INVALID_HANDLE_VALUE)
 			goto __ret;
@@ -70,7 +70,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwDirectoryBrowser::Browse(const char* file, DWORD flag) {
+	LW_RESULT lwDirectoryBrowser::Browse(std::string_view file, DWORD flag) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_proc == 0)

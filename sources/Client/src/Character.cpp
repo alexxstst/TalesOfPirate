@@ -1,6 +1,9 @@
 ﻿#include "Stdafx.h"
 #include "Character.h"
 #include "Point.h"
+#include "GameDiagnostic.h"
+
+using Corsairs::Client::Diagnostic::GameDiagnostic;
 #include "MPShadeMap.h"
 #include "mpparticlectrl.h"
 #include "Scene.h"
@@ -665,19 +668,23 @@ int CCharacter::_GetTargetAngle(int nTargetX, int nTargetY, BOOL bBack) {
 }
 
 void CCharacter::setPos(int nX, int nY) {
-#ifdef _STATE_DEBUG
-	if (IsMainCha()) {
+	//  Диагностика ходьбы main_cha. Раньше блок был под #ifdef _STATE_DEBUG
+	//  и писал в "common", засоряя его. Теперь — runtime-флаг
+	//  GameDiagnostic::IsMoveEnabled (ini [Logging] move) + отдельный
+	//  канал "movie" уровня Debug.
+	if (GameDiagnostic::Instance().IsMoveEnabled() && IsMainCha()) {
 		static DWORD tick = 0;
 		int dis = GetDistance(nX, nY, _nCurX, _nCurY);
 		if (dis > 300.0f)
-			ToLogService("common", "\t\tpos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY,
+			ToLogService("movie", LogLevel::Debug,
+						 "\t\tpos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY,
 						 dis, GetTickCount() - tick, g_Render.GetFPS());
 		else
-			ToLogService("common", "pos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY, dis,
+			ToLogService("movie", LogLevel::Debug,
+						 "pos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY, dis,
 						 GetTickCount() - tick, g_Render.GetFPS());
 		tick = GetTickCount();
 	}
-#endif
 
 	if (_Special.IsAny()) {
 		_nHelixCenterX = nX;

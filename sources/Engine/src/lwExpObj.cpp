@@ -361,11 +361,11 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataTexUV::Load(const char* file) {
+	LW_RESULT lwAnimDataTexUV::Load(std::string_view file) {
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataTexUV::Save(const char* file) const {
+	LW_RESULT lwAnimDataTexUV::Save(std::string_view file) const {
 		return LW_RET_OK;
 	}
 
@@ -446,11 +446,11 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataTexImg::Load(const char* file) {
+	LW_RESULT lwAnimDataTexImg::Load(std::string_view file) {
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataTexImg::Save(const char* file) const {
+	LW_RESULT lwAnimDataTexImg::Save(std::string_view file) const {
 		return LW_RET_OK;
 	}
 
@@ -710,10 +710,10 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataBone::Load(const char* file) {
+	LW_RESULT lwAnimDataBone::Load(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "rb");
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			goto __ret;
 
@@ -730,7 +730,7 @@ LW_BEGIN
 		if (LW_RESULT r = Load(fp, version); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] AnimDataBone::Load(fp) failed: file='{}', version={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(version), static_cast<long long>(r));
 			goto __ret;
 		}
@@ -745,10 +745,10 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwAnimDataBone::Save(const char* file) const {
+	LW_RESULT lwAnimDataBone::Save(std::string_view file) const {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "wb");
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == NULL)
 			return 0;
 
@@ -758,7 +758,7 @@ LW_BEGIN
 		if (LW_RESULT r = Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] AnimDataBone::Save(fp) failed: file='{}', ret={}",
-						 __FUNCTION__, file ? file : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
 		}
@@ -978,12 +978,12 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataMatrix::Load(const char* file) {
+	LW_RESULT lwAnimDataMatrix::Load(std::string_view file) {
 		assert(0);
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwAnimDataMatrix::Save(const char* file) const {
+	LW_RESULT lwAnimDataMatrix::Save(std::string_view file) const {
 		assert(0);
 		return LW_RET_OK;
 	}
@@ -1904,10 +1904,10 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwSaveAnimDataBone(const char* file, const lwAnimDataBone* info) {
+	LW_RESULT lwSaveAnimDataBone(std::string_view file, const lwAnimDataBone* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "wb");
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == NULL)
 			return 0;
 
@@ -1917,7 +1917,7 @@ LW_BEGIN
 		if (LW_RESULT r = info->Save(fp); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] AnimDataBone::Save failed: file='{}', ret={}",
-						 __FUNCTION__, file ? file : "(null)",
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
 		}
@@ -2488,12 +2488,12 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwGeomObjInfo::Load(const char* file) {
-		FILE* fp = fopen(file, "rb");
+	LW_RESULT lwGeomObjInfo::Load(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
-		std::string value = file;
+		std::string value{file};
 		if (value == "model\\effect\\01020018.lgo") {
 			const auto sizeX86 = sizeof(lwMeshInfoHeader); //128
 			int x = 10;
@@ -2511,8 +2511,8 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwGeomObjInfo::Save(const char* file) {
-		FILE* fp = fopen(file, "wb");
+	LW_RESULT lwGeomObjInfo::Save(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
@@ -2544,8 +2544,8 @@ LW_BEGIN
 	// lwModelObjInfo
 	LW_STD_IMPLEMENTATION(lwModelObjInfo)
 
-	LW_RESULT lwModelObjInfo::Load(const char* file) {
-		FILE* fp = fopen(file, "rb");
+	LW_RESULT lwModelObjInfo::Load(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
@@ -2591,8 +2591,8 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwModelObjInfo::Save(const char* file) {
-		FILE* fp = fopen(file, "wb");
+	LW_RESULT lwModelObjInfo::Save(std::string_view file) {
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
@@ -2693,10 +2693,10 @@ LW_BEGIN
 		return size;
 	}
 
-	LW_RESULT lwModelObjInfo::GetHeader(lwModelObjInfoHeader* header_seq, DWORD* header_num, const char* file) {
+	LW_RESULT lwModelObjInfo::GetHeader(lwModelObjInfoHeader* header_seq, DWORD* header_num, std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "rb");
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == NULL)
 			goto __ret;
 
@@ -2985,10 +2985,10 @@ LW_BEGIN
 		return TREENODE_PROC_RET_CONTINUE;
 	}
 
-	LW_RESULT lwModelInfo::Load(const char* file) {
+	LW_RESULT lwModelInfo::Load(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "rb");
+		FILE* fp = fopen(std::string{file}.c_str(), "rb");
 		if (fp == 0)
 			goto __ret;
 
@@ -3009,7 +3009,7 @@ LW_BEGIN
 				if (LW_RESULT r = node_info->Load(fp, _head.version); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] lwModelNodeInfo::Load failed: file='{}', i={}, version={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)",
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 								 static_cast<long long>(i),
 								 static_cast<long long>(_head.version),
 								 static_cast<long long>(r));
@@ -3036,7 +3036,7 @@ LW_BEGIN
 					if (LW_RESULT r = param.node->InsertChild(0, tree_node); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] InsertChild failed: file='{}', i={}, parent_handle={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)",
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file),
 									 static_cast<long long>(i),
 									 static_cast<long long>(node_info->_parent_handle),
 									 static_cast<long long>(r));
@@ -3055,10 +3055,10 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwModelInfo::Save(const char* file) {
+	LW_RESULT lwModelInfo::Save(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		FILE* fp = fopen(file, "wb");
+		FILE* fp = fopen(std::string{file}.c_str(), "wb");
 		if (fp == 0)
 			goto __ret;
 

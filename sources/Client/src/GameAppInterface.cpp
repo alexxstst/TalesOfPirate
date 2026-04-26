@@ -2,6 +2,9 @@
 
 #include "GameApp.h"
 #include "GameConfig.h"
+#include "EngineDiag.h"
+
+using Corsairs::Engine::Diagnostic::EngineDiag;
 
 #include "SceneObjRecordStore.h"
 #include "EffectRecordStore.h"
@@ -155,6 +158,37 @@ void __timer_period_render() {
 	}
 }
 
+//  Замер FPS / длительности кадра. Логирует раз в секунду в канал "perf".
+//  Источники времени:
+//   - QueryPerformanceCounter — для точного замера полной длительности кадра
+//     (FrameMove + Render + всё, что между ними);
+//   - GetFrameMoveUseTime / GetRenderUseTime — берём готовый замер из MPGameApp,
+//     чтобы понять, кто из двух фаз доминирует в frame time.
+namespace {
+	struct FrameStats {
+		std::int64_t qpcFreq{0};     //  Тиков в секунду (QueryPerformanceFrequency).
+		std::int64_t windowStart{0}; //  Начало текущего секундного окна, тики QPC.
+		std::int64_t lastFrameTick{0};
+
+		std::uint32_t frameCount{0}; //  Число кадров за текущее окно.
+
+		std::int64_t frameTimeSumUs{0}; //  Сумма длительностей кадров (мкс).
+		std::int64_t frameTimeMaxUs{0};
+
+		std::uint64_t frameMoveSumMs{0}; //  Сумма _dwFrameMoveUseTime за окно.
+		std::uint64_t renderSumMs{0};    //  Сумма _dwRenderUseTime за окно.
+
+		void Reset(std::int64_t now) {
+			windowStart = now;
+			frameCount = 0;
+			frameTimeSumUs = 0;
+			frameTimeMaxUs = 0;
+			frameMoveSumMs = 0;
+			renderSumMs = 0;
+		}
+	};
+}
+
 int CGameApp::Run() {
 #define R_FAIL - 1;
 #define R_OK 0;
@@ -182,6 +216,17 @@ int CGameApp::Run() {
 	_isRun = true;
 
 	if (!_pSteady->Init()) return -1;
+
+	FrameStats stats{};
+	{
+		LARGE_INTEGER freq{};
+		QueryPerformanceFrequency(&freq);
+		stats.qpcFreq = freq.QuadPart;
+		LARGE_INTEGER now{};
+		QueryPerformanceCounter(&now);
+		stats.windowStart = now.QuadPart;
+		stats.lastFrameTick = now.QuadPart;
+	}
 
 	while (_isRun) {
 		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
@@ -211,6 +256,38 @@ int CGameApp::Run() {
 
 				_pSteady->End();
 				g_Render.GetInterfaceMgr()->tp_loadres->SetPoolEvent(FALSE);
+
+				//  Замер кадра. Делаем после Render, чтобы посчитать полное время цикла.
+				LARGE_INTEGER now{};
+				QueryPerformanceCounter(&now);
+				const std::int64_t frameTicks = now.QuadPart - stats.lastFrameTick;
+				stats.lastFrameTick = now.QuadPart;
+				const std::int64_t frameUs = (frameTicks * 1'000'000) / stats.qpcFreq;
+				stats.frameTimeSumUs += frameUs;
+				if (frameUs > stats.frameTimeMaxUs) {
+					stats.frameTimeMaxUs = frameUs;
+				}
+				stats.frameMoveSumMs += g_pGameApp->GetFrameMoveUseTime();
+				stats.renderSumMs += g_pGameApp->GetRenderUseTime();
+				++stats.frameCount;
+
+				const std::int64_t windowTicks = now.QuadPart - stats.windowStart;
+				if (windowTicks >= stats.qpcFreq) {
+					//  Прошла секунда — печатаем сводку.
+					const double windowSec = static_cast<double>(windowTicks) / static_cast<double>(stats.qpcFreq);
+					const double fps = stats.frameCount / windowSec;
+					const double avgFrameMs = (stats.frameTimeSumUs / 1000.0) / std::max<std::uint32_t>(1u, stats.frameCount);
+					const double maxFrameMs = stats.frameTimeMaxUs / 1000.0;
+					const double avgFrameMoveMs = static_cast<double>(stats.frameMoveSumMs) / std::max<std::uint32_t>(1u, stats.frameCount);
+					const double avgRenderMs = static_cast<double>(stats.renderSumMs) / std::max<std::uint32_t>(1u, stats.frameCount);
+
+					ToLogService("perf", LogLevel::Info,
+						"FPS={:.1f} | frame avg={:.2f}ms max={:.2f}ms | FrameMove avg={:.2f}ms | Render avg={:.2f}ms | target={}",
+						fps, avgFrameMs, maxFrameMs, avgFrameMoveMs, avgRenderMs,
+						CSteadyFrame::GetFPS());
+
+					stats.Reset(now.QuadPart);
+				}
 			}
 #endif
 		}
@@ -569,6 +646,10 @@ CGameScene* CGameApp::CreateScene(stSceneInitParam* param) {
 
 	if (param->nTypeID >= enumSceneEnd) return NULL;
 
+	if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+		ToLogService("scene", LogLevel::Debug, "CreateScene: type={}, name={}, map={}", param->nTypeID, param->strName, param->strMapFile);
+	}
+
 	CGameScene* scene = NULL;
 	switch (param->nTypeID) {
 	case enumLoginScene: scene = new CLoginScene(*param);
@@ -583,8 +664,23 @@ CGameScene* CGameApp::CreateScene(stSceneInitParam* param) {
 	}
 	}
 
-	if (scene && scene->_CreateMemory())
+	if (!scene) {
+		if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+			ToLogService("scene", LogLevel::Debug, "CreateScene: scene allocation failed");
+		}
+		return NULL;
+	}
+
+	if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+		ToLogService("scene", LogLevel::Debug, "CreateScene: scene allocated, calling _CreateMemory");
+	}
+	const bool ok = scene->_CreateMemory();
+	if (EngineDiag::Instance().IsSceneLoadEnabled()) {
+		ToLogService("scene", LogLevel::Debug, "CreateScene: _CreateMemory returned {}", ok ? "true" : "false");
+	}
+	if (ok) {
 		return scene;
+	}
 
 	return NULL;
 }

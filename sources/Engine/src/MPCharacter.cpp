@@ -257,12 +257,12 @@ LW_BEGIN
 
 	extern lwGeomManager g_GeomManager;
 
-	BOOL MPCharacter::InitBone(const char* file) {
+	BOOL MPCharacter::InitBone(std::string_view file) {
 		g_GeomManager.LoadBoneData(file);
 		return TRUE;
 	}
 
-	LW_RESULT MPCharacter::LoadBone(const char* file) {
+	LW_RESULT MPCharacter::LoadBone(std::string_view file) {
 		return _physique->LoadBone(file);
 	}
 
@@ -297,7 +297,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT MPCharacter::LoadPart(DWORD part_id, const char* file) {
+	LW_RESULT MPCharacter::LoadPart(DWORD part_id, std::string_view file) {
 		LW_RESULT ret = LW_RET_OK;
 
 		if (LW_SUCCEEDED(ret = _physique->CheckPrimitive( part_id ))) {
@@ -305,7 +305,7 @@ LW_BEGIN
 			if (LW_FAILED(ret)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] DestroyPrimitive failed: part_id={}, file={}, ret={}",
-							 __FUNCTION__, part_id, file ? file : "(null)", static_cast<long long>(ret));
+							 __FUNCTION__, part_id, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(ret));
 				goto __ret;
 			}
 		}
@@ -314,8 +314,8 @@ LW_BEGIN
 		if (LW_FAILED(ret)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] LoadPrimitive failed: part_id={}, file={}, ret={}",
-						 __FUNCTION__, part_id, file ? file : "(null)", static_cast<long long>(ret));
-			LG_MSGBOX("Load MPCharacter {} error", file ? file : "(null)");
+						 __FUNCTION__, part_id, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(ret));
+			LG_MSGBOX("Load MPCharacter {} error", (file.empty() ? std::string_view{"(null)"} : file));
 			goto __ret;
 		}
 

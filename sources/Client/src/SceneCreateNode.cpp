@@ -92,7 +92,17 @@ CCharacter* CGameScene::AddCharacter(int nScriptID) {
 			pInfo->sSkinInfo[0], pInfo->sSkinInfo[1], pInfo->sSkinInfo[2], pInfo->sSkinInfo[3], pInfo->sSkinInfo[4],
 		};
 
-		if (((CCharacterModel*)pCha)->LoadCha(pInfo->chModalType, pInfo->sModel, part_buf) == 0) {
+		//  Что было: первый параметр Load*-вызовов получал pInfo->chModalType
+		//  (enum 1..4), который потом сохранялся в CCharacterModel::_TypeID.
+		//  _TypeID используется как primary key для GetChaRecordInfo() в
+		//  Cull/LoadPose/setAttachedCharacterID, поэтому подмена id-архетипа
+		//  enum-ом давала бессмысленный lookup. Для main_cha случайно
+		//  совпадало (chModalType=1 ~ lID=1), для ship/empl нет, а ниже —
+		//  LoadCha(&load_info) вообще не выставлял _TypeID, оставляя
+		//  0xCDCDCDCD (Debug-маркер uninit heap), что засоряло канал store_miss.
+		//  Что исправили: передаём nScriptID — уже подтверждённый primary key
+		//  архетипа (рядом, на строке 62, по нему достаётся pInfo).
+		if (((CCharacterModel*)pCha)->LoadCha(nScriptID, pInfo->sModel, part_buf) == 0) {
 			g_logManager.InternalLog(LogLevel::Error, "errors",
 									 SafeVFormat(GetLanguageString(26), nScriptID,
 												 std::string_view(pInfo->DataName.c_str())));
@@ -109,7 +119,10 @@ CCharacter* CGameScene::AddCharacter(int nScriptID) {
 			pInfo->sSkinInfo[2],
 		};
 
-		if (((CCharacterModel*)pCha)->LoadShip(pInfo->chModalType, pInfo->sModel, part_buf) == 0) {
+		//  Было: LoadShip(pInfo->chModalType, ...) — _TypeID = 2 (enum BOAT),
+		//  Cull искал CChaRecord с lID=2 (бессмысленно).
+		//  Стало: передаём nScriptID — реальный primary key архетипа.
+		if (((CCharacterModel*)pCha)->LoadShip(nScriptID, pInfo->sModel, part_buf) == 0) {
 			g_logManager.InternalLog(LogLevel::Error, "errors",
 									 SafeVFormat(GetLanguageString(26), nScriptID,
 												 std::string_view(pInfo->DataName.c_str())));
@@ -127,7 +140,9 @@ CCharacter* CGameScene::AddCharacter(int nScriptID) {
 			pInfo->sSkinInfo[3],
 		};
 
-		if (((CCharacterModel*)pCha)->LoadTower(pInfo->chModalType, part_buf) == 0) {
+		//  Было: LoadTower(pInfo->chModalType, ...) — _TypeID = 3 (enum EMPL).
+		//  Стало: передаём nScriptID — реальный primary key архетипа.
+		if (((CCharacterModel*)pCha)->LoadTower(nScriptID, part_buf) == 0) {
 			g_logManager.InternalLog(LogLevel::Error, "errors",
 									 SafeVFormat(GetLanguageString(26), nScriptID,
 												 std::string_view(pInfo->DataName.c_str())));
@@ -156,7 +171,12 @@ CCharacter* CGameScene::AddCharacter(int nScriptID) {
 			*r.out = 0;
 		}
 
-		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0) {
+		//  Было: LoadCha(&load_info) — overload без передачи type_id,
+		//  поэтому _TypeID оставался 0xCDCDCDCD (Debug-маркер uninit heap).
+		//  Каждый кадр Cull() уходил в GetChaRecordInfo(0xCDCDCDCD) → MISS,
+		//  поток store_miss про id=-842150451 в логах.
+		//  Стало: используем новый overload LoadCha(info, type_id) с nScriptID.
+		if (((CCharacterModel*)pCha)->LoadCha(&load_info, nScriptID) == 0) {
 			g_logManager.InternalLog(LogLevel::Error, "errors",
 									 SafeVFormat(GetLanguageString(26), nScriptID,
 												 std::string_view(pInfo->DataName.c_str())));
@@ -341,7 +361,7 @@ CSceneItem* CGameScene::AddSceneItem(int nScriptID, int nType) {
 	return pObj;
 }
 
-CSceneItem* CGameScene::AddSceneItem(const char* file) {
+CSceneItem* CGameScene::AddSceneItem(std::string_view file) {
 	CSceneItem* pObj = _GetFirstInvalidSceneItem();
 	if (pObj) {
 		pObj->Destroy();

@@ -1232,9 +1232,9 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwDeviceObject::DumpRenderState(const char* file) {
+	LW_RESULT lwDeviceObject::DumpRenderState(std::string_view file) {
 		DWORD i, j;
-		FILE* fp = fopen(file, "wt");
+		FILE* fp = fopen(std::string{file}.c_str(), "wt");
 
 		if (fp) {
 			fprintf(fp, "render state:\n");

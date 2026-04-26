@@ -25,7 +25,7 @@ UI_LoadImage( imgMinimapR, "texture/ui/ShipBuild4.dds", NORMAL, 8, 156, 245, 88 
 imgMinimapRect = UI_CreateCompent( frmMinimap, IMAGE_TYPE, "imgMinimapRect", 128, 128, 6, 8 )
 
 labMapName = UI_CreateCompent( frmMinimap, LABELEX_TYPE, "labMapName", 51, 12, 2, 137 )
-UI_SetCaption( labMapName, "��������������" )
+UI_SetCaption( labMapName, "Map Name" )
 UI_SetTextColor( labMapName, COLOR_BLACK )
 UI_SetLabelExFont( labMapName, DEFAULT_FONT, TRUE, COLOR_WHITE )
 
@@ -205,7 +205,7 @@ imgMinimapRect = UI_CreateCompent( frmMinimap, IMAGE_TYPE, "imgMinimapRect", 128
 
 -- Map name display
 labMapName = UI_CreateCompent( frmMinimap, LABELEX_TYPE, "labMapName", 51, 12, 2, 137 )
-UI_SetCaption( labMapName, "��������������" )
+UI_SetCaption( labMapName, "Map Name" )
 UI_SetTextColor( labMapName, COLOR_BLACK )
 UI_SetLabelExFont( labMapName, DEFAULT_FONT, TRUE, COLOR_WHITE )
 

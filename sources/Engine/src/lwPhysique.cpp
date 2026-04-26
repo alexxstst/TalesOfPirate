@@ -56,15 +56,15 @@ LW_BEGIN
 		m_AnimDataMap.clear();
 	}
 
-	lwGeomObjInfo* lwGeomManager::GetGeomObjInfo(const char file[]) {
-		GEOMOBJ_MAP::iterator pos = m_GeomobjMap.find(file);
+	lwGeomObjInfo* lwGeomManager::GetGeomObjInfo(std::string_view file) {
+		GEOMOBJ_MAP::iterator pos = m_GeomobjMap.find(std::string{file});
 		if (pos != m_GeomobjMap.end()) {
 			return (*pos).second;
 		}
 		return NULL;
 	}
 
-	bool lwGeomManager::LoadGeomobj(const char file[]) {
+	bool lwGeomManager::LoadGeomobj(std::string_view file) {
 		const std::string path = std::format("model\\character\\{}", file);
 		lwGeomObjInfo* pInfo = new lwGeomObjInfo;
 		if (LW_RESULT r = pInfo->Load(path.c_str()); LW_FAILED(r)) {
@@ -79,33 +79,33 @@ LW_BEGIN
 			}
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwGeomObjInfo::Load failed: file={}, path={}, ret={}\n  stack:\n{}",
-						 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r), trace);
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r), trace);
 			delete pInfo;
 			return false;
 		}
-		m_GeomobjMap[file] = pInfo;
+		m_GeomobjMap[std::string{file}] = pInfo;
 		return true;
 	}
 
-	lwIAnimDataBone* lwGeomManager::GetBoneData(const char file[]) {
-		ANIMDATA_MAP::iterator pos = m_AnimDataMap.find(file);
+	lwIAnimDataBone* lwGeomManager::GetBoneData(std::string_view file) {
+		ANIMDATA_MAP::iterator pos = m_AnimDataMap.find(std::string{file});
 		if (pos != m_AnimDataMap.end()) {
 			return (*pos).second;
 		}
 		return NULL;
 	}
 
-	bool lwGeomManager::LoadBoneData(const char file[]) {
+	bool lwGeomManager::LoadBoneData(std::string_view file) {
 		const std::string path = std::format("animation\\{}", file);
 		lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
 		if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] lwIAnimDataBone::Load failed: file={}, path={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
 			i_data->Release();
 			return false;
 		}
-		m_AnimDataMap[file] = i_data;
+		m_AnimDataMap[std::string{file}] = i_data;
 		return true;
 	}
 
@@ -239,7 +239,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPhysique::LoadBone(const char* file) {
+	LW_RESULT lwPhysique::LoadBone(std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwResFileAnimData res;
@@ -261,7 +261,7 @@ LW_BEGIN
 			if (LW_RESULT r = _res_mgr->CreateAnimCtrlAgent(&_anim_agent); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] CreateAnimCtrlAgent failed: file={}, ret={}",
-							 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -270,14 +270,14 @@ LW_BEGIN
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] CreateAnimCtrlObj(BONE) failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
 		if (LW_RESULT r = _anim_agent->AddAnimCtrlObj(bone_ctrl); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] AddAnimCtrlObj failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -303,7 +303,7 @@ LW_BEGIN
 				if (LW_RESULT r = _res_mgr->GetAnimCtrl((lwIAnimCtrl**)&anim_ctrl, ret_id); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] GetAnimCtrl failed: file={}, ret_id={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", ret_id, static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), ret_id, static_cast<long long>(r));
 					goto __ret;
 				}
 				_res_mgr->AddRefAnimCtrl(anim_ctrl, 1);
@@ -316,7 +316,7 @@ LW_BEGIN
 					LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] CreateAnimCtrl(BONE) failed (DYNAMIC_LOADING): file={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 					goto __ret;
 				}
 
@@ -351,7 +351,7 @@ LW_BEGIN
 					if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
 									 "[{}] lwAnimDataBone::Load failed: file={}, path={}, ret={}",
-									 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
 						goto __addr_1;
 					}
 				}
@@ -359,14 +359,14 @@ LW_BEGIN
 					LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] CreateAnimCtrl(BONE) failed: file={}, path={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
 					goto __addr_1;
 				}
 
 				if (LW_RESULT r = ctrl_bone->LoadData(i_data); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] ctrl_bone->LoadData failed: file={}, path={}, ret={}",
-								 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
 					goto __addr_1;
 				}
 
@@ -407,7 +407,7 @@ LW_BEGIN
 		lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
 		BYTE create_helper_primitive = opt_mgr->GetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE);
 
-		const char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER).c_str();
+		const std::string& tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER);
 
 		lwGeomObjInfo* info = (lwGeomObjInfo*)geom_info;
 
@@ -497,7 +497,7 @@ LW_BEGIN
 			if (LW_RESULT r = imp->LoadAnimData(&info->anim_data, tex_path, 0); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->LoadAnimData failed: part_id={}, tex_path={}, ret={}",
-							 __FUNCTION__, part_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, part_id, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 			}
 		}
 
@@ -515,7 +515,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, const char* file) {
+	LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, std::string_view file) {
 		if (part_id < 0 || part_id >= LW_MAX_SUBSKIN_NUM)
 			return ERR_INVALID_PARAM;
 
@@ -526,7 +526,7 @@ LW_BEGIN
 		lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
 		BYTE create_helper_primitive = opt_mgr->GetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE);
 
-		const char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER).c_str();
+		const std::string& tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER);
 
 		// query mesh pool
 		DWORD ret_id;
@@ -667,7 +667,7 @@ LW_BEGIN
 			if (LW_RESULT r = h->LoadHelperInfo(&pInfo->helper_data, create_helper_primitive); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadHelperInfo failed: part_id={}, file={}, helper_size={}, ret={}",
-							 __FUNCTION__, part_id, file ? file : "(null)", pInfo->helper_size,
+							 __FUNCTION__, part_id, (file.empty() ? std::string_view{"(null)"} : file), pInfo->helper_size,
 							 static_cast<long long>(r));
 				LG_MSGBOX("LoadHelperInfo error");
 			}
@@ -679,7 +679,7 @@ LW_BEGIN
 			if (LW_RESULT r = imp->LoadAnimData(&pInfo->anim_data, tex_path, &res); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->LoadAnimData (with res) failed: part_id={}, tex_path={}, ret={}",
-							 __FUNCTION__, part_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 __FUNCTION__, part_id, (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 			}
 		}
 

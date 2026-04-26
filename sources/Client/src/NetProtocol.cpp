@@ -1157,22 +1157,11 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 		g_cFindPathEx.Reset();
 		g_cFindPath.SetShortPathFinding(128, 38);
 
-		if (switchmap.chEnterType == enumENTER_MAP_CARRY) {
-			if (!GlobalAppConfig.IsPower()) {
-				g_logManager.Shutdown();
-			}
-		}
-
-		// Record game login time
 		CGameApp::SetLoginTime(GetTickCount());
 	}
 	else {
 		if (switchmap.chEnterType == enumENTER_MAP_CARRY) {
 			g_pGameApp->Loading();
-
-			if (!GlobalAppConfig.IsPower()) {
-				g_logManager.Shutdown();
-			}
 		}
 
 		if (!s->SwitchMap(pInfo->Id)) {

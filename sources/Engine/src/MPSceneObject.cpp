@@ -50,14 +50,14 @@ LW_BEGIN
 		}
 	}
 
-	LW_RESULT MPSceneObject::Load(const char* file, DWORD model_id) {
+	LW_RESULT MPSceneObject::Load(std::string_view file, DWORD model_id) {
 		LW_RESULT ret;
 		ret = _model->Load(file, model_id);
 		if (LW_FAILED(ret)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _model->Load failed: file={}, model_id={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", model_id, static_cast<long long>(ret));
-			LG_MSGBOX("Load MPSceneObject {} error", file ? file : "(null)");
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), model_id, static_cast<long long>(ret));
+			LG_MSGBOX("Load MPSceneObject {} error", (file.empty() ? std::string_view{"(null)"} : file));
 		}
 		return ret;
 	}
@@ -141,28 +141,28 @@ LW_BEGIN
 	}
 
 	LW_RESULT MPSceneObject::HitTestHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-											   const char* type_name) {
+											   std::string_view type_name) {
 		if (_model)
 			return _model->HitTestHelperMesh(info, org, ray, type_name);
 		return 0;
 	}
 
 	LW_RESULT MPSceneObject::HitTestHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-											  const char* type_name) {
+											  std::string_view type_name) {
 		if (_model)
 			return _model->HitTestHelperBox(info, org, ray, type_name);
 		return 0;
 	}
 
 	LW_RESULT MPSceneObject::HitTestPrimitiveHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-														const char* type_name) {
+														std::string_view type_name) {
 		if (_model)
 			return _model->HitTestPrimitiveHelperMesh(info, org, ray, type_name);
 		return 0;
 	}
 
 	LW_RESULT MPSceneObject::HitTestPrimitiveHelperBox(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
-													   const char* type_name) {
+													   std::string_view type_name) {
 		if (_model)
 			return _model->HitTestPrimitiveHelperBox(info, org, ray, type_name);
 		return 0;

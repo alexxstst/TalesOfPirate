@@ -107,7 +107,7 @@ namespace net {
 
 		//  pending accepts
 		{
-			std::lock_guard<std::mutex> lock(_pendingMtx);
+			std::scoped_lock lock(_pendingMtx);
 			for (auto& pa : _pendingAccepts) {
 				closesocket(pa.sock);
 			}
@@ -162,7 +162,7 @@ namespace net {
 		{
 			std::vector<PendingAccept> accepts;
 			{
-				std::lock_guard<std::mutex> lock(_pendingMtx);
+				std::scoped_lock lock(_pendingMtx);
 				accepts.swap(_pendingAccepts);
 			}
 
@@ -253,7 +253,7 @@ namespace net {
 				<< ipBuf << ":" << port << std::endl;
 
 			{
-				std::lock_guard<std::mutex> lock(_pendingMtx);
+				std::scoped_lock lock(_pendingMtx);
 				_pendingAccepts.push_back({ clientSock, std::string(ipBuf), port });
 			}
 		}

@@ -215,7 +215,12 @@ LW_BEGIN
 			return _base_index;
 		}
 
-		LW_RESULT GetEntryOffset(DWORD* offset, DWORD size, DWORD stride);
+		//  fail_branch (out, опционально) сообщает, какая именно проверка
+		//  вернула FAILED:
+		//    0 — успех (offset заполнен),
+		//    1 — ветка A: GetValidSize() < size (учётно нет места),
+		//    2 — ветка B: (o + size) >= GetTotalSize() (упёрлись в конец кольца — wrap).
+		LW_RESULT GetEntryOffset(DWORD* offset, DWORD size, DWORD stride, int* fail_branch = nullptr);
 		LW_RESULT ResetFreeSize(DWORD size, DWORD offset);
 	};
 

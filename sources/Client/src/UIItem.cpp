@@ -22,7 +22,7 @@ CItemBar::CItemBar()
 	: CItem(), _fScale(0.3f) {
 }
 
-void CItemBar::LoadImage(const char* file, int w, int h, int tx, int ty) {
+void CItemBar::LoadImage(std::string_view file, int w, int h, int tx, int ty) {
 	_pBar->LoadAllImage(file, w, h, tx, ty);
 }
 

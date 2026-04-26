@@ -1935,7 +1935,21 @@ const char* ConsoleCallback(const char* pszCmd) {
 					pInfo->sSkinInfo[4],
 				};
 
-				if (((CCharacterModel*)pCha)->LoadCha(pInfo->chModalType, pInfo->sModel, part_buf) == 0) {
+				//  Что было: первый параметр всех Load*-вызовов получал
+				//  pInfo->chModalType (enum 1..4). Этот же параметр у Load*
+				//  присваивается в CCharacterModel::_TypeID, который позже
+				//  используется как primary key для GetChaRecordInfo()
+				//  в Cull/LoadPose/setAttachedCharacterID. То есть _TypeID
+				//  конфликтовал с lID архетипа: для main_cha случайно
+                //  совпадало (chModalType=1 ~ lID=1), для ship/empl получался
+				//  бессмысленный lookup, а LoadCha(&load_info) для OTHER
+				//  вообще не выставлял _TypeID — он оставался 0xCDCDCDCD
+				//  (Debug-маркер uninit heap), что давало поток MISS в
+				//  store_miss.
+				//  Что исправили: передаём nScriptID — это уже подтверждённый
+				//  primary key архетипа (по нему рядом достаётся pInfo через
+				//  GetChaRecordInfo(nScriptID)).
+				if (((CCharacterModel*)pCha)->LoadCha(nScriptID, pInfo->sModel, part_buf) == 0) {
 					g_logManager.InternalLog(LogLevel::Error, "errors",
 											 SafeVFormat(GetLanguageString(26), nScriptID,
 														 std::string_view(pInfo->DataName.c_str())));
@@ -1950,7 +1964,10 @@ const char* ConsoleCallback(const char* pszCmd) {
 					pInfo->sSkinInfo[2],
 				};
 
-				if (((CCharacterModel*)pCha)->LoadShip(pInfo->chModalType, pInfo->sModel, part_buf) == 0) {
+				//  Было: LoadShip(pInfo->chModalType, ...) — _TypeID = 2 (enum),
+				//  Cull искал CChaRecord с lID=2 (бессмысленно).
+				//  Стало: передаём nScriptID — реальный primary key архетипа.
+				if (((CCharacterModel*)pCha)->LoadShip(nScriptID, pInfo->sModel, part_buf) == 0) {
 					g_logManager.InternalLog(LogLevel::Error, "errors",
 											 SafeVFormat(GetLanguageString(26), nScriptID,
 														 std::string_view(pInfo->DataName.c_str())));
@@ -1966,7 +1983,9 @@ const char* ConsoleCallback(const char* pszCmd) {
 					pInfo->sSkinInfo[3],
 				};
 
-				if (((CCharacterModel*)pCha)->LoadTower(pInfo->chModalType, part_buf) == 0) {
+				//  Было: LoadTower(pInfo->chModalType, ...) — _TypeID = 3 (enum).
+				//  Стало: передаём nScriptID — реальный primary key архетипа.
+				if (((CCharacterModel*)pCha)->LoadTower(nScriptID, part_buf) == 0) {
 					g_logManager.InternalLog(LogLevel::Error, "errors",
 											 SafeVFormat(GetLanguageString(26), nScriptID,
 														 std::string_view(pInfo->DataName.c_str())));
@@ -1994,7 +2013,13 @@ const char* ConsoleCallback(const char* pszCmd) {
 					}
 				}
 
-				if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0) {
+				//  Было: LoadCha(&load_info) — overload, который в принципе
+				//  не трогает _TypeID. Поле оставалось 0xCDCDCDCD, и каждый
+				//  кадр Cull() уходил в GetChaRecordInfo(0xCDCDCDCD) → MISS
+				//  (тот самый поток store_miss про id=-842150451).
+				//  Стало: используем новый overload LoadCha(info, type_id)
+				//  с явным nScriptID.
+				if (((CCharacterModel*)pCha)->LoadCha(&load_info, nScriptID) == 0) {
 					g_logManager.InternalLog(LogLevel::Error, "errors",
 											 SafeVFormat(GetLanguageString(26), nScriptID,
 														 std::string_view(pInfo->DataName.c_str())));

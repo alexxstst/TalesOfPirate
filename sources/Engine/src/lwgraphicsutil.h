@@ -69,11 +69,11 @@ LW_BEGIN
 
 	float lwGetFPS();
 
-	int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type,
+	int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, std::string_view file, DWORD colorkey_type,
 						 lwColorValue4b* colorkey);
 	void lwFreeColorValue(lwColorValue4b* buf);
 
-	LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type,
+	LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, std::string_view file, DWORD format, DWORD colorkey_type,
 								lwColorValue4b* colorkey, int use_power_size);
 	LW_RESULT lwLoadMeshDataInfo(lwMeshDataInfo* info, const lwMeshInfo* mi);
 	DWORD lwGetTexFlexibleSize(DWORD size);

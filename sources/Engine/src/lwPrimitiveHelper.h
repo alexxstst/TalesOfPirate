@@ -236,7 +236,7 @@ LW_BEGIN
 
 		LW_RESULT CreateInstance();
 		LW_RESULT HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwMatrix44* mat_parent,
-						  const char* type_name);
+						  std::string_view type_name);
 		LW_RESULT Render();
 
 		virtual int IsVisible() const {
@@ -285,7 +285,7 @@ LW_BEGIN
 
 		LW_RESULT CreateInstance();
 		LW_RESULT HitTest(lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwMatrix44* mat_parent,
-						  const char* type_name);
+						  std::string_view type_name);
 		LW_RESULT Render();
 
 		virtual int IsVisible() const {

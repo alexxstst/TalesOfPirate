@@ -34,7 +34,7 @@ LW_BEGIN
 
 		LW_RESULT Init(DWORD vs_buf_size, DWORD decl_buf_size, DWORD ps_buf_size);
 		LW_RESULT RegisterVertexShader(DWORD type, BYTE* data, DWORD size);
-		LW_RESULT RegisterVertexShader(DWORD type, const char* file, DWORD binary_flag,
+		LW_RESULT RegisterVertexShader(DWORD type, std::string_view file, DWORD binary_flag,
 									   const D3DXMACRO* defines = NULL);
 		LW_RESULT RegisterVertexDeclaration(DWORD type, D3DVERTEXELEMENT9* data);
 		LW_RESULT LoseDevice();

@@ -60,7 +60,7 @@ namespace GUI {
 		virtual void SetIsEnabled(bool v);
 
 		// csNormal,csHover,csDown,csDisablewh
-		bool LoadImage(const char* file, int w = 32, int h = 32, int tx = 0, int ty = 0, bool isHorizontal = true);
+		bool LoadImage(std::string_view file, int w = 32, int h = 32, int tx = 0, int ty = 0, bool isHorizontal = true);
 
 		DWORD GetTextColor() {
 			return _textColor;

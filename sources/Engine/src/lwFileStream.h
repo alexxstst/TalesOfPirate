@@ -20,7 +20,7 @@ LW_BEGIN
 		lwFileStream();
 		~lwFileStream();
 
-		LW_RESULT Open(const char* file, const lwFileStreamOpenInfo* info);
+		LW_RESULT Open(std::string_view file, const lwFileStreamOpenInfo* info);
 		LW_RESULT Close();
 		LW_RESULT Read(void* buf, DWORD in_size, DWORD* out_size);
 		LW_RESULT Write(const void* buf, DWORD in_size, DWORD* out_size);

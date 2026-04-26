@@ -44,7 +44,7 @@ uint8_t* PacketPool::Allocate(int size) {
 
     if (idx >= 0) {
         auto& bucket = _buckets[idx];
-        std::lock_guard<std::mutex> lock(bucket.mtx);
+        std::scoped_lock lock(bucket.mtx);
         ++bucket.inUseCount;
 
         if (!bucket.freeList.empty()) {
@@ -67,7 +67,7 @@ void PacketPool::Free(uint8_t* buf, int allocatedSize) {
 
     if (idx >= 0 && BUCKET_SIZES[idx] == allocatedSize) {
         auto& bucket = _buckets[idx];
-        std::lock_guard<std::mutex> lock(bucket.mtx);
+        std::scoped_lock lock(bucket.mtx);
         --bucket.inUseCount;
         bucket.freeList.push_back(buf);
         return;
@@ -84,7 +84,7 @@ void PacketPool::PrintStats() const {
         int used = bucket.inUseCount.load();
         int free;
         {
-            std::lock_guard<std::mutex> lock(bucket.mtx);
+	        std::scoped_lock lock(bucket.mtx);
             free = static_cast<int>(bucket.freeList.size());
         }
         if (used > 0 || free > 0) {

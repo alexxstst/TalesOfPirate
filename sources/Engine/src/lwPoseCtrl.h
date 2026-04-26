@@ -31,8 +31,8 @@ LW_BEGIN
 			LW_SAFE_DELETE_A(_pose_seq);
 		}
 
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file) const;
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file) const;
 		LW_RESULT Load(FILE* fp);
 		LW_RESULT Save(FILE* fp) const;
 

@@ -19,19 +19,6 @@
 
 CMaskData* CMaskData::g_MaskData = NULL;
 
-HRESULT _DbgOuts(TCHAR* strFile, DWORD dwLine, HRESULT hr, TCHAR* strMsg) {
-	OutputDebugString(std::format("{}({}): ", strFile, dwLine).c_str());
-	OutputDebugString(strMsg);
-
-	if (hr) {
-		OutputDebugString(std::format("(hr={:08x})\n", static_cast<unsigned long>(hr)).c_str());
-	}
-
-	OutputDebugString(_T("\n"));
-
-	return hr;
-}
-
 BOOL PosInRange(D3DXVECTOR3& pos, D3DXVECTOR3& Org, float fRange) {
 	//return ((pos.x > (Org.x - fRange)) && (pos.x < (Org.x + fRange))
 	//	&& (pos.y > (Org.y - fRange)) && (pos.y > (Org.y + fRange)));
@@ -475,10 +462,10 @@ void CSMallMap2D::InitScene() {
 
 #ifdef MGR
 	//MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
-	if (FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8))) {
+	if (FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", std::string_view{}, D3DFMT_A8R8G8B8))) {
 		ToLogService("errors", LogLevel::Error, "msgmapmask.bmp");
 	}
-	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8))) {
+	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\minimap\\mapsea.bmp", std::string_view{}, D3DFMT_A8R8G8B8))) {
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
 #else
@@ -624,7 +611,7 @@ void CSMallMap2D::RenderScene() {
 
 #ifdef MGR
 					lwLoadTex(&_pTex[n][m].pTex, g_Render.GetInterfaceMgr()->res_mgr,
-							  filename.c_str(), 0, D3DFMT_A8R8G8B8);
+							  filename.c_str(), std::string_view{}, D3DFMT_A8R8G8B8);
 #else
 					D3DXCreateTextureFromFileEx(m_pDev,
 												filename.c_str(), //
@@ -1670,7 +1657,7 @@ void CBigMap::Create() {
 		for (int n = 0; n < 4; ++n) {
 			const std::string filename = std::format("texture\\bigmap\\{}{}.bmp", m, n + 1);
 			lwLoadTex(&_pTex[m * 4 + n], g_Render.GetInterfaceMgr()->res_mgr,
-					  filename.c_str(), 0, D3DFMT_A8R8G8B8);
+					  filename.c_str(), std::string_view{}, D3DFMT_A8R8G8B8);
 		}
 	}
 }
@@ -1774,7 +1761,7 @@ void Ctemp::Render() {
 		//_pTex = ui::GetFont(0)->GetTexture(); //FontManager::Instance().Get(FontSlot::TipText)->GetTexture();
 
 		lwLoadTex(&_pTex, g_Render.GetInterfaceMgr()->res_mgr,
-				  "texture\\ui\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8);
+				  "texture\\ui\\minimap\\mapmask.bmp", std::string_view{}, D3DFMT_A8R8G8B8);
 	}
 
 
@@ -1815,11 +1802,11 @@ void Ctemp::Render() {
 void CMinimap::InitScene() {
 	MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 
-	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8)))
+	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", std::string_view{}, D3DFMT_A8R8G8B8)))
 	//{
 	//	LG("ERROR","msgmapmask.bmp");
 	//}
-	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8))) {
+	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", std::string_view{}, D3DFMT_A8R8G8B8))) {
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
 
@@ -2007,7 +1994,7 @@ void CMinimap::RenderScene() {
 	//					_pTex[n][m].ReleaseTex();
 	//
 	//					lwLoadTex(&_pTex[n][m].pTex,g_Render.GetInterfaceMgr()->res_mgr, 
-	//						filename, 0, D3DFMT_A8R8G8B8);
+	//						filename, std::string_view{}, D3DFMT_A8R8G8B8);
 	//					if(_pTex[n][m].pTex)
 	//					{
 	//						_pTex[n][m].x	= _sx + n;
@@ -2071,7 +2058,7 @@ void CMinimap::RenderScene() {
 							_pTex[n][m].ReleaseTex();
 
 							lwLoadTex(&_pTex[n][m].pTex, g_Render.GetInterfaceMgr()->res_mgr,
-									  filename.c_str(), 0, D3DFMT_A8R8G8B8);
+									  filename.c_str(), std::string_view{}, D3DFMT_A8R8G8B8);
 							if (_pTex[n][m].pTex) {
 								_pTex[n][m].x = _sx + n;
 								_pTex[n][m].y = _sy + m;
@@ -2300,10 +2287,10 @@ void CMinimap::RenderMask() {
 void CLargerMap::InitScene() {
 	MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 
-	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8))) {
+	if (FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", std::string_view{}, D3DFMT_A8R8G8B8))) {
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
-	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\ui\\minimap\\mask.tga", 0, D3DFMT_A8R8G8B8)))
+	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\ui\\minimap\\mask.tga", std::string_view{}, D3DFMT_A8R8G8B8)))
 	//{
 	//	LG("ERROR","msgmask.tga");
 	//}
@@ -2555,7 +2542,7 @@ void CLargerMap::Update(int x, int y) {
 								SAFE_RELEASE(_pTex[idx]);
 							}
 							lwLoadTex(&_pTex[idx], g_Render.GetInterfaceMgr()->res_mgr,
-									  filename.c_str(), 0, D3DFMT_A8R8G8B8);
+									  filename.c_str(), std::string_view{}, D3DFMT_A8R8G8B8);
 						}
 					}
 				}

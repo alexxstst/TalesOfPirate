@@ -88,9 +88,6 @@
     <ClInclude Include="src\lwCamera.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\lwConsole.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\lwCoordinateSys.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
@@ -404,9 +401,6 @@
     <ClCompile Include="src\d3dutil.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
-    <ClCompile Include="src\dxutil.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="src\MPRender.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
@@ -432,9 +426,6 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\lwCamera.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lwConsole.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\lwCoordinateSys.cpp">

@@ -326,7 +326,7 @@ LW_BEGIN
 		return blend_num;
 	}
 
-	LW_RESULT LoadFileInMemory(lwIBuffer* buf, const char* file, const char* load_flag) {
+	LW_RESULT LoadFileInMemory(lwIBuffer* buf, std::string_view file, const char* load_flag) {
 		LW_RESULT ret = LW_RET_FAILED;
 		BYTE* data = 0;
 		DWORD size = 0;
@@ -336,7 +336,7 @@ LW_BEGIN
 			goto __ret;
 
 		{
-			fp = fopen(file, load_flag);
+			fp = fopen(std::string{file}.c_str(), load_flag);
 			if (fp == 0)
 				goto __ret;
 
@@ -360,12 +360,12 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT LoadFileInMemory(BYTE** data_seq, DWORD* data_size, const char* file, const char* load_flag) {
+	LW_RESULT LoadFileInMemory(BYTE** data_seq, DWORD* data_size, std::string_view file, const char* load_flag) {
 		LW_RESULT ret = LW_RET_FAILED;
 		BYTE* data = 0;
 		DWORD size = 0;
 
-		FILE* fp = fopen(file, load_flag);
+		FILE* fp = fopen(std::string{file}.c_str(), load_flag);
 		if (fp == 0)
 			goto __ret;
 

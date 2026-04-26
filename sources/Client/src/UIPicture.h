@@ -68,10 +68,10 @@ namespace GUI {
 			return _frame;
 		}
 
-		bool LoadImage(const char* file);
-		bool LoadImage(const char* file, int w, int h, int frame = 0, int tx = 0, int ty = 0, float scalex = 0.0,
+		bool LoadImage(std::string_view file);
+		bool LoadImage(std::string_view file, int w, int h, int frame = 0, int tx = 0, int ty = 0, float scalex = 0.0,
 					   float scaley = 0.0);
-		bool LoadAllImage(const char* file, int w, int h, int tx = 0, int ty = 0);
+		bool LoadAllImage(std::string_view file, int w, int h, int tx = 0, int ty = 0);
 		bool LoadImage(int frame, int nTextureID, int tx, int ty, int tw, int th, float scale_x = 0.0,
 					   float scale_y = 0.0);
 		void Refresh();
@@ -84,7 +84,7 @@ namespace GUI {
 			_bIsScale = v;
 		}
 
-		static bool LoadImage(MPTexRect* pTex, const char* file, int w, int h, int tx = 0, int ty = 0,
+		static bool LoadImage(MPTexRect* pTex, std::string_view file, int w, int h, int tx = 0, int ty = 0,
 							  float scale_x = 1.0, float scale_y = 1.0);
 
 		int GetWidth(unsigned int frame = 0) {
@@ -149,7 +149,7 @@ namespace GUI {
 		bool LoadImage(ePicPos p, int nTextureID, int tx, int ty, int tw, int th);
 
 		// w,hclientcw,ch
-		bool LoadImage(const char* client, int cw, int ch, int tx, int ty, const char* file, int w, int h);
+		bool LoadImage(const char* client, int cw, int ch, int tx, int ty, std::string_view file, int w, int h);
 
 		void SetIsTitle(bool v) {
 			_bIsTitle = v;

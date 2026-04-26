@@ -9,8 +9,8 @@ LW_BEGIN
 
 	LW_STD_IMPLEMENTATION(lwFile)
 
-	LW_RESULT lwFile::_CheckDirectory(const char* path) {
-		DWORD a = GetFileAttributes(path);
+	LW_RESULT lwFile::_CheckDirectory(std::string_view path) {
+		DWORD a = GetFileAttributes(std::string{path}.c_str());
 
 		if (a == INVALID_FILE_ATTRIBUTES)
 			return LW_RET_FAILED;
@@ -18,11 +18,11 @@ LW_BEGIN
 		return (a & FILE_ATTRIBUTE_DIRECTORY) ? LW_RET_OK : LW_RET_FAILED;
 	}
 
-	LW_RESULT lwFile::CreateDirectory(const char* path, LPSECURITY_ATTRIBUTES attr) {
+	LW_RESULT lwFile::CreateDirectory(std::string_view path, LPSECURITY_ATTRIBUTES attr) {
 		char buf[_MAX_PATH];
 		char* ptr = buf;
 
-		_tcscpy(buf, path);
+		{const auto _p = std::string{path}; _tcscpy(buf, _p.c_str());}
 
 		do {
 			ptr = _tcschr(ptr, '\\');
@@ -50,13 +50,13 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwFile::CreateFile(const char* file, DWORD access_flag, DWORD share_mode, LPSECURITY_ATTRIBUTES secu_attr,
+	LW_RESULT lwFile::CreateFile(std::string_view file, DWORD access_flag, DWORD share_mode, LPSECURITY_ATTRIBUTES secu_attr,
 								 DWORD creation_flag, DWORD attributes_flag) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		char* ptr;
 		char path[_MAX_PATH];
-		_tcscpy(path, file);
+		{const auto _f = std::string{file}; _tcscpy(path, _f.c_str());}
 
 		if (access_flag == GENERIC_WRITE) {
 			if ((ptr = _tcsrchr(path, '\\'))) {
@@ -73,7 +73,7 @@ LW_BEGIN
 			}
 		}
 
-		_handle = ::CreateFile(file, access_flag, share_mode, secu_attr, creation_flag, attributes_flag, 0);
+		_handle = ::CreateFile(std::string{file}.c_str(), access_flag, share_mode, secu_attr, creation_flag, attributes_flag, 0);
 
 		if (_handle == INVALID_HANDLE_VALUE)
 			goto __ret;
@@ -86,7 +86,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwFile::LoadFileBuffer(const char* file, lwIBuffer* buf) {
+	LW_RESULT lwFile::LoadFileBuffer(std::string_view file, lwIBuffer* buf) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD in_size;
@@ -99,14 +99,14 @@ LW_BEGIN
 		creation_flag = OPEN_EXISTING;
 		attributes_flag = FILE_FLAG_SEQUENTIAL_SCAN;
 
-		if (file == 0 || buf == 0)
+		if (file.empty() || buf == 0)
 			goto __ret;
 
 		if (LW_RESULT r = CreateFile(file, access_flag, FILE_SHARE_READ, 0, creation_flag, attributes_flag);
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] CreateFile failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -118,7 +118,7 @@ LW_BEGIN
 		if (LW_RESULT r = Read(buf->GetData(), in_size, &out_size); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] Read failed: file={}, in_size={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", in_size, static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), in_size, static_cast<long long>(r));
 			goto __ret;
 		}
 		if (in_size != out_size)
@@ -129,7 +129,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwFile::SaveFileBuffer(const char* file, lwIBuffer* buf) {
+	LW_RESULT lwFile::SaveFileBuffer(std::string_view file, lwIBuffer* buf) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD in_size;
@@ -142,7 +142,7 @@ LW_BEGIN
 		creation_flag = CREATE_ALWAYS;
 		attributes_flag = FILE_FLAG_SEQUENTIAL_SCAN;
 
-		if (file == 0 || buf == 0)
+		if (file.empty() || buf == 0)
 			goto __ret;
 
 		if (buf->GetSize() == 0)
@@ -152,7 +152,7 @@ LW_BEGIN
 			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] CreateFile failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -161,7 +161,7 @@ LW_BEGIN
 		if (LW_RESULT r = Write(buf->GetData(), in_size, &out_size); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] Write failed: file={}, in_size={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", in_size, static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), in_size, static_cast<long long>(r));
 			goto __ret;
 		}
 		if (in_size != out_size)
@@ -258,10 +258,10 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwFile::CheckExisting(const char* path, DWORD check_directory) {
+	LW_RESULT lwFile::CheckExisting(std::string_view path, DWORD check_directory) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		DWORD attr = GetFileAttributes(path);
+		DWORD attr = GetFileAttributes(std::string{path}.c_str());
 		if (attr == INVALID_FILE_ATTRIBUTES)
 			goto __ret;
 

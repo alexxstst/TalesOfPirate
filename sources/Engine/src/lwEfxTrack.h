@@ -23,8 +23,8 @@ LW_BEGIN
 			return _data;
 		}
 
-		LW_RESULT Load(const char* file);
-		LW_RESULT Save(const char* file);
+		LW_RESULT Load(std::string_view file);
+		LW_RESULT Save(std::string_view file);
 	};
 
 LW_END

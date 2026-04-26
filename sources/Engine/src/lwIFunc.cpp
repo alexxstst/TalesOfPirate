@@ -586,14 +586,14 @@ LW_BEGIN
 		scene_mgr->RenderTransparentPrimitive();
 	}
 
-	LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, const char* file) {
+	LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwIResBufMgr* buf_mgr = res_mgr->GetResBufMgr();
 		lwIPathInfo* path_info = 0;
 		res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
 
-		FILE* fp = fopen(file, "rt");
+		FILE* fp = fopen(std::string{file}.c_str(), "rt");
 		if (fp == 0)
 			goto __ret;
 

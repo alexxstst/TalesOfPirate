@@ -63,7 +63,7 @@ public:
 
 private:
 	int _InitChaObjSeq();
-	int _CreateArrowItem(const char* file);
+	int _CreateArrowItem(std::string_view file);
 
 public:
 	LoginScene_CreateCha()
@@ -85,9 +85,9 @@ public:
 	void Destroy();
 	void Update();
 	void Render();
-	int LoadModelLXO(const char* file);
-	int LoadModelLMO(const char* file);
-	int LoadArrowItem(const char* file, const lwVector3* offset_pos4);
+	int LoadModelLXO(std::string_view file);
+	int LoadModelLMO(std::string_view file);
+	int LoadArrowItem(std::string_view file, const lwVector3* offset_pos4);
 	void OnMouseMove(int flag, int x, int y);
 	int OnLButtonDown(int flag, int x, int y);
 

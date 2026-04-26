@@ -249,7 +249,7 @@ LW_BEGIN
 		LW_RESULT ScreenToWorld(lwVector3* org, lwVector3* ray, int x, int y);
 		LW_RESULT WorldToScreen(int* x, int* y, float* z, const lwVector3* v);
 
-		LW_RESULT DumpRenderState(const char* file);
+		LW_RESULT DumpRenderState(std::string_view file);
 	};
 
 

@@ -26,7 +26,6 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 		static_cast<int64_t>(pCNetIf->m_ulPacketCount),
 		static_cast<int64_t>(type));
 
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", pCNetIf->m_ulPacketCount));
 	switch (type) {
 		case enumACTION_MOVE: {
 			stNetMoveInfo* pMove = (stNetMoveInfo*)param;
@@ -52,15 +51,6 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 				const std::string buffer = std::format("{} Lv{} {}", pCha->getHumanName(), pCha->getLv(),
 						g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
 				updateDiscordPresence(buffer.c_str(), "Sailing");
-			}
-
-			g_logManager.InternalLog(LogLevel::Debug, "common",
-									 std::format("###Send(Move):\tTick:[{}]", GetTickCount()));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Ping:\t{:3}", pMove->dwAveragePing));
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", pMove->pos_num));
-			for (DWORD i = 0; i < pMove->pos_num; i++) {
-				g_logManager.InternalLog(LogLevel::Debug, "common",
-										 std::format("\t{}, \t{}", pMove->pos_buf[i].x, pMove->pos_buf[i].y));
 			}
 
 			break;

@@ -125,13 +125,15 @@ LW_BEGIN
 		char file[LW_MAX_NAME];
 	};
 
-	inline lwShaderDeclCreateInfo SDCI_VALUE(DWORD shader, DWORD decl, DWORD light, DWORD anim, const char* file) {
+	inline lwShaderDeclCreateInfo SDCI_VALUE(DWORD shader, DWORD decl, DWORD light, DWORD anim, std::string_view file) {
 		lwShaderDeclCreateInfo i;
 		i.shader_id = shader;
 		i.decl_type = decl;
 		i.light_type = light;
 		i.anim_type = anim;
-		_tcscpy(i.file, file);
+		const std::size_t n = std::min<std::size_t>(file.size(), sizeof(i.file) - 1);
+		std::memcpy(i.file, file.data(), n);
+		i.file[n] = '\0';
 
 		return i;
 	}

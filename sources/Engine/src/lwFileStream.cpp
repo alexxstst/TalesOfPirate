@@ -15,13 +15,13 @@ LW_BEGIN
 		Close();
 	}
 
-	LW_RESULT lwFileStream::Open(const char* file, const lwFileStreamOpenInfo* info) {
+	LW_RESULT lwFileStream::Open(std::string_view file, const lwFileStreamOpenInfo* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (LW_RESULT r = Close(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] Close failed: file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -35,7 +35,7 @@ LW_BEGIN
 														info->attributes_flag); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] _adapter_file->CreateFile failed: file={}, access_flag={}, ret={}",
-							 __FUNCTION__, file ? file : "(null)", info->access_flag, static_cast<long long>(r));
+							 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), info->access_flag, static_cast<long long>(r));
 				goto __ret;
 			}
 		}

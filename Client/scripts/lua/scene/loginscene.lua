@@ -1,5 +1,5 @@
 -- Create login scene
-nLoginScene = SN_CreateScene( enumLoginScene, "��½����", "", FORM_LOGIN, 300, 200, 100, 100 )
+nLoginScene = SN_CreateScene( enumLoginScene, "Login Scene", "", FORM_LOGIN, 300, 200, 100, 100 )
 SN_SetIsShowMinimap( FALSE )
 SN_SetIsShow3DCursor( FALSE )
 

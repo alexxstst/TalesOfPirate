@@ -44,7 +44,7 @@ LW_BEGIN
 		return __fps;
 	}
 
-	int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type,
+	int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, std::string_view file, DWORD colorkey_type,
 						 lwColorValue4b* colorkey) {
 		using namespace Corsairs::Engine::Render;
 
@@ -208,7 +208,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type,
+	LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, std::string_view file, DWORD format, DWORD colorkey_type,
 								lwColorValue4b* colorkey, int use_power_size) {
 		DWORD img_width, img_height;
 		lwColorValue4b* img_buf;

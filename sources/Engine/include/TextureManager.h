@@ -32,7 +32,7 @@ public:
 	}
 
 	// Получить ID по имени файла. Создаёт запись если нет.
-	int GetOrCreateID(const char* path);
+	int GetOrCreateID(std::string_view path);
 
 	// Lazy load — загружает текстуру при первом обращении.
 	lwITex* GetTexture(int id, bool bRequest = false);

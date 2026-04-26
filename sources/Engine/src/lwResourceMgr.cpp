@@ -276,7 +276,7 @@ LW_BEGIN
 		}
 	}
 
-	LW_RESULT lwTex::LoadTexInfo(const lwTexInfo* info, const char* tex_path) {
+	LW_RESULT lwTex::LoadTexInfo(const lwTexInfo* info, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		_stage = info->stage;
@@ -296,7 +296,7 @@ LW_BEGIN
 
 		switch (info->type) {
 		case TEX_TYPE_FILE:
-			if (tex_path) {
+			if (!tex_path.empty()) {
 				_file_name = std::format("{}{}", tex_path, info->file_name);
 			}
 			else {
@@ -1599,7 +1599,7 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwMtlTexAgent::LoadMtlTex(lwMtlTexInfo* info, const char* tex_path) {
+	LW_RESULT lwMtlTexAgent::LoadMtlTex(lwMtlTexInfo* info, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwMtlTexInfo* i = (lwMtlTexInfo*)info;
@@ -1618,7 +1618,7 @@ LW_BEGIN
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadTextureStage failed: stage={}, file={}, tex_path={}, ret={}",
 							 __FUNCTION__, j, i->tex_seq[j].file_name,
-							 tex_path ? tex_path : "(null)", static_cast<long long>(r));
+							 (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -1656,7 +1656,7 @@ LW_BEGIN
 	}
 
 
-	LW_RESULT lwMtlTexAgent::LoadTextureStage(const lwTexInfo* info, const char* tex_path) {
+	LW_RESULT lwMtlTexAgent::LoadTextureStage(const lwTexInfo* info, std::string_view tex_path) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwITex* obj;
@@ -1680,7 +1680,7 @@ LW_BEGIN
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] obj->LoadTexInfo failed: stage={}, file={}, tex_path={}, ret={}",
 						 __FUNCTION__, stage, info->file_name,
-						 tex_path ? tex_path : "(null)", static_cast<long long>(r));
+						 (tex_path.empty() ? std::string_view{"(null)"} : tex_path), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -2358,11 +2358,11 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwResBufMgr::QuerySysMemTex(lwSysMemTexInfo** info, const char* file) {
+	LW_RESULT lwResBufMgr::QuerySysMemTex(lwSysMemTexInfo** info, std::string_view file) {
 		lwSysMemTexInfo* found = nullptr;
 		_pool_sysmemtex.ForEach([&](DWORD, void* raw) -> bool {
 			auto* obj = static_cast<lwSysMemTexInfo*>(raw);
-			if (_tcscmp(obj->file_name, file) == 0) {
+			if (obj->file_name == file) {
 				found = obj;
 				return false;
 			}
@@ -2414,7 +2414,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE* handle, const char* file) {
+	LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE* handle, std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
@@ -2422,7 +2422,7 @@ LW_BEGIN
 		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] moim->info.Load failed (auto-handle): file={}, ret={}",
-						 __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -2443,7 +2443,7 @@ LW_BEGIN
 			moim->hit_time = tm->GetTickCount();
 
 			moim->size = moim->info.GetDataSize();
-			_tcscpy(moim->file, file);
+			{const auto _f = std::string{file}; _tcscpy(moim->file, _f.c_str());}
 
 			_modelobj_data_size += moim->size;
 
@@ -2455,7 +2455,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE handle, const char* file) {
+	LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE handle, std::string_view file) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
@@ -2463,7 +2463,7 @@ LW_BEGIN
 		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] moim->info.Load failed (explicit-handle): handle={}, file={}, ret={}",
-						 __FUNCTION__, static_cast<std::uint64_t>(handle), file ? file : "(null)",
+						 __FUNCTION__, static_cast<std::uint64_t>(handle), (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
 		}
@@ -2477,7 +2477,7 @@ LW_BEGIN
 			moim->hit_time = tm->GetTickCount();
 
 			moim->size = moim->info.GetDataSize();
-			_tcscpy(moim->file, file);
+			{const auto _f = std::string{file}; _tcscpy(moim->file, _f.c_str());}
 
 			_modelobj_data_size += moim->size;
 
@@ -2489,9 +2489,9 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwResBufMgr::QueryModelObjInfo(lwIModelObjInfo** info, const char* file) {
+	LW_RESULT lwResBufMgr::QueryModelObjInfo(lwIModelObjInfo** info, std::string_view file) {
 		for (const auto& kv : _pool_modelobj) {
-			if (_tcscmp(kv.second->file, file) == 0) {
+			if (kv.second->file == file) {
 				*info = &kv.second->info;
 				return LW_RET_OK;
 			}
@@ -3141,7 +3141,7 @@ LW_BEGIN
 	//    return ret;
 	//__ret:
 	//    return ret;
-	LW_RESULT lwResourceMgr::QueryTex(DWORD* ret_id, const char* file_name) {
+	LW_RESULT lwResourceMgr::QueryTex(DWORD* ret_id, std::string_view file_name) {
 		DWORD found = LW_INVALID_INDEX;
 		_pool_tex.ForEach([&](DWORD handle, void* raw) -> bool {
 			auto* obj_tex = static_cast<lwTex*>(raw);
@@ -3405,7 +3405,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwResourceMgr::QueryObject(void** ret_obj, DWORD type, const char* file_name) {
+	LW_RESULT lwResourceMgr::QueryObject(void** ret_obj, DWORD type, std::string_view file_name) {
 		switch (type) {
 		case OBJ_TYPE_MODEL: {
 			lwModel* found = nullptr;
