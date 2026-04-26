@@ -167,8 +167,11 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
 
         if (_pos_num > 0)
         {
-            if (LW_FAILED(lwKeyDataSearch<lwKeyVector3>(&key_pos[0], &key_pos[1], f, _pos_seq, _pos_num)))
+            if (LW_RESULT r = lwKeyDataSearch<lwKeyVector3>(&key_pos[0], &key_pos[1], f, _pos_seq, _pos_num); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwKeyDataSearch<pos> failed: f={}, pos_num={}, ret={}",
+                             __FUNCTION__, f, _pos_num, static_cast<long long>(r));
                 assert(0);
                 goto __ret;
             }
@@ -192,8 +195,11 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
 
         if (_rot_num > 0)
         {
-            if (LW_FAILED(lwKeyDataSearch<lwKeyQuaternion>(&key_rot[0], &key_rot[1], f, _rot_seq, _rot_num)))
+            if (LW_RESULT r = lwKeyDataSearch<lwKeyQuaternion>(&key_rot[0], &key_rot[1], f, _rot_seq, _rot_num); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwKeyDataSearch<rot> failed: f={}, rot_num={}, ret={}",
+                             __FUNCTION__, f, _rot_num, static_cast<long long>(r));
                 assert(0);
                 goto __ret;
             }
@@ -218,8 +224,11 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
 
         if (_sca_num > 0)
         {
-            if (LW_FAILED(lwKeyDataSearch<lwKeyVector3>(&key_sca[0], &key_sca[1], f, _sca_seq, _sca_num)))
+            if (LW_RESULT r = lwKeyDataSearch<lwKeyVector3>(&key_sca[0], &key_sca[1], f, _sca_seq, _sca_num); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwKeyDataSearch<sca> failed: f={}, sca_num={}, ret={}",
+                             __FUNCTION__, f, _sca_num, static_cast<long long>(r));
                 assert(0);
                 goto __ret;
             }
@@ -476,8 +485,13 @@ LW_RESULT lwAnimKeySetFloat::Allocate(DWORD key_capacity)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(Clear()))
+    if(LW_RESULT r = Clear(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Clear failed: key_capacity={}, ret={}",
+                     __FUNCTION__, key_capacity, static_cast<long long>(r));
         goto __ret;
+    }
 
     _data_num = 0;
     _data_capacity = key_capacity;
@@ -656,8 +670,13 @@ LW_RESULT lwAnimKeySetFloat::GetValue(float* data, float key)
 
         DWORD prev_key, next_key;
 
-        if (LW_FAILED(lwKeyDataSearch(&prev_key, &next_key, i_key, _data_seq, _data_num)))
+        if (LW_RESULT r = lwKeyDataSearch(&prev_key, &next_key, i_key, _data_seq, _data_num); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] lwKeyDataSearch failed: i_key={}, data_num={}, ret={}",
+                         __FUNCTION__, i_key, _data_num, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwKeyFloat* k0 = &_data_seq[prev_key];
         lwKeyFloat* k1 = &_data_seq[next_key];
@@ -670,8 +689,13 @@ LW_RESULT lwAnimKeySetFloat::GetValue(float* data, float key)
         {
             float t;
 
-            if (LW_FAILED(lwGetKeySlerpCoefficent(&t, k0->slerp_type, key, (float)k0->key, (float)k1->key)))
+            if (LW_RESULT r = lwGetKeySlerpCoefficent(&t, k0->slerp_type, key, (float)k0->key, (float)k1->key); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwGetKeySlerpCoefficent failed: slerp_type={}, ret={}",
+                             __FUNCTION__, k0->slerp_type, static_cast<long long>(r));
                 goto __ret;
+            }
 
             *data = lwFloatSlerp(k0->data, k1->data, t);
         }
@@ -684,8 +708,13 @@ LW_RESULT lwAnimKeySetFloat::SetKeySequence(const lwKeyFloat* seq, DWORD num)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(Clear()))
+    if(LW_RESULT r = Clear(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Clear failed: num={}, ret={}",
+                     __FUNCTION__, num, static_cast<long long>(r));
         goto __ret;
+    }
 
     _data_num = num;
     _data_capacity = num;

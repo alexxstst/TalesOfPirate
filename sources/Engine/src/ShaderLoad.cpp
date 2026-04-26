@@ -27,11 +27,27 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
     if (!sys)
         goto __ret;
 
-    if (LW_FAILED(sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO)) || !path_info)
-        goto __ret;
+    {
+        LW_RESULT r = sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO);
+        if (LW_FAILED(r) || !path_info)
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] sys->GetInterface(LW_GUID_PATHINFO) failed: ret={}, path_info={}",
+                         __FUNCTION__, static_cast<long long>(r), static_cast<const void*>(path_info));
+            goto __ret;
+        }
+    }
 
-    if (LW_FAILED(sys_graphics->GetInterface((LW_VOID**)&res_mgr, LW_GUID_RESOURCEMGR)) || !res_mgr)
-        goto __ret;
+    {
+        LW_RESULT r = sys_graphics->GetInterface((LW_VOID**)&res_mgr, LW_GUID_RESOURCEMGR);
+        if (LW_FAILED(r) || !res_mgr)
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] sys_graphics->GetInterface(LW_GUID_RESOURCEMGR) failed: ret={}, res_mgr={}",
+                         __FUNCTION__, static_cast<long long>(r), static_cast<const void*>(res_mgr));
+            goto __ret;
+        }
+    }
 
     shader_mgr = res_mgr->GetShaderMgr();
     if (!shader_mgr)
@@ -103,8 +119,13 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
             this_decl = 0;
             if (LW_SUCCEEDED(shader_mgr->QueryVertexDeclaration(&this_decl, decl_type[i])))
                 continue;
-            if (LW_FAILED(shader_mgr->RegisterVertexDeclaration(decl_type[i], ve_buf[i])))
+            if (LW_RESULT r = shader_mgr->RegisterVertexDeclaration(decl_type[i], ve_buf[i]); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] shader_mgr->RegisterVertexDeclaration failed: i={}, decl_type={}, ret={}",
+                             __FUNCTION__, i, decl_type[i], static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -156,8 +177,13 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
         for (i = 0; i < shader_num; ++i)
         {
             sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-            if (LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defines_tab[i])))
+            if (LW_RESULT r = shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defines_tab[i]); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] shader_mgr->RegisterVertexShader failed: i={}, shader_type={}, path={}, ret={}",
+                             __FUNCTION__, i, shader_type[i], path, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -266,8 +292,13 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
     for(int i = 0; i < 6; i++)
     {
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defs_tab[i])))
+        if(LW_RESULT r = shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defs_tab[i]); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] shader_mgr->RegisterVertexShader (skinmesh) failed: i={}, shader_type={}, path={}, ret={}",
+                         __FUNCTION__, i, shader_type[i], path, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
 

@@ -44,10 +44,10 @@ lwITex* CreateAtlas(MPRender* dev, int width, int height) {
 
     lwITex* tex = nullptr;
     lwIResourceMgr* resMgr = dev->GetInterfaceMgr()->res_mgr;
-    if (LW_FAILED(lwLoadTex(&tex, resMgr, &info))) {
+    if (LW_RESULT r = lwLoadTex(&tex, resMgr, &info); LW_FAILED(r)) {
         ToLogService("errors", LogLevel::Error,
-                     "fons::CreateAtlas: lwLoadTex failed ({}x{})",
-                     width, height);
+                     "[{}] lwLoadTex failed: width={}, height={}, ret={}",
+                     __FUNCTION__, width, height, static_cast<long long>(r));
         return nullptr;
     }
     return tex;
@@ -106,9 +106,10 @@ void Dx9RenderUpdate(void* uptr, int* rect, const unsigned char* data) {
     RECT subRect{ x0, y0, x1, y1 };
     D3DLOCKED_RECT lr{};
     // LockRect с subRect — D3D отдаёт pBits уже смещённым на (x0,y0).
-    if (FAILED(backend->Atlas->GetTex()->LockRect(0, &lr, &subRect, 0))) {
+    if (HRESULT hr = backend->Atlas->GetTex()->LockRect(0, &lr, &subRect, 0); FAILED(hr)) {
         ToLogService("errors", LogLevel::Warning,
-                     "fons::Dx9RenderUpdate: LockRect failed");
+                     "[{}] LockRect failed: rect=({},{}-{},{}), hr=0x{:08X}",
+                     __FUNCTION__, x0, y0, x1, y1, static_cast<std::uint32_t>(hr));
         return;
     }
 

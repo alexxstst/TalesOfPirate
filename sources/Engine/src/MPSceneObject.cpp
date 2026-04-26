@@ -38,21 +38,39 @@ MPSceneObject::~MPSceneObject()
 void MPSceneObject::FrameMove()
 {
 	if( _model )
-    _model->Update();
+	{
+		if (LW_RESULT r = _model->Update(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _model->Update failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
+	}
 }
 
 void MPSceneObject::Render()
 {
 	if( _model )
-    _model->Render();
+	{
+		if (LW_RESULT r = _model->Render(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _model->Render failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
+	}
 
 }
 
 LW_RESULT MPSceneObject::Load( const char* file, DWORD model_id )
 {
     LW_RESULT ret;
-    if( LW_FAILED(ret = _model->Load(file, model_id)))
+    ret = _model->Load(file, model_id);
+    if( LW_FAILED(ret) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _model->Load failed: file={}, model_id={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", model_id, static_cast<long long>(ret));
         LG_MSGBOX("Load MPSceneObject %s error", file);
     }
    return ret;
@@ -222,8 +240,13 @@ LW_RESULT MPSceneObject::SetItemLink( const lwSceneItemLinkInfo* info )
     ili.link_item_id = info->link_item_id;
     ili.link_parent_id = info->link_parent_id;
 
-    if( LW_FAILED( _model->SetItemLink( &ili ) ) )
+    if( LW_RESULT r = _model->SetItemLink( &ili ); LW_FAILED( r ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _model->SetItemLink failed: id={}, link_item_id={}, link_parent_id={}, ret={}",
+                     __FUNCTION__, info->id, info->link_item_id, info->link_parent_id, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     _link_item_seq[ _link_item_num++ ] = info->obj;
 
@@ -382,7 +405,12 @@ LW_RESULT lwSceneObjectChair::Render()
     if( _obj )
     {
         _obj->SetMatrixParent( &_mat );
-        _obj->Render();
+        if (LW_RESULT r = _obj->Render(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;

@@ -37,8 +37,13 @@ static LW_RESULT __global_lose_dev_entry()
     {
         if(g_lose_dev_seq[i])
         {
-            if(LW_FAILED((*g_lose_dev_seq[i])()))
+            if(LW_RESULT r = (*g_lose_dev_seq[i])(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lose_dev proc[{}] failed: ret={}",
+                             __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -55,8 +60,13 @@ static LW_RESULT __global_reset_dev_entry()
     {
         if(g_reset_dev_seq[i])
         {
-            if(LW_FAILED((*g_reset_dev_seq[i])()))
+            if(LW_RESULT r = (*g_reset_dev_seq[i])(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] reset_dev proc[{}] failed: ret={}",
+                             __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -189,15 +199,25 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         goto __ret;
     }
 
-    if(LW_FAILED(sys->Initialize()))
+    if(LW_RESULT r = sys->Initialize(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] sys->Initialize failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     {
         // begin init path info
         lwIPathInfo* path_info = 0;
 
-        if (LW_FAILED(sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO)))
+        if (LW_RESULT r = sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetInterface(LW_GUID_PATHINFO) failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         path_info->SetPath(PATH_TYPE_WORKINGDIRECTORY, ".\\");
 
@@ -216,8 +236,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
 
         // end
 
-        if (LW_FAILED(sys->CreateGraphicsSystem(&sys_graphics)))
+        if (LW_RESULT r = sys->CreateGraphicsSystem(&sys_graphics); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateGraphicsSystem failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwInitUserRenderCtrlVSProc(sys_graphics->GetResourceMgr());
 
@@ -268,8 +293,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         goto __ret;
     }
 
-    if(LW_FAILED(sys->Initialize()))
+    if(LW_RESULT r = sys->Initialize(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] sys->Initialize failed (d3d/dev overload): ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     // check current directx version
     {
@@ -284,8 +314,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         // begin init path info
         lwIPathInfo* path_info = 0;
 
-        if (LW_FAILED(sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO)))
+        if (LW_RESULT r = sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetInterface(LW_GUID_PATHINFO) failed (d3d/dev overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         path_info->SetPath(PATH_TYPE_WORKINGDIRECTORY, ".\\");
 
@@ -303,8 +338,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         path_info->SetPath(PATH_TYPE_SHADER, ".\\shader\\dx9\\");
         // end
 
-        if (LW_FAILED(sys->CreateGraphicsSystem(&sys_graphics)))
+        if (LW_RESULT r = sys->CreateGraphicsSystem(&sys_graphics); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateGraphicsSystem failed (d3d/dev overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         // set golbal lose-reset dev call back
         sys_graphics->SetOutputLoseDeviceProc(__global_lose_dev_entry);
@@ -314,11 +354,21 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         dev_obj->SetDirect3D(d3d);
         dev_obj->SetDevice(dev);
 
-        if (LW_FAILED(dev_obj->InitStateCache()))
+        if (LW_RESULT r = dev_obj->InitStateCache(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] InitStateCache failed (d3d/dev overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(dev_obj->InitCapsInfo()))
+        if (LW_RESULT r = dev_obj->InitCapsInfo(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] InitCapsInfo failed (d3d/dev overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwIResourceMgr* res_mgr = sys_graphics->GetResourceMgr();
         lwIStaticStreamMgr* ssm = res_mgr->GetStaticStreamMgr();
@@ -378,8 +428,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         goto __ret;
     }
 
-    if(LW_FAILED(sys->Initialize()))
+    if(LW_RESULT r = sys->Initialize(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] sys->Initialize failed (param overload): ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     // check current directx version
     {
@@ -391,8 +446,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         }
     }
 
-    if(LW_FAILED(sys->CreateGraphicsSystem(&sys_graphics)))
+    if(LW_RESULT r = sys->CreateGraphicsSystem(&sys_graphics); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateGraphicsSystem failed (param overload): ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     // set golbal lose-reset dev call back
     sys_graphics->SetOutputLoseDeviceProc(__global_lose_dev_entry);
@@ -402,8 +462,13 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         // begin init path info
         lwIPathInfo* path_info = 0;
 
-        if (LW_FAILED(sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO)))
+        if (LW_RESULT r = sys->GetInterface((LW_VOID**)&path_info, LW_GUID_PATHINFO); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetInterface(LW_GUID_PATHINFO) failed (param overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         path_info->SetPath(PATH_TYPE_WORKINGDIRECTORY, ".\\");
 
@@ -424,29 +489,54 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
 
         dev_obj = sys_graphics->GetDeviceObject();
 
-        if (LW_FAILED(dev_obj->CreateDirect3D()))
+        if (LW_RESULT r = dev_obj->CreateDirect3D(); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateDirect3D failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             ret = INIT_ERR_CREATE_D3D;
             goto __ret;
         }
 
         if (param_info)
         {
-            if (LW_FAILED(lwAdjustD3DCreateParam(dev_obj->GetDirect3D(), param, param_info)))
+            if (LW_RESULT r = lwAdjustD3DCreateParam(dev_obj->GetDirect3D(), param, param_info); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwAdjustD3DCreateParam failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
 
-        if (LW_FAILED(dev_obj->CreateDevice(param)))
+        if (LW_RESULT r = dev_obj->CreateDevice(param); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateDevice failed: adapter={}, dev_type={}, windowed={}, ret={}",
+                         __FUNCTION__,
+                         param ? param->adapter : 0u,
+                         param ? static_cast<std::uint32_t>(param->dev_type) : 0u,
+                         param ? static_cast<int>(param->present_param.Windowed) : -1,
+                         static_cast<long long>(r));
             ret = INIT_ERR_CREATE_DEVICE;
             goto __ret;
         }
 
-        if (LW_FAILED(dev_obj->InitStateCache()))
+        if (LW_RESULT r = dev_obj->InitStateCache(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] InitStateCache failed (param overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(dev_obj->InitCapsInfo()))
+        if (LW_RESULT r = dev_obj->InitCapsInfo(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] InitCapsInfo failed (param overload): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwIResourceMgr* res_mgr = sys_graphics->GetResourceMgr();
         lwIStaticStreamMgr* ssm = res_mgr->GetStaticStreamMgr();
@@ -601,8 +691,11 @@ LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, const char* file)
         fscanf(fp, "%d\t%s\n", &handle, model_file);
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
 
-        if(LW_FAILED(buf_mgr->RegisterModelObjInfo(handle, path)))
+        if(LW_RESULT r = buf_mgr->RegisterModelObjInfo(handle, path); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] RegisterModelObjInfo failed: handle={}, path={}, ret={}",
+                         __FUNCTION__, handle, path, static_cast<long long>(r));
             LG_MSGBOX("cannot find model file: %s", path);
             continue;
         }

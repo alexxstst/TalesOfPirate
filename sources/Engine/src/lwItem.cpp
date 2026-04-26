@@ -46,8 +46,13 @@ LW_RESULT lwItem::Load(lwIGeomObjInfo* info)
         lwPrimitive* imp = LW_NEW(lwPrimitive(_res_mgr));
 
 
-        if (LW_FAILED(imp->Load(info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), NULL)))
+        if (LW_RESULT r = imp->Load(info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->Load failed: tex_path={}, ret={}",
+                         __FUNCTION__, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), static_cast<long long>(r));
             goto __ret;
+        }
 
         _obj = imp;
 
@@ -108,11 +113,21 @@ __a:
         // begin load mesh
         lwGeomObjInfo info;
 
-        if( LW_FAILED( info.Load( path ) ) )
+        if( LW_RESULT r = info.Load( path ); LW_FAILED( r ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] info.Load failed: path={}, ret={}",
+                         __FUNCTION__, path, static_cast<long long>(r));
             return LW_RET_FAILED;
+        }
 
-        if( LW_FAILED( imp->Load( &info, path_info->GetPath( PATH_TYPE_TEXTURE_ITEM ), &res ) ) )
+        if( LW_RESULT r = imp->Load( &info, path_info->GetPath( PATH_TYPE_TEXTURE_ITEM ), &res ); LW_FAILED( r ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->Load failed: path={}, file={}, ret={}",
+                         __FUNCTION__, path, file ? file : "(null)", static_cast<long long>(r));
             return LW_RET_FAILED;
+        }
 
         _obj = imp;
 
@@ -199,13 +214,23 @@ LW_RESULT lwItem::Update()
         {
             lwMatrix44 mat_parent;
 
-            if( LW_FAILED( _link_ctrl->GetLinkCtrlMatrix( &mat_parent, _link_parent_id ) ) )
+            if( LW_RESULT r = _link_ctrl->GetLinkCtrlMatrix( &mat_parent, _link_parent_id ); LW_FAILED( r ) )
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _link_ctrl->GetLinkCtrlMatrix failed: link_parent_id={}, ret={}",
+                             __FUNCTION__, _link_parent_id, static_cast<long long>(r));
                 goto __ret;
+            }
 
             lwMatrix44 mat_dummy;
 
-            if( LW_FAILED( GetDummyMatrix( &mat_dummy, _link_item_id ) ) )
+            if( LW_RESULT r = GetDummyMatrix( &mat_dummy, _link_item_id ); LW_FAILED( r ) )
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] GetDummyMatrix failed: link_item_id={}, ret={}",
+                             __FUNCTION__, _link_item_id, static_cast<long long>(r));
                 goto __ret;
+            }
 
 
             lwMatrix44InverseNoScaleFactor( &mat_dummy, &mat_dummy );
@@ -216,8 +241,13 @@ LW_RESULT lwItem::Update()
 
         _obj->SetMatrixParent( &_mat_base );
 
-        if( LW_FAILED( _obj->Update() ) )
+        if( LW_RESULT r = _obj->Update(); LW_FAILED( r ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->Update failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -239,13 +269,23 @@ LW_RESULT lwItem::Render()
     {     
         if(_scene_mgr && _obj->GetState(STATE_TRANSPARENT))
         {
-            if(LW_FAILED(_scene_mgr->AddTransparentPrimitive(_obj)))
+            if(LW_RESULT r = _scene_mgr->AddTransparentPrimitive(_obj); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] AddTransparentPrimitive failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
         else
         {
-            if(LW_FAILED(_obj->Render()))
+            if(LW_RESULT r = _obj->Render(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj->Render failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -365,8 +405,13 @@ LW_RESULT lwItem::GetObjDummyRunTimeMatrix( lwMatrix44* mat, DWORD id )
         goto __ret;
 
     
-    if( LW_FAILED( GetDummyMatrix( &mat_dummy, id ) ) )
+    if( LW_RESULT r = GetDummyMatrix( &mat_dummy, id ); LW_FAILED( r ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetDummyMatrix failed: id={}, ret={}",
+                     __FUNCTION__, id, static_cast<long long>(r));
         goto __ret;
+    }
 
     //lwMatrix44Multiply( mat, &mat_dummy, &_mat_base );
     lwMatrix44Multiply(mat, &mat_dummy, _obj->GetMatrixGlobal());
@@ -433,8 +478,13 @@ __ret:
 
 LW_RESULT lwItem::SetLinkCtrl( lwLinkCtrl* ctrl, DWORD link_parent_id, DWORD link_item_id )
 {
-    if( LW_FAILED( GetDummyMatrix( NULL, link_item_id ) ) )
+    if( LW_RESULT r = GetDummyMatrix( NULL, link_item_id ); LW_FAILED( r ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetDummyMatrix failed: link_item_id={}, ret={}",
+                     __FUNCTION__, link_item_id, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     _link_ctrl = ctrl;
     _link_parent_id = link_parent_id;

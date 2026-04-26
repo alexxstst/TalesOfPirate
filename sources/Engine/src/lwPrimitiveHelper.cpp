@@ -152,8 +152,18 @@ LW_RESULT lwHelperDummy::Render()
         lwMatrix44Multiply( &mat, &mat, &_mat_parent );
 
         _obj->SetMatrixParent( &mat );
-        _obj->Update();
-        _obj->Render();
+        if( LW_RESULT r = _obj->Update(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->Update failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
+        if( LW_RESULT r = _obj->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->Render failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
 
     }
 
@@ -259,8 +269,13 @@ LW_RESULT lwBoundingBox::HitTest( lwPickInfo* info, const lwVector3* org, const 
 		box.r.z *= scale.z;
 		
 
-        if( LW_FAILED( lwHitTestBox( &u, org, ray, &box, &mat ) ) )
+        if( LW_RESULT r = lwHitTestBox( &u, org, ray, &box, &mat ); LW_FAILED( r ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] lwHitTestBox failed: j={}, ret={}",
+                         __FUNCTION__, j, static_cast<long long>(r));
             continue;
+        }
 
         if( v.obj_id == LW_INVALID_INDEX || v.dis > u.dis )
         {
@@ -288,18 +303,28 @@ LW_RESULT lwBoundingBox::Render()
         return LW_RET_OK;
 
 
-    _obj->Update();
+    if( LW_RESULT r = _obj->Update(); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Update failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     lwMatrix44 mat;
 
-    
+
     for( DWORD i = 0; i < _obj_num; i++ )
     {
         lwMatrix44Multiply( &mat, &_obj_seq[i].mat, &_mat_parent );
 
         _obj->SetMatrixParent( &mat );
 
-        _obj->RenderSubset( i );
+        if( LW_RESULT r = _obj->RenderSubset( i ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->RenderSubset failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;
@@ -514,7 +539,12 @@ LW_RESULT lwBoundingSphere::Render()
     if( _obj == 0 || _visible_flag == 0 )
         return LW_RET_OK;
 
-    _obj->Update();
+    if( LW_RESULT r = _obj->Update(); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Update failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     lwMatrix44 mat;
 
@@ -524,7 +554,12 @@ LW_RESULT lwBoundingSphere::Render()
 
         _obj->SetMatrixParent( &mat );
 
-        _obj->RenderSubset( i );
+        if( LW_RESULT r = _obj->RenderSubset( i ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->RenderSubset failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;
@@ -674,8 +709,13 @@ LW_RESULT lwHelperMesh::CreateInstance()
     RSA_VALUE(&info.rs_set[0], D3DRS_LIGHTING, FALSE);
     RSA_VALUE(&info.rs_set[1], D3DRS_FILLMODE, D3DFILL_WIREFRAME );
 
-    if( LW_FAILED( _obj->LoadMesh( &info ) ) )
+    if( LW_RESULT r = _obj->LoadMesh( &info ); LW_FAILED( r ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->LoadMesh failed: vertex_num={}, index_num={}, ret={}",
+                     __FUNCTION__, info.vertex_num, info.index_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     for( i = 0; i < _obj_num; i++ )
     {
@@ -688,14 +728,24 @@ LW_RESULT lwHelperMesh::CreateInstance()
 
         mti.mtl = mtl;
 
-        _obj->LoadMtlTex( i, &mti, NULL );
+        if (LW_RESULT r = _obj->LoadMtlTex( i, &mti, NULL ); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->LoadMtlTex failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
     lwRenderCtrlCreateInfo rcci;
     lwRenderCtrlCreateInfo_Construct( &rcci );
     rcci.ctrl_id = RENDERCTRL_VS_FIXEDFUNCTION;
 
-    _obj->LoadRenderCtrl(&rcci);
+    if (LW_RESULT r = _obj->LoadRenderCtrl(&rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->LoadRenderCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     //lwIRenderCtrl* render_ctrl;
     //_res_mgr->RequestRenderCtrl( &render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION );
@@ -889,7 +939,12 @@ LW_RESULT lwHelperMesh::Render()
         return LW_RET_OK;
 
 
-    _obj->Update();
+    if( LW_RESULT r = _obj->Update(); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Update failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     for( DWORD i = 0; i < _obj_num; i++ )
     {
@@ -898,7 +953,12 @@ LW_RESULT lwHelperMesh::Render()
 
         _obj->SetMatrixParent( &mat );
 
-        _obj->RenderSubset( i );
+        if( LW_RESULT r = _obj->RenderSubset( i ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->RenderSubset failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;
@@ -1026,8 +1086,13 @@ LW_RESULT lwHelperBox::HitTest( lwPickInfo* info, const lwVector3* org, const lw
 
         lwMatrix44Multiply( &mat, &_obj_seq[ j ].mat, mat_parent );
 
-        if( LW_FAILED( lwHitTestBox( &u, org, ray, &_obj_seq[ j ].box, &mat ) ) )
+        if( LW_RESULT r = lwHitTestBox( &u, org, ray, &_obj_seq[ j ].box, &mat ); LW_FAILED( r ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] lwHitTestBox failed: j={}, ret={}",
+                         __FUNCTION__, j, static_cast<long long>(r));
             continue;
+        }
 
         if( v.obj_id == LW_INVALID_INDEX || v.dis > u.dis )
         {
@@ -1055,7 +1120,12 @@ LW_RESULT lwHelperBox::Render()
         return LW_RET_OK;
 
 
-    _obj->Update();
+    if( LW_RESULT r = _obj->Update(); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Update failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     for( DWORD i = 0; i < _obj_num; i++ )
     {
@@ -1064,7 +1134,12 @@ LW_RESULT lwHelperBox::Render()
 
         _obj->SetMatrixParent( &mat );
 
-        _obj->RenderSubset( i );
+        if( LW_RESULT r = _obj->RenderSubset( i ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj->RenderSubset failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;
@@ -1140,8 +1215,13 @@ LW_RESULT lwHelperObject::LoadHelperInfo( const lwHelperInfo* info, int create_i
 
         if( create_instance_flag )
         {
-            if(LW_FAILED(_obj_dummy->CreateInstance()))
+            if(LW_RESULT r = _obj_dummy->CreateInstance(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj_dummy->CreateInstance failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -1156,8 +1236,13 @@ LW_RESULT lwHelperObject::LoadHelperInfo( const lwHelperInfo* info, int create_i
 
         if( create_instance_flag )
         {
-            if(LW_FAILED(_obj_box->CreateInstance()))
+            if(LW_RESULT r = _obj_box->CreateInstance(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj_box->CreateInstance failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -1172,8 +1257,13 @@ LW_RESULT lwHelperObject::LoadHelperInfo( const lwHelperInfo* info, int create_i
 
         if( create_instance_flag )
         {
-            if(LW_FAILED(_obj_mesh->CreateInstance()))
+            if(LW_RESULT r = _obj_mesh->CreateInstance(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj_mesh->CreateInstance failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -1188,8 +1278,13 @@ LW_RESULT lwHelperObject::LoadHelperInfo( const lwHelperInfo* info, int create_i
 
         if( create_instance_flag )
         {
-            if(LW_FAILED(_obj_boundingbox->CreateInstance()))
+            if(LW_RESULT r = _obj_boundingbox->CreateInstance(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj_boundingbox->CreateInstance failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -1204,8 +1299,13 @@ LW_RESULT lwHelperObject::LoadHelperInfo( const lwHelperInfo* info, int create_i
 
         if( create_instance_flag )
         {
-            if(LW_FAILED(_obj_boundingsphere->CreateInstance()))
+            if(LW_RESULT r = _obj_boundingsphere->CreateInstance(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _obj_boundingsphere->CreateInstance failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -1288,23 +1388,48 @@ LW_RESULT lwHelperObject::Render()
 {
     if( _obj_dummy )
     {
-        _obj_dummy->Render();
+        if( LW_RESULT r = _obj_dummy->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj_dummy->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
     if( _obj_box )
     {
-        _obj_box->Render();
+        if( LW_RESULT r = _obj_box->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj_box->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
     if( _obj_mesh )
     {
-        _obj_mesh->Render();
+        if( LW_RESULT r = _obj_mesh->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj_mesh->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
     if( _obj_boundingbox )
     {
-        _obj_boundingbox->Render();
+        if( LW_RESULT r = _obj_boundingbox->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj_boundingbox->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
     if( _obj_boundingsphere )
     {
-        _obj_boundingsphere->Render();
+        if( LW_RESULT r = _obj_boundingsphere->Render(); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _obj_boundingsphere->Render failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
+        }
     }
 
     return LW_RET_OK;

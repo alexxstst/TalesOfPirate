@@ -88,8 +88,13 @@ bool CEffPath::LoadPathFromFileLet(const char* file)
     lwMatrix44 mat;
     lwEfxTrack et;
     lwIAnimDataMatrix* data;
-    if(LW_FAILED(et.Load(file)))
+    if(LW_RESULT r = et.Load(file); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwEfxTrack::Load failed: file='{}', ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         return false;
+    }
     data = et.GetData();
     j = data->GetFrameNum();
     for(i = 0; i < j; i++)

@@ -30,8 +30,14 @@ LW_RESULT lwAnimCtrlObjMat::Clone(lwIAnimCtrlObjMat** ret_obj)
 
     lwAnimCtrlObjMat* o = NULL;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj failed: type={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(THIS_TYPE),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->AttachAnimCtrl(_anim_ctrl);
     // lwAnimCtrl_Ref
@@ -40,8 +46,14 @@ LW_RESULT lwAnimCtrlObjMat::Clone(lwIAnimCtrlObjMat** ret_obj)
         _res_mgr->AddRefAnimCtrl(_anim_ctrl, 1);
     }
 
-    if(LW_FAILED(o->PlayPose(&_ppi)))
+    if(LW_RESULT r = o->PlayPose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetTypeInfo(&_type_info);
     
@@ -92,8 +104,14 @@ LW_RESULT lwAnimCtrlObjMat::PlayPose(const lwPlayPoseInfo* info)
     if(_anim_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl())))
+    if(LW_RESULT r = lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl()); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwPlayPoseSmooth failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -107,11 +125,23 @@ LW_RESULT lwAnimCtrlObjMat::UpdateAnimCtrl()
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->UpdatePose(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdateAnimData(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdateAnimData(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdateAnimData failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -120,14 +150,19 @@ __ret:
 }
 
 LW_RESULT lwAnimCtrlObjMat::UpdateObject()
-{ 
+{
     LW_RESULT ret = LW_RET_FAILED;
 
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->GetRTM(&_rtm)))
+    if(LW_RESULT r = _anim_ctrl->GetRTM(&_rtm); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::GetRTM failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -180,8 +215,14 @@ LW_RESULT lwAnimCtrlObjBone::Clone(lwIAnimCtrlObjBone** ret_obj)
 
     lwAnimCtrlObjBone* o = NULL;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj failed: type={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(THIS_TYPE),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->AttachAnimCtrl(_anim_ctrl);
     // lwAnimCtrl_Ref
@@ -190,8 +231,14 @@ LW_RESULT lwAnimCtrlObjBone::Clone(lwIAnimCtrlObjBone** ret_obj)
         _res_mgr->AddRefAnimCtrl(_anim_ctrl, 1);
     }
 
-    if(LW_FAILED(o->PlayPose(&_ppi)))
+    if(LW_RESULT r = o->PlayPose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetTypeInfo(&_type_info);
     
@@ -241,8 +288,14 @@ LW_RESULT lwAnimCtrlObjBone::PlayPose(const lwPlayPoseInfo* info)
     if(_anim_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl())))
+    if(LW_RESULT r = lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl()); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwPlayPoseSmooth failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -256,14 +309,32 @@ LW_RESULT lwAnimCtrlObjBone::UpdateAnimCtrl()
     if(_anim_ctrl == NULL || _ppi.type == PLAY_INVALID)
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->UpdatePose(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdateAnimData(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdateAnimData(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdateAnimData failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdatePoseKeyFrameProc(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePoseKeyFrameProc(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePoseKeyFrameProc failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -418,8 +489,14 @@ LW_RESULT lwAnimCtrlObjTexUV::Clone(lwIAnimCtrlObjTexUV** ret_obj)
 
     lwAnimCtrlObjTexUV* o = NULL;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj failed: type={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(THIS_TYPE),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->AttachAnimCtrl(_anim_ctrl);
     // lwAnimCtrl_Ref
@@ -428,8 +505,14 @@ LW_RESULT lwAnimCtrlObjTexUV::Clone(lwIAnimCtrlObjTexUV** ret_obj)
         _res_mgr->AddRefAnimCtrl(_anim_ctrl, 1);
     }
 
-    if(LW_FAILED(o->PlayPose(&_ppi)))
+    if(LW_RESULT r = o->PlayPose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetTypeInfo(&_type_info);
     
@@ -481,8 +564,14 @@ LW_RESULT lwAnimCtrlObjTexUV::PlayPose(const lwPlayPoseInfo* info)
     if(_anim_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl())))
+    if(LW_RESULT r = lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl()); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwPlayPoseSmooth failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -496,11 +585,23 @@ LW_RESULT lwAnimCtrlObjTexUV::UpdateAnimCtrl()
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->UpdatePose(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdateAnimData(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdateAnimData(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdateAnimData failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -509,14 +610,19 @@ __ret:
 }
 
 LW_RESULT lwAnimCtrlObjTexUV::UpdateObject()
-{ 
+{
     LW_RESULT ret = LW_RET_FAILED;
 
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->GetRunTimeMatrix(&_rtm)))
+    if(LW_RESULT r = _anim_ctrl->GetRunTimeMatrix(&_rtm); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::GetRunTimeMatrix failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -559,8 +665,14 @@ LW_RESULT lwAnimCtrlObjTexImg::Clone(lwIAnimCtrlObjTexImg** ret_obj)
 
     lwAnimCtrlObjTexImg* o = NULL;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj failed: type={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(THIS_TYPE),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->AttachAnimCtrl(_anim_ctrl);
     // lwAnimCtrl_Ref
@@ -569,8 +681,14 @@ LW_RESULT lwAnimCtrlObjTexImg::Clone(lwIAnimCtrlObjTexImg** ret_obj)
         _res_mgr->AddRefAnimCtrl(_anim_ctrl, 1);
     }
 
-    if(LW_FAILED(o->PlayPose(&_ppi)))
+    if(LW_RESULT r = o->PlayPose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetTypeInfo(&_type_info);
 
@@ -623,8 +741,14 @@ LW_RESULT lwAnimCtrlObjTexImg::PlayPose(const lwPlayPoseInfo* info)
     if(_anim_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl())))
+    if(LW_RESULT r = lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl()); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwPlayPoseSmooth failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -638,11 +762,23 @@ LW_RESULT lwAnimCtrlObjTexImg::UpdateAnimCtrl()
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->UpdatePose(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdateAnimData(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdateAnimData(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdateAnimData failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -651,14 +787,19 @@ __ret:
 }
 
 LW_RESULT lwAnimCtrlObjTexImg::UpdateObject()
-{ 
+{
     LW_RESULT ret = LW_RET_FAILED;
 
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->GetRunTimeTex(&_rt_tex)))
+    if(LW_RESULT r = _anim_ctrl->GetRunTimeTex(&_rt_tex); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::GetRunTimeTex failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -700,8 +841,14 @@ LW_RESULT lwAnimCtrlObjMtlOpacity::Clone(lwIAnimCtrlObjMtlOpacity** ret_obj)
 
     lwAnimCtrlObjMtlOpacity* o = NULL;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&o, THIS_TYPE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj failed: type={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(THIS_TYPE),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->AttachAnimCtrl(_anim_ctrl);
     // lwAnimCtrl_Ref
@@ -710,8 +857,14 @@ LW_RESULT lwAnimCtrlObjMtlOpacity::Clone(lwIAnimCtrlObjMtlOpacity** ret_obj)
         _res_mgr->AddRefAnimCtrl(_anim_ctrl, 1);
     }
 
-    if(LW_FAILED(o->PlayPose(&_ppi)))
+    if(LW_RESULT r = o->PlayPose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetTypeInfo(&_type_info);
 
@@ -764,8 +917,14 @@ LW_RESULT lwAnimCtrlObjMtlOpacity::PlayPose(const lwPlayPoseInfo* info)
     if(_anim_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl())))
+    if(LW_RESULT r = lwPlayPoseSmooth(&_ppi, info, _anim_ctrl->GetPoseCtrl()); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwPlayPoseSmooth failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -779,11 +938,23 @@ LW_RESULT lwAnimCtrlObjMtlOpacity::UpdateAnimCtrl()
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->UpdatePose(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdatePose(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdatePose failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_ctrl->UpdateAnimData(&_ppi)))
+    if(LW_RESULT r = _anim_ctrl->UpdateAnimData(&_ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::UpdateAnimData failed: pose={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(_ppi.pose),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -792,14 +963,19 @@ __ret:
 }
 
 LW_RESULT lwAnimCtrlObjMtlOpacity::UpdateObject()
-{ 
+{
     LW_RESULT ret = LW_RET_FAILED;
 
     if(!IsPlaying())
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_anim_ctrl->GetRunTimeOpacity(&_rt_opacity)))
+    if(LW_RESULT r = _anim_ctrl->GetRunTimeOpacity(&_rt_opacity); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimCtrl::GetRunTimeOpacity failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -917,8 +1093,14 @@ LW_RESULT lwAnimCtrlAgent::Update()
 
     for(DWORD i = 0; i < _obj_num; i++)
     {
-        if(LW_FAILED(_obj_seq[i]->UpdateAnimCtrl()))
+        if(LW_RESULT r = _obj_seq[i]->UpdateAnimCtrl(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] obj[{}].UpdateAnimCtrl failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -935,8 +1117,13 @@ LW_RESULT lwAnimCtrlAgent::Clone(lwIAnimCtrlAgent** ret_obj)
 
     lwIAnimCtrlObj* obj = 0;
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlAgent(&agent)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlAgent(&agent); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlAgent failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     for(DWORD i = 0; i < _obj_num; i++)
     {
@@ -964,10 +1151,23 @@ LW_RESULT lwAnimCtrlAgent::Clone(lwIAnimCtrlAgent** ret_obj)
         }
 
         if(LW_FAILED(ret))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] obj[{}].Clone failed: ctrl_type={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         static_cast<long long>(type_info.type),
+                         static_cast<long long>(ret));
             goto __ret;
+        }
 
-        if(LW_FAILED(agent->AddAnimCtrlObj(obj)))
+        if(LW_RESULT r = agent->AddAnimCtrlObj(obj); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AddAnimCtrlObj failed: i={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
         obj = 0;
     }
@@ -1007,8 +1207,14 @@ LW_RESULT lwAnimCtrlAgent::ExtractAnimData(lwIAnimDataInfo* data_info)
             {
                 lwIAnimCtrlMatrix* ctrl_obj = (lwIAnimCtrlMatrix*)aco->GetAnimCtrl();
                 lwAnimDataMatrix* out_data = LW_NEW(lwAnimDataMatrix);
-                if(LW_FAILED(ctrl_obj->ExtractAnimData(out_data)))
+                if(LW_RESULT r = ctrl_obj->ExtractAnimData(out_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrlMatrix::ExtractAnimData failed: i={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
                 a->anim_mat = out_data;
             }
             break;
@@ -1016,26 +1222,46 @@ LW_RESULT lwAnimCtrlAgent::ExtractAnimData(lwIAnimDataInfo* data_info)
             {
                 lwIAnimCtrlBone* ctrl_obj = (lwIAnimCtrlBone*)aco->GetAnimCtrl();
                 lwAnimDataBone* out_data = LW_NEW(lwAnimDataBone);
-                if(LW_FAILED(ctrl_obj->ExtractAnimData(out_data)))
+                if(LW_RESULT r = ctrl_obj->ExtractAnimData(out_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrlBone::ExtractAnimData failed: i={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
                 a->anim_bone = out_data;
             }
             break;
         case ANIM_CTRL_TYPE_TEXUV:
             {
-                lwIAnimCtrlTexUV* ctrl_obj = (lwIAnimCtrlTexUV*)aco->GetAnimCtrl();;  
+                lwIAnimCtrlTexUV* ctrl_obj = (lwIAnimCtrlTexUV*)aco->GetAnimCtrl();;
                 lwAnimDataTexUV* out_data = LW_NEW(lwAnimDataTexUV);
-                if(LW_FAILED(ctrl_obj->ExtractAnimData(out_data)))
+                if(LW_RESULT r = ctrl_obj->ExtractAnimData(out_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrlTexUV::ExtractAnimData failed: i={}, subset={}, stage={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(subset), static_cast<long long>(stage),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
                 a->anim_tex[subset][stage] = out_data;
             }
             break;
         case ANIM_CTRL_TYPE_TEXIMG:
             {
-                lwIAnimCtrlTexImg* ctrl_obj = (lwIAnimCtrlTexImg*)aco->GetAnimCtrl();           
+                lwIAnimCtrlTexImg* ctrl_obj = (lwIAnimCtrlTexImg*)aco->GetAnimCtrl();
                 lwAnimDataTexImg* out_data = LW_NEW(lwAnimDataTexImg);
-                if(LW_FAILED(ctrl_obj->ExtractAnimData(out_data)))
+                if(LW_RESULT r = ctrl_obj->ExtractAnimData(out_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrlTexImg::ExtractAnimData failed: i={}, subset={}, stage={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(subset), static_cast<long long>(stage),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
                 a->anim_img[subset][stage] = out_data;
             }
             break;

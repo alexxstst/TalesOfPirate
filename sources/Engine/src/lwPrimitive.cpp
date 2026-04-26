@@ -124,11 +124,22 @@ LW_RESULT lwPrimitive::LoadMtlTex( DWORD mtl_id, lwMtlTexInfo* info, const char*
     if( mtl_id < 0 || mtl_id >= LW_MAX_SUBSET_NUM )
         goto __ret;
 
-    if( LW_FAILED( _res_mgr->CreateMtlTexAgent( &_mtltex_agent_seq[ mtl_id ] ) ) )
+    if(LW_RESULT r = _res_mgr->CreateMtlTexAgent(&_mtltex_agent_seq[mtl_id]); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateMtlTexAgent failed: mtl_id={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(mtl_id), static_cast<long long>(r));
         goto __ret;
+    }
 
-    if( LW_FAILED( _mtltex_agent_seq[ mtl_id ]->LoadMtlTex( info, tex_path ) ) )
+    if(LW_RESULT r = _mtltex_agent_seq[mtl_id]->LoadMtlTex(info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadMtlTex failed: mtl_id={}, tex_path='{}', ret={}",
+                     __FUNCTION__, static_cast<long long>(mtl_id),
+                     tex_path ? tex_path : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -150,8 +161,13 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     //info->rcci.ctrl_id = 2;
     //info->rcci.vs_id = VST_PNDT0_LD_TT0;
 
-    if(LW_FAILED(LoadRenderCtrl(&info->rcci)))
+    if(LW_RESULT r = LoadRenderCtrl(&info->rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadRenderCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     // begin base info
 
@@ -164,13 +180,24 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     // mtltex info
     for( i = 0; i < info->mtl_num; i++ )
     {
-        if( LW_FAILED( LoadMtlTex( i, &info->mtl_seq[ i ], tex_path ) ) )
+        if(LW_RESULT r = LoadMtlTex(i, &info->mtl_seq[i], tex_path); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadMtlTex failed: i={}, tex_path='{}', ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         tex_path ? tex_path : "(null)", static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     // mesh info
-    if( LW_FAILED( LoadMesh( &info->mesh ) ) )
+    if(LW_RESULT r = LoadMesh(&info->mesh); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadMesh failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     if( res )
     {
@@ -187,8 +214,12 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     {
         LW_IF_RELEASE(_helper_object);
         _res_mgr->CreateHelperObject(&_helper_object);
-        if(LW_FAILED(_helper_object->LoadHelperInfo(&info->helper_data, create_helper_primitive)))
+        if(LW_RESULT r = _helper_object->LoadHelperInfo(&info->helper_data, create_helper_primitive); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadHelperInfo failed: create_helper_primitive={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(create_helper_primitive),
+                         static_cast<long long>(r));
             LG_MSGBOX("LoadHelperInfo");
         }
     }
@@ -196,8 +227,14 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     // anim info
     if( info->anim_size > 0 )
     {
-        if( LW_FAILED( LoadAnimData( &info->anim_data, tex_path, res ) ) )
+        if(LW_RESULT r = LoadAnimData(&info->anim_data, tex_path, res); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadAnimData failed: tex_path='{}', ret={}",
+                         __FUNCTION__, tex_path ? tex_path : "(null)",
+                         static_cast<long long>(r));
             goto __ret;
+        }
     }
 
 
@@ -212,11 +249,21 @@ LW_RESULT lwPrimitive::LoadMesh( lwMeshInfo* info )
 
     LW_SAFE_RELEASE( _mesh_agent );
 
-    if( LW_FAILED( _res_mgr->CreateMeshAgent( &_mesh_agent ) ) )
+    if(LW_RESULT r = _res_mgr->CreateMeshAgent(&_mesh_agent); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateMeshAgent failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if( LW_FAILED( _mesh_agent->LoadMesh( info ) ) )
+    if(LW_RESULT r = _mesh_agent->LoadMesh(info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadMesh(lwMeshInfo*) failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -229,11 +276,22 @@ LW_RESULT lwPrimitive::LoadMesh( const lwResFileMesh* info )
 
     LW_SAFE_RELEASE( _mesh_agent );
 
-    if( LW_FAILED( _res_mgr->CreateMeshAgent( &_mesh_agent ) ) )
+    if(LW_RESULT r = _res_mgr->CreateMeshAgent(&_mesh_agent); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateMeshAgent failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if( LW_FAILED( _mesh_agent->LoadMesh( info ) ) )
+    if(LW_RESULT r = _mesh_agent->LoadMesh(info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadMesh(lwResFileMesh*) failed: file_name='{}', ret={}",
+                     __FUNCTION__, info ? info->file_name : "(null)",
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -255,8 +313,14 @@ LW_RESULT lwPrimitive::LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci)
     render_agent->SetVertexDeclaration(rcci->decl_id);
     render_agent->SetVertexShader(rcci->vs_id);
 
-    if(LW_FAILED(render_agent->SetRenderCtrl(rcci->ctrl_id)))
+    if(LW_RESULT r = render_agent->SetRenderCtrl(rcci->ctrl_id); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetRenderCtrl failed: ctrl_id={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(rcci->ctrl_id),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     _render_agent = render_agent;
 
@@ -277,8 +341,13 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
     //LW_SAFE_RELEASE(_anim_agent);
     if(_anim_agent == 0)
     {
-        if(LW_FAILED(_res_mgr->CreateAnimCtrlAgent(&_anim_agent)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrlAgent(&_anim_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrlAgent failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
 
@@ -293,18 +362,35 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
         lwIAnimCtrlMatrix* ctrl = NULL;
         lwIAnimCtrlObjMat* ctrl_obj = NULL;
 
-        if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrlObj(MAT) failed: type={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(type_info.type),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrl(MAT) failed: type={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(type_info.type),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(ctrl->LoadData(data)))
+        if(LW_RESULT r = ctrl->LoadData(data); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimCtrl(MAT)::LoadData failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         ctrl_obj->AttachAnimCtrl(ctrl);
         ctrl_obj->SetTypeInfo(&type_info);
-        _anim_agent->AddAnimCtrlObj(ctrl_obj);        
+        _anim_agent->AddAnimCtrlObj(ctrl_obj);
     }
     if(info->anim_bone)
     {
@@ -319,18 +405,35 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
 
 
 
-        if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrlObj(BONE) failed: type={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(type_info.type),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrl(BONE) failed: type={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(type_info.type),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(ctrl->LoadData(data)))
+        if(LW_RESULT r = ctrl->LoadData(data); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimCtrl(BONE)::LoadData failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         ctrl_obj->AttachAnimCtrl(ctrl);
         ctrl_obj->SetTypeInfo(&type_info);
-        _anim_agent->AddAnimCtrlObj(ctrl_obj);        
+        _anim_agent->AddAnimCtrlObj(ctrl_obj);
 
     }
 
@@ -352,14 +455,34 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
             lwIAnimCtrlMtlOpacity* ctrl = NULL;
             lwIAnimCtrlObjMtlOpacity* ctrl_obj = NULL;
 
-            if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type)))
+            if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] CreateAnimCtrlObj(MTLOPACITY) failed: i={}, type={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(type_info.type),
+                             static_cast<long long>(r));
                 goto __ret;
+            }
 
-            if(LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type)))
+            if(LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] CreateAnimCtrl(MTLOPACITY) failed: i={}, type={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(type_info.type),
+                             static_cast<long long>(r));
                 goto __ret;
+            }
 
-            if(LW_FAILED(ctrl->LoadData(data)))
+            if(LW_RESULT r = ctrl->LoadData(data); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] AnimCtrl(MTLOPACITY)::LoadData failed: i={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(r));
                 goto __ret;
+            }
 
             ctrl_obj->AttachAnimCtrl(ctrl);
             ctrl_obj->SetTypeInfo(&type_info);
@@ -380,14 +503,37 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
                 lwIAnimCtrlTexUV* ctrl = NULL;
                 lwIAnimCtrlObjTexUV* ctrl_obj = NULL;
 
-                if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type)))
+                if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] CreateAnimCtrlObj(TEXUV) failed: i={}, j={}, type={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(type_info.type),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
-                if(LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type)))
+                if(LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] CreateAnimCtrl(TEXUV) failed: i={}, j={}, type={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(type_info.type),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
-                if(LW_FAILED(ctrl->LoadData(data)))
+                if(LW_RESULT r = ctrl->LoadData(data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrl(TEXUV)::LoadData failed: i={}, j={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
                 ctrl_obj->AttachAnimCtrl(ctrl);
                 ctrl_obj->SetTypeInfo(&type_info);
@@ -409,14 +555,37 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
                 lwIAnimCtrlTexImg* ctrl = NULL;
                 lwIAnimCtrlObjTexImg* ctrl_obj = NULL;
 
-                if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type)))
+                if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrl_obj, type_info.type); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] CreateAnimCtrlObj(TEXIMG) failed: i={}, j={}, type={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(type_info.type),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
-                if(LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type)))
+                if(LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl, type_info.type); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] CreateAnimCtrl(TEXIMG) failed: i={}, j={}, type={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(type_info.type),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
-                if(LW_FAILED(ctrl->LoadData(data)))
+                if(LW_RESULT r = ctrl->LoadData(data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimCtrl(TEXIMG)::LoadData failed: i={}, j={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(j),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
                 ctrl_obj->AttachAnimCtrl(ctrl);
                 ctrl_obj->SetTypeInfo(&type_info);
@@ -446,8 +615,13 @@ LW_RESULT lwPrimitive::Clone( lwIPrimitive** ret_obj )
     if( _mesh_agent )
     {
         lwIMeshAgent* mesh_agent;
-        if(LW_FAILED(_mesh_agent->Clone(&mesh_agent )))
+        if(LW_RESULT r = _mesh_agent->Clone(&mesh_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] MeshAgent::Clone failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         o->SetMeshAgent( mesh_agent );
     }
@@ -458,25 +632,41 @@ LW_RESULT lwPrimitive::Clone( lwIPrimitive** ret_obj )
             continue;
 
         lwIMtlTexAgent* mtltex_agent;
-        if(LW_FAILED(_mtltex_agent_seq[ i ]->Clone( &mtltex_agent )))
+        if(LW_RESULT r = _mtltex_agent_seq[i]->Clone(&mtltex_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] MtlTexAgent::Clone failed: i={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
         o->SetMtlTexAgent( i, mtltex_agent );
     }
-        
+
     if(_anim_agent)
     {
         lwIAnimCtrlAgent* anim_agent;
-        if(LW_FAILED(_anim_agent->Clone(&anim_agent)))
+        if(LW_RESULT r = _anim_agent->Clone(&anim_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimCtrlAgent::Clone failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
         o->SetAnimCtrlAgent(anim_agent);
     }
 
     if(_render_agent)
     {
         lwIRenderCtrlAgent* render_agent;
-        if(LW_FAILED(_render_agent->Clone(&render_agent)))
+        if(LW_RESULT r = _render_agent->Clone(&render_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] RenderCtrlAgent::Clone failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
         o->SetRenderCtrl(render_agent);
     }
 
@@ -539,8 +729,13 @@ LW_RESULT lwPrimitive::Update()
 
     if(_anim_agent)
     {
-        if(LW_FAILED(_anim_agent->Update()))
+        if(LW_RESULT r = _anim_agent->Update(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimAgent::Update failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwAnimCtrlObjTypeInfo type_info;
         lwIAnimCtrlObj* ctrl_obj;
@@ -557,28 +752,58 @@ LW_RESULT lwPrimitive::Update()
             {
             case ANIM_CTRL_TYPE_MAT:
                 {
-                    if(LW_FAILED(((lwIAnimCtrlObjMat*)ctrl_obj)->UpdateObject()))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjMat*)ctrl_obj)->UpdateObject(); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjMat::UpdateObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
 
                     lwMatrix44 mat;
-                    if(LW_FAILED(((lwIAnimCtrlObjMat*)ctrl_obj)->GetRTM(&mat)))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjMat*)ctrl_obj)->GetRTM(&mat); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjMat::GetRTM failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
                     _render_agent->SetLocalMatrix(&mat);
                 }
                 break;
             case ANIM_CTRL_TYPE_BONE:
                 {
-                    if(LW_FAILED(((lwIAnimCtrlObjBone*)ctrl_obj)->UpdateObject((lwIAnimCtrlObjBone*)ctrl_obj, _mesh_agent->GetMesh())))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjBone*)ctrl_obj)->UpdateObject((lwIAnimCtrlObjBone*)ctrl_obj, _mesh_agent->GetMesh()); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjBone::UpdateObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
 
-                    if(LW_FAILED(((lwIAnimCtrlObjBone*)ctrl_obj)->UpdateHelperObject(_helper_object)))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjBone*)ctrl_obj)->UpdateHelperObject(_helper_object); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjBone::UpdateHelperObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
                 }
                 break;
             case ANIM_CTRL_TYPE_MTLOPACITY:
                 {
-                    if(LW_FAILED(((lwIAnimCtrlObjMtlOpacity*)ctrl_obj)->UpdateObject()))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjMtlOpacity*)ctrl_obj)->UpdateObject(); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjMtlOpacity::UpdateObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
 
                     lwIMtlTexAgent* mtltex_agent;
                     mtltex_agent = GetMtlTexAgent(type_info.data[0]);
@@ -592,8 +817,14 @@ LW_RESULT lwPrimitive::Update()
                 break;
             case ANIM_CTRL_TYPE_TEXUV:
                 {
-                    if(LW_FAILED(((lwIAnimCtrlObjTexUV*)ctrl_obj)->UpdateObject()))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjTexUV*)ctrl_obj)->UpdateObject(); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjTexUV::UpdateObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
                 }
                 break;
             case ANIM_CTRL_TYPE_TEXIMG:
@@ -601,11 +832,23 @@ LW_RESULT lwPrimitive::Update()
                     lwITex* tex;
                     lwIMtlTexAgent* mtltex_agent;
 
-                    if(LW_FAILED(((lwIAnimCtrlObjTexImg*)ctrl_obj)->UpdateObject()))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjTexImg*)ctrl_obj)->UpdateObject(); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjTexImg::UpdateObject failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
 
-                    if(LW_FAILED(((lwIAnimCtrlObjTexImg*)ctrl_obj)->GetRunTimeTex(&tex)))
+                    if(LW_RESULT r = ((lwIAnimCtrlObjTexImg*)ctrl_obj)->GetRunTimeTex(&tex); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                                     "[{}] AnimCtrlObjTexImg::GetRunTimeTex failed: i={}, ret={}",
+                                     __FUNCTION__, static_cast<long long>(i),
+                                     static_cast<long long>(r));
                         goto __ret;
+                    }
 
                     mtltex_agent = GetMtlTexAgent(type_info.data[0]);
                     if(mtltex_agent == 0)
@@ -658,8 +901,13 @@ LW_RESULT lwPrimitive::Render()
     _render_agent->BindAnimCtrlAgent(_anim_agent);
     _render_agent->BindMeshAgent( _mesh_agent );
 
-    if(LW_FAILED(_render_agent->BeginSet()))
+    if(LW_RESULT r = _render_agent->BeginSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] RenderAgent::BeginSet failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     {
         for (DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
@@ -675,27 +923,56 @@ LW_RESULT lwPrimitive::Render()
 
             _render_agent->BindMtlTexAgent(_mtltex_agent_seq[i]);
 
-            if (LW_FAILED(ret = _render_agent->BeginSetSubset(i)))
+            ret = _render_agent->BeginSetSubset(i);
+            if (LW_FAILED(ret))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] RenderAgent::BeginSetSubset failed: i={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(ret));
                 goto __ret;
+            }
 
             if (ret == LW_RET_OK_1)
                 goto __ret;
 
-            if (LW_FAILED(_render_agent->DrawSubset(i)))
+            if (LW_RESULT r = _render_agent->DrawSubset(i); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] RenderAgent::DrawSubset failed: i={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(r));
                 goto __ret;
+            }
 
-            if (LW_FAILED(_render_agent->EndSetSubset(i)))
+            if (LW_RESULT r = _render_agent->EndSetSubset(i); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] RenderAgent::EndSetSubset failed: i={}, ret={}",
+                             __FUNCTION__, static_cast<long long>(i),
+                             static_cast<long long>(r));
                 goto __ret;
+            }
 
             _mtltex_agent_seq[i]->EndPass();
         }
 
-        if (LW_FAILED(_render_agent->EndSet()))
+        if (LW_RESULT r = _render_agent->EndSet(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] RenderAgent::EndSet failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         if (_helper_object)
         {
-            _helper_object->Render();
+            if (LW_RESULT r = _helper_object->Render(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _helper_object->Render failed: ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
+            }
         }
 
 	}
@@ -717,11 +994,36 @@ LW_RESULT lwPrimitive::RenderSubset( DWORD subset )
     _render_agent->BindMeshAgent( _mesh_agent );
     _render_agent->BindMtlTexAgent( _mtltex_agent_seq[ subset ] );
 
-    _render_agent->BeginSet();
-    _render_agent->BeginSetSubset(subset);
-    _render_agent->DrawSubset( subset );
-    _render_agent->EndSetSubset(subset);
-    _render_agent->EndSet();
+    if (LW_RESULT r = _render_agent->BeginSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_agent->BeginSet failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+    }
+    if (LW_RESULT r = _render_agent->BeginSetSubset(subset); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_agent->BeginSetSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+    }
+    if (LW_RESULT r = _render_agent->DrawSubset( subset ); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_agent->DrawSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+    }
+    if (LW_RESULT r = _render_agent->EndSetSubset(subset); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_agent->EndSetSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+    }
+    if (LW_RESULT r = _render_agent->EndSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_agent->EndSet failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+    }
 
     // subset render doest not render helper object
     //_dummy_object.Render( dev_obj, &mat );
@@ -834,8 +1136,13 @@ LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwIGeomObjInfo* info)
         if (mesh == 0)
             goto __ret;
 
-        if (LW_FAILED(mesh->ExtractMesh(&a->mesh)))
+        if (LW_RESULT r = mesh->ExtractMesh(&a->mesh); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] Mesh::ExtractMesh failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         // mtltex
         {
@@ -845,8 +1152,14 @@ LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwIGeomObjInfo* info)
                 if (_mtltex_agent_seq[i] == 0)
                     break;
 
-                if (LW_FAILED(_mtltex_agent_seq[i]->ExtractMtlTex(&a->mtl_seq[i])))
+                if (LW_RESULT r = _mtltex_agent_seq[i]->ExtractMtlTex(&a->mtl_seq[i]); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] MtlTexAgent::ExtractMtlTex failed: i={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(i),
+                                 static_cast<long long>(r));
                     goto __ret;
+                }
 
             }
             a->mtl_num = i;
@@ -854,16 +1167,26 @@ LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwIGeomObjInfo* info)
             // animation
             if (_anim_agent)
             {
-                if (LW_FAILED(_anim_agent->ExtractAnimData(&a->anim_data)))
+                if (LW_RESULT r = _anim_agent->ExtractAnimData(&a->anim_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AnimAgent::ExtractAnimData failed: ret={}",
+                                 __FUNCTION__, static_cast<long long>(r));
                     goto __ret;
+                }
             }
 
 
             // helper info
             if (_helper_object)
             {
-                if (LW_FAILED(_helper_object->ExtractHelperInfo(&a->helper_data)))
+                if (LW_RESULT r = _helper_object->ExtractHelperInfo(&a->helper_data); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] HelperObject::ExtractHelperInfo failed: ret={}",
+                                 __FUNCTION__, static_cast<long long>(r));
                     goto __ret;
+                }
             }
 
             //
@@ -901,7 +1224,12 @@ LW_RESULT lwPrimitive::PlayDefaultAnimation(bool IsGlitched)
         for (DWORD i = 0; i < n; i++)
         {
             ctrl_obj = _anim_agent->GetAnimCtrlObj(i);
-            ctrl_obj->PlayPose(&ppi);
+            if (LW_RESULT r = ctrl_obj->PlayPose(&ppi); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] ctrl_obj->PlayPose failed: i={}, n={}, ret={}",
+                             __FUNCTION__, i, n, static_cast<long long>(r));
+            }
 
             //if(LW_SUCCEEDED(ctrl_obj->GetTypeInfo(&type_info)))
             //{
@@ -942,8 +1270,13 @@ LW_RESULT lwPrimitivePlayDefaultAnimation( lwIPrimitive* obj, bool IsGlitched )
     {
        
         ctrl_obj = anim_agent->GetAnimCtrlObj(i);
-        
-        ctrl_obj->PlayPose(&ppi);
+
+        if (LW_RESULT r = ctrl_obj->PlayPose(&ppi); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ctrl_obj->PlayPose failed: i={}, n={}, ret={}",
+                         __FUNCTION__, i, n, static_cast<long long>(r));
+        }
         //if(LW_SUCCEEDED(ctrl_obj->GetTypeInfo(&type_info)))
         //{
         //    if(type_info.type == ANIM_CTRL_TYPE_MTLOPACITY)

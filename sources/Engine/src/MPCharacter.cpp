@@ -175,7 +175,12 @@ void MPCharacter::FrameMove()
 {
 	if( _physique->isLoaded() )
 	{
-		_physique->Update();
+		if( LW_RESULT r = _physique->Update(); LW_FAILED(r) )
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _physique->Update failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
 	}
 }
 
@@ -183,7 +188,12 @@ void MPCharacter::Render()
 {
 	if( _physique->isLoaded() )
 	{
-		_physique->Render();
+		if( LW_RESULT r = _physique->Render(); LW_FAILED(r) )
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _physique->Render failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
 	}
 
 }
@@ -194,18 +204,28 @@ LW_RESULT MPCharacter::Load( const MPChaLoadInfo* info )
 
     if( strlen( info->bone ) > 0 )
     {
-        if( LW_FAILED( _physique->LoadBone( info->bone ) ) )
+        if( LW_RESULT r = _physique->LoadBone( info->bone ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _physique->LoadBone failed: bone={}, ret={}",
+                         __FUNCTION__, info->bone, static_cast<long long>(r));
             goto __ret;
+        }
     }
-  
+
 
     for( int i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
     {
         if( strlen( info->part[i] ) == 0 )
             continue;
 
-        if( LW_FAILED( LoadPart( i, info->part[i] ) ) )
+        if( LW_RESULT r = LoadPart( i, info->part[i] ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadPart failed: i={}, part={}, ret={}",
+                         __FUNCTION__, i, info->part[i], static_cast<long long>(r));
             goto __ret;
+        }
     }
     ret = LW_RET_OK;
 
@@ -225,10 +245,15 @@ LW_RESULT MPCharacter::Load( DWORD obj_id, DWORD group_id, DWORD* skin_id_seq, i
         char path_bone[ LW_MAX_PATH ];
         sprintf( path_bone, "%04d.lab", obj_id );
 
-        if( LW_FAILED( _physique->LoadBone( path_bone ) ) )
+        if( LW_RESULT r = _physique->LoadBone( path_bone ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _physique->LoadBone failed: obj_id={}, group_id={}, path_bone={}, ret={}",
+                         __FUNCTION__, obj_id, group_id, path_bone, static_cast<long long>(r));
             goto __ret;
+        }
     }
- 
+
     DWORD file_id;
 
     for( int i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
@@ -238,8 +263,13 @@ LW_RESULT MPCharacter::Load( DWORD obj_id, DWORD group_id, DWORD* skin_id_seq, i
 
         file_id = obj_id * 1000000 + group_id * 10000 + i;
 
-        if( LW_FAILED( LoadPart( i, file_id ) ) )
+        if( LW_RESULT r = LoadPart( i, file_id ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadPart failed: i={}, obj_id={}, group_id={}, file_id={}, ret={}",
+                         __FUNCTION__, i, obj_id, group_id, file_id, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -288,12 +318,22 @@ LW_RESULT MPCharacter::LoadPart( DWORD part_id, DWORD file_id )
     
     if( LW_SUCCEEDED( ret = _physique->CheckPrimitive( part_id ) ) )
     {
-        if( LW_FAILED( ret = _physique->DestroyPrimitive( part_id ) ) )
+        ret = _physique->DestroyPrimitive( part_id );
+        if( LW_FAILED( ret ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] DestroyPrimitive failed: part_id={}, file_id={}, path_mesh={}, ret={}",
+                         __FUNCTION__, part_id, file_id, path_mesh, static_cast<long long>(ret));
             goto __ret;
+        }
     }
 
-    if( LW_FAILED( ret = _physique->LoadPrimitive( part_id, path_mesh ) ) )
+    ret = _physique->LoadPrimitive( part_id, path_mesh );
+    if( LW_FAILED( ret ) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadPrimitive failed: part_id={}, file_id={}, path_mesh={}, ret={}",
+                     __FUNCTION__, part_id, file_id, path_mesh, static_cast<long long>(ret));
         LG_MSGBOX("Load MPCharacter %s error", path_mesh);
         goto __ret;
     }
@@ -310,12 +350,22 @@ LW_RESULT MPCharacter::LoadPart( DWORD part_id, const char* file )
     
     if( LW_SUCCEEDED( ret = _physique->CheckPrimitive( part_id ) ) )
     {
-        if( LW_FAILED( ret = _physique->DestroyPrimitive( part_id ) ) )
+        ret = _physique->DestroyPrimitive( part_id );
+        if( LW_FAILED( ret ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] DestroyPrimitive failed: part_id={}, file={}, ret={}",
+                         __FUNCTION__, part_id, file ? file : "(null)", static_cast<long long>(ret));
             goto __ret;
+        }
     }
 
-    if( LW_FAILED( ret = _physique->LoadPrimitive( part_id, file ) ) )
+    ret = _physique->LoadPrimitive( part_id, file );
+    if( LW_FAILED( ret ) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadPrimitive failed: part_id={}, file={}, ret={}",
+                     __FUNCTION__, part_id, file ? file : "(null)", static_cast<long long>(ret));
         LG_MSGBOX("Load MPCharacter %s error", file);
         goto __ret;
     }
@@ -332,8 +382,14 @@ LW_RESULT MPCharacter::DestroyPart( DWORD part_id )
 
     if( LW_SUCCEEDED( ret = _physique->CheckPrimitive( part_id ) ) )
     {
-        if( LW_FAILED( ret = _physique->DestroyPrimitive( part_id ) ) )
+        ret = _physique->DestroyPrimitive( part_id );
+        if( LW_FAILED( ret ) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] DestroyPrimitive failed: part_id={}, ret={}",
+                         __FUNCTION__, part_id, static_cast<long long>(ret));
             goto __ret;
+        }
     }
     ret = LW_RET_OK;
 
@@ -474,8 +530,13 @@ LW_RESULT MPCharacter::AttachItem( const MPItemLinkInfo* info )
 
     if( info->data == -1 )
     {
-        if( LW_FAILED( _physique->SetItemLink( &ili ) ) )
+        if( LW_RESULT r = _physique->SetItemLink( &ili ); LW_FAILED(r) )
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _physique->SetItemLink failed: link_parent_id={}, link_item_id={}, ret={}",
+                         __FUNCTION__, info->link_parent_id, info->link_item_id, static_cast<long long>(r));
             return LW_RET_FAILED;
+        }
     }
     else
     {
@@ -505,8 +566,13 @@ LW_RESULT MPCharacter::SetItemLink( const lwSceneItemLinkInfo* info )
     ili.link_item_id = info->link_item_id;
     ili.link_parent_id = info->link_parent_id;
 
-    if( LW_FAILED( _physique->SetItemLink( &ili ) ) )
+    if( LW_RESULT r = _physique->SetItemLink( &ili ); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _physique->SetItemLink failed: id={}, link_parent_id={}, link_item_id={}, ret={}",
+                     __FUNCTION__, info->id, info->link_parent_id, info->link_item_id, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     _link_item_seq[ _link_item_num ].obj = info->obj;
     _link_item_seq[ _link_item_num ].data = info->data;

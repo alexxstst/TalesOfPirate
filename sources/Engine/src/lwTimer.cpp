@@ -332,8 +332,13 @@ LW_RESULT lwTimerThread::SetTimer(DWORD id, lwTimerProc proc, DWORD interval)
     {
         lwTimerThreadInfo* tti = LW_NEW(lwTimerThreadInfo);
 
-        if (LW_FAILED(tti->Init(proc, interval)))
+        if (LW_RESULT r = tti->Init(proc, interval); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] tti->Init failed: id={}, interval={}, ret={}",
+                         __FUNCTION__, id, interval, static_cast<long long>(r));
             goto __ret;
+        }
 
         _timer_seq[id] = tti;
     }
@@ -382,8 +387,13 @@ LW_RESULT lwTimerThread::ClearTimer(DWORD id, DWORD delay)
 
         if(id == LW_INVALID_INDEX || id == i)
         {
-            if(LW_FAILED(_timer_seq[i]->Term(delay)))
+            if(LW_RESULT r = _timer_seq[i]->Term(delay); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _timer_seq[i]->Term failed: i={}, delay={}, ret={}",
+                             __FUNCTION__, i, delay, static_cast<long long>(r));
                 goto __ret;
+            }
 
             LW_DELETE(_timer_seq[i]);
             _timer_seq[i] = 0;

@@ -142,9 +142,11 @@ void MPMap::Render()
             HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(_dwLandVBSize, 
 		        0, FVF_LAND, D3DPOOL_MANAGED, &_pLandVB, NULL);
 
-	        if(FAILED(hr)) 
+	        if(FAILED(hr))
 	        {
-                ToLogService("errors", LogLevel::Error, " MPMap::Render() Land Terrain Vertex Buffer!");
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] CreateVertexBuffer (Land) failed: size={}, hr=0x{:08X}",
+                             __FUNCTION__, _dwLandVBSize, static_cast<std::uint32_t>(hr));
                 _pLandVB = NULL;
             }
         }
@@ -160,9 +162,12 @@ void MPMap::Render()
 	        HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(sizeof(MPSeaTileVertex) * nVertexCnt, 
 		        D3DUSAGE_WRITEONLY, FVF_SEA,  D3DPOOL_DEFAULT, &_pVB, NULL);
 
-	        if(FAILED(hr)) 
+	        if(FAILED(hr))
 	        {
-                ToLogService("errors", LogLevel::Error, " MPMap::Render() Sea Vertex Buffer!");
+                const DWORD seaVBSize = sizeof(MPSeaTileVertex) * nVertexCnt;
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] CreateVertexBuffer (Sea) failed: size={}, hr=0x{:08X}",
+                             __FUNCTION__, seaVBSize, static_cast<std::uint32_t>(hr));
                 _pVB = NULL;
             }
         }
@@ -661,7 +666,13 @@ void MPMap::RenderSea()
 //
 //#else
 		HRESULT hr = _pVB->Lock(0, nVertexCnt * sizeof(MPSeaTileVertex), (void**)&pCurVertex, D3DLOCK_NOOVERWRITE );
-	    if(FAILED(hr)) return;
+	    if(FAILED(hr))
+	    {
+	        ToLogService("errors", LogLevel::Error,
+	                     "[{}] _pVB->Lock failed: nVertexCnt={}, hr=0x{:08X}",
+	                     __FUNCTION__, nVertexCnt, static_cast<std::uint32_t>(hr));
+	        return;
+	    }
 		for(y = 0; y < nSeaCntY; y++)
 		{
 			for(x = 0; x < nSeaCntX; x++)
@@ -705,8 +716,10 @@ void MPMap::RenderSea()
 	
 		_pVB->Unlock();
 		g_Render.SetStreamSource(0, _pVB, 0, sizeof(MPSeaTileVertex));
-		if(FAILED(g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, 0, nTriCnt)))
-			ToLogService("errors", LogLevel::Error, " render sea");
+		if(HRESULT hr = g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, 0, nTriCnt); FAILED(hr))
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] DrawPrimitive (sea) failed: nTriCnt={}, hr=0x{:08X}",
+			             __FUNCTION__, nTriCnt, static_cast<std::uint32_t>(hr));
 //#endif
 	}
 	else
@@ -745,8 +758,10 @@ void MPMap::RenderSea()
                 lwInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
                 lwIDynamicStreamMgr* dsm = imgr->res_mgr->GetDynamicStreamMgr();
                 dsm->BindDataVB(0, &SVertex, sizeof(MPSeaTileVertex) * 4, sizeof(MPSeaTileVertex));
-				if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2)))
-					ToLogService("errors", LogLevel::Error, " render sea");
+				if(LW_RESULT r = dsm->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2); LW_FAILED(r))
+					ToLogService("errors", LogLevel::Error,
+					             "[{}] dsm->DrawPrimitive (sea strip) failed: ret={}",
+					             __FUNCTION__, static_cast<long long>(r));
 #else
 				g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &SVertex, sizeof(MPSeaTileVertex));
 #endif
@@ -1204,9 +1219,11 @@ void MPMap::_FillVB()
         
     MPTileVertex *pCurVertex = NULL;
     HRESULT hr = _pLandVB->Lock(0, nLockVertex * sizeof(MPTileVertex), (void**)&pCurVertex, 0 );
-	if(FAILED(hr)) 
+	if(FAILED(hr))
     {
-        ToLogService("common", "Terrain Land VB Lock Fail!");
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _pLandVB->Lock failed: nLockVertex={}, hr=0x{:08X}",
+                     __FUNCTION__, nLockVertex, static_cast<std::uint32_t>(hr));
         return;
     }
 

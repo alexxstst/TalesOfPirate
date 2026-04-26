@@ -164,7 +164,12 @@ void MPGameApp::FrameMove(DWORD dwTimeParam) {
 	}
 
 	lwISceneMgr* sm = g_Render.GetInterfaceMgr()->sys_graphics->GetSceneMgr();
-	sm->Update();
+	if (LW_RESULT r = sm->Update(); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] sm->Update failed: ret={}",
+		             __FUNCTION__, static_cast<long long>(r));
+	}
 
 	_FrameMove(_time = dwTimeParam);
 
@@ -188,8 +193,18 @@ void MPGameApp::Render() {
 
 	// _RenderAxis();
 
-	sm->BeginRender();
-	sm->Render();
+	if (LW_RESULT r = sm->BeginRender(); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] sm->BeginRender failed: ret={}",
+		             __FUNCTION__, static_cast<long long>(r));
+	}
+	if (LW_RESULT r = sm->Render(); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] sm->Render failed: ret={}",
+		             __FUNCTION__, static_cast<long long>(r));
+	}
 
 	// Фон консоли — сплошной colored quad (без текстуры) через D3D. Рисуем
 	// ДО _Render(), чтобы UI и текст консоли (CGameApp::_RenderConsoleText)
@@ -232,7 +247,12 @@ void MPGameApp::Render() {
 
 	_Render(); //
 
-	sm->EndRender();
+	if (LW_RESULT r = sm->EndRender(); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] sm->EndRender failed: ret={}",
+		             __FUNCTION__, static_cast<long long>(r));
+	}
 
 	///////////////////////////////////////////////////////////
 

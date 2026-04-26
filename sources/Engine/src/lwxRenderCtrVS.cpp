@@ -221,11 +221,21 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
         if (!shader_mgr)
             goto __ret;
 
-        if (LW_FAILED(shader_mgr->QueryVertexShader(&vs, agent->GetVertexShader())))
+        if (LW_RESULT r = shader_mgr->QueryVertexShader(&vs, agent->GetVertexShader()); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] QueryVertexShader failed (dx8): vs_id={}, ret={}",
+                         __FUNCTION__, agent->GetVertexShader(), static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(shader_mgr->QueryVertexDeclaration(&decl, agent->GetVertexDeclaration())))
+        if (LW_RESULT r = shader_mgr->QueryVertexDeclaration(&decl, agent->GetVertexDeclaration()); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] QueryVertexDeclaration failed (dx8): decl_id={}, ret={}",
+                         __FUNCTION__, agent->GetVertexDeclaration(), static_cast<long long>(r));
             goto __ret;
+        }
 
         dev_obj->SetVertexDeclarationForced(decl);
         dev_obj->SetVertexShader(vs);
@@ -365,8 +375,13 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::Initialize(lwIRenderCtrlAgent* agent)
     lwIShaderMgr* shader_mgr = res_mgr->GetShaderMgr();
 
     lwVertexShaderInfo* vs_info = shader_mgr->GetVertexShaderInfo(agent->GetVertexShader());
-    if(FAILED(D3DXGetShaderConstantTable((DWORD*)vs_info->data, &_const_tab)))
+    if(HRESULT hr = D3DXGetShaderConstantTable((DWORD*)vs_info->data, &_const_tab); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] D3DXGetShaderConstantTable failed: vs_id={}, hr=0x{:08X}",
+                     __FUNCTION__, agent->GetVertexShader(), static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -464,14 +479,29 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
     }
 
     // --- constantes de shader (mantido seu _const_tab) ---
-    if (FAILED(_const_tab->SetInt(dev, "blend_num", blend_factor)))
+    if (HRESULT hr = _const_tab->SetInt(dev, "blend_num", blend_factor); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetInt(blend_num) failed: blend_factor={}, hr=0x{:08X}",
+                     __FUNCTION__, blend_factor, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
-    if (FAILED(_const_tab->SetMatrix(dev, "mat_viewproj", &mat)))
+    if (HRESULT hr = _const_tab->SetMatrix(dev, "mat_viewproj", &mat); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetMatrix(mat_viewproj) failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
-    if (FAILED(_const_tab->SetValue(dev, "light_dir", &light_dir, sizeof(light_dir))))
+    if (HRESULT hr = _const_tab->SetValue(dev, "light_dir", &light_dir, sizeof(light_dir)); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetValue(light_dir) failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     // --- paleta de ossos (mantido) ---
     anim_agent = agent->GetAnimCtrlAgent();
@@ -498,12 +528,15 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
                     goto __ret;
 
                 // Se GetConstantByName falhar, retorna NULL e SetMatrixArray falha:
-                if (FAILED(_const_tab->SetMatrixArray(
+                if (HRESULT hr = _const_tab->SetMatrixArray(
                         dev,
                         _const_tab->GetConstantByName(NULL, "mat_bonepallette"),
                         (D3DXMATRIX*)bone_ctrl->GetBoneRTMSeq(),
-                        reg_num)))
+                        reg_num); FAILED(hr))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] SetMatrixArray(mat_bonepallette) failed: reg_num={}, hr=0x{:08X}",
+                                 __FUNCTION__, reg_num, static_cast<std::uint32_t>(hr));
                     goto __ret;
                 }
 
@@ -521,11 +554,21 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
         IDirect3DVertexShaderX*      shader = 0;
         IDirect3DVertexDeclarationX* decl   = 0;
 
-        if (LW_FAILED(shader_mgr->QueryVertexShader(&shader, agent->GetVertexShader())))
+        if (LW_RESULT r = shader_mgr->QueryVertexShader(&shader, agent->GetVertexShader()); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] QueryVertexShader failed (dx9): vs_id={}, ret={}",
+                         __FUNCTION__, agent->GetVertexShader(), static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(shader_mgr->QueryVertexDeclaration(&decl, agent->GetVertexDeclaration())))
+        if (LW_RESULT r = shader_mgr->QueryVertexDeclaration(&decl, agent->GetVertexDeclaration()); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] QueryVertexDeclaration failed (dx9): decl_id={}, ret={}",
+                         __FUNCTION__, agent->GetVertexDeclaration(), static_cast<long long>(r));
             goto __ret;
+        }
 
         dev_obj->SetVertexDeclarationForced(decl);
         dev_obj->SetVertexShader(shader);
@@ -644,11 +687,21 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
     if (!_const_tab)
         goto __ret;
 
-    if (FAILED(_const_tab->SetVector(dev, "mtl_amb", (D3DXVECTOR4*)&amb_dif[0])))
+    if (HRESULT hr = _const_tab->SetVector(dev, "mtl_amb", (D3DXVECTOR4*)&amb_dif[0]); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetVector(mtl_amb) failed: subset={}, hr=0x{:08X}",
+                     __FUNCTION__, subset, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
-    if (FAILED(_const_tab->SetVector(dev, "mtl_dif", (D3DXVECTOR4*)&amb_dif[1])))
+    if (HRESULT hr = _const_tab->SetVector(dev, "mtl_dif", (D3DXVECTOR4*)&amb_dif[1]); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetVector(mtl_dif) failed: subset={}, hr=0x{:08X}",
+                     __FUNCTION__, subset, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     // --- UV anim (mantido; s adicionei bounds-check) ---
     anim_agent = agent->GetAnimCtrlAgent();

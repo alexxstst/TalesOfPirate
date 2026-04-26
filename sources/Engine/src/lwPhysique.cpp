@@ -90,8 +90,11 @@ bool lwGeomManager::LoadGeomobj( const char file[] )
 	static char path[ LW_MAX_PATH ];
 	sprintf( path, "%s%s", "model\\character\\", file );
 	lwGeomObjInfo* pInfo = new lwGeomObjInfo;
-	if( LW_FAILED(pInfo->Load( path )) )
+	if( LW_RESULT r = pInfo->Load( path ); LW_FAILED(r) )
 	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] lwGeomObjInfo::Load failed: file={}, path={}, ret={}",
+		             __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
 		delete pInfo;
 		return false;
 	}
@@ -114,8 +117,11 @@ bool lwGeomManager::LoadBoneData( const char file[] )
 	static char path[ LW_MAX_PATH ];
 	sprintf( path, "%s%s", "animation\\", file );
 	lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
-	if( LW_FAILED( i_data->Load( path ) ) )
+	if( LW_RESULT r = i_data->Load( path ); LW_FAILED(r) )
 	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] lwIAnimDataBone::Load failed: file={}, path={}, ret={}",
+		             __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
 		i_data->Release();
 		return false;
 	}
@@ -196,8 +202,13 @@ LW_RESULT lwPhysique::DestroyPrimitive( DWORD part_id )
         goto __ret;
     }
 
-    if( LW_FAILED( _obj_seq[ part_id ]->Destroy() ) )
+    if( LW_RESULT r = _obj_seq[ part_id ]->Destroy(); LW_FAILED(r) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwIPrimitive::Destroy failed: part_id={}, ret={}",
+                     __FUNCTION__, part_id, static_cast<long long>(r));
         goto __ret;
+    }
 
     _obj_seq[ part_id ]->Release();
     _obj_seq[ part_id ] = 0;
@@ -221,8 +232,11 @@ LW_RESULT lwPhysique::Destroy()
 
     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
     {
-        if( LW_FAILED( DestroyPrimitive( i ) ) )
+        if( LW_RESULT r = DestroyPrimitive( i ); LW_FAILED(r) )
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] DestroyPrimitive failed: i={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
             assert( 0 && "call DestroyPrimitive in lwPhysique::Destroy error" );
         }
     }
@@ -234,11 +248,21 @@ LW_RESULT lwPhysique::Destroy()
 
 LW_RESULT lwPhysique::LoadBoneCatch( lwPhysiqueBoneInfo& info )
 {
-	if(LW_FAILED(info.data->Load(info.str.c_str())))
+	if(LW_RESULT r = info.data->Load(info.str.c_str()); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] info.data->Load failed: str={}, ret={}",
+		             __FUNCTION__, info.str.c_str(), static_cast<long long>(r));
 		goto __addr_1;
+	}
 
-	if(LW_FAILED(info.cb->LoadData(info.data)))
+	if(LW_RESULT r = info.cb->LoadData(info.data); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] info.cb->LoadData failed: str={}, ret={}",
+		             __FUNCTION__, info.str.c_str(), static_cast<long long>(r));
 		goto __addr_1;
+	}
 
 	info.cb->SetResFile(&info.res);
 
@@ -274,15 +298,30 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
 
     if(_anim_agent == NULL)
     {
-        if(LW_FAILED(_res_mgr->CreateAnimCtrlAgent(&_anim_agent)))
+        if(LW_RESULT r = _res_mgr->CreateAnimCtrlAgent(&_anim_agent); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrlAgent failed: file={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
             goto __ret;
+        }
     }
 
-    if(LW_FAILED(_res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&bone_ctrl, ANIM_CTRL_TYPE_BONE)))
+    if(LW_RESULT r = _res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&bone_ctrl, ANIM_CTRL_TYPE_BONE); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateAnimCtrlObj(BONE) failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_anim_agent->AddAnimCtrlObj(bone_ctrl)))
+    if(LW_RESULT r = _anim_agent->AddAnimCtrlObj(bone_ctrl); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AddAnimCtrlObj failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     {
     lwISysGraphics* sys_graphics = _res_mgr->GetSysGraphics();
@@ -301,10 +340,15 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
     _tcscpy( res.file_name, path );
 
     if(LW_SUCCEEDED(_res_mgr->QueryAnimCtrl(&ret_id, &res)))
-    {        
+    {
         lwIAnimCtrlBone* anim_ctrl = NULL;
-        if(LW_FAILED(_res_mgr->GetAnimCtrl((lwIAnimCtrl**)&anim_ctrl, ret_id)))
+        if(LW_RESULT r = _res_mgr->GetAnimCtrl((lwIAnimCtrl**)&anim_ctrl, ret_id); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetAnimCtrl failed: file={}, ret_id={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", ret_id, static_cast<long long>(r));
             goto __ret;
+        }
         _res_mgr->AddRefAnimCtrl(anim_ctrl, 1);
         bone_ctrl->AttachAnimCtrl(anim_ctrl);
     }
@@ -312,8 +356,13 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
     {
 #ifdef DYNAMIC_LOADING
         lwIAnimCtrlBone* ctrl_bone;
-        if (LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE)))
+        if (LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrl(BONE) failed (DYNAMIC_LOADING): file={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
             goto __ret;
+        }
 
         lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
 
@@ -330,8 +379,11 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
         lwIThreadPool* tp = tp_mgr->GetThreadPool(THREAD_POOL_LOADPHY);
 
         incCount();
-        if (LW_FAILED(tp->RegisterTask(__load_bone, (void*)bi)))
+        if (LW_RESULT r = tp->RegisterTask(__load_bone, (void*)bi); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] tp->RegisterTask(__load_bone) failed: path={}, ret={}",
+                         __FUNCTION__, path, static_cast<long long>(r));
             char szData[128];
             sprintf(szData, "Load bone file error!%s.", path);
             MessageBox(NULL, szData, "Error", MB_OK);
@@ -343,14 +395,29 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
         if (i_data == NULL)
         {
             i_data = LW_NEW(lwAnimDataBone);
-            if (LW_FAILED(i_data->Load(path)))
+            if (LW_RESULT r = i_data->Load(path); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwAnimDataBone::Load failed: file={}, path={}, ret={}",
+                             __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
                 goto __addr_1;
+            }
         }
-        if (LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE)))
+        if (LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateAnimCtrl(BONE) failed: file={}, path={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
             goto __addr_1;
+        }
 
-        if (LW_FAILED(ctrl_bone->LoadData(i_data)))
+        if (LW_RESULT r = ctrl_bone->LoadData(i_data); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ctrl_bone->LoadData failed: file={}, path={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
             goto __addr_1;
+        }
 
         ctrl_bone->SetResFile(&res);
 
@@ -407,7 +474,12 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
     
     
     // mesh
-    mesh_agent->LoadMesh( &info->mesh );
+    if (LW_RESULT r = mesh_agent->LoadMesh( &info->mesh ); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] mesh_agent->LoadMesh failed: part_id={}, ret={}",
+                     __FUNCTION__, part_id, static_cast<long long>(r));
+    }
 
     imp->SetMeshAgent(mesh_agent);
 
@@ -470,8 +542,11 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
     {
         lwIHelperObject* h;
         _res_mgr->CreateHelperObject(&h);
-        if(LW_FAILED(h->LoadHelperInfo(&info->helper_data, create_helper_primitive)))
+        if(LW_RESULT r = h->LoadHelperInfo(&info->helper_data, create_helper_primitive); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadHelperInfo failed: part_id={}, helper_size={}, ret={}",
+                         __FUNCTION__, part_id, info->helper_size, static_cast<long long>(r));
             LG_MSGBOX("LoadHelperInfo error");
         }
         imp->SetHelperObject(h);
@@ -480,7 +555,12 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
     // ObjImpLoadMesh
     if( info->anim_size > 0 )
     {
-        imp->LoadAnimData( &info->anim_data, tex_path, 0 );
+        if (LW_RESULT r = imp->LoadAnimData( &info->anim_data, tex_path, 0 ); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->LoadAnimData failed: part_id={}, tex_path={}, ret={}",
+                         __FUNCTION__, part_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+        }
     }
 
     LW_SAFE_RELEASE( _obj_seq[ part_id ] );
@@ -564,7 +644,12 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     }
     else
     {
-		mesh_agent->LoadMesh( &pInfo->mesh/*&info.mesh*/ );
+		if (LW_RESULT r = mesh_agent->LoadMesh( &pInfo->mesh/*&info.mesh*/ ); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] mesh_agent->LoadMesh (else branch) failed: part_id={}, ret={}",
+			             __FUNCTION__, part_id, static_cast<long long>(r));
+		}
     }
 
     mesh_agent->GetMesh()->SetResFile( &rfm );
@@ -657,8 +742,11 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     {
         lwIHelperObject* h;
         _res_mgr->CreateHelperObject(&h);
-        if(LW_FAILED(h->LoadHelperInfo(&pInfo->helper_data, create_helper_primitive)))
+        if(LW_RESULT r = h->LoadHelperInfo(&pInfo->helper_data, create_helper_primitive); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadHelperInfo failed: part_id={}, file={}, helper_size={}, ret={}",
+                         __FUNCTION__, part_id, file ? file : "(null)", pInfo->helper_size, static_cast<long long>(r));
             LG_MSGBOX("LoadHelperInfo error");
         }
         imp->SetHelperObject(h);
@@ -667,7 +755,12 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     // ObjImpLoadMesh
     if( pInfo->anim_size > 0 )
     {
-        imp->LoadAnimData( &pInfo->anim_data, tex_path, &res );
+        if (LW_RESULT r = imp->LoadAnimData( &pInfo->anim_data, tex_path, &res ); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->LoadAnimData (with res) failed: part_id={}, tex_path={}, ret={}",
+                         __FUNCTION__, part_id, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+        }
     }
 
     LW_SAFE_RELEASE( _obj_seq[ part_id ] );
@@ -688,8 +781,13 @@ LW_RESULT lwPhysique::Update()
     // update physique bone animation
     if( _anim_agent )
     {
-        if(LW_FAILED(_anim_agent->Update()))
+        if(LW_RESULT r = _anim_agent->Update(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _anim_agent->Update failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwAnimCtrlObjTypeInfo type_info;
         type_info.type = ANIM_CTRL_TYPE_BONE;
@@ -700,8 +798,13 @@ LW_RESULT lwPhysique::Update()
         lwIAnimCtrlBone* ctrl = (lwIAnimCtrlBone*)ctrl_obj->GetAnimCtrl();
 
 
-        if(LW_FAILED(ctrl_obj->UpdateObject(ctrl_obj, NULL)))
+        if(LW_RESULT r = ctrl_obj->UpdateObject(ctrl_obj, NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ctrl_obj->UpdateObject(self) failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         lwIPrimitive* pri;
         lwIAnimCtrlObjBone* pri_ctrl;
@@ -719,8 +822,13 @@ LW_RESULT lwPhysique::Update()
                 __debugbreak();
             }
 
-            if(LW_FAILED(ctrl_obj->UpdateObject(pri_ctrl, pri->GetMeshAgent()->GetMesh())))
+            if(LW_RESULT r = ctrl_obj->UpdateObject(pri_ctrl, pri->GetMeshAgent()->GetMesh()); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] ctrl_obj->UpdateObject(pri) failed: subskin={}, ret={}",
+                             __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }    
 
@@ -752,7 +860,12 @@ LW_RESULT lwPhysique::Update()
 
         imp->SetMatrixParent( &mat );
 
-        imp->Update();
+        if (LW_RESULT r = imp->Update(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->Update failed: subskin={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
+        }
     }
 
 
@@ -784,8 +897,13 @@ LW_RESULT lwPhysique::Render()
 
             if (_scene_mgr && p->GetState(STATE_TRANSPARENT))
             {
-                if (LW_FAILED(_scene_mgr->AddTransparentPrimitive(p)))
+                if (LW_RESULT r = _scene_mgr->AddTransparentPrimitive(p); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] AddTransparentPrimitive failed: subskin={}, ret={}",
+                                 __FUNCTION__, i, static_cast<long long>(r));
                     goto __ret;
+                }
             }
             else
             {
@@ -811,8 +929,13 @@ LW_RESULT lwPhysique::Render()
                 }
 
 
-                if (LW_FAILED(p->Render()))
+                if (LW_RESULT r = p->Render(); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] p->Render failed: subskin={}, ret={}",
+                                 __FUNCTION__, i, static_cast<long long>(r));
                     goto __ret;
+                }
 
                 if (mIndexColourFilterList.find(i) != mIndexColourFilterList.end())
                 {

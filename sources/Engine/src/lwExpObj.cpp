@@ -547,8 +547,13 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		if (_aks_ctrl) {
 			lwIAnimKeySetFloat* aksf;
 
-			if (LW_FAILED(_aks_ctrl->Clone(&aksf)))
+			if (LW_RESULT r = _aks_ctrl->Clone(&aksf); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] AnimKeySetFloat::Clone failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			o->SetAnimKeySet(aksf);
 		}
@@ -578,8 +583,14 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		_aks_ctrl = LW_NEW(lwAnimKeySetFloat);
 
-		if (LW_FAILED(_aks_ctrl->SetKeySequence(seq, num)))
+		if (LW_RESULT r = _aks_ctrl->SetKeySequence(seq, num); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] SetKeySequence failed: num={}, ret={}",
+			             __FUNCTION__, static_cast<long long>(num),
+			             static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 	__ret:
@@ -786,8 +797,14 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			MessageBox(NULL, buf, "warning", MB_OK);
 		}
 
-		if (LW_FAILED(Load(fp, version)))
+		if (LW_RESULT r = Load(fp, version); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] AnimDataBone::Load(fp) failed: file='{}', version={}, ret={}",
+			             __FUNCTION__, file ? file : "(null)",
+			             static_cast<long long>(version), static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 
@@ -809,8 +826,14 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD version = EXP_OBJ_VERSION;
 		fwrite(&version, sizeof(version), 1, fp);
 
-		if (LW_FAILED(Save(fp)))
+		if (LW_RESULT r = Save(fp); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] AnimDataBone::Save(fp) failed: file='{}', ret={}",
+			             __FUNCTION__, file ? file : "(null)",
+			             static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 
@@ -1153,13 +1176,25 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD key_rot[2];
 		DWORD key_sca[2];
 
-		if (LW_FAILED(lwKeyDataSearch< lwKeyDataVector3 >(&key_pos[0], &key_pos[1], f, pos_seq, pos_num))) {
+		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataVector3 >(&key_pos[0], &key_pos[1], f, pos_seq, pos_num); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwKeyDataSearch<Vector3>(pos) failed: f={}, pos_num={}, ret={}",
+			             __FUNCTION__, static_cast<long long>(f),
+			             static_cast<long long>(pos_num), static_cast<long long>(r));
 			assert(0);
 		}
-		if (LW_FAILED(lwKeyDataSearch< lwKeyDataQuaternion >(&key_rot[0], &key_rot[1], f, rot_seq, rot_num))) {
+		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataQuaternion >(&key_rot[0], &key_rot[1], f, rot_seq, rot_num); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwKeyDataSearch<Quaternion>(rot) failed: f={}, rot_num={}, ret={}",
+			             __FUNCTION__, static_cast<long long>(f),
+			             static_cast<long long>(rot_num), static_cast<long long>(r));
 			assert(0);
 		}
-		if (LW_FAILED(lwKeyDataSearch< lwKeyDataVector3 >(&key_sca[0], &key_sca[1], f, sca_seq, sca_num))) {
+		if (LW_RESULT r = lwKeyDataSearch< lwKeyDataVector3 >(&key_sca[0], &key_sca[1], f, sca_seq, sca_num); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwKeyDataSearch<Vector3>(sca) failed: f={}, sca_num={}, ret={}",
+			             __FUNCTION__, static_cast<long long>(f),
+			             static_cast<long long>(sca_num), static_cast<long long>(r));
 			assert(0);
 		}
 
@@ -1770,14 +1805,24 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&data_teximg_size, sizeof(data_teximg_size), 1, fp);
 
 		if (data_bone_size > 0) {
-			anim_bone->Save(fp);
+			if (LW_RESULT r = anim_bone->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] anim_bone->Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
+			}
 		}
 
 		if (data_mat_size > 0) {
 #ifdef USE_ANIMKEY_PRS
 			lwSaveAnimKeySetPRS(fp, anim_mat);
 #else
-			anim_mat->Save(fp);
+			if (LW_RESULT r = anim_mat->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] anim_mat->Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
+			}
 #endif
 		}
 
@@ -1785,7 +1830,12 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			if (data_mtlopac_size[i] == 0)
 				continue;
 
-			anim_mtlopac[i]->Save(fp);
+			if (LW_RESULT r = anim_mtlopac[i]->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] anim_mtlopac->Save failed: i={}, ret={}",
+				             __FUNCTION__, i, static_cast<long long>(r));
+			}
 		}
 
 		for (DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++) {
@@ -1793,7 +1843,12 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				if (data_texuv_size[i][j] == 0)
 					continue;
 
-				anim_tex[i][j]->Save(fp);
+				if (LW_RESULT r = anim_tex[i][j]->Save(fp); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+					             "[{}] anim_tex->Save failed: i={}, j={}, ret={}",
+					             __FUNCTION__, i, j, static_cast<long long>(r));
+				}
 			}
 		}
 
@@ -1802,7 +1857,12 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				if (data_teximg_size[i][j] == 0)
 					continue;
 
-				anim_img[i][j]->Save(fp);
+				if (LW_RESULT r = anim_img[i][j]->Save(fp); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+					             "[{}] anim_img->Save failed: i={}, j={}, ret={}",
+					             __FUNCTION__, i, j, static_cast<long long>(r));
+				}
 			}
 		}
 
@@ -1971,8 +2031,14 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD version = EXP_OBJ_VERSION;
 		fwrite(&version, sizeof(DWORD), 1, fp);
 
-		if (LW_FAILED(info->Save(fp)))
+		if (LW_RESULT r = info->Save(fp); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] AnimDataBone::Save failed: file='{}', ret={}",
+			             __FUNCTION__, file ? file : "(null)",
+			             static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 
@@ -2530,11 +2596,21 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		if (helper_size > 0) {
-			helper_data.Save(fp);
+			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] helper_data.Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
+			}
 		}
 
 		if (anim_size > 0) {
-			anim_data.Save(fp);
+			if (LW_RESULT r = anim_data.Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] anim_data.Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
+			}
 		}
 
 
@@ -2704,7 +2780,12 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		// save helper data
 		if (helper_data.type != HELPER_TYPE_INVALID) {
-			helper_data.Save(fp);
+			if (LW_RESULT r = helper_data.Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] helper_data.Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
+			}
 		}
 
 
@@ -2793,7 +2874,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fread(&anim_data_flag, sizeof(anim_data_flag), 1, fp);
 		if (anim_data_flag == 1) {
 			lwAnimDataMatrix* anim_data = LW_NEW(lwAnimDataMatrix);
-			if (LW_FAILED(anim_data->Load(fp, 0))) {
+			if (LW_RESULT r = anim_data->Load(fp, 0); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] AnimDataMatrix::Load failed: id={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(_id),
+				             static_cast<long long>(r));
 				LW_DELETE(anim_data);
 				goto __ret;
 			}
@@ -2815,8 +2900,14 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		DWORD anim_data_flag = _anim_data ? 1 : 0;
 		fwrite(&anim_data_flag, sizeof(anim_data_flag), 1, fp);
 		if (_anim_data) {
-			if (LW_FAILED(((lwAnimDataMatrix*)_anim_data)->Save(fp)))
+			if (LW_RESULT r = ((lwAnimDataMatrix*)_anim_data)->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] AnimDataMatrix::Save failed: id={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(_id),
+				             static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		ret = LW_RET_OK;
@@ -2851,23 +2942,47 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (_type == NODE_PRIMITIVE) {
 			_data = LW_NEW(lwGeomObjInfo);
-			if (LW_FAILED(((lwGeomObjInfo*)_data)->Load(fp, version)))
+			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Load(fp, version); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwGeomObjInfo::Load failed: version={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(version),
+				             static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_BONECTRL) {
 			_data = LW_NEW(lwAnimDataBone);
-			if (LW_FAILED(((lwAnimDataBone*)_data)->Load(fp, version)))
+			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Load(fp, version); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwAnimDataBone::Load failed: version={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(version),
+				             static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_DUMMY) {
 			_data = LW_NEW(lwHelperDummyObjInfo);
-			if (LW_FAILED(((lwHelperDummyObjInfo*)_data)->Load(fp, version)))
+			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Load(fp, version); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwHelperDummyObjInfo::Load failed: version={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(version),
+				             static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_HELPER) {
 			_data = LW_NEW(lwHelperInfo);
-			if (LW_FAILED(((lwHelperInfo*)_data)->Load(fp, version)))
+			if (LW_RESULT r = ((lwHelperInfo*)_data)->Load(fp, version); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwHelperInfo::Load failed: version={}, ret={}",
+				             __FUNCTION__, static_cast<long long>(version),
+				             static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else {
 			goto __ret;
@@ -2884,20 +2999,40 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&_head, sizeof(_head), 1, fp);
 
 		if (_type == NODE_PRIMITIVE) {
-			if (LW_FAILED(((lwGeomObjInfo*)_data)->Save(fp)))
+			if (LW_RESULT r = ((lwGeomObjInfo*)_data)->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwGeomObjInfo::Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_BONECTRL) {
-			if (LW_FAILED(((lwAnimDataBone*)_data)->Save(fp)))
+			if (LW_RESULT r = ((lwAnimDataBone*)_data)->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwAnimDataBone::Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_DUMMY) {
-			if (LW_FAILED(((lwHelperDummyObjInfo*)_data)->Save(fp)))
+			if (LW_RESULT r = ((lwHelperDummyObjInfo*)_data)->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwHelperDummyObjInfo::Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else if (_type == NODE_HELPER) {
-			if (LW_FAILED(((lwHelperInfo*)_data)->Save(fp)))
+			if (LW_RESULT r = ((lwHelperInfo*)_data)->Save(fp); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] lwHelperInfo::Save failed: ret={}",
+				             __FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		ret = LW_RET_OK;
@@ -2923,7 +3058,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		lwModelNodeInfo* data = LW_NEW(lwModelNodeInfo);
 
-		if (LW_FAILED(data->Load(lp->fp, lp->version))) {
+		if (LW_RESULT r = data->Load(lp->fp, lp->version); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwModelNodeInfo::Load failed: version={}, ret={}",
+			             __FUNCTION__, static_cast<long long>(lp->version),
+			             static_cast<long long>(r));
 			LW_DELETE(data);
 			return TREENODE_PROC_RET_ABORT;
 		}
@@ -2938,7 +3077,10 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		lwModelNodeInfo* data = (lwModelNodeInfo*)node->GetData();
 
-		if (LW_FAILED(data->Save(fp))) {
+		if (LW_RESULT r = data->Save(fp); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwModelNodeInfo::Save failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
 			return TREENODE_PROC_RET_ABORT;
 		}
 
@@ -3006,7 +3148,13 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 			for (DWORD i = 0; i < obj_num; i++) {
 				node_info = LW_NEW(lwModelNodeInfo);
-				if (LW_FAILED(node_info->Load(fp, _head.version))) {
+				if (LW_RESULT r = node_info->Load(fp, _head.version); LW_FAILED(r)) {
+					ToLogService("errors", LogLevel::Error,
+					             "[{}] lwModelNodeInfo::Load failed: file='{}', i={}, version={}, ret={}",
+					             __FUNCTION__, file ? file : "(null)",
+					             static_cast<long long>(i),
+					             static_cast<long long>(_head.version),
+					             static_cast<long long>(r));
 					LW_DELETE(node_info);
 					goto __ret;
 				}
@@ -3027,8 +3175,16 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 					if (param.node == 0)
 						goto __ret;
 
-					if (LW_FAILED(param.node->InsertChild(0, tree_node)))
+					if (LW_RESULT r = param.node->InsertChild(0, tree_node); LW_FAILED(r))
+					{
+						ToLogService("errors", LogLevel::Error,
+						             "[{}] InsertChild failed: file='{}', i={}, parent_handle={}, ret={}",
+						             __FUNCTION__, file ? file : "(null)",
+						             static_cast<long long>(i),
+						             static_cast<long long>(node_info->_parent_handle),
+						             static_cast<long long>(r));
 						goto __ret;
+					}
 				}
 			}
 
@@ -3134,8 +3290,13 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	};
 
 	DWORD __tree_proc_sort_id(lwITreeNode* node, void* param) {
-		if (LW_FAILED(lwModelNodeSortChild(node)))
+		if (LW_RESULT r = lwModelNodeSortChild(node); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwModelNodeSortChild failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
 			return TREENODE_PROC_RET_ABORT;
+		}
 
 		return TREENODE_PROC_RET_CONTINUE;
 	}

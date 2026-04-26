@@ -46,11 +46,21 @@ LW_RESULT lwRenderCtrlAgent::SetRenderCtrl(DWORD ctrl_type)
 
     LW_IF_RELEASE(_render_ctrl);
 
-    if(LW_FAILED(_res_mgr->CreateRenderCtrlVS(&_render_ctrl, ctrl_type)))
+    if(LW_RESULT r = _res_mgr->CreateRenderCtrlVS(&_render_ctrl, ctrl_type); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _res_mgr->CreateRenderCtrlVS failed: ctrl_type={}, ret={}",
+                     __FUNCTION__, ctrl_type, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_render_ctrl->Initialize(this)))
+    if(LW_RESULT r = _render_ctrl->Initialize(this); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_ctrl->Initialize failed: ctrl_type={}, ret={}",
+                     __FUNCTION__, ctrl_type, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -63,8 +73,13 @@ LW_RESULT lwRenderCtrlAgent::Clone(lwIRenderCtrlAgent** ret_obj)
 
     lwIRenderCtrlAgent* o;
 
-    if(LW_FAILED(_res_mgr->CreateRenderCtrlAgent(&o)))
+    if(LW_RESULT r = _res_mgr->CreateRenderCtrlAgent(&o); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _res_mgr->CreateRenderCtrlAgent failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     o->SetRenderCtrl(_render_ctrl->GetType());
 
@@ -86,11 +101,21 @@ LW_RESULT lwRenderCtrlAgent::BeginSet()
     if(_mesh_agent == NULL || _render_ctrl == NULL)
         goto __ret;
 
-    if(LW_FAILED(_mesh_agent->BeginSet()))
+    if(LW_RESULT r = _mesh_agent->BeginSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _mesh_agent->BeginSet failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_render_ctrl->BeginSet(this)))
+    if(LW_RESULT r = _render_ctrl->BeginSet(this); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_ctrl->BeginSet failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -103,11 +128,21 @@ LW_RESULT lwRenderCtrlAgent::EndSet()
      if(_mesh_agent == NULL || _render_ctrl == NULL)
          goto __ret;
 
-     if(LW_FAILED(_mesh_agent->EndSet()))
+     if(LW_RESULT r = _mesh_agent->EndSet(); LW_FAILED(r))
+     {
+         ToLogService("errors", LogLevel::Error,
+                      "[{}] _mesh_agent->EndSet failed: ret={}",
+                      __FUNCTION__, static_cast<long long>(r));
          goto __ret;
+     }
 
-     if(LW_FAILED(_render_ctrl->EndSet(this)))
+     if(LW_RESULT r = _render_ctrl->EndSet(this); LW_FAILED(r))
+     {
+         ToLogService("errors", LogLevel::Error,
+                      "[{}] _render_ctrl->EndSet failed: ret={}",
+                      __FUNCTION__, static_cast<long long>(r));
          goto __ret;
+     }
 
      ret = LW_RET_OK;
 __ret:
@@ -120,12 +155,22 @@ LW_RESULT lwRenderCtrlAgent::BeginSetSubset(DWORD subset)
     if(_mtltex_agent == 0 || _render_ctrl == 0)
         goto __ret;
 
-    if(LW_FAILED(_mtltex_agent->BeginSet()))
+    if(LW_RESULT r = _mtltex_agent->BeginSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _mtltex_agent->BeginSet failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
         goto __ret;
+    }
 
 
-    if(LW_FAILED(_render_ctrl->BeginSetSubset(subset, this)))
+    if(LW_RESULT r = _render_ctrl->BeginSetSubset(subset, this); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_ctrl->BeginSetSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
         goto __ret;
+    }
 
 
     ret = LW_RET_OK;
@@ -139,11 +184,21 @@ LW_RESULT lwRenderCtrlAgent::EndSetSubset(DWORD subset)
     if(_mtltex_agent == 0 || _render_ctrl == 0)
         goto __ret;
 
-    if(LW_FAILED(_mtltex_agent->EndSet()))
-            goto __ret;
+    if(LW_RESULT r = _mtltex_agent->EndSet(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _mtltex_agent->EndSet failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+        goto __ret;
+    }
 
-    if(LW_FAILED(_render_ctrl->EndSetSubset(subset, this)))
-            goto __ret;
+    if(LW_RESULT r = _render_ctrl->EndSetSubset(subset, this); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _render_ctrl->EndSetSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
+        goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -157,8 +212,13 @@ LW_RESULT lwRenderCtrlAgent::DrawSubset(DWORD subset)
     if(_mesh_agent == NULL)
         goto __ret;
 
-    if(LW_FAILED(_mesh_agent->DrawSubset(subset)))
+    if(LW_RESULT r = _mesh_agent->DrawSubset(subset); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _mesh_agent->DrawSubset failed: subset={}, ret={}",
+                     __FUNCTION__, subset, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:

@@ -33,7 +33,12 @@ LW_RESULT lwEfxTrack::Save(const char* file)
     if(fp ==NULL)
         return LW_RET_FAILED;
 
-    _data->Save(fp);
+    if (LW_RESULT r = _data->Save(fp); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _data->Save failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
+    }
 
     fclose(fp);
 

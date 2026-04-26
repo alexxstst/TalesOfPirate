@@ -20,30 +20,28 @@ struct FONScontext;
 struct FONSparams;
 
 LW_BEGIN
-class lwITex;
+	class lwITex;
 LW_END
 
 namespace fons {
+	struct Dx9Backend {
+		MPRender* Dev = nullptr;
+		CMPEffectFile* Effect = nullptr;
+		// Индекс HLSL-техники в Effect (alpha-blend SrcAlpha/InvSrcAlpha,
+		// modulate texture×diffuse, sampler POINT, Z off). По умолчанию 5 —
+		// совпадает с FontRender::_renderIdx.
+		int Technique = 5;
+		int Width = 0;
+		int Height = 0;
+		MindPower::lwITex* Atlas = nullptr;
+	};
 
-struct Dx9Backend {
-    MPRender*          Dev       = nullptr;
-    CMPEffectFile*     Effect    = nullptr;
-    // Индекс HLSL-техники в Effect (alpha-blend SrcAlpha/InvSrcAlpha,
-    // modulate texture×diffuse, sampler POINT, Z off). По умолчанию 5 —
-    // совпадает с FontRender::_renderIdx.
-    int                Technique = 5;
-    int                Width     = 0;
-    int                Height    = 0;
-    MindPower::lwITex* Atlas     = nullptr;
-};
+	// Заполнить FONSparams указателями на колбеки + userPtr=backend. width/height —
+	// начальный размер атласа. Не создаёт FONScontext — для этого вызывать Fons
+	// напрямую (CreateContext) или передавать params в fonsCreateInternal.
+	void FillParams(FONSparams& params, Dx9Backend* backend, int width, int height);
 
-// Заполнить FONSparams указателями на колбеки + userPtr=backend. width/height —
-// начальный размер атласа. Не создаёт FONScontext — для этого вызывать Fons
-// напрямую (CreateContext) или передавать params в fonsCreateInternal.
-void FillParams(FONSparams& params, Dx9Backend* backend, int width, int height);
-
-// Convenience-обёртка: заполняет params и вызывает fonsCreateInternal.
-// Возвращает nullptr при ошибке (renderCreate провалился и т.п.).
-FONScontext* CreateContext(Dx9Backend* backend, int width, int height);
-
+	// Convenience-обёртка: заполняет params и вызывает fonsCreateInternal.
+	// Возвращает nullptr при ошибке (renderCreate провалился и т.п.).
+	FONScontext* CreateContext(Dx9Backend* backend, int width, int height);
 } // namespace fons

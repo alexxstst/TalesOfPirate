@@ -116,13 +116,23 @@ LW_RESULT lwStreamObjVB::Create(DWORD size, DWORD fvf)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(lwStreamObject::Init(size)))
+    if(LW_RESULT r = lwStreamObject::Init(size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::Init failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     _fvf = fvf;
 
-    if(LW_FAILED(ResetDevice()))
+    if(LW_RESULT r = ResetDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] ResetDevice failed: size={}, fvf={}, ret={}",
+            __FUNCTION__, size, fvf, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -136,14 +146,24 @@ LW_RESULT lwStreamObjVB::LoseDevice()
     if(_buf)
     {
         IDirect3DVertexBufferX* vb = _buf;
-        _buf = 0; 
-        if(LW_FAILED(_dev_obj->ReleaseVertexBuffer(vb)))
+        _buf = 0;
+        if(LW_RESULT r = _dev_obj->ReleaseVertexBuffer(vb); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _dev_obj->ReleaseVertexBuffer failed: ret={}",
+                __FUNCTION__, static_cast<long long>(r));
             ret = LW_RET_FAILED;
+        }
     }
 
     // Reinit (como j fazia)
-    if(LW_FAILED(lwStreamObject::Init(_total_size)))
+    if(LW_RESULT r = lwStreamObject::Init(_total_size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::Init failed: total_size={}, ret={}",
+            __FUNCTION__, _total_size, static_cast<long long>(r));
         ret = LW_RET_FAILED;
+    }
 
     return ret;
 }
@@ -158,14 +178,24 @@ LW_RESULT lwStreamObjVB::BindData(DWORD* out_off_addr, void* data, DWORD size, D
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(lwStreamObject::BindData(out_off_addr, size, stride)))
+    if(LW_RESULT r = lwStreamObject::BindData(out_off_addr, size, stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::BindData(VB) failed: size={}, stride={}, ret={}",
+            __FUNCTION__, size, stride, static_cast<long long>(r));
         goto __ret;
+    }
     {
         D3DLOCK_TYPE* lock_buf;
         DWORD lock_flag = (*out_off_addr) == 0 ? D3DLOCK_DISCARD : D3DLOCK_NOOVERWRITE;
 
-        if (FAILED(_buf->Lock(*out_off_addr, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag)))
+        if (HRESULT hr = _buf->Lock(*out_off_addr, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(VB) failed: offset={}, size={}, lock_flag={}, hr=0x{:08X}",
+                __FUNCTION__, *out_off_addr, size, lock_flag, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
 
         memcpy(lock_buf, data, size);
 
@@ -190,14 +220,24 @@ lwStreamObjIB::~lwStreamObjIB()
 LW_RESULT lwStreamObjIB::Create(DWORD size, DWORD format)
 {
     LW_RESULT ret = LW_RET_FAILED;
-    
-    if(LW_FAILED(lwStreamObject::Init(size)))
+
+    if(LW_RESULT r = lwStreamObject::Init(size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::Init failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     _format = format;
 
-    if(LW_FAILED(ResetDevice()))
+    if(LW_RESULT r = ResetDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] ResetDevice failed: size={}, format={}, ret={}",
+            __FUNCTION__, size, format, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -208,13 +248,23 @@ LW_RESULT lwStreamObjIB::LoseDevice()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev_obj->ReleaseIndexBuffer(_buf)))
+    if(LW_RESULT r = _dev_obj->ReleaseIndexBuffer(_buf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->ReleaseIndexBuffer failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     _buf = 0;
 
-    if(LW_FAILED(lwStreamObject::Init(_total_size)))
+    if(LW_RESULT r = lwStreamObject::Init(_total_size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::Init failed: total_size={}, ret={}",
+            __FUNCTION__, _total_size, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -231,15 +281,25 @@ LW_RESULT lwStreamObjIB::BindData(DWORD* out_off_addr, void* data, DWORD size, D
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(lwStreamObject::BindData(out_off_addr, size, stride)))
+    if(LW_RESULT r = lwStreamObject::BindData(out_off_addr, size, stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] lwStreamObject::BindData(IB) failed: size={}, stride={}, ret={}",
+            __FUNCTION__, size, stride, static_cast<long long>(r));
         goto __ret;
+    }
 
     {
         D3DLOCK_TYPE* lock_buf;
         DWORD lock_flag = (*out_off_addr) == 0 ? D3DLOCK_DISCARD : D3DLOCK_NOOVERWRITE;
 
-        if (FAILED(_buf->Lock(*out_off_addr, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag)))
+        if (HRESULT hr = _buf->Lock(*out_off_addr, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(IB) failed: offset={}, size={}, lock_flag={}, hr=0x{:08X}",
+                __FUNCTION__, *out_off_addr, size, lock_flag, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
 
         memcpy(lock_buf, data, size);
 
@@ -330,8 +390,11 @@ LW_RESULT lwStaticStreamMgr::CreateVertexBufferStream(DWORD stream_id, DWORD str
     {
         lwStreamObjVB* s = LW_NEW(lwStreamObjVB(_dev_obj));
 
-        if (LW_FAILED(s->Create(stream_size, 0)))
+        if (LW_RESULT r = s->Create(stream_size, 0); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->Create(VB stream) failed: stream_id={}, stream_size={}, ret={}",
+                __FUNCTION__, stream_id, stream_size, static_cast<long long>(r));
             LW_DELETE(s);
             goto __ret;
         }
@@ -355,8 +418,11 @@ LW_RESULT lwStaticStreamMgr::CreateIndexBufferStream(DWORD stream_id, DWORD stre
     {
         lwStreamObjIB* s = LW_NEW(lwStreamObjIB(_dev_obj));
 
-        if (LW_FAILED(s->Create(stream_size, (DWORD)D3DFMT_INDEX16)))
+        if (LW_RESULT r = s->Create(stream_size, (DWORD)D3DFMT_INDEX16); LW_FAILED(r))
         {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->Create(IB stream) failed: stream_id={}, stream_size={}, ret={}",
+                __FUNCTION__, stream_id, stream_size, static_cast<long long>(r));
             LW_DELETE(s);
             goto __ret;
         }
@@ -421,7 +487,13 @@ LW_RESULT lwStaticStreamMgr::RegisterVertexBuffer(LW_HANDLE* out_handle, void* d
 
             // reset stream
             s = _stream_vb_seq[stream_id];
-            s->Reset();
+            if (LW_RESULT r = s->Reset(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->Reset(VB) failed: stream_id={}, ret={}",
+                    __FUNCTION__, stream_id, static_cast<long long>(r));
+                goto __ret;
+            }
 
             // reset entity
             lwStreamEntity* e = 0;
@@ -431,15 +503,23 @@ LW_RESULT lwStaticStreamMgr::RegisterVertexBuffer(LW_HANDLE* out_handle, void* d
 
                 if ((e->stream_id == stream_id) && (e->state != STREAMENTITY_STATE_INVALID))
                 {
-                    if (LW_FAILED(s->ReserveRoom(e->size, e->stride)))
+                    if (LW_RESULT r = s->ReserveRoom(e->size, e->stride); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                            "[{}] s->ReserveRoom(VB realloc) failed: stream_id={}, e_size={}, e_stride={}, ret={}",
+                            __FUNCTION__, stream_id, e->size, e->stride, static_cast<long long>(r));
                         goto __ret;
+                    }
 
                     e->state = STREAMENTITY_STATE_INIT;
                 }
             }
 
-            if (LW_FAILED(s->ReserveRoom(size, stride)))
+            if (LW_RESULT r = s->ReserveRoom(size, stride); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->ReserveRoom(VB new) failed: stream_id={}, size={}, stride={}, ret={}",
+                    __FUNCTION__, stream_id, size, stride, static_cast<long long>(r));
                 // this is impossible...@@
                 goto __ret;
             }
@@ -527,7 +607,13 @@ LW_RESULT lwStaticStreamMgr::RegisterIndexBuffer(LW_HANDLE* out_handle, void* da
 
             // reset stream
             s = _stream_ib_seq[stream_id];
-            s->Reset();
+            if (LW_RESULT r = s->Reset(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->Reset(IB) failed: stream_id={}, ret={}",
+                    __FUNCTION__, stream_id, static_cast<long long>(r));
+                goto __ret;
+            }
 
             // reset entity
             lwStreamEntity* e = 0;
@@ -537,15 +623,23 @@ LW_RESULT lwStaticStreamMgr::RegisterIndexBuffer(LW_HANDLE* out_handle, void* da
 
                 if ((e->stream_id == stream_id) && (e->state != STREAMENTITY_STATE_INVALID))
                 {
-                    if (LW_FAILED(s->ReserveRoom(e->size, e->stride)))
+                    if (LW_RESULT r = s->ReserveRoom(e->size, e->stride); LW_FAILED(r))
+                    {
+                        ToLogService("errors", LogLevel::Error,
+                            "[{}] s->ReserveRoom(IB realloc) failed: stream_id={}, e_size={}, e_stride={}, ret={}",
+                            __FUNCTION__, stream_id, e->size, e->stride, static_cast<long long>(r));
                         goto __ret;
+                    }
 
                     e->state = STREAMENTITY_STATE_INIT;
                 }
             }
 
-            if (LW_FAILED(s->ReserveRoom(size, stride)))
+            if (LW_RESULT r = s->ReserveRoom(size, stride); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->ReserveRoom(IB new) failed: stream_id={}, size={}, stride={}, ret={}",
+                    __FUNCTION__, stream_id, size, stride, static_cast<long long>(r));
                 // this is impossible...@@
                 goto __ret;
             }
@@ -593,8 +687,13 @@ LW_RESULT lwStaticStreamMgr::UnregisterVertexBuffer(LW_HANDLE handle)
         lwStreamEntity* e = &_entity_vb_seq[handle];
         lwStreamObject* s = _stream_vb_seq[e->stream_id];
 
-        if (LW_FAILED(s->UnbindData(e->size, e->stride)))
+        if (LW_RESULT r = s->UnbindData(e->size, e->stride); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->UnbindData(VB) failed: handle={}, size={}, stride={}, ret={}",
+                __FUNCTION__, static_cast<std::uint64_t>(handle), e->size, e->stride, static_cast<long long>(r));
             goto __ret;
+        }
 
         e->Reset();
 
@@ -618,8 +717,13 @@ LW_RESULT lwStaticStreamMgr::UnregisterIndexBuffer(LW_HANDLE handle)
         lwStreamEntity* e = &_entity_ib_seq[handle];
         lwStreamObject* s = _stream_ib_seq[e->stream_id];
 
-        if (LW_FAILED(s->UnbindData(e->size, e->stride)))
+        if (LW_RESULT r = s->UnbindData(e->size, e->stride); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->UnbindData(IB) failed: handle={}, size={}, stride={}, ret={}",
+                __FUNCTION__, static_cast<std::uint64_t>(handle), e->size, e->stride, static_cast<long long>(r));
             goto __ret;
+        }
 
         e->Reset();
 
@@ -649,8 +753,13 @@ LW_RESULT lwStaticStreamMgr::BindVertexBuffer(LW_HANDLE handle, UINT channel)
 
         if (e->state == STREAMENTITY_STATE_INIT)
         {
-            if (LW_FAILED(s->BindData(&e->offset, e->data, e->size, e->stride)))
+            if (LW_RESULT r = s->BindData(&e->offset, e->data, e->size, e->stride); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->BindData(VB) failed: handle={}, size={}, stride={}, ret={}",
+                    __FUNCTION__, static_cast<std::uint64_t>(handle), e->size, e->stride, static_cast<long long>(r));
                 goto __ret;
+            }
 
             e->state = STREAMENTITY_STATE_BIND;
         }
@@ -683,8 +792,13 @@ LW_RESULT lwStaticStreamMgr::BindIndexBuffer(LW_HANDLE handle)
 
         if (e->state == STREAMENTITY_STATE_INIT)
         {
-            if (LW_FAILED(s->BindData(&e->offset, e->data, e->size, e->stride)))
+            if (LW_RESULT r = s->BindData(&e->offset, e->data, e->size, e->stride); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] s->BindData(IB) failed: handle={}, size={}, stride={}, ret={}",
+                    __FUNCTION__, static_cast<std::uint64_t>(handle), e->size, e->stride, static_cast<long long>(r));
                 goto __ret;
+            }
 
             e->state = STREAMENTITY_STATE_BIND;
         }
@@ -709,13 +823,23 @@ LW_RESULT lwStaticStreamMgr::LoseDevice()
     {
         if(_stream_vb_seq[i])
         {
-            if(LW_FAILED(_stream_vb_seq[i]->LoseDevice()))
+            if(LW_RESULT r = _stream_vb_seq[i]->LoseDevice(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] _stream_vb_seq[{}]->LoseDevice failed: ret={}",
+                    __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
         if(_stream_ib_seq[i])
         {
-            if(LW_FAILED(_stream_ib_seq[i]->LoseDevice()))
+            if(LW_RESULT r = _stream_ib_seq[i]->LoseDevice(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] _stream_ib_seq[{}]->LoseDevice failed: ret={}",
+                    __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -748,13 +872,23 @@ LW_RESULT lwStaticStreamMgr::ResetDevice()
     {
         if(_stream_vb_seq[i])
         {
-            if(LW_FAILED(_stream_vb_seq[i]->ResetDevice()))
+            if(LW_RESULT r = _stream_vb_seq[i]->ResetDevice(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] _stream_vb_seq[{}]->ResetDevice failed: ret={}",
+                    __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
         if(_stream_ib_seq[i])
         {
-            if(LW_FAILED(_stream_ib_seq[i]->ResetDevice()))
+            if(LW_RESULT r = _stream_ib_seq[i]->ResetDevice(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                    "[{}] _stream_ib_seq[{}]->ResetDevice failed: ret={}",
+                    __FUNCTION__, i, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
 
@@ -888,13 +1022,19 @@ LW_RESULT lwDynamicStreamVB::Bind(DWORD channel, const void* data, DWORD size, D
     DWORD lock_flag = D3DLOCK_NOOVERWRITE;
     D3DLOCK_TYPE* lock_buf = 0;
     
-    if(LW_FAILED(GetEntryOffset(&offset, size, stride)))
+    if(LW_RESULT r = GetEntryOffset(&offset, size, stride); LW_FAILED(r))
     {
+        ToLogService("errors", LogLevel::Warning,
+            "[{}] GetEntryOffset(VB first) failed; resetting and retrying: size={}, stride={}, ret={}",
+            __FUNCTION__, size, stride, static_cast<long long>(r));
         _free_addr = 0;
         _free_size = _total_size;
 
-        if(LW_FAILED(GetEntryOffset(&offset, size, stride)))
+        if(LW_RESULT r2 = GetEntryOffset(&offset, size, stride); LW_FAILED(r2))
         {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] GetEntryOffset(VB retry) failed: size={}, stride={}, ret={}",
+                __FUNCTION__, size, stride, static_cast<long long>(r2));
             return LW_RET_FAILED;
         }
 
@@ -903,8 +1043,13 @@ LW_RESULT lwDynamicStreamVB::Bind(DWORD channel, const void* data, DWORD size, D
 
     lock_flag = (offset == 0) ? D3DLOCK_DISCARD : D3DLOCK_NOOVERWRITE;
 
-    if(FAILED(_buf->Lock(offset, lock_flag == D3DLOCK_DISCARD ? 0 : size, (D3DLOCK_TYPE**)&lock_buf, lock_flag)))
+    if(HRESULT hr = _buf->Lock(offset, lock_flag == D3DLOCK_DISCARD ? 0 : size, (D3DLOCK_TYPE**)&lock_buf, lock_flag); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(VB) failed: offset={}, size={}, lock_flag={}, hr=0x{:08X}",
+            __FUNCTION__, offset, size, lock_flag, static_cast<std::uint32_t>(hr));
         return LW_RET_FAILED;
+    }
 
     memcpy(lock_buf, data, size);
 
@@ -966,21 +1111,32 @@ LW_RESULT lwDynamicStreamIB::Bind(DWORD vert_index, const void* data, DWORD size
     DWORD lock_flag = D3DLOCK_NOOVERWRITE;
     D3DLOCK_TYPE* lock_buf = 0;
     
-    if(LW_FAILED(GetEntryOffset(&offset, size, stride)))
+    if(LW_RESULT r = GetEntryOffset(&offset, size, stride); LW_FAILED(r))
     {
+        ToLogService("errors", LogLevel::Warning,
+            "[{}] GetEntryOffset(IB first) failed; resetting and retrying: size={}, stride={}, ret={}",
+            __FUNCTION__, size, stride, static_cast<long long>(r));
         _free_addr = 0;
         _free_size = _total_size;
 
-        if(LW_FAILED(GetEntryOffset(&offset, size, stride)))
+        if(LW_RESULT r2 = GetEntryOffset(&offset, size, stride); LW_FAILED(r2))
         {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] GetEntryOffset(IB retry) failed: size={}, stride={}, ret={}",
+                __FUNCTION__, size, stride, static_cast<long long>(r2));
             return LW_RET_FAILED;
         }
 
         lock_flag = D3DLOCK_DISCARD;
     }
 
-    if(FAILED(_buf->Lock(offset, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag)))
+    if(HRESULT hr = _buf->Lock(offset, size, (D3DLOCK_TYPE**)&lock_buf, lock_flag); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(IB) failed: offset={}, size={}, lock_flag={}, hr=0x{:08X}",
+            __FUNCTION__, offset, size, lock_flag, static_cast<std::uint32_t>(hr));
         return LW_RET_FAILED;
+    }
 
     memcpy(lock_buf, data, size);
 
@@ -1059,11 +1215,21 @@ LW_RESULT lwDynamicStreamMgr::Create(DWORD vb_size, DWORD ib_size)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_vb.Create(vb_size, (D3DFORMAT)0)))
+    if(LW_RESULT r = _vb.Create(vb_size, (D3DFORMAT)0); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _vb.Create failed: vb_size={}, ret={}",
+            __FUNCTION__, vb_size, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_ib.Create(ib_size, D3DFMT_INDEX16)))
+    if(LW_RESULT r = _ib.Create(ib_size, D3DFMT_INDEX16); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _ib.Create failed: ib_size={}, ret={}",
+            __FUNCTION__, ib_size, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -1077,14 +1243,29 @@ LW_RESULT lwDynamicStreamMgr::DrawPrimitive(D3DPRIMITIVETYPE pt_type, UINT count
 
     DWORD vert_size = _GetVerticesSize(pt_type, count, vert_stride);
 
-    if(LW_FAILED(_vb.Bind(0, vert_data, vert_size, vert_stride)))
+    if(LW_RESULT r = _vb.Bind(0, vert_data, vert_size, vert_stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _vb.Bind failed: pt_type={}, count={}, vert_size={}, vert_stride={}, ret={}",
+            __FUNCTION__, static_cast<std::uint32_t>(pt_type), count, vert_size, vert_stride, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(FAILED(_dev_obj->SetFVF(fvf)))
+    if(HRESULT hr = _dev_obj->SetFVF(fvf); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->SetFVF failed: fvf={}, hr=0x{:08X}",
+            __FUNCTION__, static_cast<std::uint32_t>(fvf), static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
-    if(FAILED(_dev_obj->DrawPrimitive(pt_type, _vb.GetBaseIndex(), count)))
+    if(HRESULT hr = _dev_obj->DrawPrimitive(pt_type, _vb.GetBaseIndex(), count); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->DrawPrimitive failed: pt_type={}, count={}, hr=0x{:08X}",
+            __FUNCTION__, static_cast<std::uint32_t>(pt_type), count, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -1101,17 +1282,37 @@ LW_RESULT lwDynamicStreamMgr::DrawIndexedPrimitive(D3DPRIMITIVETYPE pt_type, UIN
     DWORD vert_size = _GetVerticesSize(pt_type, count, vert_stride);
     DWORD index_size = _GetIndicesSize(pt_type, count, index_stride);
 
-    if(LW_FAILED(_vb.Bind(0, vertex_data, vert_size, vert_stride)))
+    if(LW_RESULT r = _vb.Bind(0, vertex_data, vert_size, vert_stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _vb.Bind(idx) failed: pt_type={}, vert_size={}, vert_stride={}, ret={}",
+            __FUNCTION__, static_cast<std::uint32_t>(pt_type), vert_size, vert_stride, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_ib.Bind(_vb.GetBaseIndex(), index_data, index_size , index_stride)))
+    if(LW_RESULT r = _ib.Bind(_vb.GetBaseIndex(), index_data, index_size , index_stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _ib.Bind(idx) failed: pt_type={}, index_size={}, index_stride={}, ret={}",
+            __FUNCTION__, static_cast<std::uint32_t>(pt_type), index_size, index_stride, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(FAILED(_dev_obj->SetFVF(fvf)))
+    if(HRESULT hr = _dev_obj->SetFVF(fvf); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->SetFVF(idx) failed: fvf={}, hr=0x{:08X}",
+            __FUNCTION__, static_cast<std::uint32_t>(fvf), static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
-    if(FAILED(_dev_obj->DrawIndexedPrimitive(pt_type, 0, min_vert_index, num_vert_indices, _ib.GetBaseIndex(), count)))
+    if(HRESULT hr = _dev_obj->DrawIndexedPrimitive(pt_type, 0, min_vert_index, num_vert_indices, _ib.GetBaseIndex(), count); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->DrawIndexedPrimitive failed: pt_type={}, num_vert={}, count={}, hr=0x{:08X}",
+            __FUNCTION__, static_cast<std::uint32_t>(pt_type), num_vert_indices, count, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -1141,11 +1342,21 @@ LW_RESULT lwDynamicStreamMgr::LoseDevice()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_vb.LoseDevice()))
+    if(LW_RESULT r = _vb.LoseDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _vb.LoseDevice failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_ib.LoseDevice()))
+    if(LW_RESULT r = _ib.LoseDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _ib.LoseDevice failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -1158,11 +1369,21 @@ LW_RESULT lwDynamicStreamMgr::ResetDevice()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_vb.ResetDevice()))
+    if(LW_RESULT r = _vb.ResetDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _vb.ResetDevice failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_ib.ResetDevice()))
+    if(LW_RESULT r = _ib.ResetDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _ib.ResetDevice failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -1177,18 +1398,33 @@ LW_RESULT lwLockableStreamVB::Create(void* data, DWORD size, DWORD usage, DWORD 
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev_obj->CreateVertexBuffer(size, usage, fvf, D3DPOOL_DEFAULT, &_buf, NULL)))
+    if(LW_RESULT r = _dev_obj->CreateVertexBuffer(size, usage, fvf, D3DPOOL_DEFAULT, &_buf, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->CreateVertexBuffer failed: size={}, usage={}, fvf={}, ret={}",
+            __FUNCTION__, size, usage, fvf, static_cast<long long>(r));
         goto __ret;
+    }
 
     D3DLOCK_TYPE* p;
 
-    if(LW_FAILED(_buf->Lock(0, 0, &p, 0)))
+    if(LW_RESULT r = _buf->Lock(0, 0, &p, 0); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(VB Create) failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     memcpy(p, data, size);
 
-    if(LW_FAILED(_buf->Unlock()))
+    if(LW_RESULT r = _buf->Unlock(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Unlock(VB Create) failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     _size = size;
     _usage = usage;
@@ -1238,8 +1474,13 @@ LW_RESULT lwLockableStreamVB::Unlock()
     void* d;
     DWORD s;
 
-    if(LW_FAILED(_buf->Lock(_lock_offset, _lock_size, &p, _lock_flag)))
+    if(LW_RESULT r = _buf->Lock(_lock_offset, _lock_size, &p, _lock_flag); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(VB Unlock) failed: offset={}, size={}, flag={}, ret={}",
+            __FUNCTION__, _lock_offset, _lock_size, _lock_flag, static_cast<long long>(r));
         goto __ret;
+    }
 
     if(_lock_offset == 0 && _lock_size == 0)
     {
@@ -1286,16 +1527,31 @@ LW_RESULT lwLockableStreamVB::ResetDevice()
 
     if(_buf == 0 && _size != 0)
     {
-        if(LW_FAILED(_dev_obj->CreateVertexBuffer(_size, _usage, _fvf, D3DPOOL_DEFAULT, &_buf, NULL)))
+        if(LW_RESULT r = _dev_obj->CreateVertexBuffer(_size, _usage, _fvf, D3DPOOL_DEFAULT, &_buf, NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _dev_obj->CreateVertexBuffer(reset VB) failed: size={}, usage={}, fvf={}, ret={}",
+                __FUNCTION__, _size, _usage, _fvf, static_cast<long long>(r));
             goto __ret;
+        }
 
         void* p;
 
-        if(LW_FAILED(Lock(0, 0, &p, 0)))
+        if(LW_RESULT r = Lock(0, 0, &p, 0); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] Lock(reset VB) failed: ret={}",
+                __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(Unlock()))
+        if(LW_RESULT r = Unlock(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] Unlock(reset VB) failed: ret={}",
+                __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -1313,18 +1569,33 @@ LW_RESULT lwLockableStreamIB::Create(void* data, DWORD size, DWORD usage, DWORD 
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev_obj->CreateIndexBuffer(size, usage, (D3DFORMAT)fvf, D3DPOOL_DEFAULT, &_buf, NULL)))
+    if(LW_RESULT r = _dev_obj->CreateIndexBuffer(size, usage, (D3DFORMAT)fvf, D3DPOOL_DEFAULT, &_buf, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->CreateIndexBuffer failed: size={}, usage={}, fvf={}, ret={}",
+            __FUNCTION__, size, usage, fvf, static_cast<long long>(r));
         goto __ret;
+    }
 
     D3DLOCK_TYPE* p;
 
-    if(LW_FAILED(_buf->Lock(0, 0, &p, 0)))
+    if(LW_RESULT r = _buf->Lock(0, 0, &p, 0); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(IB Create) failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     memcpy(p, data, size);
 
-    if(LW_FAILED(_buf->Unlock()))
+    if(LW_RESULT r = _buf->Unlock(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Unlock(IB Create) failed: size={}, ret={}",
+            __FUNCTION__, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     _size = size;
     _usage = usage;
@@ -1374,8 +1645,13 @@ LW_RESULT lwLockableStreamIB::Unlock()
     void* d;
     DWORD s;
 
-    if(LW_FAILED(_buf->Lock(_lock_offset, _lock_size, &p, _lock_flag)))
+    if(LW_RESULT r = _buf->Lock(_lock_offset, _lock_size, &p, _lock_flag); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _buf->Lock(IB Unlock) failed: offset={}, size={}, flag={}, ret={}",
+            __FUNCTION__, _lock_offset, _lock_size, _lock_flag, static_cast<long long>(r));
         goto __ret;
+    }
 
     if(_lock_offset == 0 && _lock_size == 0)
     {
@@ -1421,16 +1697,31 @@ LW_RESULT lwLockableStreamIB::ResetDevice()
 
     if(_buf == 0 && _size != 0)
     {
-        if(LW_FAILED(_dev_obj->CreateIndexBuffer(_size, _usage, (D3DFORMAT)_fvf, D3DPOOL_DEFAULT, &_buf, NULL)))
+        if(LW_RESULT r = _dev_obj->CreateIndexBuffer(_size, _usage, (D3DFORMAT)_fvf, D3DPOOL_DEFAULT, &_buf, NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _dev_obj->CreateIndexBuffer(reset IB) failed: size={}, usage={}, fvf={}, ret={}",
+                __FUNCTION__, _size, _usage, _fvf, static_cast<long long>(r));
             goto __ret;
+        }
 
         void* p;
 
-        if(LW_FAILED(Lock(0, 0, &p, D3DLOCK_DISCARD)))
+        if(LW_RESULT r = Lock(0, 0, &p, D3DLOCK_DISCARD); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] Lock(reset IB) failed: ret={}",
+                __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(Unlock()))
+        if(LW_RESULT r = Unlock(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] Unlock(reset IB) failed: ret={}",
+                __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -1458,13 +1749,23 @@ LW_RESULT lwLockableStreamMgr::RegisterVertexBuffer(LW_HANDLE* handle, void* dat
 
     lwLockableStreamVB* s = LW_NEW(lwLockableStreamVB(_res_mgr->GetDeviceObject()));
 
-    if(LW_FAILED(s->Create(data, size, usage, fvf)))
+    if(LW_RESULT r = s->Create(data, size, usage, fvf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->Create(VB) failed: size={}, usage={}, fvf={}, ret={}",
+            __FUNCTION__, size, usage, fvf, static_cast<long long>(r));
         goto __ret;
+    }
 
     DWORD ret_id;
 
-    if(LW_FAILED(_pool_vb.Register(&ret_id, s)))
+    if(LW_RESULT r = _pool_vb.Register(&ret_id, s); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_vb.Register failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     s =  0;
 
@@ -1481,13 +1782,23 @@ LW_RESULT lwLockableStreamMgr::RegisterIndexBuffer(LW_HANDLE* handle, void* data
 
     lwLockableStreamIB* s = LW_NEW(lwLockableStreamIB(_res_mgr->GetDeviceObject()));
 
-    if(LW_FAILED(s->Create(data, size, usage, fvf)))
+    if(LW_RESULT r = s->Create(data, size, usage, fvf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->Create(IB) failed: size={}, usage={}, fvf={}, ret={}",
+            __FUNCTION__, size, usage, fvf, static_cast<long long>(r));
         goto __ret;
+    }
 
     DWORD ret_id;
 
-    if(LW_FAILED(_pool_ib.Register(&ret_id, s)))
+    if(LW_RESULT r = _pool_ib.Register(&ret_id, s); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_ib.Register failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     s =  0;
 
@@ -1504,8 +1815,14 @@ LW_RESULT lwLockableStreamMgr::UnregisterVertexBuffer(LW_HANDLE handle)
     LW_RESULT ret = LW_RET_FAILED;
 
     lwLockableStreamVB* s;
-    if(LW_FAILED(ret = _pool_vb.Unregister((lwPoolEntity*)&s, handle)))
+    ret = _pool_vb.Unregister((lwPoolEntity*)&s, handle);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_vb.Unregister failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(ret));
         return ret;
+    }
 
     if(ret == LW_RET_OK_1)
     {
@@ -1521,8 +1838,14 @@ LW_RESULT lwLockableStreamMgr::UnregisterIndexBuffer(LW_HANDLE handle)
 
     lwLockableStreamIB* s;
 
-    if(LW_FAILED(ret = _pool_ib.Unregister((lwPoolEntity*)&s, handle)))
+    ret = _pool_ib.Unregister((lwPoolEntity*)&s, handle);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_ib.Unregister failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(ret == LW_RET_OK_1)
     {
@@ -1540,11 +1863,21 @@ LW_RESULT lwLockableStreamMgr::BindVertexBuffer(LW_HANDLE handle, UINT channel, 
 
     lwLockableStreamVB* s;
 
-     if(LW_FAILED(_pool_vb.GetObj((lwPoolEntity*)&s, handle)))
+     if(LW_RESULT r = _pool_vb.GetObj((lwPoolEntity*)&s, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_vb.GetObj failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(s->Bind(channel, offset_byte, stride)))
+    if(LW_RESULT r = s->Bind(channel, offset_byte, stride); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->Bind(VB) failed: handle={}, channel={}, offset={}, stride={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), channel, offset_byte, stride, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -1556,11 +1889,21 @@ LW_RESULT lwLockableStreamMgr::BindIndexBuffer(LW_HANDLE handle, UINT base_vert_
 
     lwLockableStreamIB* s;
 
-    if(LW_FAILED(_pool_ib.GetObj((lwPoolEntity*)&s, handle)))
+    if(LW_RESULT r = _pool_ib.GetObj((lwPoolEntity*)&s, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_ib.GetObj failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(s->Bind(base_vert_index)))
+    if(LW_RESULT r = s->Bind(base_vert_index); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->Bind(IB) failed: handle={}, base_vert_index={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), base_vert_index, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -1572,9 +1915,12 @@ LW_RESULT lwLockableStreamMgr::LoseDevice()
 {
     LW_RESULT ret = LW_RET_OK;
 
-    _pool_vb.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_vb.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* vb = static_cast<lwLockableStreamVB*>(raw);
-        if (LW_FAILED(vb->LoseDevice())) {
+        if (LW_RESULT r = vb->LoseDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] vb->LoseDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1584,9 +1930,12 @@ LW_RESULT lwLockableStreamMgr::LoseDevice()
         return ret;
     }
 
-    _pool_ib.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_ib.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* ib = static_cast<lwLockableStreamIB*>(raw);
-        if (LW_FAILED(ib->LoseDevice())) {
+        if (LW_RESULT r = ib->LoseDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] ib->LoseDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1598,9 +1947,12 @@ LW_RESULT lwLockableStreamMgr::ResetDevice()
 {
     LW_RESULT ret = LW_RET_OK;
 
-    _pool_vb.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_vb.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* vb = static_cast<lwLockableStreamVB*>(raw);
-        if (LW_FAILED(vb->ResetDevice())) {
+        if (LW_RESULT r = vb->ResetDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] vb->ResetDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1610,9 +1962,12 @@ LW_RESULT lwLockableStreamMgr::ResetDevice()
         return ret;
     }
 
-    _pool_ib.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_ib.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* ib = static_cast<lwLockableStreamIB*>(raw);
-        if (LW_FAILED(ib->ResetDevice())) {
+        if (LW_RESULT r = ib->ResetDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] ib->ResetDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1625,8 +1980,13 @@ lwILockableStreamVB* lwLockableStreamMgr::GetStreamVB(LW_HANDLE handle)
 {
     lwLockableStreamVB* s = 0;
 
-    if(LW_FAILED(_pool_vb.GetObj((lwPoolEntity*)&s, handle)))
+    if(LW_RESULT r = _pool_vb.GetObj((lwPoolEntity*)&s, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_vb.GetObj failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 __ret:
     return (lwILockableStreamVB*)s;
 }
@@ -1634,8 +1994,13 @@ lwILockableStreamIB* lwLockableStreamMgr::GetStreamIB(LW_HANDLE handle)
 {
     lwLockableStreamIB* s = 0;
 
-    if(LW_FAILED(_pool_ib.GetObj((lwPoolEntity*)&s, handle)))
+    if(LW_RESULT r = _pool_ib.GetObj((lwPoolEntity*)&s, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_ib.GetObj failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 __ret:
     return (lwILockableStreamIB*)s;
 }
@@ -1648,8 +2013,13 @@ LW_RESULT lwSurfaceStream::Release()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_ss_mgr->UnregisterSurface(_reg_id)))
+    if(LW_RESULT r = _ss_mgr->UnregisterSurface(_reg_id); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _ss_mgr->UnregisterSurface failed: reg_id={}, ret={}",
+            __FUNCTION__, _reg_id, static_cast<long long>(r));
         goto __ret;
+    }
 
     LW_DELETE(this);
 
@@ -1681,8 +2051,13 @@ LW_RESULT lwSurfaceStream::CreateRenderTarget(UINT width, UINT height, D3DFORMAT
 
     lwIDeviceObject* dev_obj = _ss_mgr->GetResourceMgr()->GetDeviceObject();
 
-    if(FAILED(dev_obj->CreateRenderTarget(&_surface, width, height, format, multi_sample, multi_sample_quality, lockable, NULL)))
+    if(HRESULT hr = dev_obj->CreateRenderTarget(&_surface, width, height, format, multi_sample, multi_sample_quality, lockable, NULL); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] dev_obj->CreateRenderTarget failed: w={}, h={}, format={}, lockable={}, hr=0x{:08X}",
+            __FUNCTION__, width, height, static_cast<std::uint32_t>(format), lockable, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     _type = SURFACESTREAM_RENDERTARGET;
     _width = width;
@@ -1702,8 +2077,13 @@ LW_RESULT lwSurfaceStream::CreateDepthStencilSurface(UINT width, UINT height, D3
 
     lwIDeviceObject* dev_obj = _ss_mgr->GetResourceMgr()->GetDeviceObject();
 
-    if(FAILED(dev_obj->CreateDepthStencilSurface(&_surface, width, height, format, multi_sample, multi_sample_quality, discard, handle)))
+    if(HRESULT hr = dev_obj->CreateDepthStencilSurface(&_surface, width, height, format, multi_sample, multi_sample_quality, discard, handle); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] dev_obj->CreateDepthStencilSurface failed: w={}, h={}, format={}, discard={}, hr=0x{:08X}",
+            __FUNCTION__, width, height, static_cast<std::uint32_t>(format), discard, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     _type = SURFACESTREAM_DEPTHSTENCIL;
     _width = width;
@@ -1757,9 +2137,12 @@ lwSurfaceStreamMgr::~lwSurfaceStreamMgr()
 LW_RESULT lwSurfaceStreamMgr::LoseDevice()
 {
     LW_RESULT ret = LW_RET_OK;
-    _pool_surface.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_surface.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* s = static_cast<lwISurfaceStream*>(raw);
-        if (LW_FAILED(s->LoseDevice())) {
+        if (LW_RESULT r = s->LoseDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->LoseDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1770,9 +2153,12 @@ LW_RESULT lwSurfaceStreamMgr::LoseDevice()
 LW_RESULT lwSurfaceStreamMgr::ResetDevice()
 {
     LW_RESULT ret = LW_RET_OK;
-    _pool_surface.ForEach([&](DWORD, void* raw) -> bool {
+    _pool_surface.ForEach([&](DWORD handle, void* raw) -> bool {
         auto* s = static_cast<lwISurfaceStream*>(raw);
-        if (LW_FAILED(s->ResetDevice())) {
+        if (LW_RESULT r = s->ResetDevice(); LW_FAILED(r)) {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] s->ResetDevice failed: handle={}, ret={}",
+                __FUNCTION__, handle, static_cast<long long>(r));
             ret = LW_RET_FAILED;
             return false;
         }
@@ -1787,11 +2173,21 @@ LW_RESULT lwSurfaceStreamMgr::CreateRenderTarget(LW_HANDLE* ret_handle, UINT wid
 
     lwISurfaceStream* s = LW_NEW(lwSurfaceStream(this));
 
-    if(LW_FAILED(s->CreateRenderTarget(width, height, format, multi_sample, multi_sample_quality, lockable, handle)))
+    if(LW_RESULT r = s->CreateRenderTarget(width, height, format, multi_sample, multi_sample_quality, lockable, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->CreateRenderTarget failed: w={}, h={}, format={}, lockable={}, ret={}",
+            __FUNCTION__, width, height, static_cast<std::uint32_t>(format), lockable, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_pool_surface.Register(ret_handle, s)))
+    if(LW_RESULT r = _pool_surface.Register(ret_handle, s); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_surface.Register(RT) failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     s->SetRegisterID(*ret_handle);
     s = 0;
@@ -1808,11 +2204,21 @@ LW_RESULT lwSurfaceStreamMgr::CreateDepthStencilSurface(LW_HANDLE* ret_handle, U
 
     lwISurfaceStream* s = LW_NEW(lwSurfaceStream(this));
 
-    if(LW_FAILED(s->CreateDepthStencilSurface(width, height, format, multi_sample, multi_sample_quality, discard, handle)))
+    if(LW_RESULT r = s->CreateDepthStencilSurface(width, height, format, multi_sample, multi_sample_quality, discard, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] s->CreateDepthStencilSurface failed: w={}, h={}, format={}, discard={}, ret={}",
+            __FUNCTION__, width, height, static_cast<std::uint32_t>(format), discard, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_pool_surface.Register(ret_handle, s)))
+    if(LW_RESULT r = _pool_surface.Register(ret_handle, s); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_surface.Register(DS) failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     s->SetRegisterID(*ret_handle);
     s = 0;
@@ -1829,8 +2235,13 @@ LW_RESULT lwSurfaceStreamMgr::UnregisterSurface(LW_HANDLE handle)
 
     lwISurfaceStream* ss;
 
-    if(LW_FAILED(_pool_surface.Unregister((void**)&ss, handle)))
+    if(LW_RESULT r = _pool_surface.Unregister((void**)&ss, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_surface.Unregister failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 
     if(ss)
     {
@@ -1847,8 +2258,13 @@ lwISurfaceStream* lwSurfaceStreamMgr::GetSurfaceStream(LW_HANDLE handle)
 {
     lwISurfaceStream* ret = 0;
 
-    if(LW_FAILED(_pool_surface.GetObj((void**)&ret, handle)))
+    if(LW_RESULT r = _pool_surface.GetObj((void**)&ret, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _pool_surface.GetObj failed: handle={}, ret={}",
+            __FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
         goto __ret;
+    }
 
 __ret:
     return ret;
@@ -1862,8 +2278,13 @@ LW_RESULT lwVertexBuffer::Release()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(Destroy()))
+    if(LW_RESULT r = Destroy(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] Destroy(VB) failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
     {
         lwDeviceObject* devobj = reinterpret_cast<lwDeviceObject*>(_dev_obj);
         devobj->_ReleaseStreamBuffer(this);
@@ -1889,9 +2310,14 @@ LW_RESULT lwVertexBuffer::Create(UINT length, DWORD usage, DWORD fvf, D3DPOOL po
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev_obj->CreateVertexBuffer(length, usage, fvf, pool, &_buf, handle)))
+    if(LW_RESULT r = _dev_obj->CreateVertexBuffer(length, usage, fvf, pool, &_buf, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->CreateVertexBuffer failed: length={}, usage={}, fvf={}, pool={}, ret={}",
+            __FUNCTION__, length, usage, fvf, static_cast<std::uint32_t>(pool), static_cast<long long>(r));
         goto __ret;
-    
+    }
+
     _buf_info.fvf = fvf;
     _buf_info.size = length;
     _buf_info.usage = usage;
@@ -1910,8 +2336,13 @@ LW_RESULT lwVertexBuffer::Destroy()
     if(_buf == 0)
         goto __addre_ret_ok;
 
-    if(LW_FAILED(_dev_obj->ReleaseVertexBuffer(_buf)))
+    if(LW_RESULT r = _dev_obj->ReleaseVertexBuffer(_buf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->ReleaseVertexBuffer failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     _buf = 0;
     memset(&_buf_info, 0, sizeof(_buf_info));
@@ -1937,8 +2368,13 @@ LW_RESULT lwVertexBuffer::LoadData(const void* data_seq, DWORD data_size, UINT o
     {
         D3DLOCK_TYPE* p_buf = 0;
 
-        if (LW_FAILED(_buf->Lock(offset, (data_size == _buf_info.size) ? 0 : data_size, &p_buf, lock_flag)))
+        if (LW_RESULT r = _buf->Lock(offset, (data_size == _buf_info.size) ? 0 : data_size, &p_buf, lock_flag); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(VB LoadData) failed: offset={}, data_size={}, lock_flag={}, ret={}",
+                __FUNCTION__, offset, data_size, lock_flag, static_cast<long long>(r));
             goto __ret;
+        }
 
         memcpy(p_buf, data_seq, data_size);
 
@@ -1977,8 +2413,13 @@ LW_RESULT lwVertexBuffer::LoadDataDynamic(const void* data_seq, DWORD data_size)
             lock_size = data_size;
         }
 
-        if (LW_FAILED(_buf->Lock(_dlock_pos, lock_size, &p_buf, lock_flag)))
+        if (LW_RESULT r = _buf->Lock(_dlock_pos, lock_size, &p_buf, lock_flag); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(VB LoadDataDynamic) failed: dlock_pos={}, lock_size={}, lock_flag={}, ret={}",
+                __FUNCTION__, _dlock_pos, lock_size, lock_flag, static_cast<long long>(r));
             goto __ret;
+        }
 
         memcpy(p_buf, data_seq, data_size);
 
@@ -1999,8 +2440,13 @@ LW_RESULT lwIndexBuffer::Release()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(Destroy()))
+    if(LW_RESULT r = Destroy(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] Destroy(IB) failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
     {
         lwDeviceObject* devobj = reinterpret_cast<lwDeviceObject*>(_dev_obj);
         devobj->_ReleaseStreamBuffer(this);
@@ -2026,9 +2472,14 @@ LW_RESULT lwIndexBuffer::Create(UINT length, DWORD usage, D3DFORMAT format, D3DP
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev_obj->CreateIndexBuffer(length, usage, format, pool, &_buf, handle)))
+    if(LW_RESULT r = _dev_obj->CreateIndexBuffer(length, usage, format, pool, &_buf, handle); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->CreateIndexBuffer failed: length={}, usage={}, format={}, pool={}, ret={}",
+            __FUNCTION__, length, usage, static_cast<std::uint32_t>(format), static_cast<std::uint32_t>(pool), static_cast<long long>(r));
         goto __ret;
-    
+    }
+
     _buf_info.size = length;
     _buf_info.pool = pool;
     _buf_info.usage = usage;
@@ -2047,8 +2498,13 @@ LW_RESULT lwIndexBuffer::Destroy()
     if(_buf == 0)
         goto __addre_ret_ok;
 
-    if(LW_FAILED(_dev_obj->ReleaseIndexBuffer(_buf)))
+    if(LW_RESULT r = _dev_obj->ReleaseIndexBuffer(_buf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+            "[{}] _dev_obj->ReleaseIndexBuffer failed: ret={}",
+            __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     _buf = 0;
     memset(&_buf_info, 0, sizeof(_buf_info));
@@ -2074,8 +2530,13 @@ LW_RESULT lwIndexBuffer::LoadData(const void* data_seq, DWORD data_size, UINT of
     {
         D3DLOCK_TYPE* p_buf = 0;
 
-        if (LW_FAILED(_buf->Lock(offset, (data_size == _buf_info.size) ? 0 : data_size, &p_buf, lock_flag)))
+        if (LW_RESULT r = _buf->Lock(offset, (data_size == _buf_info.size) ? 0 : data_size, &p_buf, lock_flag); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(IB LoadData) failed: offset={}, data_size={}, lock_flag={}, ret={}",
+                __FUNCTION__, offset, data_size, lock_flag, static_cast<long long>(r));
             goto __ret;
+        }
 
         memcpy(p_buf, data_seq, data_size);
 
@@ -2114,8 +2575,13 @@ LW_RESULT lwIndexBuffer::LoadDataDynamic(const void* data_seq, DWORD data_size)
             lock_size = data_size;
         }
 
-        if (LW_FAILED(_buf->Lock(_dlock_pos, lock_size, &p_buf, lock_flag)))
+        if (LW_RESULT r = _buf->Lock(_dlock_pos, lock_size, &p_buf, lock_flag); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                "[{}] _buf->Lock(IB LoadDataDynamic) failed: dlock_pos={}, lock_size={}, lock_flag={}, ret={}",
+                __FUNCTION__, _dlock_pos, lock_size, lock_flag, static_cast<long long>(r));
             goto __ret;
+        }
 
         memcpy(p_buf, data_seq, data_size);
 

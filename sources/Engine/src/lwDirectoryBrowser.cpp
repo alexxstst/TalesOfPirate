@@ -49,16 +49,22 @@ LW_RESULT lwDirectoryBrowser::_Go(const char* file, DWORD flag)
 
             if ((!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) && (flag & DIR_BROWSE_FILE))
             {
-                if (LW_FAILED((*_proc)(file_path, &wfd, _param)))
+                if (LW_RESULT r = (*_proc)(file_path, &wfd, _param); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] callback (file) returned failure: file_path={}, name={}, ret={}",
+                                 __FUNCTION__, file_path, wfd.cFileName, static_cast<long long>(r));
                     ret = LW_RET_OK_1;
                     goto __ret;
                 }
             }
             else if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && (flag & DIR_BROWSE_DIRECTORY))
             {
-                if (LW_FAILED((*_proc)(file_path, &wfd, _param)))
+                if (LW_RESULT r = (*_proc)(file_path, &wfd, _param); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] callback (directory) returned failure: file_path={}, name={}, ret={}",
+                                 __FUNCTION__, file_path, wfd.cFileName, static_cast<long long>(r));
                     ret = LW_RET_OK_1;
                     goto __ret;
                 }

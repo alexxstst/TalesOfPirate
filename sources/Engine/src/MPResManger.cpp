@@ -419,11 +419,11 @@ lwITex*		CMPResManger::GetTextureByIDlw( int iID)
 #endif
 		lwITex* tex;
 
-		if(LW_FAILED(lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A8R8G8B8)))
+		if(LW_RESULT r = lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A8R8G8B8); LW_FAILED(r))
 		{
-			char szMsg[64];
-			sprintf(szMsg, "[id=%d]", iID);
-			ToLogService("errors", LogLevel::Error, "{}",szMsg);
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] lwLoadTex failed: id={}, file={}, ret={}",
+			             __FUNCTION__, iID, t_pszFile, static_cast<long long>(r));
 			return 0;
 		}
 		//#endif
@@ -1311,10 +1311,13 @@ bool	CMPResManger::LoadTotalVShader()
 			_vecVShader.resize(_iVShaderNum);
 			//_vecVShader[_iVShaderNum - 1] = new DWORD;
 		//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
-			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
+			if( HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
 				(DWORD*)pCode->GetBufferPointer(),
-				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ) ) )
+				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ); FAILED(hr) )
 			 {
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] CreateVertexShader failed (eff loop): path={}, idx={}, hr=0x{:08X}",
+				             __FUNCTION__, t_Path, _iVShaderNum - 1, static_cast<std::uint32_t>(hr));
 				MessageBox(NULL,t_Path,"ERROR",0);
 				return false;
 			 }
@@ -1341,10 +1344,13 @@ bool	CMPResManger::LoadTotalVShader()
 		if(SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL )))
 		{
 
-			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
+			if( HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
 				(DWORD*)pCode->GetBufferPointer(),
-				(IDirect3DVertexShaderX**)&_dwShadeMapVS ) ) )
+				(IDirect3DVertexShaderX**)&_dwShadeMapVS ); FAILED(hr) )
 		 {
+			 ToLogService("errors", LogLevel::Error,
+			              "[{}] CreateVertexShader failed (shadeeff): hr=0x{:08X}",
+			              __FUNCTION__, static_cast<std::uint32_t>(hr));
 			 MessageBox(NULL,"shader\\shadeeff.vsh","ERROR",0);
 			 return false;
 		 }
@@ -1377,10 +1383,13 @@ bool	CMPResManger::LoadTotalVShader()
 			_vecVShader.resize(_iVShaderNum);
 			//_vecVShader[_iVShaderNum - 1] = new DWORD;
 			//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
-			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
+			if( HRESULT hr = m_pDev->GetDevice()->CreateVertexShader(
 				(DWORD*)pCode->GetBufferPointer(),
-				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ) ) )
+				(IDirect3DVertexShaderX**)&_vecVShader[_iVShaderNum - 1] ); FAILED(hr) )
 			{
+				ToLogService("errors", LogLevel::Error,
+				             "[{}] CreateVertexShader failed (eff2): idx={}, hr=0x{:08X}",
+				             __FUNCTION__, _iVShaderNum - 1, static_cast<std::uint32_t>(hr));
 				//MessageBox(NULL,"shader\\eff2.vsh","ERROR",0);
 				//return false;
 				_vecVShader[0] = 0L;
@@ -1511,8 +1520,13 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 			continue;
 		}
 
-        if(LW_FAILED(shader_mgr->RegisterVertexDeclaration(decl_type[i], decl_tab[i])))
+        if(LW_RESULT r = shader_mgr->RegisterVertexDeclaration(decl_type[i], decl_tab[i]); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] shader_mgr->RegisterVertexDeclaration failed: i={}, decl_type={}, ret={}",
+                         __FUNCTION__, i, decl_type[i], static_cast<long long>(r));
             return false;
+        }
 		shader_mgr->QueryVertexDeclaration(&this_decl, decl_type[i]);
 		_vecVDecl[i] = this_decl;
     }
@@ -1520,8 +1534,13 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
     for(int i = 0; i < decl_num; i++)
     {
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, shader_compile_flag[i])))
+        if(LW_RESULT r = shader_mgr->RegisterVertexShader(shader_type[i], path, shader_compile_flag[i]); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] shader_mgr->RegisterVertexShader failed: i={}, shader_type={}, path={}, ret={}",
+                         __FUNCTION__, i, shader_type[i], path, static_cast<long long>(r));
             return false;
+        }
 
 		if (i < 4) {
 			_iVShaderNum++;

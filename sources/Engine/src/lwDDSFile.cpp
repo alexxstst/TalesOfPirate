@@ -43,23 +43,31 @@ LW_RESULT lwDDSFile::LoadOriginTexture(const char* file, DWORD mip_level, D3DFOR
 
     IDirect3DTextureX* tex = 0;
 
-    if(FAILED(D3DXCreateTextureFromFileEx(
-        _dev, 
-        file,
-        D3DX_DEFAULT, 
-        D3DX_DEFAULT,
-        mip_level,
-        0,
-        format,
-        D3DPOOL_MANAGED,
-        D3DX_FILTER_POINT,
-        D3DX_FILTER_POINT,
-        colorkey,
-        NULL,
-        NULL,
-        &tex)))
     {
-        goto __ret;
+        HRESULT hr = D3DXCreateTextureFromFileEx(
+            _dev,
+            file,
+            D3DX_DEFAULT,
+            D3DX_DEFAULT,
+            mip_level,
+            0,
+            format,
+            D3DPOOL_MANAGED,
+            D3DX_FILTER_POINT,
+            D3DX_FILTER_POINT,
+            colorkey,
+            NULL,
+            NULL,
+            &tex);
+        if(FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] D3DXCreateTextureFromFileEx failed: file='{}', mip_level={}, format={}, hr=0x{:08X}",
+                         __FUNCTION__, file ? file : "(null)",
+                         static_cast<long long>(mip_level), static_cast<long long>(format),
+                         static_cast<std::uint32_t>(hr));
+            goto __ret;
+        }
     }
     
     {
@@ -151,7 +159,7 @@ LW_RESULT lwDDSFile::Compress(D3DFORMAT new_fmt)
 
     if(IsVolumeMap())
     {
-        if(FAILED(_dev->CreateVolumeTextureX(
+        if(HRESULT hr = _dev->CreateVolumeTextureX(
             _tex_width,
             _tex_height,
             _volume_depth,
@@ -160,67 +168,123 @@ LW_RESULT lwDDSFile::Compress(D3DFORMAT new_fmt)
             new_fmt,
             D3DPOOL_SYSTEMMEM,
             &pvoltexNew,
-            NULL)))
+            NULL); FAILED(hr))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateVolumeTextureX failed: w={}, h={}, depth={}, mip={}, fmt={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(_tex_width),
+                         static_cast<long long>(_tex_height), static_cast<long long>(_volume_depth),
+                         static_cast<long long>(_mip_level), static_cast<long long>(new_fmt),
+                         static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
         LW_IF_RELEASE(_dds_tex);
         _dds_tex = pvoltexNew;
 
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_FORCE_DWORD, _origin_tex, _dds_tex)))
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_FORCE_DWORD, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(volume) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
     else if(IsCubeMap())
     {
-        if(FAILED(_dev->CreateCubeTextureX(
+        if(HRESULT hr = _dev->CreateCubeTextureX(
             _tex_width,
-            _mip_level, 
+            _mip_level,
             0,
             new_fmt,
             D3DPOOL_MANAGED,
             &pcubetexNew,
-            NULL)))
+            NULL); FAILED(hr))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateCubeTextureX failed: edge={}, mip={}, fmt={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(_tex_width),
+                         static_cast<long long>(_mip_level), static_cast<long long>(new_fmt),
+                         static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
         LW_IF_RELEASE(_dds_tex);
         _dds_tex = pcubetexNew;
 
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_X, _origin_tex, _dds_tex)))
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_X, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube NEG_X) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_X, _origin_tex, _dds_tex)))
+        }
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_X, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube POS_X) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_Y, _origin_tex, _dds_tex)))
+        }
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_Y, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube NEG_Y) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_Y, _origin_tex, _dds_tex)))
+        }
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_Y, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube POS_Y) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_Z, _origin_tex, _dds_tex)))
+        }
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_NEGATIVE_Z, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube NEG_Z) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_Z, _origin_tex, _dds_tex)))
+        }
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_POSITIVE_Z, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(cube POS_Z) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
     else
     {
-        if(FAILED(_dev->CreateTextureX(
+        if(HRESULT hr = _dev->CreateTextureX(
             _tex_width,
             _tex_height,
-            _mip_level, 
+            _mip_level,
             0,
             new_fmt,
             D3DPOOL_MANAGED,
             &pmiptexNew,
-            NULL)))
+            NULL); FAILED(hr))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateTextureX failed: w={}, h={}, mip={}, fmt={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(_tex_width),
+                         static_cast<long long>(_tex_height), static_cast<long long>(_mip_level),
+                         static_cast<long long>(new_fmt), static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
         LW_IF_RELEASE(_dds_tex);
         _dds_tex = pmiptexNew;
 
-        if(FAILED(BltAllLevels(D3DCUBEMAP_FACE_FORCE_DWORD, _origin_tex, _dds_tex)))
+        if(HRESULT hr = BltAllLevels(D3DCUBEMAP_FACE_FORCE_DWORD, _origin_tex, _dds_tex); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] BltAllLevels(generic) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -300,11 +364,24 @@ LW_RESULT lwDDSFile::Convert(const char* file, D3DFORMAT src_fmt, D3DFORMAT dds_
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(LoadOriginTexture(file, mip_level, src_fmt, src_colorkey)))
+    if(LW_RESULT r = LoadOriginTexture(file, mip_level, src_fmt, src_colorkey); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadOriginTexture failed: file='{}', mip_level={}, src_fmt={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)",
+                     static_cast<long long>(mip_level), static_cast<long long>(src_fmt),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(Compress(dds_fmt)))
+    if(LW_RESULT r = Compress(dds_fmt); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Compress failed: dds_fmt={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(dds_fmt),
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -322,33 +399,80 @@ LW_RESULT lwDDSFile::Save(const char* file)
     if((fp = fopen(file, "wb")) == 0)
         goto __ret;
 
-    if(LW_FAILED(SaveDDSHeader(ptex, fp)))
+    if(LW_RESULT r = SaveDDSHeader(ptex, fp); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SaveDDSHeader failed: file='{}', ret={}",
+                     __FUNCTION__, file ? file : "(null)",
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     if(IsVolumeMap())
     {
-        if(FAILED(SaveAllVolumeSurfaces((IDirect3DVolumeTextureX*)ptex, fp)))
+        if(HRESULT hr = SaveAllVolumeSurfaces((IDirect3DVolumeTextureX*)ptex, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllVolumeSurfaces failed: file='{}', hr=0x{:08X}",
+                         __FUNCTION__, file ? file : "(null)",
+                         static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
     else if(IsCubeMap())
     {
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_X, fp)))
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_X, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(POS_X) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_X, fp)))
+        }
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_X, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(NEG_X) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_Y, fp)))
+        }
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_Y, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(POS_Y) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_Y, fp)))
+        }
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_Y, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(NEG_Y) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_Z, fp)))
+        }
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_POSITIVE_Z, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(POS_Z) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_Z, fp)))
+        }
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_NEGATIVE_Z, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(NEG_Z) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
     else // generic texture
     {
-        if(FAILED(SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_FORCE_DWORD, fp)))
+        if(HRESULT hr = SaveAllMipSurfaces(ptex, D3DCUBEMAP_FACE_FORCE_DWORD, fp); FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SaveAllMipSurfaces(generic) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -541,7 +665,15 @@ HRESULT lwDDSFile::SaveAllMipSurfaces(IDirect3DBaseTextureX* ptex, D3DCUBEMAP_FA
             hr = pcubetex->GetCubeMapSurface(FaceType, iLevel, &psurf);
 
         if(FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] {} failed: iLevel={}, FaceType={}, hr=0x{:08X}",
+                         __FUNCTION__, pmiptex != NULL ? "GetSurfaceLevel" : "GetCubeMapSurface",
+                         static_cast<long long>(iLevel),
+                         static_cast<long long>(FaceType),
+                         static_cast<std::uint32_t>(hr));
             return hr;
+        }
 
         psurf->GetDesc(&sd);
 
@@ -550,7 +682,14 @@ HRESULT lwDDSFile::SaveAllMipSurfaces(IDirect3DBaseTextureX* ptex, D3DCUBEMAP_FA
         else
             hr = pcubetex->LockRect(FaceType, iLevel, &lr, NULL, 0);
         if(FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LockRect failed: iLevel={}, FaceType={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(iLevel),
+                         static_cast<long long>(FaceType),
+                         static_cast<std::uint32_t>(hr));
             return hr;
+        }
         if(sd.Format == D3DFMT_DXT1 ||
             sd.Format == D3DFMT_DXT2 ||
             sd.Format == D3DFMT_DXT3 ||
@@ -612,7 +751,13 @@ HRESULT lwDDSFile::SaveAllVolumeSurfaces(IDirect3DVolumeTextureX* pvoltex, FILE*
         box.Back = vd.Depth;
         hr = pvoltex->LockBox(iLevel, &lb, &box, 0);
         if(FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LockBox failed: iLevel={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(iLevel),
+                         static_cast<std::uint32_t>(hr));
             return hr;
+        }
         switch(vd.Format)
         {
         case D3DFMT_A8R8G8B8:

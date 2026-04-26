@@ -28,8 +28,13 @@ LW_RESULT lwLoadPrimitiveLineList(lwINodePrimitive* obj, const char* name, DWORD
 
     RSA_VALUE(&info.rs_set[0], D3DRS_LIGHTING, FALSE);
 
-    if(LW_FAILED(obj->LoadMesh(&info)))
+    if(LW_RESULT r = obj->LoadMesh(&info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMesh failed: name={}, vert_num={}, subset_num={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", vert_num, subset_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     lwMtlTexInfo mti;
     lwMaterial mtl;
@@ -44,14 +49,24 @@ LW_RESULT lwLoadPrimitiveLineList(lwINodePrimitive* obj, const char* name, DWORD
 
     for(DWORD i = 0; i < subset_num; i++)
     {
-        obj->LoadMtlTex(i, &mti, NULL);
+        if(LW_RESULT r = obj->LoadMtlTex(i, &mti, NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] obj->LoadMtlTex failed: name={}, i={}, subset_num={}, ret={}",
+                         __FUNCTION__, name ? name : "(null)", i, subset_num, static_cast<long long>(r));
+        }
     }
 
     lwRenderCtrlCreateInfo rcci;
     lwRenderCtrlCreateInfo_Construct(&rcci);
     rcci.ctrl_id = RENDERCTRL_VS_FIXEDFUNCTION;
 
-    obj->LoadRenderCtrl(&rcci);
+    if(LW_RESULT r = obj->LoadRenderCtrl(&rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadRenderCtrl failed: name={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }
@@ -80,8 +95,13 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
 
     RSA_VALUE(&info.rs_set[0], D3DRS_LIGHTING, FALSE);
 
-    if(LW_FAILED(obj->LoadMesh(&info)))
+    if(LW_RESULT r = obj->LoadMesh(&info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMesh failed: name={}, vert_num={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", vert_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     lwMtlTexInfo mti;
     lwMaterial mtl;
@@ -92,13 +112,23 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
 
     mti.mtl = mtl;
 
-    obj->LoadMtlTex(0, &mti, NULL);
+    if(LW_RESULT r = obj->LoadMtlTex(0, &mti, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMtlTex failed: name={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
+    }
 
     lwRenderCtrlCreateInfo rcci;
     lwRenderCtrlCreateInfo_Construct(&rcci);
     rcci.ctrl_id = RENDERCTRL_VS_FIXEDFUNCTION;
 
-    obj->LoadRenderCtrl(&rcci);
+    if(LW_RESULT r = obj->LoadRenderCtrl(&rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadRenderCtrl failed: name={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
+    }
 
     //lwIRenderCtrl* render_ctrl;
     //obj->GetResourceMgr()->RequestRenderCtrl(&render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION);
@@ -127,8 +157,13 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
 
     RSA_VALUE(&info.rs_set[0], D3DRS_LIGHTING, FALSE);
 
-    if(LW_FAILED(obj->LoadMesh(&info)))
+    if(LW_RESULT r = obj->LoadMesh(&info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMesh (subset overload) failed: name={}, vert_num={}, subset_num={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", vert_num, subset_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     lwMtlTexInfo mti;
     lwMaterial mtl;
@@ -141,14 +176,24 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
 
     for(DWORD i = 0; i < subset_num; i++)
     {
-        obj->LoadMtlTex(i, &mti, NULL);
+        if(LW_RESULT r = obj->LoadMtlTex(i, &mti, NULL); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] obj->LoadMtlTex (subset overload) failed: name={}, i={}, subset_num={}, ret={}",
+                         __FUNCTION__, name ? name : "(null)", i, subset_num, static_cast<long long>(r));
+        }
     }
 
     lwRenderCtrlCreateInfo rcci;
     lwRenderCtrlCreateInfo_Construct(&rcci);
     rcci.ctrl_id = RENDERCTRL_VS_FIXEDFUNCTION;
 
-    obj->LoadRenderCtrl(&rcci);
+    if(LW_RESULT r = obj->LoadRenderCtrl(&rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadRenderCtrl (subset overload) failed: name={}, ret={}",
+                     __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
+    }
 
     //lwIRenderCtrl* render_ctrl;
     //obj->GetResourceMgr()->RequestRenderCtrl(&render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION);
@@ -448,8 +493,13 @@ LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color,
     info.index_seq = ind_seq;
     info.vercol_seq = col_seq;
 
-    if(LW_FAILED(obj->LoadMesh(&info)))
+    if(LW_RESULT r = obj->LoadMesh(&info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMesh (Plane) failed: vertex_num={}, index_num={}, ret={}",
+                     __FUNCTION__, info.vertex_num, info.index_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     lwMtlTexInfo mti;
     lwMaterial mtl;
@@ -460,13 +510,23 @@ LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color,
 
     mti.mtl = mtl;
 
-    obj->LoadMtlTex(0, &mti, NULL);
+    if(LW_RESULT r = obj->LoadMtlTex(0, &mti, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadMtlTex (Plane) failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     lwRenderCtrlCreateInfo rcci;
     lwRenderCtrlCreateInfo_Construct(&rcci);
     rcci.ctrl_id = RENDERCTRL_VS_FIXEDFUNCTION;
 
-    obj->LoadRenderCtrl(&rcci);
+    if(LW_RESULT r = obj->LoadRenderCtrl(&rcci); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] obj->LoadRenderCtrl (Plane) failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }

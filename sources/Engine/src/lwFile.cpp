@@ -37,7 +37,12 @@ LW_RESULT lwFile::CreateDirectory(const char* path, LPSECURITY_ATTRIBUTES attr)
         if(LW_FAILED(_CheckDirectory(buf)))
         {
             if(::CreateDirectory(buf, attr) == 0)
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] ::CreateDirectory failed: buf={}, gle={}",
+                             __FUNCTION__, buf, static_cast<std::uint32_t>(::GetLastError()));
                 return LW_RET_FAILED;
+            }
         }
 
         if(ptr == NULL)
@@ -67,8 +72,13 @@ LW_RESULT lwFile::CreateFile(const char* file, DWORD access_flag, DWORD share_mo
 
             if(LW_FAILED(_CheckDirectory(path)))
             {
-                if(LW_FAILED(CreateDirectory(path, 0)))
+                if(LW_RESULT r = CreateDirectory(path, 0); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] CreateDirectory failed: path={}, ret={}",
+                                 __FUNCTION__, path, static_cast<long long>(r));
                     goto __ret;
+                }
             }
         }
     }
@@ -103,16 +113,26 @@ LW_RESULT lwFile::LoadFileBuffer(const char* file, lwIBuffer* buf)
     if(file == 0 || buf == 0)
         goto __ret;
 
-    if(LW_FAILED(CreateFile(file, access_flag, FILE_SHARE_READ, 0, creation_flag, attributes_flag)))
+    if(LW_RESULT r = CreateFile(file, access_flag, FILE_SHARE_READ, 0, creation_flag, attributes_flag); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateFile failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     in_size = GetSize();
 
     buf->Free();
     buf->Alloc(in_size);
 
-    if(LW_FAILED(Read(buf->GetData(), in_size, &out_size)))
+    if(LW_RESULT r = Read(buf->GetData(), in_size, &out_size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Read failed: file={}, in_size={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", in_size, static_cast<long long>(r));
         goto __ret;
+    }
     if(in_size != out_size)
         goto __ret;
 
@@ -140,13 +160,23 @@ LW_RESULT lwFile::SaveFileBuffer(const char* file, lwIBuffer* buf)
     if(buf->GetSize() == 0)
         goto __ret;
 
-    if(LW_FAILED(CreateFile(file, access_flag, FILE_SHARE_READ, 0, creation_flag, attributes_flag)))
+    if(LW_RESULT r = CreateFile(file, access_flag, FILE_SHARE_READ, 0, creation_flag, attributes_flag); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateFile failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     in_size = buf->GetSize();
 
-    if(LW_FAILED(Write(buf->GetData(), in_size, &out_size)))
+    if(LW_RESULT r = Write(buf->GetData(), in_size, &out_size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Write failed: file={}, in_size={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", in_size, static_cast<long long>(r));
         goto __ret;
+    }
     if(in_size != out_size)
         goto __ret;
 

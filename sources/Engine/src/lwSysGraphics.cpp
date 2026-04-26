@@ -105,12 +105,22 @@ LW_RESULT lwSysGraphics::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInf
     //d3dcp->present_param.Windowed
     if(_lose_dev_proc)
     {
-        if(LW_FAILED((*_lose_dev_proc)()))
+        if(LW_RESULT r = (*_lose_dev_proc)(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _lose_dev_proc failed: windowed={}, ret={}",
+                         __FUNCTION__, static_cast<int>(d3dpp->Windowed), static_cast<long long>(r));
             goto __ret;
+        }
     }
 
-    if(LW_FAILED(_res_mgr->LoseDevice()))
+    if(LW_RESULT r = _res_mgr->LoseDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _res_mgr->LoseDevice failed: windowed={}, ret={}",
+                     __FUNCTION__, static_cast<int>(d3dpp->Windowed), static_cast<long long>(r));
         goto __ret;
+    }
 
     //AdjustWindowForChange
     LONG style;
@@ -128,8 +138,13 @@ LW_RESULT lwSysGraphics::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInf
     if(SetWindowLong(hwnd, GWL_STYLE, style) == 0)
         goto __ret;
 
-    if(LW_FAILED(_dev_obj->ResetDevice(d3dpp)))
+    if(LW_RESULT r = _dev_obj->ResetDevice(d3dpp); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _dev_obj->ResetDevice failed: windowed={}, ret={}",
+                     __FUNCTION__, static_cast<int>(d3dpp->Windowed), static_cast<long long>(r));
         goto __ret;
+    }
 
     if(d3dpp->Windowed)
     {
@@ -140,30 +155,65 @@ LW_RESULT lwSysGraphics::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInf
             wnd_info->height,
             SWP_SHOWWINDOW) == 0)
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] SetWindowPos failed: left={}, top={}, w={}, h={}, gle={}",
+                         __FUNCTION__, wnd_info->left, wnd_info->top,
+                         wnd_info->width, wnd_info->height,
+                         static_cast<std::uint32_t>(GetLastError()));
             goto __ret;
         }
     }
 
-    if(LW_FAILED(_dev_obj->UpdateWindowRect()))
+    if(LW_RESULT r = _dev_obj->UpdateWindowRect(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UpdateWindowRect failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(_dev_obj->ResetDeviceStateCache()))
+    if(LW_RESULT r = _dev_obj->ResetDeviceStateCache(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ResetDeviceStateCache failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
-    
-    if(LW_FAILED(_dev_obj->ResetDeviceTransformMatrix()))
-        goto __ret;
+    }
 
-    if(LW_FAILED(_dev_obj->InitCapsInfo()))
+    if(LW_RESULT r = _dev_obj->ResetDeviceTransformMatrix(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ResetDeviceTransformMatrix failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
+
+    if(LW_RESULT r = _dev_obj->InitCapsInfo(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] InitCapsInfo failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+        goto __ret;
+    }
 
 
-    if(LW_FAILED(_res_mgr->ResetDevice()))
+    if(LW_RESULT r = _res_mgr->ResetDevice(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _res_mgr->ResetDevice failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     if(_reset_dev_proc)
     {
-        if(LW_FAILED((*_reset_dev_proc)()))
+        if(LW_RESULT r = (*_reset_dev_proc)(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _reset_dev_proc failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -208,31 +258,67 @@ LW_RESULT lwSysGraphics::TestCooperativeLevel()
 
         if (_lose_dev_proc)
         {
-            if (LW_FAILED((*_lose_dev_proc)()))
+            if (LW_RESULT r = (*_lose_dev_proc)(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _lose_dev_proc failed (DEVICENOTRESET): ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
 
-        if (LW_FAILED(_res_mgr->LoseDevice()))
+        if (LW_RESULT r = _res_mgr->LoseDevice(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _res_mgr->LoseDevice failed (DEVICENOTRESET): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(_dev_obj->ResetDevice(&d3dcp->present_param)))
+        if (LW_RESULT r = _dev_obj->ResetDevice(&d3dcp->present_param); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _dev_obj->ResetDevice failed (DEVICENOTRESET): windowed={}, ret={}",
+                         __FUNCTION__, static_cast<int>(d3dcp->present_param.Windowed),
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
         //LG("ttt", "*** %\n", GetTickCount());
 
-        if (LW_FAILED(_dev_obj->ResetDeviceStateCache()))
+        if (LW_RESULT r = _dev_obj->ResetDeviceStateCache(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ResetDeviceStateCache failed (DEVICENOTRESET): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(_dev_obj->ResetDeviceTransformMatrix()))
+        if (LW_RESULT r = _dev_obj->ResetDeviceTransformMatrix(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ResetDeviceTransformMatrix failed (DEVICENOTRESET): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if (LW_FAILED(_res_mgr->ResetDevice()))
+        if (LW_RESULT r = _res_mgr->ResetDevice(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _res_mgr->ResetDevice failed (DEVICENOTRESET): ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
 
         if (_reset_dev_proc)
         {
-            if (LW_FAILED((*_reset_dev_proc)()))
+            if (LW_RESULT r = (*_reset_dev_proc)(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] _reset_dev_proc failed (DEVICENOTRESET): ret={}",
+                             __FUNCTION__, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
     ret = LW_RET_OK_1;

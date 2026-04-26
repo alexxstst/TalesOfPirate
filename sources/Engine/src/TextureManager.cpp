@@ -246,8 +246,18 @@ lwITex* TextureManager::LoadTexture(Entry& entry) {
 		}
 	}
 
-	tex->LoadTexInfo(&tex_info, NULL);
-	tex->LoadVideoMemory();
+	if (LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] tex->LoadTexInfo failed: file={}, ret={}",
+		             __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
+	}
+	if (LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r))
+	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] tex->LoadVideoMemory failed: file={}, ret={}",
+		             __FUNCTION__, tex_info.file_name, static_cast<long long>(r));
+	}
 
 	tex->GetTexInfo(&tex_info);
 

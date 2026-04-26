@@ -250,8 +250,13 @@ LW_RESULT lwHeapT<T>::Push(const T& t)
 {
     if(_num >= _buf_size)
     {
-        if(LW_FAILED(_Allocate(0xffffffff)))
+        if(LW_RESULT r = _Allocate(0xffffffff); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _Allocate failed: num={}, buf_size={}, ret={}",
+                         __FUNCTION__, _num, _buf_size, static_cast<long long>(r));
             return LW_RET_FAILED;
+        }
     }
 
     _Place(_num, t);

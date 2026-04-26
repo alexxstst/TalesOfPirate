@@ -22,8 +22,13 @@ LW_RESULT lwFileStream::Open(const char* file, const lwFileStreamOpenInfo* info)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(Close()))
+    if(LW_RESULT r = Close(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Close failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     if(info->adapter_type == FS_ADAPTER_FILE)
     {
@@ -32,8 +37,13 @@ LW_RESULT lwFileStream::Open(const char* file, const lwFileStreamOpenInfo* info)
             goto __ret;
         }
 
-        if(LW_FAILED(_adapter_file->CreateFile(file, info->access_flag, NULL, 0, info->create_flag, info->attributes_flag)))
+        if(LW_RESULT r = _adapter_file->CreateFile(file, info->access_flag, NULL, 0, info->create_flag, info->attributes_flag); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _adapter_file->CreateFile failed: file={}, access_flag={}, ret={}",
+                         __FUNCTION__, file ? file : "(null)", info->access_flag, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
 
@@ -66,8 +76,13 @@ LW_RESULT lwFileStream::Read(void* buf, DWORD in_size, DWORD* out_size)
         if(_adapter_file == 0)
             goto __ret;
 
-        if(LW_FAILED(_adapter_file->Read(buf, in_size, out_size)))
+        if(LW_RESULT r = _adapter_file->Read(buf, in_size, out_size); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _adapter_file->Read failed: in_size={}, ret={}",
+                         __FUNCTION__, in_size, static_cast<long long>(r));
             goto __ret;
+        }
     }
     else if(_fsoi.adapter_type == FS_ADAPTER_PACKET)
     {
@@ -87,8 +102,13 @@ LW_RESULT lwFileStream::Write(const void* buf, DWORD in_size, DWORD* out_size)
         if(_adapter_file == 0)
             goto __ret;
 
-        if(LW_FAILED(_adapter_file->Write(buf, in_size, out_size)))
+        if(LW_RESULT r = _adapter_file->Write(buf, in_size, out_size); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _adapter_file->Write failed: in_size={}, ret={}",
+                         __FUNCTION__, in_size, static_cast<long long>(r));
             goto __ret;
+        }
     }
     else if(_fsoi.adapter_type == FS_ADAPTER_PACKET)
     {
@@ -155,8 +175,13 @@ LW_RESULT lwFileStream::Flush()
         if(_adapter_file == 0)
             goto __ret;
 
-        if(LW_FAILED(_adapter_file->Flush()))
+        if(LW_RESULT r = _adapter_file->Flush(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _adapter_file->Flush failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
     else if(_fsoi.adapter_type == FS_ADAPTER_PACKET)
     {
@@ -176,8 +201,13 @@ LW_RESULT lwFileStream::SetEnd()
         if(_adapter_file == 0)
             goto __ret;
 
-        if(LW_FAILED(_adapter_file->SetEnd()))
+        if(LW_RESULT r = _adapter_file->SetEnd(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _adapter_file->SetEnd failed: ret={}",
+                         __FUNCTION__, static_cast<long long>(r));
             goto __ret;
+        }
     }
     else if(_fsoi.adapter_type == FS_ADAPTER_PACKET)
     {

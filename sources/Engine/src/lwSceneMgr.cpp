@@ -83,8 +83,11 @@ LW_RESULT lwSceneMgr::RenderTransparentPrimitive()
         }
         else
         {
-            if(LW_FAILED(spi->obj->Render()))
+            if(LW_RESULT r = spi->obj->Render(); LW_FAILED(r))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] lwIPrimitive::Render failed: idx={}, ret={}",
+                             __FUNCTION__, i, static_cast<long long>(r));
             }
         }
     }

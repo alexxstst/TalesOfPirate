@@ -19,8 +19,13 @@ LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const char* file, con
 
     lwITex* tex;
 
-    if(LW_FAILED(res_mgr->CreateTex(&tex)))
+    if(LW_RESULT r = res_mgr->CreateTex(&tex); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] res_mgr->CreateTex failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     lwTexInfo tex_info;
     lwTexInfo_Construct(&tex_info);
@@ -32,11 +37,21 @@ LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const char* file, con
     tex_info.pool = D3DPOOL_DEFAULT;
     _tcscpy(tex_info.file_name, file);
 
-    if(LW_FAILED(tex->LoadTexInfo(&tex_info, tex_path)))
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: file={}, tex_path={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", tex_path ? tex_path : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(tex->LoadVideoMemory()))
+    if(LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadVideoMemory failed: file={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
         goto __ret;
+    }
 
     *out = tex;
 
@@ -56,8 +71,13 @@ LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info
 
     lwITex* tex;
 
-    if(LW_FAILED(res_mgr->CreateTex(&tex)))
+    if(LW_RESULT r = res_mgr->CreateTex(&tex); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] res_mgr->CreateTex failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     // Для TEX_TYPE_DATA пользовательский буфер пробрасывается через отдельный
     // API (а не через поле `lwTexInfo::data`, которое убрано из-за
@@ -65,11 +85,21 @@ LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info
     if(user_data)
         tex->SetUserData(user_data);
 
-    if(LW_FAILED(tex->LoadTexInfo(info, 0)))
+    if(LW_RESULT r = tex->LoadTexInfo(info, 0); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: type={}, ret={}",
+                     __FUNCTION__, info ? info->type : 0u, static_cast<long long>(r));
         goto __ret;
+    }
 
-    if(LW_FAILED(tex->LoadVideoMemory()))
+    if(LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadVideoMemory failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     *out = tex;
 
@@ -165,8 +195,13 @@ LW_RESULT lwPrimitiveSetRenderCtrl(lwIPrimitive* p, DWORD ctrl_type)
     if(render_agent == 0)
         goto __ret;
 
-    if(LW_FAILED(render_agent->SetRenderCtrl(ctrl_type)))
+    if(LW_RESULT r = render_agent->SetRenderCtrl(ctrl_type); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] render_agent->SetRenderCtrl failed: ctrl_type={}, ret={}",
+                     __FUNCTION__, ctrl_type, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -501,7 +536,12 @@ LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_p
     RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
     RSA_VALUE(&tex_info.tss_set[5], D3DTSS_TEXCOORDINDEX, 0 );
 
-    tex->LoadTexInfo(&tex_info, tex_path);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
+                     __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+    }
 
     lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
     //mtltex_agent->LoadTextureStage(&tex_info,
@@ -542,7 +582,12 @@ LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_p
     ppi.pose = 0;
     ppi.frame = 0;
     ppi.data = 0;
-    ctrl_obj_texuv->PlayPose(&ppi);
+    if(LW_RESULT r = ctrl_obj_texuv->PlayPose(&ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ctrl_obj_texuv->PlayPose failed: anim_type={}, ret={}",
+                     __FUNCTION__, anim_type, static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }
@@ -575,7 +620,12 @@ LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_
     RSA_VALUE(&tex_info.tss_set[3], D3DTSS_ALPHAOP, D3DTOP_DISABLE );
     RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
 
-    tex->LoadTexInfo(&tex_info, tex_path);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
+                     __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+    }
 
     lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
     //mtltex_agent->LoadTextureStage(&tex_info,
@@ -616,7 +666,12 @@ LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_
     ppi.pose = 0;
     ppi.frame = 0;
     ppi.data = 0;
-    ctrl_obj_texuv->PlayPose(&ppi);
+    if(LW_RESULT r = ctrl_obj_texuv->PlayPose(&ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ctrl_obj_texuv->PlayPose failed: anim_type={}, ret={}",
+                     __FUNCTION__, anim_type, static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }
@@ -628,8 +683,13 @@ LW_RESULT lwPrimitiveTexUnLitA(lwIPrimitive* p)
 
     for(DWORD i = 1; i < 4; i++)
     {
-        if(LW_FAILED(mtltex_agent->DestroyTextureStage(i)))
+        if(LW_RESULT r = mtltex_agent->DestroyTextureStage(i); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] DestroyTextureStage failed: stage={}, ret={}",
+                         __FUNCTION__, i, static_cast<long long>(r));
             return LW_RET_FAILED;
+        }
     }
 
     return LW_RET_OK;
@@ -663,7 +723,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG2, D3DTA_CURRENT );
     
     res_mgr->CreateTex(&tex);
-    tex->LoadTexInfo(&tex_info, tex_path);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
+                     __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+    }
 
     mtltex_agent = p->GetMtlTexAgent(0);
     //mtltex_agent->LoadTextureStage(&tex_info,
@@ -691,7 +756,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG1, D3DTA_CURRENT );
 
     res_mgr->CreateTex(&tex);
-    tex->LoadTexInfo(&tex_info, tex_path);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
+                     __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+    }
 
     mtltex_agent = p->GetMtlTexAgent(0);
     //mtltex_agent->LoadTextureStage(&tex_info,
@@ -712,7 +782,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     RSA_VALUE(&tex_info.tss_set[4], D3DTSS_ALPHAARG2, D3DTA_TFACTOR );
 
     res_mgr->CreateTex(&tex);
-    tex->LoadTexInfo(&tex_info, NULL);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path=NULL, ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);
 
@@ -748,7 +823,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     ppi.pose = 0;
     ppi.frame = 0;
     ppi.data = 0;
-    ctrl_obj_texuv->PlayPose(&ppi);
+    if(LW_RESULT r = ctrl_obj_texuv->PlayPose(&ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ctrl_obj_texuv->PlayPose failed: anim_type={}, ret={}",
+                     __FUNCTION__, anim_type, static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }
@@ -783,7 +863,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, const char* 
 
     
     res_mgr->CreateTex(&tex);
-    tex->LoadTexInfo(&tex_info, tex_path);
+    if(LW_RESULT r = tex->LoadTexInfo(&tex_info, tex_path); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] tex->LoadTexInfo failed: tex_path={}, ret={}",
+                     __FUNCTION__, tex_path ? tex_path : "(null)", static_cast<long long>(r));
+    }
 
     mtltex_agent = p->GetMtlTexAgent(0);
     //mtltex_agent->LoadTextureStage(&tex_info,
@@ -824,7 +909,12 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, const char* 
     ppi.pose = 0;
     ppi.frame = 0;
     ppi.data = 0;
-    ctrl_obj_texuv->PlayPose(&ppi);
+    if(LW_RESULT r = ctrl_obj_texuv->PlayPose(&ppi); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] ctrl_obj_texuv->PlayPose failed: anim_type={}, ret={}",
+                     __FUNCTION__, anim_type, static_cast<long long>(r));
+    }
 
     return LW_RET_OK;
 }

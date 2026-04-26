@@ -68,8 +68,13 @@ LW_RESULT lwSystem::Initialize()
     _system_info = LW_NEW(lwSystemInfo);
     _internal_timer = LW_NEW(lwTimer);
 
-    if(LW_FAILED(_system_info->CheckDirectXVersion()))
+    if(LW_RESULT r = _system_info->CheckDirectXVersion(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CheckDirectXVersion failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:

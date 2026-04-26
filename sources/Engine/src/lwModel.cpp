@@ -63,8 +63,13 @@ LW_RESULT lwModel::Load(lwIModelObjInfo* info)
             if (_helper_object == 0)
             {
                 _helper_object = LW_NEW(lwHelperObject((lwResourceMgr*)_res_mgr));
-                if (LW_FAILED(_helper_object->LoadHelperInfo(&m_info->helper_data, create_helper_primitive)))
+                if (LW_RESULT r = _helper_object->LoadHelperInfo(&m_info->helper_data, create_helper_primitive); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] LoadHelperInfo failed (info overload): helper_type={}, ret={}",
+                                 __FUNCTION__, static_cast<int>(m_info->helper_data.type), static_cast<long long>(r));
                     goto __ret;
+                }
             }
         }
 
@@ -131,11 +136,21 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
             if(LW_FAILED(res_buf_mgr->QueryModelObjInfo((lwIModelObjInfo**)&model_info_ptr, path)))
             {
                 LW_HANDLE handle;
-                if(LW_FAILED(res_buf_mgr->RegisterModelObjInfo(&handle, path)))
+                if(LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(&handle, path); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] RegisterModelObjInfo failed: file={}, path={}, ret={}",
+                                 __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
                     return LW_RET_FAILED;
+                }
 
-                if(LW_FAILED(res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, handle)))
+                if(LW_RESULT r = res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, handle); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] GetModelObjInfo(handle) failed: file={}, handle={}, ret={}",
+                                 __FUNCTION__, file ? file : "(null)", handle, static_cast<long long>(r));
                     return LW_RET_FAILED;
+                }
             }
         }
         // USE_MODEL_ID_QUERY
@@ -144,8 +159,13 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
             // first check object existed
             if(LW_FAILED(res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, model_id)))
             {
-                if(LW_FAILED(res_buf_mgr->RegisterModelObjInfo(model_id, path)))
+                if(LW_RESULT r = res_buf_mgr->RegisterModelObjInfo(model_id, path); LW_FAILED(r))
+                {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] RegisterModelObjInfo(model_id) failed: file={}, model_id={}, path={}, ret={}",
+                                 __FUNCTION__, file ? file : "(null)", model_id, path, static_cast<long long>(r));
                     return LW_RET_FAILED;
+                }
 
                 res_buf_mgr->GetModelObjInfo((lwIModelObjInfo**)&model_info_ptr, model_id);
             }
@@ -172,8 +192,12 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
             if(_helper_object == 0)
             {
                 _helper_object = LW_NEW(lwHelperObject((lwResourceMgr*)_res_mgr));
-                if(LW_FAILED(_helper_object->LoadHelperInfo(&model_info_ptr->helper_data, create_helper_primitive)))
+                if(LW_RESULT r = _helper_object->LoadHelperInfo(&model_info_ptr->helper_data, create_helper_primitive); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] LoadHelperInfo failed: file={}, path={}, helper_type={}, ret={}",
+                                 __FUNCTION__, file ? file : "(null)", path,
+                                 static_cast<int>(model_info_ptr->helper_data.type), static_cast<long long>(r));
                     LG_MSGBOX("load helper object error with file:%s", path);
                     return LW_RET_FAILED;
                 }
@@ -246,8 +270,13 @@ LW_RESULT lwModel::Clone(lwIModel** ret_obj)
     lwModel* o;
     _res_mgr->CreateModel((lwIModel**)&o);
 
-    if(LW_FAILED(o->Copy(this)))
+    if(LW_RESULT r = o->Copy(this); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Copy failed: src_obj_num={}, ret={}",
+                     __FUNCTION__, _obj_num, static_cast<long long>(r));
         return LW_RET_FAILED;
+    }
 
     *ret_obj = o;
     
@@ -283,8 +312,13 @@ LW_RESULT lwModel::Update()
 
         imp->SetMatrixParent(&mat);
 
-        if(LW_FAILED(imp->Update()))
+        if(LW_RESULT r = imp->Update(); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] imp->Update failed: i={}, file={}, ret={}",
+                         __FUNCTION__, i, _file_name, static_cast<long long>(r));
             goto __ret;
+        }
 
     }
 
@@ -347,13 +381,23 @@ LW_RESULT lwModel::RenderPrimitive(DWORD id)
 
         if (_scene_mgr && p->GetState(STATE_TRANSPARENT))
         {
-            if (LW_FAILED(_scene_mgr->AddTransparentPrimitive(p)))
+            if (LW_RESULT r = _scene_mgr->AddTransparentPrimitive(p); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] AddTransparentPrimitive failed: id={}, file={}, ret={}",
+                             __FUNCTION__, id, _file_name, static_cast<long long>(r));
                 goto __ret;
+            }
         }
         else
         {
-            if (LW_FAILED(p->Render()))
+            if (LW_RESULT r = p->Render(); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] p->Render failed: id={}, file={}, ret={}",
+                             __FUNCTION__, id, _file_name, static_cast<long long>(r));
                 goto __ret;
+            }
         }
 
         ret = LW_RET_OK;
@@ -802,16 +846,26 @@ LW_RESULT lwModel::ExtractModelInfo(lwIModelObjInfo* out_info)
     {
         pri = _obj_seq[i];
         a->geom_obj_seq[i] = LW_NEW(lwGeomObjInfo);
-        if(LW_FAILED(pri->ExtractGeomObjInfo(a->geom_obj_seq[i])))
+        if(LW_RESULT r = pri->ExtractGeomObjInfo(a->geom_obj_seq[i]); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ExtractGeomObjInfo failed: i={}, pri_num={}, file={}, ret={}",
+                         __FUNCTION__, i, pri_num, _file_name, static_cast<long long>(r));
             goto __ret;
+        }
     }
     a->geom_obj_num = pri_num;
 
     // helper object
     if(_helper_object)
     {
-        if(LW_FAILED(_helper_object->ExtractHelperInfo(&a->helper_data)))
+        if(LW_RESULT r = _helper_object->ExtractHelperInfo(&a->helper_data); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] ExtractHelperInfo failed: file={}, ret={}",
+                         __FUNCTION__, _file_name, static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     

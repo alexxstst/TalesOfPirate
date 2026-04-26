@@ -104,8 +104,13 @@ HRESULT D3DUtil_SetColorKey( IDirect3DTextureX* pTexture, DWORD dwColorKey )
 
     // Lock the texture
     D3DLOCKED_RECT  d3dlr;
-    if( FAILED( pTexture->LockRect( 0, &d3dlr, 0, 0 ) ) )
+    if( HRESULT hr = pTexture->LockRect( 0, &d3dlr, 0, 0 ); FAILED( hr ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] pTexture->LockRect failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(hr));
         return E_FAIL;
+    }
 
     // Scan through each pixel, looking for the colorkey to replace
     for( DWORD y=0; y<d3dsd.Height; y++ )
@@ -152,7 +157,12 @@ HRESULT D3DUtil_CreateVertexShader( IDirect3DDeviceX* pd3dDevice,
 
     // Assemble the vertex shader file
     if( FAILED( hr = D3DXAssembleShaderFromFile( strPath, NULL, NULL, 0, &pCode, NULL ) ) )
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] D3DXAssembleShaderFromFile failed: strPath={}, hr=0x{:08X}",
+                     __FUNCTION__, strPath ? strPath : "(null)", static_cast<std::uint32_t>(hr));
         return hr;
+    }
 
     // Create the vertex shader
     hr = pd3dDevice->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), (IDirect3DVertexShaderX**)pdwVertexShader);
@@ -310,9 +320,12 @@ HRESULT D3DUtil_SetDeviceCursor( IDirect3DDeviceX* pd3dDevice, HCURSOR hCursor )
     }
 
     // Create a surface for the fullscreen cursor
-    if( FAILED( hr = pd3dDevice->CreateOffscreenPlainSurface( dwWidth, dwHeightDest, 
+    if( FAILED( hr = pd3dDevice->CreateOffscreenPlainSurface( dwWidth, dwHeightDest,
         D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pCursorBitmap, NULL ) ) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateOffscreenPlainSurface failed: w={}, h={}, hr=0x{:08X}",
+                     __FUNCTION__, dwWidth, dwHeightDest, static_cast<std::uint32_t>(hr));
         goto End;
     }
 
@@ -379,9 +392,12 @@ HRESULT D3DUtil_SetDeviceCursor( IDirect3DDeviceX* pd3dDevice, HCURSOR hCursor )
     pCursorBitmap->UnlockRect();
 
     // Set the device cursor
-    if( FAILED( hr = pd3dDevice->SetCursorProperties( iconinfo.xHotspot, 
+    if( FAILED( hr = pd3dDevice->SetCursorProperties( iconinfo.xHotspot,
         iconinfo.yHotspot, pCursorBitmap ) ) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetCursorProperties failed: xHot={}, yHot={}, hr=0x{:08X}",
+                     __FUNCTION__, iconinfo.xHotspot, iconinfo.yHotspot, static_cast<std::uint32_t>(hr));
         goto End;
     }
 

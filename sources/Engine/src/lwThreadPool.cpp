@@ -128,8 +128,13 @@ LW_RESULT lwThreadPool::Create(DWORD thread_seq_size, DWORD task_seq_size, DWORD
     if(_event_signal == NULL)
         goto __ret;
 
-    if(LW_FAILED(_event_pool.Create(NULL, TRUE, TRUE, NULL)))
+    if(LW_RESULT r = _event_pool.Create(NULL, TRUE, TRUE, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _event_pool.Create failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ::InitializeCriticalSection(&_cs_lock);
 
@@ -151,6 +156,9 @@ LW_RESULT lwThreadPool::Create(DWORD thread_seq_size, DWORD task_seq_size, DWORD
 __ret:
     if(LW_FAILED(ret))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] Create failed (pre-Destroy cleanup): thread_seq_size={}, task_seq_size={}, suspend_flag={}, ret={}",
+                     __FUNCTION__, thread_seq_size, task_seq_size, suspend_flag, static_cast<long long>(ret));
         Destroy();
     }
 
@@ -236,8 +244,13 @@ LW_RESULT lwThreadPool::RemoveTask(lwThreadProc proc, void* param)
 
     lwQueueTaskInfo_It it;
 
-    if(LW_FAILED(_FindTask(&it, proc, param)))
+    if(LW_RESULT r = _FindTask(&it, proc, param); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _FindTask failed: proc={}, param={}, ret={}",
+                     __FUNCTION__, reinterpret_cast<const void*>(proc), param, static_cast<long long>(r));
         goto __ret;
+    }
 
     _queue_task.erase(it);
 

@@ -264,6 +264,8 @@ LW_RESULT lwDeviceObject::InitCapsInfo()
             int j = 0;
             for (int i = 0; i < fmt_num; i++)
             {
+                // capability probe: failure here means the format is not supported,
+                // which is normal and not logged to avoid spam.
                 if (FAILED(_d3d->CheckDeviceFormat(
                     _d3d_create_param.adapter,
                     _d3d_create_param.dev_type,
@@ -292,6 +294,8 @@ LW_RESULT lwDeviceObject::InitCapsInfo()
             int j = 0;
             for (int i = 0; i < fmt_num; i++)
             {
+                // capability probes: failure означает «формат не поддерживается»,
+                // это нормально и не логируется (иначе спам).
                 if (FAILED(_d3d->CheckDeviceFormat(
                     _d3d_create_param.adapter,
                     _d3d_create_param.dev_type,
@@ -452,13 +456,20 @@ LW_RESULT lwDeviceObject::CreateDevice(lwD3DCreateParam* param)
         IDirect3DDeviceX* dev;
         //Create a Direct3D device.
         HRESULT hr = S_OK;
-        if (FAILED(hr = _d3d->CreateDevice(param->adapter,
+        hr = _d3d->CreateDevice(param->adapter,
             param->dev_type,
             param->hwnd,
             param->behavior_flag,
             &param->present_param,
-            &dev)))
+            &dev);
+        if (FAILED(hr))
         {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateDevice failed: adapter={}, dev_type={}, behavior_flag=0x{:08X}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(param->adapter),
+                         static_cast<long long>(param->dev_type),
+                         static_cast<std::uint32_t>(param->behavior_flag),
+                         static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
@@ -469,8 +480,13 @@ LW_RESULT lwDeviceObject::CreateDevice(lwD3DCreateParam* param)
         UpdateWindowRect();
 
         // init viewport
-        if (FAILED(_dev->GetViewport(&_viewport)))
+        if (HRESULT hr2 = _dev->GetViewport(&_viewport); FAILED(hr2))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetViewport failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr2));
             goto __ret;
+        }
 
         ret = LW_RET_OK;
     }
@@ -512,13 +528,21 @@ LW_RESULT lwDeviceObject::ResetDevice(D3DPRESENT_PARAMETERS* d3dpp)
 
 	if(FAILED(hr))
 	{
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] Reset failed: hr=0x{:08X}",
+		             __FUNCTION__, static_cast<std::uint32_t>(hr));
 		goto __ret;
 	}
 
 	hr = _dev->GetViewport(&_viewport);
 
     if(FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetViewport failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     _d3d_create_param.present_param = *d3dpp;
 
@@ -531,8 +555,16 @@ LW_RESULT lwDeviceObject::CreateVertexBuffer(UINT length, DWORD usage, DWORD fvf
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(FAILED(ret = _dev->CreateVertexBufferX(length, usage, fvf, pool, vb, handle)))
+    ret = _dev->CreateVertexBufferX(length, usage, fvf, pool, vb, handle);
+    if(FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateVertexBufferX failed: length={}, usage=0x{:08X}, fvf=0x{:08X}, pool={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(length),
+                     static_cast<std::uint32_t>(usage), static_cast<std::uint32_t>(fvf),
+                     static_cast<long long>(pool), static_cast<std::uint32_t>(ret));
         goto __ret;
+    }
 
     _watch_vm_info.alloc_vb_size += length;
     _watch_vm_info.alloc_vb_cnt += 1;
@@ -544,8 +576,16 @@ LW_RESULT lwDeviceObject::CreateIndexBuffer(UINT length, DWORD usage, D3DFORMAT 
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(FAILED(ret = _dev->CreateIndexBufferX(length, usage, fmt, pool, ib, handle)))
+    ret = _dev->CreateIndexBufferX(length, usage, fmt, pool, ib, handle);
+    if(FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateIndexBufferX failed: length={}, usage=0x{:08X}, fmt={}, pool={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(length),
+                     static_cast<std::uint32_t>(usage), static_cast<long long>(fmt),
+                     static_cast<long long>(pool), static_cast<std::uint32_t>(ret));
         goto __ret;
+    }
 
     _watch_vm_info.alloc_ib_size += length;
     _watch_vm_info.alloc_ib_cnt += 1;
@@ -567,19 +607,36 @@ LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, const lwTex
         // временную SYSTEMMEM-текстуру и UpdateTexture (DMA в VRAM).
         IDirect3DTextureX* mem_tex;
 
-        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, D3DPOOL_DEFAULT, &t, 0))) {
+        if (HRESULT hr = _dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, D3DPOOL_DEFAULT, &t, 0); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateTextureX(DEFAULT) failed: w={}, h={}, level={}, usage=0x{:08X}, format={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(info->width),
+                         static_cast<long long>(info->height), static_cast<long long>(level),
+                         static_cast<std::uint32_t>(usage), static_cast<long long>(format),
+                         static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
-        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, 0, (D3DFORMAT)format, D3DPOOL_SYSTEMMEM, &mem_tex, 0))) {
+        if (HRESULT hr = _dev->CreateTextureX(info->width, info->height, level, 0, (D3DFORMAT)format, D3DPOOL_SYSTEMMEM, &mem_tex, 0); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateTextureX(SYSTEMMEM staging) failed: w={}, h={}, level={}, format={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(info->width),
+                         static_cast<long long>(info->height), static_cast<long long>(level),
+                         static_cast<long long>(format), static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
-        if (FAILED(mem_tex->GetSurfaceLevel(0, &surface))) {
+        if (HRESULT hr = mem_tex->GetSurfaceLevel(0, &surface); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] mem_tex->GetSurfaceLevel(0) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
-        if (FAILED(surface->LockRect(&lock_rc, 0, 0))) {
+        if (HRESULT hr = surface->LockRect(&lock_rc, 0, 0); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] surface->LockRect (staging) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
@@ -588,7 +645,10 @@ LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, const lwTex
         surface->UnlockRect();
         surface->Release();
 
-        if (FAILED(_dev->UpdateTexture(mem_tex, t))) {
+        if (HRESULT hr = _dev->UpdateTexture(mem_tex, t); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] UpdateTexture (mem->default) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
@@ -596,15 +656,27 @@ LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, const lwTex
     }
     else {
         // MANAGED / SYSTEMMEM / SCRATCH lockable напрямую — пишем в LockRect без staging.
-        if (FAILED(_dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, pool, &t, 0))) {
+        if (HRESULT hr = _dev->CreateTextureX(info->width, info->height, level, usage, (D3DFORMAT)format, pool, &t, 0); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateTextureX(pool={}) failed: w={}, h={}, level={}, usage=0x{:08X}, format={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(pool),
+                         static_cast<long long>(info->width), static_cast<long long>(info->height),
+                         static_cast<long long>(level), static_cast<std::uint32_t>(usage),
+                         static_cast<long long>(format), static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
-        if (FAILED(t->GetSurfaceLevel(0, &surface))) {
+        if (HRESULT hr = t->GetSurfaceLevel(0, &surface); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] t->GetSurfaceLevel(0) failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
-        if (FAILED(surface->LockRect(&lock_rc, 0, 0))) {
+        if (HRESULT hr = surface->LockRect(&lock_rc, 0, 0); FAILED(hr)) {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] surface->LockRect failed: hr=0x{:08X}",
+                         __FUNCTION__, static_cast<std::uint32_t>(hr));
             goto __ret;
         }
 
@@ -628,12 +700,25 @@ LW_RESULT lwDeviceObject::CreateTexture(IDirect3DTextureX** out_tex, UINT width,
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_dev->CreateTextureX(width, height, level, usage, format, pool, out_tex, NULL)))
+    if(LW_RESULT r = _dev->CreateTextureX(width, height, level, usage, format, pool, out_tex, NULL); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CreateTextureX failed: w={}, h={}, level={}, usage=0x{:08X}, format={}, pool={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(width),
+                     static_cast<long long>(height), static_cast<long long>(level),
+                     static_cast<std::uint32_t>(usage), static_cast<long long>(format),
+                     static_cast<long long>(pool), static_cast<std::uint32_t>(r));
         goto __ret;
+    }
 
     D3DSURFACE_DESC desc;
-    if(LW_FAILED((*out_tex)->GetLevelDesc(0, &desc)))
+    if(LW_RESULT r = (*out_tex)->GetLevelDesc(0, &desc); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetLevelDesc(0) failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(r));
         goto __ret;
+    }
 
     _watch_vm_info.alloc_tex_size += lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
     _watch_vm_info.alloc_tex_cnt += 1;
@@ -648,29 +733,43 @@ LW_RESULT lwDeviceObject::CreateTextureFromFileInMemory(IDirect3DTextureX** out_
     LW_RESULT ret = LW_RET_FAILED;
 
     IDirect3DTextureX* t = 0;
-    if(FAILED(D3DXCreateTextureFromFileInMemoryEx(
-        _dev, // device
-        data, // data
-        data_size, // data size
-        D3DX_DEFAULT_NONPOW2, // width
-        D3DX_DEFAULT_NONPOW2, // height
-        mip_level, // mipmap level
-        usage, // usage
-        format, // format
-        pool, // d3dpool
-        filter, // filter
-        mip_filter,
-        colorkey, // colorkey
-        src_info, // D3DXIMAGE_INFO
-        palette, // PALETTEENTRY
-        &t))) // out
     {
-        goto __ret;
+        HRESULT hr = D3DXCreateTextureFromFileInMemoryEx(
+            _dev, // device
+            data, // data
+            data_size, // data size
+            D3DX_DEFAULT_NONPOW2, // width
+            D3DX_DEFAULT_NONPOW2, // height
+            mip_level, // mipmap level
+            usage, // usage
+            format, // format
+            pool, // d3dpool
+            filter, // filter
+            mip_filter,
+            colorkey, // colorkey
+            src_info, // D3DXIMAGE_INFO
+            palette, // PALETTEENTRY
+            &t); // out
+        if(FAILED(hr))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] D3DXCreateTextureFromFileInMemoryEx failed: data_size={}, mip_level={}, usage=0x{:08X}, format={}, pool={}, hr=0x{:08X}",
+                         __FUNCTION__, static_cast<long long>(data_size),
+                         static_cast<long long>(mip_level), static_cast<std::uint32_t>(usage),
+                         static_cast<long long>(format), static_cast<long long>(pool),
+                         static_cast<std::uint32_t>(hr));
+            goto __ret;
+        }
     }
 
     D3DSURFACE_DESC desc;
-    if(LW_FAILED(t->GetLevelDesc(0, &desc)))
+    if(LW_RESULT r = t->GetLevelDesc(0, &desc); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetLevelDesc(0) failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(r));
         goto __ret;
+    }
 
     _watch_vm_info.alloc_tex_size += lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
     //_watch_vm_info.alloc_tex_size += desc.Size;
@@ -885,8 +984,16 @@ LW_RESULT lwDeviceObject::SetStreamSource(UINT stream_num, IDirect3DVertexBuffer
     //if(_vb_value[stream_num] == stream_data)
     //    goto __addr_ok;
     
-    if(FAILED(ret = _dev->SetStreamSourceX(stream_num, stream_data, offset_byte, stride)))
+    ret = _dev->SetStreamSourceX(stream_num, stream_data, offset_byte, stride);
+    if(FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetStreamSourceX failed: stream_num={}, offset_byte={}, stride={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(stream_num),
+                     static_cast<long long>(offset_byte), static_cast<long long>(stride),
+                     static_cast<std::uint32_t>(ret));
         goto __ret;
+    }
 
     //_vb_value[stream_num] = stream_data;
 
@@ -904,8 +1011,15 @@ LW_RESULT lwDeviceObject::SetIndices(IDirect3DIndexBufferX* index_data, UINT bas
     //if(_ib_value == index_data)
     //    goto __addr_ok;
     
-    if(FAILED(ret = _dev->SetIndicesX(index_data, base_vert_index)))
+    ret = _dev->SetIndicesX(index_data, base_vert_index);
+    if(FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetIndicesX failed: base_vert_index={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(base_vert_index),
+                     static_cast<std::uint32_t>(ret));
         goto __ret;
+    }
 
     //_ib_value = index_data;
 
@@ -928,8 +1042,14 @@ LW_RESULT lwDeviceObject::DrawIndexedPrimitive(D3DPRIMITIVETYPE pt_type, INT bas
 {
     _mark_polygon_num += count;
 
-    if(LW_FAILED(_dev->DrawIndexedPrimitiveX(pt_type, base_vert_index, min_index, vert_num, start_index, count)))
+    if(LW_RESULT r = _dev->DrawIndexedPrimitiveX(pt_type, base_vert_index, min_index, vert_num, start_index, count); LW_FAILED(r))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] DrawIndexedPrimitiveX failed: pt_type={}, base_vert={}, min_idx={}, vert_num={}, start_idx={}, count={}, hr=0x{:08X}",
+                     __FUNCTION__, static_cast<long long>(pt_type),
+                     static_cast<long long>(base_vert_index), static_cast<long long>(min_index),
+                     static_cast<long long>(vert_num), static_cast<long long>(start_index),
+                     static_cast<long long>(count), static_cast<std::uint32_t>(r));
         return LW_RET_FAILED;
     }
     return LW_RET_OK;

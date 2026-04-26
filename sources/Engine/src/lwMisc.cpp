@@ -215,9 +215,14 @@ LW_RESULT lwRenderStateAtomSet::Clone(lwIRenderStateAtomSet** obj)
     LW_RESULT ret = LW_RET_FAILED;
 
     lwRenderStateAtomSet* o = LW_NEW(lwRenderStateAtomSet);
-    
-    if(LW_FAILED(o->Load(_rsa_seq, _rsa_num)))
+
+    if(LW_RESULT r = o->Load(_rsa_seq, _rsa_num); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwRenderStateAtomSet::Load failed: rsa_num={}, ret={}",
+                     __FUNCTION__, _rsa_num, static_cast<long long>(r));
         goto __ret;
+    }
 
     *obj = o;
 

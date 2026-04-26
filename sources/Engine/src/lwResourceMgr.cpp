@@ -34,11 +34,17 @@ LW_BEGIN
 	unsigned int __stdcall __thread_proc_load_tex(void* param) {
 		lwITex* tex = (lwITex*)param;
 
-		if (LW_FAILED(tex->LoadSystemMemory())) {
+		if (LW_RESULT r = tex->LoadSystemMemory(); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+				"[{}] tex->LoadSystemMemory failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			tex->SetLoadResMask(LOADINGRES_MASK_LOADSM_FAILED, 0);
 		}
 
-		if (LW_FAILED(tex->LoadVideoMemory())) {
+		if (LW_RESULT r = tex->LoadVideoMemory(); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+				"[{}] tex->LoadVideoMemory failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			tex->SetLoadResMask(LOADINGRES_MASK_LOADVM_FAILED, 0);
 		}
 
@@ -50,7 +56,12 @@ LW_BEGIN
 	unsigned int __stdcall __thread_proc_load_mesh(void* param) {
 		lwIMesh* mesh = (lwIMesh*)param;
 
-		mesh->LoadVideoMemory();
+		if (LW_RESULT r = mesh->LoadVideoMemory(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] mesh->LoadVideoMemory failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
 
 		return 0;
 	}
@@ -72,7 +83,10 @@ LW_BEGIN
 
 				if (LW_SUCCEEDED(tp->FindTask(__thread_proc_load_tex, (void*)this))) {
 					if (_res_mgr->QueryTexRefCnt(this) == 1) {
-						if (LW_FAILED(tp->RemoveTask(__thread_proc_load_tex, (void*)this))) {
+						if (LW_RESULT r = tp->RemoveTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r)) {
+							ToLogService("errors", LogLevel::Error,
+								"[{}] tp->RemoveTask failed: file={}, ret={}",
+								__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 							LG_MSGBOX("fatal error when release texture, call jack");
 						}
 					}
@@ -85,8 +99,14 @@ LW_BEGIN
 			}
 		}
 
-		if (LW_FAILED(ret = _res_mgr->UnregisterTex(this)))
+		ret = _res_mgr->UnregisterTex(this);
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->UnregisterTex failed: file={}, ret={}",
+				__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		if (_reg_id == LW_INVALID_INDEX) {
 			Corsairs::Engine::Render::TextureLog::Instance().Log(
@@ -146,7 +166,10 @@ LW_BEGIN
 			if (!(_load_mask & LOADINGRES_MASK_RT0)) {
 				SetLoadResMask(LOADINGRES_MASK_RT0, 0);
 
-				if (LW_FAILED(LoadVideoMemory())) {
+				if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r)) {
+					ToLogService("errors", LogLevel::Error,
+						"[{}] LoadVideoMemory failed: file={}, ret={}",
+						__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 					SetLoadResMask(LOADINGRES_MASK_LOADVM_FAILED, 0);
 				}
 			}
@@ -158,7 +181,10 @@ LW_BEGIN
 				lwIThreadPoolMgr* tp_mgr = _res_mgr->GetThreadPoolMgr();
 				lwIThreadPool* tp = tp_mgr->GetThreadPool(THREAD_POOL_LOADRES);
 
-				if (LW_FAILED(tp->RegisterTask(__thread_proc_load_tex, (void*)this))) {
+				if (LW_RESULT r = tp->RegisterTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r)) {
+					ToLogService("errors", LogLevel::Error,
+						"[{}] tp->RegisterTask failed: file={}, ret={}",
+						__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 					SetLoadResMask(LOADINGRES_MASK_RTMTREG_FAILED, 0);
 				}
 
@@ -395,15 +421,20 @@ LW_BEGIN
 			goto __addr_ret_ok;
 
 		if ((_state & RES_STATE_SYSTEMMEMORY) == 0) {
-			if (LW_FAILED(LoadSystemMemory()))
+			if (LW_RESULT r = LoadSystemMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadSystemMemory failed: file={}, ret={}",
+					__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		// added by clp
 		_format = D3DFMT_A8R8G8B8;
 
 		if (_tex_type == TEX_TYPE_DATA) {
-			if (LW_FAILED(dev_obj->CreateTextureFromFileInMemory(
+			if (LW_RESULT r = dev_obj->CreateTextureFromFileInMemory(
 				&_tex,
 				_data,
 				_data_size,
@@ -418,13 +449,21 @@ LW_BEGIN
 				_colorkey.color, // colorkey
 				NULL, // D3DXIMAGE_INFO
 				NULL // PALETTEENTRY
-			))) {
+			); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] CreateTextureFromFileInMemory(TEX_TYPE_DATA) failed: data_size={}, format={}, ret={}",
+					__FUNCTION__, _data_size, static_cast<std::uint32_t>(_format), static_cast<long long>(r));
 				goto __ret;
 			}
 
 			D3DSURFACE_DESC desc;
-			if (LW_FAILED(_tex->GetLevelDesc(0, &desc)))
+			if (LW_RESULT r = _tex->GetLevelDesc(0, &desc); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _tex->GetLevelDesc(TEX_TYPE_DATA) failed: ret={}",
+					__FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			_data_info.width = desc.Width;
 			_data_info.height = desc.Height;
@@ -478,8 +517,13 @@ LW_BEGIN
 
 			LW_HANDLE handle;
 			if (LW_SUCCEEDED(resbuf_mgr->RegisterSysMemTex(&handle, &smti))) {
-				if (LW_FAILED(resbuf_mgr->GetSysMemTex(&info, handle)))
+				if (LW_RESULT r = resbuf_mgr->GetSysMemTex(&info, handle); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] resbuf_mgr->GetSysMemTex(dds) failed: file={}, handle={}, ret={}",
+						__FUNCTION__, dds_file, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
 					goto __ret;
+				}
 
 				goto __load_check_dds;
 			}
@@ -499,11 +543,21 @@ LW_BEGIN
 				smti.mip_filter = D3DX_DEFAULT;
 				_tcscpy(smti.file_name, _file_name);
 
-				if (LW_FAILED(resbuf_mgr->RegisterSysMemTex(&handle, &smti)))
+				if (LW_RESULT r = resbuf_mgr->RegisterSysMemTex(&handle, &smti); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] resbuf_mgr->RegisterSysMemTex(orig) failed: file={}, ret={}",
+						__FUNCTION__, _file_name, static_cast<long long>(r));
 					goto __ret;
+				}
 
-				if (LW_FAILED(resbuf_mgr->GetSysMemTex(&info, handle)))
+				if (LW_RESULT r = resbuf_mgr->GetSysMemTex(&info, handle); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] resbuf_mgr->GetSysMemTex(orig) failed: file={}, handle={}, ret={}",
+						__FUNCTION__, _file_name, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 
 		__load_check_dds:
@@ -542,7 +596,7 @@ LW_BEGIN
 				mip_filter = colorkey ? D3DX_FILTER_POINT : D3DX_DEFAULT;
 			}
 
-			if (LW_FAILED(dev_obj->CreateTextureFromFileInMemory(
+			if (LW_RESULT r = dev_obj->CreateTextureFromFileInMemory(
 				&_tex,
 				info->buf->GetData(),
 				info->buf->GetSize(),
@@ -557,13 +611,21 @@ LW_BEGIN
 				colorkey, // colorkey
 				NULL, // D3DXIMAGE_INFO
 				NULL // PALETTEENTRY
-			))) {
+			); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] CreateTextureFromFileInMemory(TEX_TYPE_FILE) failed: file={}, fmt={}, ret={}",
+					__FUNCTION__, info->file_name, static_cast<std::uint32_t>(fmt), static_cast<long long>(r));
 				goto __ret;
 			}
 
 			D3DSURFACE_DESC desc;
-			if (LW_FAILED(_tex->GetLevelDesc(0, &desc)))
+			if (LW_RESULT r = _tex->GetLevelDesc(0, &desc); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _tex->GetLevelDesc(TEX_TYPE_FILE) failed: file={}, ret={}",
+					__FUNCTION__, info->file_name, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			_data_info.width = desc.Width;
 			_data_info.height = desc.Height;
@@ -585,10 +647,15 @@ LW_BEGIN
 			// был хардкод D3DFMT_A4R4G4B4 — он ломал FontRender, который пишет в
 			// атлас D3DFMT_A8R8G8B8. Для шрифтов A4 (16 уровней альфы) даёт
 			// заметные ступеньки на кеглях 12-13px.
-			if (LW_FAILED(
-				dev_obj->CreateTexture(&_tex, _data_info.width, _data_info.height, _level, _usage, (D3DFORMAT)_format,
-					_pool)))
+			if (LW_RESULT r = dev_obj->CreateTexture(&_tex, _data_info.width, _data_info.height, _level, _usage, (D3DFORMAT)_format,
+					_pool); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] CreateTexture(TEX_TYPE_SIZE) failed: w={}, h={}, level={}, usage={}, format={}, ret={}",
+					__FUNCTION__, _data_info.width, _data_info.height, _level, _usage,
+					static_cast<std::uint32_t>(_format), static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 	__use_dds:
@@ -613,8 +680,13 @@ LW_BEGIN
 		lwIThreadPoolMgr* tp_mgr = _res_mgr->GetThreadPoolMgr();
 		lwIThreadPool* tp = tp_mgr->GetThreadPool(THREAD_POOL_LOADRES);
 
-		if (LW_FAILED(tp->RegisterTask(__thread_proc_load_tex, (void*)this)))
+		if (LW_RESULT r = tp->RegisterTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] tp->RegisterTask failed: file={}, ret={}",
+				__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 			return LW_RET_FAILED;
+		}
 
 		_mt_flag = 1;
 
@@ -640,8 +712,13 @@ LW_BEGIN
 			goto __addr_ret_ok;
 
 		if ((_state & RES_STATE_SYSTEMMEMORY) == 0) {
-			if (LW_FAILED(LoadSystemMemory()))
+			if (LW_RESULT r = LoadSystemMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadSystemMemory failed: file={}, ret={}",
+					__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		_state |= RES_STATE_LOADTEST;
@@ -651,20 +728,34 @@ LW_BEGIN
 			if (_tex_type != TEX_TYPE_FILE)
 				goto __ret;
 
-			if (LW_FAILED(
-				lwLoadTexDataInfo(&_data_info, _file_name, _format, _colorkey_type, &_colorkey, _byte_alignment_flag)))
+			if (LW_RESULT r = lwLoadTexDataInfo(&_data_info, _file_name, _format, _colorkey_type, &_colorkey, _byte_alignment_flag); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] lwLoadTexDataInfo failed: file={}, format={}, ret={}",
+					__FUNCTION__, _file_name, static_cast<std::uint32_t>(_format), static_cast<long long>(r));
 				goto __ret;
+			}
 
-			if (LW_FAILED(dev_obj->CreateTexture(&_tex, &_data_info, _level, _usage, _format, _pool)))
+			if (LW_RESULT r = dev_obj->CreateTexture(&_tex, &_data_info, _level, _usage, _format, _pool); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] dev_obj->CreateTexture(direct) failed: file={}, level={}, usage={}, format={}, ret={}",
+					__FUNCTION__, _file_name, _level, _usage, static_cast<std::uint32_t>(_format), static_cast<long long>(r));
 				goto __ret;
+			}
 
 
 			_state |= RES_STATE_VIDEOMEMORY;
 
 
 			D3DSURFACE_DESC desc;
-			if (LW_FAILED(_tex->GetLevelDesc(0, &desc)))
+			if (LW_RESULT r = _tex->GetLevelDesc(0, &desc); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _tex->GetLevelDesc(direct) failed: file={}, ret={}",
+					__FUNCTION__, _file_name, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			_data_info.width = desc.Width;
 			_data_info.height = desc.Height;
@@ -720,7 +811,10 @@ LW_BEGIN
 		if ((_state & RES_STATE_VIDEOMEMORY) == 0)
 			goto __addr_ret_ok;
 
-		if (LW_FAILED(dev_obj->ReleaseTex(_tex))) {
+		if (LW_RESULT r = dev_obj->ReleaseTex(_tex); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+				"[{}] dev_obj->ReleaseTex failed: file={}, ret={}",
+				__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -738,11 +832,21 @@ LW_BEGIN
 	LW_RESULT lwTex::Unload() {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (LW_FAILED(UnloadVideoMemory()))
+		if (LW_RESULT r = UnloadVideoMemory(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] UnloadVideoMemory failed: file={}, ret={}",
+				__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(UnloadSystemMemory()))
+		if (LW_RESULT r = UnloadSystemMemory(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] UnloadSystemMemory failed: file={}, ret={}",
+				__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 
@@ -765,8 +869,13 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_pool == D3DPOOL_DEFAULT) {
-			if (LW_FAILED(UnloadVideoMemory()))
+			if (LW_RESULT r = UnloadVideoMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] UnloadVideoMemory failed: file={}, ret={}",
+					__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		ret = LW_RET_OK;
@@ -778,8 +887,13 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_pool == D3DPOOL_DEFAULT) {
-			if (LW_FAILED(LoadVideoMemory()))
+			if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadVideoMemory failed: file={}, ret={}",
+					__FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		ret = LW_RET_OK;
@@ -802,8 +916,14 @@ LW_BEGIN
 		}
 
 
-		if (LW_FAILED(ret = _res_mgr->UnregisterMesh(this)))
+		ret = _res_mgr->UnregisterMesh(this);
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->UnregisterMesh failed: reg_id={}, ret={}",
+				__FUNCTION__, _reg_id, static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		if (_reg_id == LW_INVALID_INDEX) {
 			Unload();
@@ -854,16 +974,26 @@ LW_BEGIN
 		if (_state & RES_STATE_SYSTEMMEMORY)
 			goto __addr_ret_ok;
 
-		if (LW_FAILED(lwMeshInfo_Copy(&_mesh_info, info)))
+		if (LW_RESULT r = lwMeshInfo_Copy(&_mesh_info, info); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] lwMeshInfo_Copy failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_mesh_info_ptr = &_mesh_info;
 
 		lwMeshDataInfo_Destruct(&_data_info);
 		lwMeshDataInfo_Construct(&_data_info);
 
-		if (LW_FAILED(lwLoadMeshDataInfo(&_data_info, info)))
+		if (LW_RESULT r = lwLoadMeshDataInfo(&_data_info, info); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] lwLoadMeshDataInfo failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_rsa_0.Load(info->rs_set, LW_MESH_RS_NUM);
 
@@ -930,62 +1060,113 @@ LW_BEGIN
 			goto __addr_ret_ok;
 
 		else if ((_state & RES_STATE_SYSTEMMEMORY) == 0) {
-			if (LW_FAILED(LoadSystemMemory()))
+			if (LW_RESULT r = LoadSystemMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadSystemMemory failed: ret={}",
+					__FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		switch (_stream_type) {
 		case STREAM_GENERIC:
 			if (_data_info.vb_size > 0) {
-				if (LW_FAILED(dev_obj->CreateVertexBuffer(&_svb)))
+				if (LW_RESULT r = dev_obj->CreateVertexBuffer(&_svb); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] dev_obj->CreateVertexBuffer failed: vb_size={}, ret={}",
+						__FUNCTION__, _data_info.vb_size, static_cast<long long>(r));
 					goto __ret;
+				}
 
-				if (LW_FAILED(
-					_svb->Create(_data_info.vb_size, 0, _mesh_info_ptr->fvf, D3DPOOL_DEFAULT, _data_info.vb_stride, NULL
-					)))
+				if (LW_RESULT r = _svb->Create(_data_info.vb_size, 0, _mesh_info_ptr->fvf, D3DPOOL_DEFAULT, _data_info.vb_stride, NULL
+					); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _svb->Create failed: vb_size={}, vb_stride={}, fvf={}, ret={}",
+						__FUNCTION__, _data_info.vb_size, _data_info.vb_stride,
+						_mesh_info_ptr->fvf, static_cast<long long>(r));
 					goto __ret;
+				}
 
-				if (LW_FAILED(_svb->LoadData(_data_info.vb_data, _data_info.vb_size, 0, 0)))
+				if (LW_RESULT r = _svb->LoadData(_data_info.vb_data, _data_info.vb_size, 0, 0); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _svb->LoadData failed: vb_size={}, ret={}",
+						__FUNCTION__, _data_info.vb_size, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 			if (_data_info.ib_size > 0) {
-				if (LW_FAILED(dev_obj->CreateIndexBuffer(&_sib)))
+				if (LW_RESULT r = dev_obj->CreateIndexBuffer(&_sib); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] dev_obj->CreateIndexBuffer failed: ib_size={}, ret={}",
+						__FUNCTION__, _data_info.ib_size, static_cast<long long>(r));
 					goto __ret;
+				}
 
-				if (LW_FAILED(_sib->Create(_data_info.ib_size, 0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, NULL)))
+				if (LW_RESULT r = _sib->Create(_data_info.ib_size, 0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, NULL); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _sib->Create failed: ib_size={}, ret={}",
+						__FUNCTION__, _data_info.ib_size, static_cast<long long>(r));
 					goto __ret;
+				}
 
-				if (LW_FAILED(_sib->LoadData(_data_info.ib_data, _data_info.ib_size, 0, 0)))
+				if (LW_RESULT r = _sib->LoadData(_data_info.ib_data, _data_info.ib_size, 0, 0); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _sib->LoadData failed: ib_size={}, ret={}",
+						__FUNCTION__, _data_info.ib_size, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 
 			break;
 		case STREAM_STATIC:
 			ssm = _res_mgr->GetStaticStreamMgr();
 
-			if (LW_FAILED(
-				ssm->RegisterVertexBuffer(&_vb_id, _data_info.vb_data, _data_info.vb_size, _data_info.vb_stride)))
+			if (LW_RESULT r = ssm->RegisterVertexBuffer(&_vb_id, _data_info.vb_data, _data_info.vb_size, _data_info.vb_stride); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] ssm->RegisterVertexBuffer failed: vb_size={}, vb_stride={}, ret={}",
+					__FUNCTION__, _data_info.vb_size, _data_info.vb_stride, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			if (_data_info.ib_size > 0) {
-				if (LW_FAILED(
-					ssm->RegisterIndexBuffer(&_ib_id, _data_info.ib_data, _data_info.ib_size, _data_info.ib_stride)))
+				if (LW_RESULT r = ssm->RegisterIndexBuffer(&_ib_id, _data_info.ib_data, _data_info.ib_size, _data_info.ib_stride); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] ssm->RegisterIndexBuffer failed: ib_size={}, ib_stride={}, ret={}",
+						__FUNCTION__, _data_info.ib_size, _data_info.ib_stride, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 			break;
 		case STREAM_LOCKABLE:
 			lsm = _res_mgr->GetLockableStreamMgr();
 
-			if (LW_FAILED(
-				lsm->RegisterVertexBuffer(&_vb_id, _data_info.vb_data, _data_info.vb_size, D3DUSAGE_DYNAMIC|
-					D3DUSAGE_WRITEONLY, _mesh_info_ptr->fvf)))
+			if (LW_RESULT r = lsm->RegisterVertexBuffer(&_vb_id, _data_info.vb_data, _data_info.vb_size, D3DUSAGE_DYNAMIC|
+					D3DUSAGE_WRITEONLY, _mesh_info_ptr->fvf); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] lsm->RegisterVertexBuffer failed: vb_size={}, fvf={}, ret={}",
+					__FUNCTION__, _data_info.vb_size, _mesh_info_ptr->fvf, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			if (_data_info.ib_size > 0) {
-				if (LW_FAILED(
-					lsm->RegisterIndexBuffer(&_ib_id, _data_info.ib_data, _data_info.ib_size, D3DUSAGE_DYNAMIC|
-						D3DUSAGE_WRITEONLY, D3DFMT_INDEX16)))
+				if (LW_RESULT r = lsm->RegisterIndexBuffer(&_ib_id, _data_info.ib_data, _data_info.ib_size, D3DUSAGE_DYNAMIC|
+						D3DUSAGE_WRITEONLY, D3DFMT_INDEX16); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] lsm->RegisterIndexBuffer failed: ib_size={}, ret={}",
+						__FUNCTION__, _data_info.ib_size, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 			break;
 		default:
@@ -1008,8 +1189,13 @@ LW_BEGIN
 		lwIThreadPoolMgr* tp_mgr = _res_mgr->GetThreadPoolMgr();
 		lwIThreadPool* tp = tp_mgr->GetThreadPool(THREAD_POOL_LOADRES);
 
-		if (LW_FAILED(tp->RegisterTask(__thread_proc_load_mesh, (void*)this)))
+		if (LW_RESULT r = tp->RegisterTask(__thread_proc_load_mesh, (void*)this); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] tp->RegisterTask(load_mesh) failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			return LW_RET_FAILED;
+		}
 
 		_mt_flag = 1;
 
@@ -1064,15 +1250,25 @@ LW_BEGIN
 			ssm = _res_mgr->GetStaticStreamMgr();
 
 			if (_vb_id != LW_INVALID_INDEX) {
-				if (LW_FAILED(ssm->UnregisterVertexBuffer(_vb_id)))
+				if (LW_RESULT r = ssm->UnregisterVertexBuffer(_vb_id); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] ssm->UnregisterVertexBuffer failed: vb_id={}, ret={}",
+						__FUNCTION__, _vb_id, static_cast<long long>(r));
 					goto __ret;
+				}
 
 				_vb_id = LW_INVALID_INDEX;
 			}
 
 			if (_ib_id != LW_INVALID_INDEX) {
-				if (LW_FAILED(ssm->UnregisterIndexBuffer(_ib_id)))
+				if (LW_RESULT r = ssm->UnregisterIndexBuffer(_ib_id); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] ssm->UnregisterIndexBuffer failed: ib_id={}, ret={}",
+						__FUNCTION__, _ib_id, static_cast<long long>(r));
 					goto __ret;
+				}
 
 				_ib_id = LW_INVALID_INDEX;
 			}
@@ -1081,15 +1277,25 @@ LW_BEGIN
 			lsm = _res_mgr->GetLockableStreamMgr();
 
 			if (_vb_id != LW_INVALID_INDEX) {
-				if (LW_FAILED(lsm->UnregisterVertexBuffer(_vb_id)))
+				if (LW_RESULT r = lsm->UnregisterVertexBuffer(_vb_id); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] lsm->UnregisterVertexBuffer failed: vb_id={}, ret={}",
+						__FUNCTION__, _vb_id, static_cast<long long>(r));
 					goto __ret;
+				}
 
 				_vb_id = LW_INVALID_INDEX;
 			}
 
 			if (_ib_id != LW_INVALID_INDEX) {
-				if (LW_FAILED(lsm->UnregisterIndexBuffer(_ib_id)))
+				if (LW_RESULT r = lsm->UnregisterIndexBuffer(_ib_id); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] lsm->UnregisterIndexBuffer failed: ib_id={}, ret={}",
+						__FUNCTION__, _ib_id, static_cast<long long>(r));
 					goto __ret;
+				}
 
 				_ib_id = LW_INVALID_INDEX;
 			}
@@ -1110,11 +1316,23 @@ LW_BEGIN
 	LW_RESULT lwMesh::Unload() {
 		LW_RESULT ret = LW_RET_OK;
 
-		if (LW_FAILED(ret = UnloadVideoMemory()))
+		ret = UnloadVideoMemory();
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] UnloadVideoMemory failed: ret={}",
+				__FUNCTION__, static_cast<long long>(ret));
 			goto __ret;
+		}
 
-		if (LW_FAILED(ret = UnloadSystemMemory()))
+		ret = UnloadSystemMemory();
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] UnloadSystemMemory failed: ret={}",
+				__FUNCTION__, static_cast<long long>(ret));
 			goto __ret;
+		}
 
 	__ret:
 		return ret;
@@ -1132,39 +1350,74 @@ LW_BEGIN
 			goto __ret_ok;
 
 		if (!(_state & RES_STATE_VIDEOMEMORY) && (_state | RES_STATE_INIT)) {
-			if (LW_FAILED(LoadVideoMemory()))
+			if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadVideoMemory failed: ret={}",
+					__FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		switch (_stream_type) {
 		case STREAM_GENERIC:
 			if (_svb) {
-				if (LW_FAILED(_svb->BindDevice(0, 0)))
+				if (LW_RESULT r = _svb->BindDevice(0, 0); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _svb->BindDevice failed: ret={}",
+						__FUNCTION__, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 			if (_sib) {
-				if (LW_FAILED(_sib->BindDevice()))
+				if (LW_RESULT r = _sib->BindDevice(); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] _sib->BindDevice failed: ret={}",
+						__FUNCTION__, static_cast<long long>(r));
 					goto __ret;
+				}
 			}
 			break;
 		case STREAM_STATIC:
 			ssm = _res_mgr->GetStaticStreamMgr();
 
 			if (_vb_id != LW_INVALID_INDEX) {
-				ssm->BindVertexBuffer(_vb_id, 0);
+				if (LW_RESULT r = ssm->BindVertexBuffer(_vb_id, 0); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] ssm->BindVertexBuffer failed: vb_id={}, ret={}",
+						__FUNCTION__, _vb_id, static_cast<long long>(r));
+				}
 			}
 			if (_ib_id != LW_INVALID_INDEX) {
-				ssm->BindIndexBuffer(_ib_id);
+				if (LW_RESULT r = ssm->BindIndexBuffer(_ib_id); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] ssm->BindIndexBuffer failed: ib_id={}, ret={}",
+						__FUNCTION__, _ib_id, static_cast<long long>(r));
+				}
 			}
 			break;
 		case STREAM_LOCKABLE:
 			lsm = _res_mgr->GetLockableStreamMgr();
 
 			if (_vb_id != LW_INVALID_INDEX) {
-				lsm->BindVertexBuffer(_vb_id, 0, 0, _data_info.vb_stride);
+				if (LW_RESULT r = lsm->BindVertexBuffer(_vb_id, 0, 0, _data_info.vb_stride); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] lsm->BindVertexBuffer failed: vb_id={}, ret={}",
+						__FUNCTION__, _vb_id, static_cast<long long>(r));
+				}
 			}
 			if (_ib_id != LW_INVALID_INDEX) {
-				lsm->BindIndexBuffer(_ib_id, 0);
+				if (LW_RESULT r = lsm->BindIndexBuffer(_ib_id, 0); LW_FAILED(r))
+				{
+					ToLogService("errors", LogLevel::Error,
+						"[{}] lsm->BindIndexBuffer failed: ib_id={}, ret={}",
+						__FUNCTION__, _ib_id, static_cast<long long>(r));
+				}
 			}
 			break;
 		default:
@@ -1265,8 +1518,13 @@ LW_BEGIN
 		switch (_stream_type) {
 		case STREAM_GENERIC:
 		case STREAM_STATIC:
-			if (LW_FAILED(UnloadVideoMemory()))
+			if (LW_RESULT r = UnloadVideoMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] UnloadVideoMemory failed: stream_type={}, ret={}",
+					__FUNCTION__, _stream_type, static_cast<long long>(r));
 				goto __ret;
+			}
 			break;
 		case STREAM_LOCKABLE:
 			break;
@@ -1285,8 +1543,13 @@ LW_BEGIN
 		switch (_stream_type) {
 		case STREAM_GENERIC:
 		case STREAM_STATIC:
-			if (LW_FAILED(LoadVideoMemory()))
+			if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadVideoMemory failed: stream_type={}, ret={}",
+					__FUNCTION__, _stream_type, static_cast<long long>(r));
 				goto __ret;
+			}
 			break;
 		case STREAM_LOCKABLE:
 			break;
@@ -1335,7 +1598,7 @@ LW_BEGIN
 	LW_RESULT lwMesh::ExtractMesh(lwMeshInfo* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (LW_FAILED(lwExtractMeshData(
+		if (LW_RESULT r = lwExtractMeshData(
 			info,
 			_data_info.vb_data,
 			_data_info.ib_data,
@@ -1343,7 +1606,11 @@ LW_BEGIN
 			_data_info.ib_size / _data_info.ib_stride,
 			(D3DFORMAT)_mesh_info.fvf,
 			D3DFMT_INDEX16
-		))) {
+		); LW_FAILED(r)) {
+			ToLogService("errors", LogLevel::Error,
+				"[{}] lwExtractMeshData failed: vb_size={}, ib_size={}, fvf={}, ret={}",
+				__FUNCTION__, _data_info.vb_size, _data_info.ib_size,
+				_mesh_info.fvf, static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -1421,8 +1688,14 @@ LW_BEGIN
 			if (i->tex_seq[j].stage == LW_INVALID_INDEX)
 				continue;
 
-			if (LW_FAILED(LoadTextureStage(&i->tex_seq[j], tex_path)))
+			if (LW_RESULT r = LoadTextureStage(&i->tex_seq[j], tex_path); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] LoadTextureStage failed: stage={}, file={}, tex_path={}, ret={}",
+					__FUNCTION__, j, i->tex_seq[j].file_name,
+					tex_path ? tex_path : "(null)", static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 		ret = LW_RET_OK;
@@ -1471,11 +1744,22 @@ LW_BEGIN
 		if (_tex_seq[stage] != NULL)
 			goto __ret;
 
-		if (LW_FAILED(_res_mgr->CreateTex(&obj)))
+		if (LW_RESULT r = _res_mgr->CreateTex(&obj); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->CreateTex failed: stage={}, ret={}",
+				__FUNCTION__, stage, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(obj->LoadTexInfo(info, tex_path)))
+		if (LW_RESULT r = obj->LoadTexInfo(info, tex_path); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] obj->LoadTexInfo failed: stage={}, file={}, tex_path={}, ret={}",
+				__FUNCTION__, stage, info->file_name,
+				tex_path ? tex_path : "(null)", static_cast<long long>(r));
 			goto __ret;
+		}
 
 		DWORD load_type;
 
@@ -1541,8 +1825,13 @@ LW_BEGIN
 		//    }
 		//}
 
-		if (LW_FAILED(_tex_seq[stage]->Release()))
+		if (LW_RESULT r = _tex_seq[stage]->Release(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _tex_seq[stage]->Release failed: stage={}, ret={}",
+				__FUNCTION__, stage, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_tex_seq[stage] = NULL;
 
@@ -1558,7 +1847,10 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 
 		for (DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++) {
-			if (LW_FAILED(DestroyTextureStage(i))) {
+			if (LW_RESULT r = DestroyTextureStage(i); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] DestroyTextureStage failed: stage={}, ret={}",
+					__FUNCTION__, i, static_cast<long long>(r));
 				assert(0 && "call lwMtlTexAgent::Destroy error");
 				goto __ret;
 			}
@@ -1654,8 +1946,13 @@ LW_BEGIN
 				tex = _tt_tex[i];
 			}
 
-			if (LW_FAILED(tex->BeginSet()))
+			if (LW_RESULT r = tex->BeginSet(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] tex->BeginSet failed: stage={}, ret={}",
+					__FUNCTION__, i, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			// texture transform
 			//if(_uvmat[i])
@@ -1719,8 +2016,13 @@ LW_BEGIN
 			if ((tex = _tex_seq[i]) == NULL)
 				break;
 
-			if (LW_FAILED(tex->EndSet()))
+			if (LW_RESULT r = tex->EndSet(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] tex->EndSet failed: stage={}, ret={}",
+					__FUNCTION__, i, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			// texture transform
 			//if(_uvmat[i])
@@ -1741,8 +2043,13 @@ LW_BEGIN
 
 		lwMtlTexAgent* o;
 
-		if (LW_FAILED(_res_mgr->CreateMtlTexAgent(reinterpret_cast< lwIMtlTexAgent** >(&o))))
+		if (LW_RESULT r = _res_mgr->CreateMtlTexAgent(reinterpret_cast< lwIMtlTexAgent** >(&o)); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->CreateMtlTexAgent failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 		{
 			o->_opacity = _opacity;
 			o->_transp_type = _transp_type;
@@ -1851,21 +2158,41 @@ LW_BEGIN
 
 		lwIMesh* obj = 0;
 
-		if (LW_FAILED(_res_mgr->CreateMesh(&obj)))
+		if (LW_RESULT r = _res_mgr->CreateMesh(&obj); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->CreateMesh failed: mt_flag={}, ret={}",
+				__FUNCTION__, _mt_flag, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		if (_mt_flag == 1) {
-			if (LW_FAILED(obj->LoadSystemMemoryMT(info)))
+			if (LW_RESULT r = obj->LoadSystemMemoryMT(info); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] obj->LoadSystemMemoryMT failed: ret={}",
+					__FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 		else {
-			if (LW_FAILED(obj->LoadSystemMemory(info)))
+			if (LW_RESULT r = obj->LoadSystemMemory(info); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] obj->LoadSystemMemory failed: ret={}",
+					__FUNCTION__, static_cast<long long>(r));
 				goto __ret;
+			}
 		}
 
 
-		if (LW_FAILED(obj->LoadVideoMemoryEx()))
+		if (LW_RESULT r = obj->LoadVideoMemoryEx(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] obj->LoadVideoMemoryEx failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_mesh_obj = obj;
 
@@ -1882,11 +2209,21 @@ LW_BEGIN
 
 		lwMeshInfo i;
 
-		if (LW_FAILED(LoadMesh(&i)))
+		if (LW_RESULT r = LoadMesh(&i); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] LoadMesh(MeshInfo) failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_mesh_obj->SetResFile(info)))
+		if (LW_RESULT r = _mesh_obj->SetResFile(info); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _mesh_obj->SetResFile failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 
 		ret = LW_RET_OK;
@@ -1901,8 +2238,13 @@ LW_BEGIN
 		if (_mesh_obj == 0)
 			goto __addr_ret_ok;
 
-		if (LW_FAILED(_mesh_obj->Release()))
+		if (LW_RESULT r = _mesh_obj->Release(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _mesh_obj->Release failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_mesh_obj = 0;
 
@@ -1916,8 +2258,13 @@ LW_BEGIN
 	LW_RESULT lwMeshAgent::Destroy() {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (LW_FAILED(DestroyMesh()))
+		if (LW_RESULT r = DestroyMesh(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] DestroyMesh failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 	__ret:
@@ -1929,8 +2276,13 @@ LW_BEGIN
 
 		lwIMeshAgent* o = NULL;
 
-		if (LW_FAILED(_res_mgr->CreateMeshAgent(&o)))
+		if (LW_RESULT r = _res_mgr->CreateMeshAgent(&o); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _res_mgr->CreateMeshAgent failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		if (_mesh_obj) {
 			_res_mgr->AddRefMesh(_mesh_obj, 1);
@@ -1949,8 +2301,13 @@ LW_BEGIN
 	LW_RESULT lwMeshAgent::BeginSet() {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		if (LW_FAILED(_mesh_obj->BeginSet()))
+		if (LW_RESULT r = _mesh_obj->BeginSet(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _mesh_obj->BeginSet failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		{
 			lwRenderStateValue* rsv;
@@ -1975,7 +2332,12 @@ LW_BEGIN
 	LW_RESULT lwMeshAgent::EndSet() {
 		lwIDeviceObject* dev_obj = _res_mgr->GetDeviceObject();
 
-		_mesh_obj->EndSet();
+		if (LW_RESULT r = _mesh_obj->EndSet(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _mesh_obj->EndSet failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
 
 		lwRenderStateValue* rsv;
 
@@ -2060,12 +2422,22 @@ LW_BEGIN
 		memset(o, 0, sizeof(lwSysMemTexInfo));
 
 		o->buf = LW_NEW(lwBuffer);
-		if (LW_FAILED(LoadFileInMemory(o->buf, info->file_name, "rb")))
+		if (LW_RESULT r = LoadFileInMemory(o->buf, info->file_name, "rb"); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] LoadFileInMemory failed: file={}, ret={}",
+				__FUNCTION__, info->file_name, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		if (_res_mgr->GetByteSet()->GetValue(OPT_RESMGR_TEXENCODE)) {
 			lwTexEncode te;
-			te.Decode(o->buf);
+			if (LW_RESULT r = te.Decode(o->buf); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] te.Decode failed: file={}, ret={}",
+					__FUNCTION__, info->file_name, static_cast<long long>(r));
+			}
 		}
 
 		o->colorkey = info->colorkey;
@@ -2079,7 +2451,10 @@ LW_BEGIN
 		{
 			_lock_sysmemtex.Lock();
 
-			if (LW_FAILED(_pool_sysmemtex.Register(handle, o))) {
+			if (LW_RESULT r = _pool_sysmemtex.Register(handle, o); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _pool_sysmemtex.Register failed: file={}, ret={}",
+					__FUNCTION__, info->file_name, static_cast<long long>(r));
 				_lock_sysmemtex.Unlock();
 				goto __ret;
 			}
@@ -2138,8 +2513,13 @@ LW_BEGIN
 
 	LW_RESULT lwResBufMgr::UnregisterSysMemTex(LW_HANDLE handle) {
 		lwSysMemTexInfo* obj = 0;
-		if (LW_FAILED(_pool_sysmemtex.Unregister((void**)&obj, handle)))
+		if (LW_RESULT r = _pool_sysmemtex.Unregister((void**)&obj, handle); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_sysmemtex.Unregister failed: handle={}, ret={}",
+				__FUNCTION__, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
 			return LW_RET_FAILED;
+		}
 
 		LW_IF_RELEASE(obj->buf);
 		LW_DELETE(obj);
@@ -2152,8 +2532,13 @@ LW_BEGIN
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
 
-		if (LW_FAILED(moim->info.Load(file)))
+		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] moim->info.Load failed (auto-handle): file={}, ret={}",
+				__FUNCTION__, file ? file : "(null)", static_cast<long long>(r));
 			goto __ret;
+		}
 
 		// Берём свободный auto-handle в пространстве 0x80000000+ (не пересекается
 		// с внешними model_id, которые приходят ниже).
@@ -2189,8 +2574,13 @@ LW_BEGIN
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
 
-		if (LW_FAILED(moim->info.Load(file)))
+		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] moim->info.Load failed (explicit-handle): handle={}, file={}, ret={}",
+				__FUNCTION__, static_cast<std::uint64_t>(handle), file ? file : "(null)", static_cast<long long>(r));
 			goto __ret;
+		}
 
 		if (!_pool_modelobj.emplace(handle, moim).second)
 			goto __ret;
@@ -2263,7 +2653,10 @@ LW_BEGIN
 			}
 		}
 		for (DWORD h : to_erase) {
-			if (LW_FAILED(UnregisterModelObjInfo(h))) {
+			if (LW_RESULT r = UnregisterModelObjInfo(h); LW_FAILED(r)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] UnregisterModelObjInfo failed: handle={}, ret={}",
+					__FUNCTION__, h, static_cast<long long>(r));
 				return LW_RET_FAILED;
 			}
 		}
@@ -2297,8 +2690,13 @@ LW_BEGIN
 				goto __ret;
 			}
 
-			if (LW_FAILED(_pool_seq[i]->Create(ci[i][0], ci[i][1], 0)))
+			if (LW_RESULT r = _pool_seq[i]->Create(ci[i][0], ci[i][1], 0); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _pool_seq[{}]->Create failed: thread_count={}, queue_size={}, ret={}",
+					__FUNCTION__, i, ci[i][0], ci[i][1], static_cast<long long>(r));
 				goto __ret;
+			}
 
 			for (DWORD j = 0; j < ci[i][0]; j++) {
 				DWORD id = ((lwThreadPool*)_pool_seq[i])->GetThreadId(j);
@@ -2324,8 +2722,13 @@ LW_BEGIN
 			if (_pool_seq[i] == 0)
 				continue;
 
-			if (LW_FAILED(_pool_seq[i]->Destroy()))
+			if (LW_RESULT r = _pool_seq[i]->Destroy(); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+					"[{}] _pool_seq[{}]->Destroy failed: ret={}",
+					__FUNCTION__, i, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			_pool_seq[i]->Release();
 		}
@@ -2354,7 +2757,12 @@ LW_BEGIN
 
 		_shader_mgr = LW_NEW(lwShaderMgr(_dev_obj));
 
-		_shader_mgr->Init(1024, 1024, 0);
+		if (LW_RESULT r = _shader_mgr->Init(1024, 1024, 0); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _shader_mgr->Init failed: ret={}",
+			             __FUNCTION__, static_cast<long long>(r));
+		}
 
 		_resbuf_mgr = LW_NEW(lwResBufMgr(this));
 
@@ -2461,8 +2869,13 @@ LW_BEGIN
 		if ((o = LW_NEW(lwMesh(this))) == NULL)
 			goto __ret;
 
-		if (LW_FAILED(RegisterMesh(o)))
+		if (LW_RESULT r = RegisterMesh(o); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] RegisterMesh failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		*ret_obj = o;
 
@@ -2479,8 +2892,13 @@ LW_BEGIN
 		if ((o = LW_NEW(lwTex(this))) == NULL)
 			goto __ret;
 
-		if (LW_FAILED(RegisterTex(o)))
+		if (LW_RESULT r = RegisterTex(o); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] RegisterTex failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		*ret_obj = o;
 
@@ -2514,8 +2932,13 @@ LW_BEGIN
 			assert(0 && "invalid ctrl type in call RegisterAnimData");
 		}
 
-		if (LW_FAILED(RegisterAnimCtrl(c)))
+		if (LW_RESULT r = RegisterAnimCtrl(c); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] RegisterAnimCtrl failed: type={}, ret={}",
+				__FUNCTION__, type, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		*ret_obj = c;
 
@@ -2766,8 +3189,13 @@ LW_BEGIN
 
 		DWORD ret_id;
 
-		if (LW_FAILED(_pool_mesh.Register(&ret_id, obj)))
+		if (LW_RESULT r = _pool_mesh.Register(&ret_id, obj); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_mesh.Register failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		obj->SetRegisterID(ret_id);
 
@@ -2783,8 +3211,13 @@ LW_BEGIN
 
 		DWORD ret_id;
 
-		if (LW_FAILED(_pool_tex.Register(&ret_id, obj)))
+		if (LW_RESULT r = _pool_tex.Register(&ret_id, obj); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_tex.Register failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		obj->SetRegisterID(ret_id);
 
@@ -2801,8 +3234,13 @@ LW_BEGIN
 
 		DWORD ret_id;
 
-		if (LW_FAILED(_pool_animctrl.Register(&ret_id, obj)))
+		if (LW_RESULT r = _pool_animctrl.Register(&ret_id, obj); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_animctrl.Register failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		obj->SetRegisterID(ret_id);
 
@@ -2965,8 +3403,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwMesh* o;
 
-		if (LW_FAILED(ret = _pool_mesh.Unregister((void**)&o, obj->GetRegisterID())))
+		ret = _pool_mesh.Unregister((void**)&o, obj->GetRegisterID());
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_mesh.Unregister failed: reg_id={}, ret={}",
+				__FUNCTION__, obj->GetRegisterID(), static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		if (ret == LW_RET_OK_1) {
 			obj->SetRegisterID(LW_INVALID_INDEX);
@@ -2986,8 +3430,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwITex* o;
 
-		if (LW_FAILED(ret = _pool_tex.Unregister((void**)&o, obj->GetRegisterID())))
+		ret = _pool_tex.Unregister((void**)&o, obj->GetRegisterID());
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_tex.Unregister failed: reg_id={}, ret={}",
+				__FUNCTION__, obj->GetRegisterID(), static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		if (ret == LW_RET_OK_1) {
 			obj->SetRegisterID(LW_INVALID_INDEX);
@@ -3009,8 +3459,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwAnimCtrl* o;
 
-		if (LW_FAILED(ret =_pool_animctrl.Unregister((void**)&o, obj->GetRegisterID())))
+		ret = _pool_animctrl.Unregister((void**)&o, obj->GetRegisterID());
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_animctrl.Unregister failed: reg_id={}, ret={}",
+				__FUNCTION__, obj->GetRegisterID(), static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		if (ret == LW_RET_OK_1) {
 			obj->SetRegisterID(LW_INVALID_INDEX);
@@ -3050,8 +3506,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwMesh* o;
 
-		if (LW_FAILED(ret = _pool_mesh.GetObj((void**)&o, id)))
+		ret = _pool_mesh.GetObj((void**)&o, id);
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_mesh.GetObj failed: id={}, ret={}",
+				__FUNCTION__, id, static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		*ret_obj = static_cast<lwIMesh*>(o);
 
@@ -3065,8 +3527,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwTex* o;
 
-		if (LW_FAILED(ret = _pool_tex.GetObj((void**)&o, id)))
+		ret = _pool_tex.GetObj((void**)&o, id);
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_tex.GetObj failed: id={}, ret={}",
+				__FUNCTION__, id, static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		*ret_obj = static_cast<lwITex*>(o);
 
@@ -3080,8 +3548,14 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 		lwIAnimCtrl* o;
 
-		if (LW_FAILED(ret = _pool_animctrl.GetObj((void**)&o, id)))
+		ret = _pool_animctrl.GetObj((void**)&o, id);
+		if (LW_FAILED(ret))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _pool_animctrl.GetObj failed: id={}, ret={}",
+				__FUNCTION__, id, static_cast<long long>(ret));
 			goto __ret;
+		}
 
 		*ret_obj = o;
 
@@ -3192,21 +3666,46 @@ LW_BEGIN
 		});
 
 		// stream manager object
-		if (LW_FAILED(_static_stream_mgr->LoseDevice()))
+		if (LW_RESULT r = _static_stream_mgr->LoseDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _static_stream_mgr->LoseDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_dynamic_stream_mgr->LoseDevice()))
+		if (LW_RESULT r = _dynamic_stream_mgr->LoseDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _dynamic_stream_mgr->LoseDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_lockable_stream_mgr->LoseDevice()))
+		if (LW_RESULT r = _lockable_stream_mgr->LoseDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _lockable_stream_mgr->LoseDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_surface_stream_mgr->LoseDevice()))
+		if (LW_RESULT r = _surface_stream_mgr->LoseDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _surface_stream_mgr->LoseDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		// shader manager object
-		if (LW_FAILED(_shader_mgr->LoseDevice()))
+		if (LW_RESULT r = _shader_mgr->LoseDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _shader_mgr->LoseDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		ret = LW_RET_OK;
 	__ret:
@@ -3217,21 +3716,46 @@ LW_BEGIN
 		LW_RESULT ret = LW_RET_FAILED;
 
 		// stream manager object
-		if (LW_FAILED(_static_stream_mgr->ResetDevice()))
+		if (LW_RESULT r = _static_stream_mgr->ResetDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _static_stream_mgr->ResetDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_dynamic_stream_mgr->ResetDevice()))
+		if (LW_RESULT r = _dynamic_stream_mgr->ResetDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _dynamic_stream_mgr->ResetDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_lockable_stream_mgr->ResetDevice()))
+		if (LW_RESULT r = _lockable_stream_mgr->ResetDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _lockable_stream_mgr->ResetDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
-		if (LW_FAILED(_surface_stream_mgr->ResetDevice()))
+		if (LW_RESULT r = _surface_stream_mgr->ResetDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _surface_stream_mgr->ResetDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		// shader manager object
-		if (LW_FAILED(_shader_mgr->ResetDevice()))
+		if (LW_RESULT r = _shader_mgr->ResetDevice(); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"[{}] _shader_mgr->ResetDevice failed: ret={}",
+				__FUNCTION__, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		_pool_mesh.ForEach([](DWORD, void* raw) {
 			static_cast<lwIMesh*>(raw)->ResetDevice();
@@ -3271,12 +3795,18 @@ LW_BEGIN
 				&texture, NULL);
 
 			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] device->CreateTexture(mono) failed: w={}, h={}, hr=0x{:08X}",
+					__FUNCTION__, width, height, static_cast<std::uint32_t>(hr));
 				return 0;
 			}
 
 			D3DLOCKED_RECT lockedRect;
 			hr = texture->LockRect(0, &lockedRect, 0, D3DLOCK_DISCARD);
 			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] texture->LockRect(mono) failed: w={}, h={}, hr=0x{:08X}",
+					__FUNCTION__, width, height, static_cast<std::uint32_t>(hr));
 				texture->Release();
 				return 0;
 			}
@@ -3305,12 +3835,18 @@ LW_BEGIN
 				&texture);
 
 			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] D3DXCreateTextureFromFile(filter) failed: file={}, hr=0x{:08X}",
+					__FUNCTION__, filterTexture, static_cast<std::uint32_t>(hr));
 				return 0;
 			}
 
 			D3DSURFACE_DESC description;
 			hr = texture->GetLevelDesc(0, &description);
 			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] texture->GetLevelDesc(filter) failed: file={}, hr=0x{:08X}",
+					__FUNCTION__, filterTexture, static_cast<std::uint32_t>(hr));
 				return 0;
 			}
 
@@ -3320,6 +3856,9 @@ LW_BEGIN
 			D3DLOCKED_RECT lockedRect;
 			hr = texture->LockRect(0, &lockedRect, 0, D3DLOCK_DISCARD);
 			if (FAILED(hr)) {
+				ToLogService("errors", LogLevel::Error,
+					"[{}] texture->LockRect(filter) failed: file={}, hr=0x{:08X}",
+					__FUNCTION__, filterTexture, static_cast<std::uint32_t>(hr));
 				texture->Release();
 				return 0;
 			}

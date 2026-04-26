@@ -79,8 +79,13 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, BYTE* data, DWORD size)
     if (!data || size == 0)
         goto __ret;
 
-    if (FAILED(dev->CreateVertexShader((DWORD*)data, &handle)))
+    if (HRESULT hr = dev->CreateVertexShader((DWORD*)data, &handle); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] dev->CreateVertexShader failed: type={}, size={}, hr=0x{:08X}",
+                     __FUNCTION__, type, size, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     i = &_vs_seq[type];
     i->handle = handle;
@@ -135,21 +140,24 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
 
         if(file_flag == VS_FILE_ASM)
         {
-            if(FAILED(D3DXAssembleShaderFromFile(
+            if(HRESULT hr = D3DXAssembleShaderFromFile(
                 file,
-                NULL, 
-                NULL, 
-                compile_flag, 
-                &buf_code, 
-                &buf_error)))
+                NULL,
+                NULL,
+                compile_flag,
+                &buf_code,
+                &buf_error); FAILED(hr))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] D3DXAssembleShaderFromFile failed: file={}, hr=0x{:08X}",
+                             __FUNCTION__, file ? file : "(null)", static_cast<std::uint32_t>(hr));
                 goto __ret;
             }
         }
         else if(file_flag == VS_FILE_HLSL)
         {
 
-            if(FAILED(D3DXCompileShaderFromFile(
+            if(HRESULT hr = D3DXCompileShaderFromFile(
                 file,
                 NULL,
                 NULL,
@@ -158,8 +166,11 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
                 compile_flag,
                 &buf_code,
                 &buf_error,
-                NULL)))
+                NULL); FAILED(hr))
             {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] D3DXCompileShaderFromFile failed: file={}, hr=0x{:08X}",
+                             __FUNCTION__, file ? file : "(null)", static_cast<std::uint32_t>(hr));
                 goto __ret;
             }
 
@@ -168,8 +179,13 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
 #else
         if(file_flag == VS_FILE_ASM)
         {
-            if (FAILED(D3DXAssembleShader((LPCSTR)data, size, NULL, NULL, 0, &buf_code, &buf_error)))
+            if (HRESULT hr = D3DXAssembleShader((LPCSTR)data, size, NULL, NULL, 0, &buf_code, &buf_error); FAILED(hr))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] D3DXAssembleShader failed: file={}, size={}, hr=0x{:08X}",
+                             __FUNCTION__, file ? file : "(null)", size, static_cast<std::uint32_t>(hr));
                 goto __ret;
+            }
         }
         else if(file_flag == VS_FILE_HLSL)
         {
@@ -181,7 +197,7 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
             if (defines && defines->Name) {
                 macro_ptr = defines;
             }
-            if(FAILED(D3DXCompileShader(
+            if(HRESULT hr = D3DXCompileShader(
                 (LPCSTR)data,
                 size,
                 macro_ptr,
@@ -191,8 +207,14 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
                 compile_flag,
                 &buf_code,
                 &buf_error,
-                NULL)))
+                NULL); FAILED(hr))
             {
+                const char* err_msg = (buf_error && buf_error->GetBufferPointer())
+                    ? static_cast<const char*>(buf_error->GetBufferPointer())
+                    : "(no error buffer)";
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] D3DXCompileShader failed: file={}, size={}, hr=0x{:08X}, err={}",
+                             __FUNCTION__, file ? file : "(null)", size, static_cast<std::uint32_t>(hr), err_msg);
                 goto __ret;
             }
         }
@@ -203,8 +225,13 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
 
     }
 
-    if(LW_FAILED(RegisterVertexShader(type, code, size)))
+    if(LW_RESULT r = RegisterVertexShader(type, code, size); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] RegisterVertexShader failed: type={}, size={}, ret={}",
+                     __FUNCTION__, type, size, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 
@@ -235,8 +262,13 @@ LW_RESULT lwShaderMgr9::RegisterVertexDeclaration(DWORD type, D3DVERTEXELEMENT9*
     if (!data)  // segurana
         goto __ret;
 
-    if (FAILED(dev->CreateVertexDeclaration(data, &handle)))
+    if (HRESULT hr = dev->CreateVertexDeclaration(data, &handle); FAILED(hr))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] dev->CreateVertexDeclaration failed: type={}, hr=0x{:08X}",
+                     __FUNCTION__, type, static_cast<std::uint32_t>(hr));
         goto __ret;
+    }
 
     _decl_seq[type].handle = handle;
 
@@ -292,8 +324,13 @@ LW_RESULT lwShaderMgr9::ResetDevice()
 
         if(s->handle == 0 && s->data)
         {
-            if(FAILED(dev->CreateVertexShader((DWORD*)s->data, &s->handle)))
+            if(HRESULT hr = dev->CreateVertexShader((DWORD*)s->data, &s->handle); FAILED(hr))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] dev->CreateVertexShader failed: index={}, hr=0x{:08X}",
+                             __FUNCTION__, i, static_cast<std::uint32_t>(hr));
                 goto __ret;
+            }
         }
     }
 

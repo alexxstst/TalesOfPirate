@@ -138,8 +138,12 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
     LW_RESULT ret;
 	lwISystem* sys;
     lwISysGraphics* sys_graphics;
-    if(LW_FAILED(ret = lwInitMeshLibSystem(&sys, &sys_graphics, &d3dcp, &_d3dCPAdjustInfo)))
+    ret = lwInitMeshLibSystem(&sys, &sys_graphics, &d3dcp, &_d3dCPAdjustInfo);
+    if(LW_FAILED(ret))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] lwInitMeshLibSystem failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         char err_str[260];
 
         switch(ret)
@@ -172,8 +176,18 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
     _IMgr.res_mgr = sys_graphics->GetResourceMgr();
     _IMgr.tp_loadres = _IMgr.res_mgr->GetThreadPoolMgr()->GetThreadPool(THREAD_POOL_LOADRES);
 
-    LoadShader0(sys_graphics);
-    LoadShader1(sys_graphics);
+    if (LW_RESULT r = LoadShader0(sys_graphics); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadShader0 failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
+    if (LW_RESULT r = LoadShader1(sys_graphics); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadShader1 failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
     ToggleFullScreen();
 
@@ -287,9 +301,11 @@ int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL 
     d3dcp.present_param.AutoDepthStencilFormat = depth_fmt;
 
 
-    if(LW_FAILED(lwAdjustD3DCreateParam(dev, &d3dcp, &_d3dCPAdjustInfo)))
+    if(LW_RESULT r = lwAdjustD3DCreateParam(dev, &d3dcp, &_d3dCPAdjustInfo); LW_FAILED(r))
     {
-		ToLogService("errors", LogLevel::Error, "ToggleFullScreen error");
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] lwAdjustD3DCreateParam failed: width={}, height={}, ret={}",
+		             __FUNCTION__, width, height, static_cast<long long>(r));
         return 0;
     }
 
@@ -305,8 +321,13 @@ int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL 
 int MPRender::ToggleFullScreen(D3DPRESENT_PARAMETERS* d3dpp, lwWndInfo* wnd_info)
 {
     SAFE_RELEASE(_p2DSprite);
-    if(LW_FAILED(_IMgr.sys_graphics->ToggleFullScreen(d3dpp, wnd_info)))
+    if(LW_RESULT r = _IMgr.sys_graphics->ToggleFullScreen(d3dpp, wnd_info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] sys_graphics->ToggleFullScreen failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         return 0;
+    }
 
     D3DXCreateSprite(_pD3DDevice, &_p2DSprite);
     return ToggleFullScreen();
@@ -348,12 +369,18 @@ int MPRender::InitMPTextureSetFormat()
     // Раньше был fallback на A4R4G4B4/R5G6B5 для старых видеокарт —
     // удалён, так как 16-bit форматы дают ступенчатую альфу и, как правило,
     // всё равно эмулируются через 32-bit драйвером.
-    if(LW_FAILED(_IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_A8R8G8B8)))
+    if(LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_A8R8G8B8); LW_FAILED(r))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CheckCurrentDeviceFormat(A8R8G8B8) failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         return 0;
     }
-    if(LW_FAILED(_IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_X8R8G8B8)))
+    if(LW_RESULT r = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_X8R8G8B8); LW_FAILED(r))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] CheckCurrentDeviceFormat(X8R8G8B8) failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         return 0;
     }
 
@@ -373,7 +400,9 @@ void MPRender::SetViewport(int nStartX, int nStartY, int nWidth, int nHeight)
     HRESULT hr = _pD3DDevice->SetViewport(&_view);
 	if (FAILED(hr))
 	{
-		ToLogService("common", "Error when SetViewport(), [{}].", hr);
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] SetViewport failed: x={}, y={}, w={}, h={}, hr=0x{:08X}",
+		             __FUNCTION__, nStartX, nStartY, nWidth, nHeight, static_cast<std::uint32_t>(hr));
 	}
     // LG("render", "Set View Port [x = %d, y = %d , w = %d, h = %d\n", nStartX, nStartY, nWidth, nHeight);
 }
@@ -658,6 +687,9 @@ BOOL MPRender::BeginRender(bool clear)//vim
 	HRESULT hr;
     if(FAILED(hr = _IMgr.sys_graphics->TestCooperativeLevel()))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] sys_graphics->TestCooperativeLevel failed: hr=0x{:08X}",
+                     __FUNCTION__, static_cast<std::uint32_t>(hr));
         return 0;
     }
     if(hr == LW_RET_OK_1)
@@ -674,15 +706,20 @@ BOOL MPRender::BeginRender(bool clear)//vim
     
     if(clear)//vim
 	{
-		if(FAILED( _pD3DDevice->Clear( 0L, NULL, _dwClearFlag, _dwBackgroundColor, 1.0f, 0L ) ) )
+		if(HRESULT hrClear = _pD3DDevice->Clear( 0L, NULL, _dwClearFlag, _dwBackgroundColor, 1.0f, 0L ); FAILED(hrClear))
 		{
-			ToLogService("errors", LogLevel::Error, "D3D Device Clear Failed!");
+			ToLogService("errors", LogLevel::Error,
+			             "[{}] _pD3DDevice->Clear failed: clear_flag={}, color=0x{:08X}, hr=0x{:08X}",
+			             __FUNCTION__, _dwClearFlag, static_cast<std::uint32_t>(_dwBackgroundColor), static_cast<std::uint32_t>(hrClear));
 			return false;
 		}
 	}
     
-	if ( FAILED( _pD3DDevice->BeginScene() ) ) 
+	if ( HRESULT hrScene = _pD3DDevice->BeginScene(); FAILED( hrScene ) )
     {
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] _pD3DDevice->BeginScene failed: hr=0x{:08X}",
+		             __FUNCTION__, static_cast<std::uint32_t>(hrScene));
 		return false;
 	}
 	
@@ -691,8 +728,10 @@ BOOL MPRender::BeginRender(bool clear)//vim
 
 void MPRender::EndRender(const bool present) // vim
 {
-	if (FAILED(_pD3DDevice->EndScene())) {
-		ToLogService("errors", LogLevel::Error, "D3D End Scene Fail!");
+	if (HRESULT hrEnd = _pD3DDevice->EndScene(); FAILED(hrEnd)) {
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] _pD3DDevice->EndScene failed: hr=0x{:08X}",
+		             __FUNCTION__, static_cast<std::uint32_t>(hrEnd));
 		return;
 	}
 

@@ -832,7 +832,10 @@ bool CChaModel::LoadScript(const s_string& strModel) {
 bool CChaModel::LoadChaModel(MPChaLoadInfo& info) {
 	if (strlen(info.bone) <= 0)
 		return false;
-	if (FAILED(MPCharacter::Load( &info ))) {
+	if (HRESULT hr = MPCharacter::Load( &info ); FAILED(hr)) {
+		ToLogService("errors", LogLevel::Error,
+		             "[{}] MPCharacter::Load failed: bone='{}', hr=0x{:08X}",
+		             __FUNCTION__, info.bone, static_cast<std::uint32_t>(hr));
 		return false;
 	}
 	return true;

@@ -148,14 +148,23 @@ LW_BEGIN
 		if (info->type == PLAY_INVALID)
 			goto __ret;
 
-		if (LW_FAILED(_Update(info->pose, info->type, info->velocity, &info->frame, &info->ret_frame)))
+		if (LW_RESULT r = _Update(info->pose, info->type, info->velocity, &info->frame, &info->ret_frame); LW_FAILED(r))
+		{
+			ToLogService("errors", LogLevel::Error,
+						 "[{}] _Update failed: pose={}, type={}, velocity={}, ret={}",
+						 __FUNCTION__, info->pose, info->type, info->velocity, static_cast<long long>(r));
 			goto __ret;
+		}
 
 		if (info->blend_info.op_state) {
-			if (LW_FAILED(
-				_Update(info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity, &info->blend_info.
-					blend_frame, &info->blend_info.blend_ret_frame)))
+			if (LW_RESULT r = _Update(info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity,
+									  &info->blend_info.blend_frame, &info->blend_info.blend_ret_frame); LW_FAILED(r))
+			{
+				ToLogService("errors", LogLevel::Error,
+							 "[{}] _Update (blend) failed: blend_pose={}, blend_type={}, velocity={}, ret={}",
+							 __FUNCTION__, info->blend_info.blend_pose, info->blend_info.blend_type, info->velocity, static_cast<long long>(r));
 				goto __ret;
+			}
 
 			info->blend_info.weight += (info->blend_info.factor * info->velocity); // Mdr
 

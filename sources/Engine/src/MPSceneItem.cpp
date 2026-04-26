@@ -32,20 +32,34 @@ MPSceneItem::~MPSceneItem()
 
 void MPSceneItem::FrameMove()
 {
-    _obj->Update();
+    if (LW_RESULT r = _obj->Update(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Update failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 }
 
 void MPSceneItem::Render()
 {
-    _obj->Render();
+    if (LW_RESULT r = _obj->Render(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Render failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+    }
 
 }
 
 LW_RESULT MPSceneItem::Load( const char* file, int arbitrary_flag )
 {
     LW_RESULT ret;
-    if( LW_FAILED( ret = _obj->Load( file, arbitrary_flag ) ) )
+    ret = _obj->Load( file, arbitrary_flag );
+    if( LW_FAILED( ret ) )
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _obj->Load failed: file={}, arbitrary_flag={}, ret={}",
+                     __FUNCTION__, file ? file : "(null)", arbitrary_flag, static_cast<long long>(ret));
         LG_MSGBOX("Load MPSceneItem %s error", file);
     }
 
@@ -131,8 +145,13 @@ LW_RESULT MPSceneItem::PlayObjImpPose( DWORD ctrl_type, DWORD pose_id, DWORD pla
             if (ctrl_obj == 0)
                 goto __ret;
 
-            if (LW_FAILED(ctrl_obj->PlayPose(&info)))
+            if (LW_RESULT r = ctrl_obj->PlayPose(&info); LW_FAILED(r))
+            {
+                ToLogService("errors", LogLevel::Error,
+                             "[{}] ctrl_obj->PlayPose failed: ctrl_type={}, pose_id={}, ret={}",
+                             __FUNCTION__, ctrl_type, pose_id, static_cast<long long>(r));
                 goto __ret;
+            }
         }
     }
     ret = LW_RET_OK;

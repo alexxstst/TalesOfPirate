@@ -18,8 +18,14 @@ LW_RESULT lwAnimCtrlBone::Release()
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _res_mgr->UnregisterAnimCtrl(this)))
+    ret = _res_mgr->UnregisterAnimCtrl(this);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UnregisterAnimCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(_reg_id == LW_INVALID_INDEX)
     {
@@ -80,8 +86,16 @@ LW_RESULT lwAnimCtrlBone::_BuildRunTimeBoneMatrix(lwMatrix44* out_buf, float fra
     {
         mat_run = &out_buf[i];
 
-        if(LW_FAILED(ret = _data.GetValue(mat_run, i, (float)frame, start_frame, end_frame)))
+        ret = _data.GetValue(mat_run, i, (float)frame, start_frame, end_frame);
+        if(LW_FAILED(ret))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimDataBone::GetValue failed: i={}, frame={}, start={}, end={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         frame, static_cast<long long>(start_frame), static_cast<long long>(end_frame),
+                         static_cast<long long>(ret));
             goto __ret;
+        }
 
         lwMatrix44* m = mat_run;
 
@@ -167,8 +181,12 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
             {
                 rtbd_f->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_f->data, frame, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_f->data, frame, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_f) failed: frame={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, frame, static_cast<long long>(start_frame),
+                                 static_cast<long long>(end_frame), static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_f->data);
                     goto __ret;
                 }
@@ -223,8 +241,13 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
             {
                 rtbd_min->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_min->data, min_f, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_min->data, min_f, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_min) failed: min_f={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(min_f),
+                                 static_cast<long long>(start_frame), static_cast<long long>(end_frame),
+                                 static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_min->data);
                     goto __ret;
                 }
@@ -234,8 +257,13 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
             {
                 rtbd_max->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_max->data, max_f, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_max->data, max_f, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_max) failed: max_f={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, static_cast<long long>(max_f),
+                                 static_cast<long long>(start_frame), static_cast<long long>(end_frame),
+                                 static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_max->data);
                     goto __ret;
                 }
@@ -274,8 +302,14 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
     {
 __rt_get_value:
 
-        if(LW_FAILED(_BuildRunTimeBoneMatrix(mat_buf, frame, start_frame, end_frame)))
+        if(LW_RESULT r = _BuildRunTimeBoneMatrix(mat_buf, frame, start_frame, end_frame); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _BuildRunTimeBoneMatrix(mat_buf) failed: frame={}, start={}, end={}, ret={}",
+                         __FUNCTION__, frame, static_cast<long long>(start_frame),
+                         static_cast<long long>(end_frame), static_cast<long long>(r));
             goto __ret;
+        }
 
         this_mat_ptr = mat_buf;
     }
@@ -362,8 +396,12 @@ LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_fra
             {
                 rtbd_f->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_f->data, frame, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_f->data, frame, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_f) failed: frame={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, frame, static_cast<long long>(start_frame),
+                                 static_cast<long long>(end_frame), static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_f->data);
                     goto __ret;
                 }
@@ -387,8 +425,12 @@ LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_fra
             {
                 rtbd_min->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_min->data, frame, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_min->data, frame, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_min) failed: frame={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, frame, static_cast<long long>(start_frame),
+                                 static_cast<long long>(end_frame), static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_min->data);
                     goto __ret;
                 }
@@ -398,8 +440,12 @@ LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_fra
             {
                 rtbd_max->data = LW_NEW(lwMatrix44[_data._bone_num]);
 
-                if(LW_FAILED(_BuildRunTimeBoneMatrix(rtbd_max->data, frame, start_frame, end_frame)))
+                if(LW_RESULT r = _BuildRunTimeBoneMatrix(rtbd_max->data, frame, start_frame, end_frame); LW_FAILED(r))
                 {
+                    ToLogService("errors", LogLevel::Error,
+                                 "[{}] _BuildRunTimeBoneMatrix(rtbd_max) failed: frame={}, start={}, end={}, ret={}",
+                                 __FUNCTION__, frame, static_cast<long long>(start_frame),
+                                 static_cast<long long>(end_frame), static_cast<long long>(r));
                     LW_SAFE_DELETE_A(rtbd_max->data);
                     goto __ret;
                 }
@@ -421,8 +467,14 @@ LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_fra
 __rt_get_value:
 
 #if 1
-        if(LW_FAILED(_BuildRunTimeBoneMatrix(_bone_rtmat_seq, frame, start_frame, end_frame)))
+        if(LW_RESULT r = _BuildRunTimeBoneMatrix(_bone_rtmat_seq, frame, start_frame, end_frame); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _BuildRunTimeBoneMatrix(_bone_rtmat_seq) failed: frame={}, start={}, end={}, ret={}",
+                         __FUNCTION__, frame, static_cast<long long>(start_frame),
+                         static_cast<long long>(end_frame), static_cast<long long>(r));
             goto __ret;
+        }
 
 #else  // _BuildRunTimeBoneMatrix
         DWORD i;
@@ -460,8 +512,13 @@ __rt_get_value:
 
 __addr_set_rtdummy:
 
-    if(LW_FAILED(_UpdateFrameDataBoneDummy()))
+    if(LW_RESULT r = _UpdateFrameDataBoneDummy(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _UpdateFrameDataBoneDummy failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
 
     ret = LW_RET_OK;
@@ -477,8 +534,13 @@ LW_RESULT lwAnimCtrlBone::LoadData(const void* data)
 
     const lwAnimDataBone* data_bone = (lwAnimDataBone*)data;
 
-    if(LW_FAILED(_data.Copy(data_bone)))
+    if(LW_RESULT r = _data.Copy(data_bone); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimDataBone::Copy failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     _bone_rtmat_seq = LW_NEW(lwMatrix44[_data._bone_num]);
     _dummy_rtmat_seq = LW_NEW(lwIndexMatrix44[_data._dummy_num]);
@@ -604,8 +666,13 @@ LW_RESULT lwAnimCtrlBone::Destroy()
         _rtbuf_seq = 0;
     }
 
-    if(LW_FAILED(_data.Destroy()))
+    if(LW_RESULT r = _data.Destroy(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimDataBone::Destroy failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -645,8 +712,14 @@ LW_RESULT lwAnimCtrlBone::UpdatePose(lwPlayPoseInfo* info)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(_pose_ctrl.PlayPose(info)))
+    if(LW_RESULT r = _pose_ctrl.PlayPose(info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
     //lwPoseInfo* pi = _pose_ctrl.GetPoseInfo(info->pose);
 
@@ -665,8 +738,15 @@ LW_RESULT lwAnimCtrlBone::UpdateAnimData(const lwPlayPoseInfo* info)
 
     lwPoseInfo* pi = _pose_ctrl.GetPoseInfo(info->pose);
 
-    if(LW_FAILED(_UpdateFrameDataBone(&_rtmat_ptr, _bone_rtmat_seq, info->ret_frame, pi->start, pi->end, info->type == PLAY_LOOP ? 1 : 0)))
+    if(LW_RESULT r = _UpdateFrameDataBone(&_rtmat_ptr, _bone_rtmat_seq, info->ret_frame, pi->start, pi->end, info->type == PLAY_LOOP ? 1 : 0); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _UpdateFrameDataBone(main) failed: pose={}, frame={}, start={}, end={}, ret={}",
+                     __FUNCTION__, static_cast<long long>(info->pose),
+                     info->ret_frame, static_cast<long long>(pi->start),
+                     static_cast<long long>(pi->end), static_cast<long long>(r));
         goto __ret;
+    }
 
     if(info->blend_info.op_state)
     {
@@ -679,17 +759,33 @@ LW_RESULT lwAnimCtrlBone::UpdateAnimData(const lwPlayPoseInfo* info)
 
         pi = _pose_ctrl.GetPoseInfo(info->blend_info.blend_pose);
 
-        if(LW_FAILED(_UpdateFrameDataBone(&rtmat_blend_ptr, _bone_rtmat_blend_seq, info->blend_info.blend_ret_frame, pi->start, pi->end, info->blend_info.blend_type == PLAY_LOOP ? 1 : 0)))
+        if(LW_RESULT r = _UpdateFrameDataBone(&rtmat_blend_ptr, _bone_rtmat_blend_seq, info->blend_info.blend_ret_frame, pi->start, pi->end, info->blend_info.blend_type == PLAY_LOOP ? 1 : 0); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _UpdateFrameDataBone(blend) failed: blend_pose={}, blend_frame={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(info->blend_info.blend_pose),
+                         info->blend_info.blend_ret_frame, static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(_BlendBoneData(_bone_rtmat_seq, rtmat_blend_ptr, _rtmat_ptr, info->blend_info.weight)))
+        if(LW_RESULT r = _BlendBoneData(_bone_rtmat_seq, rtmat_blend_ptr, _rtmat_ptr, info->blend_info.weight); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] _BlendBoneData failed: weight={}, ret={}",
+                         __FUNCTION__, info->blend_info.weight, static_cast<long long>(r));
             goto __ret;
+        }
 
         _rtmat_ptr = _bone_rtmat_seq;
     }
 
-    if(LW_FAILED(_UpdateFrameDataBoneDummy()))
+    if(LW_RESULT r = _UpdateFrameDataBoneDummy(); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] _UpdateFrameDataBoneDummy failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     ret = LW_RET_OK;
 __ret:
@@ -703,8 +799,14 @@ LW_RESULT lwAnimCtrlBone::UpdatePoseKeyFrameProc(lwPlayPoseInfo* info)
     if(info->type == PLAY_FRAME)
         goto __addr_ret_ok;
 
-    if(LW_FAILED(_pose_ctrl.CallBack(info)))
+    if(LW_RESULT r = _pose_ctrl.CallBack(info); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::CallBack failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(r));
         goto __ret;
+    }
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -717,8 +819,14 @@ LW_RESULT lwAnimCtrlMatrix::Release()
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _res_mgr->UnregisterAnimCtrl(this)))
+    ret = _res_mgr->UnregisterAnimCtrl(this);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UnregisterAnimCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(_reg_id == LW_INVALID_INDEX)
     {
@@ -812,11 +920,24 @@ LW_RESULT lwAnimCtrlMatrix::UpdatePose(lwPlayPoseInfo* info)
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _pose_ctrl.PlayPose(info)))
+    ret = _pose_ctrl.PlayPose(info);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(ret));
         return ret;
+    }
 
-    if(LW_FAILED(ret = SetFrame(info->ret_frame)))
+    ret = SetFrame(info->ret_frame);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] SetFrame failed: frame={}, ret={}",
+                     __FUNCTION__, info->ret_frame, static_cast<long long>(ret));
         return ret;
+    }
 
     return _pose_ctrl.CallBack(info);
 }
@@ -837,8 +958,14 @@ LW_RESULT lwAnimCtrlTexUV::Release()
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _res_mgr->UnregisterAnimCtrl(this)))
+    ret = _res_mgr->UnregisterAnimCtrl(this);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UnregisterAnimCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(_reg_id == LW_INVALID_INDEX)
     {
@@ -943,8 +1070,13 @@ LW_RESULT lwAnimCtrlTexUV::SetFrame(float frame)
         if(frame >= _keyset_prs->GetFrameNum())
             goto __ret;
 
-        if(LW_FAILED(_keyset_prs->GetValue(&_rtmat_seq[0], frame)))
+        if(LW_RESULT r = _keyset_prs->GetValue(&_rtmat_seq[0], frame); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] keyset_prs::GetValue failed: frame={}, ret={}",
+                         __FUNCTION__, frame, static_cast<long long>(r));
             goto __ret;
+        }
 
         // because uv translation only use m._31 and m._32
         lwMatrix44* mat = &_rtmat_seq[0];
@@ -957,8 +1089,14 @@ LW_RESULT lwAnimCtrlTexUV::SetFrame(float frame)
         if(frame >= _frame_num)
             goto __ret;
 
-        if(LW_FAILED(GetValue(&_rtmat_seq[0], frame)))
+        if(LW_RESULT r = GetValue(&_rtmat_seq[0], frame); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] GetValue failed: frame={}, frame_num={}, ret={}",
+                         __FUNCTION__, frame, static_cast<long long>(_frame_num),
+                         static_cast<long long>(r));
             goto __ret;
+        }
     }
 
     ret = LW_RET_OK;
@@ -975,8 +1113,15 @@ LW_RESULT lwAnimCtrlTexUV::UpdatePose(lwPlayPoseInfo* info)
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _pose_ctrl.PlayPose(info)))
+    ret = _pose_ctrl.PlayPose(info);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(ret));
         return ret;
+    }
 
     return _pose_ctrl.CallBack(info);
 }
@@ -997,8 +1142,14 @@ LW_RESULT lwAnimCtrlTexImg::Release()
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _res_mgr->UnregisterAnimCtrl(this)))
+    ret = _res_mgr->UnregisterAnimCtrl(this);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UnregisterAnimCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(_reg_id == LW_INVALID_INDEX)
     {
@@ -1042,8 +1193,13 @@ LW_RESULT lwAnimCtrlTexImg::LoadData(const void* data)
     lwAnimDataTexImg* adti = (lwAnimDataTexImg*)data;
 	lwPoseInfo pi{};
 
-    if(LW_FAILED(_data.Copy(adti)))
+    if(LW_RESULT r = _data.Copy(adti); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimDataTexImg::Copy failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     _tex_num = adti->_data_num;
     _tex_seq = LW_NEW(lwITex*[_tex_num]);
@@ -1053,11 +1209,23 @@ LW_RESULT lwAnimCtrlTexImg::LoadData(const void* data)
 
     for(DWORD i = 0; i < _tex_num; i++)
     {
-        if(LW_FAILED(_res_mgr->CreateTex(&tex)))
+        if(LW_RESULT r = _res_mgr->CreateTex(&tex); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] CreateTex failed: i={}, ret={}",
+                         __FUNCTION__, static_cast<long long>(i), static_cast<long long>(r));
             goto __ret;
+        }
 
-        if(LW_FAILED(tex->LoadTexInfo(&adti->_data_seq[i], adti->_tex_path)))
+        if(LW_RESULT r = tex->LoadTexInfo(&adti->_data_seq[i], adti->_tex_path); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] LoadTexInfo failed: i={}, tex_path='{}', ret={}",
+                         __FUNCTION__, static_cast<long long>(i),
+                         adti->_tex_path[0] ? adti->_tex_path : "(empty)",
+                         static_cast<long long>(r));
             goto __ret;
+        }
 
         tex->SetLoadResType(LOADINGRES_TYPE_RUNTIME);
         _tex_seq[i] = tex;
@@ -1075,6 +1243,9 @@ LW_RESULT lwAnimCtrlTexImg::LoadData(const void* data)
 __ret:
     if(LW_FAILED(ret))
     {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] LoadData failed, cleaning up: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         LW_IF_RELEASE(tex);
         Destroy();
     }
@@ -1092,8 +1263,15 @@ LW_RESULT lwAnimCtrlTexImg::UpdatePose(lwPlayPoseInfo* info)
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _pose_ctrl.PlayPose(info)))
+    ret = _pose_ctrl.PlayPose(info);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(ret));
         return ret;
+    }
 
     return _pose_ctrl.CallBack(info);
 }
@@ -1128,8 +1306,14 @@ LW_RESULT lwAnimCtrlMtlOpacity::Release()
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _res_mgr->UnregisterAnimCtrl(this)))
+    ret = _res_mgr->UnregisterAnimCtrl(this);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] UnregisterAnimCtrl failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(ret));
         goto __ret;
+    }
 
     if(_reg_id == LW_INVALID_INDEX)
     {
@@ -1159,8 +1343,13 @@ LW_RESULT lwAnimCtrlMtlOpacity::LoadData(const void* data)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    if(LW_FAILED(((lwIAnimDataMtlOpacity*)data)->Clone(&_data)))
+    if(LW_RESULT r = ((lwIAnimDataMtlOpacity*)data)->Clone(&_data); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimDataMtlOpacity::Clone failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
         goto __ret;
+    }
 
     {
         lwIAnimKeySetFloat* aks = _data->GetAnimKeySet();
@@ -1193,8 +1382,20 @@ LW_RESULT lwAnimCtrlMtlOpacity::ExtractAnimData(lwIAnimDataMtlOpacity* out_data)
     
     lwIAnimKeySetFloat* this_aksf = _data->GetAnimKeySet();
 
-    if(this_aksf == 0 || LW_FAILED(this_aksf->Clone(&aksf)))
+    if(this_aksf == 0)
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] GetAnimKeySet returned null",
+                     __FUNCTION__);
         goto __ret;
+    }
+    if(LW_RESULT r = this_aksf->Clone(&aksf); LW_FAILED(r))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] AnimKeySetFloat::Clone failed: ret={}",
+                     __FUNCTION__, static_cast<long long>(r));
+        goto __ret;
+    }
 
     out_data->SetAnimKeySet(aksf);
 
@@ -1207,8 +1408,15 @@ LW_RESULT lwAnimCtrlMtlOpacity::UpdatePose(lwPlayPoseInfo* info)
 {
     LW_RESULT ret;
 
-    if(LW_FAILED(ret = _pose_ctrl.PlayPose(info)))
+    ret = _pose_ctrl.PlayPose(info);
+    if(LW_FAILED(ret))
+    {
+        ToLogService("errors", LogLevel::Error,
+                     "[{}] PoseCtrl::PlayPose failed: pose={}, ret={}",
+                     __FUNCTION__, info ? static_cast<long long>(info->pose) : -1LL,
+                     static_cast<long long>(ret));
         return ret;
+    }
 
     return _pose_ctrl.CallBack(info);
 }
@@ -1224,8 +1432,13 @@ LW_RESULT lwAnimCtrlMtlOpacity::UpdateAnimData(const lwPlayPoseInfo* info)
         if (aksf == 0)
             goto __ret;
 
-        if (LW_FAILED(aksf->GetValue(&_rt_opacity, info->ret_frame)))
+        if (LW_RESULT r = aksf->GetValue(&_rt_opacity, info->ret_frame); LW_FAILED(r))
+        {
+            ToLogService("errors", LogLevel::Error,
+                         "[{}] AnimKeySetFloat::GetValue failed: frame={}, ret={}",
+                         __FUNCTION__, info->ret_frame, static_cast<long long>(r));
             goto __ret;
+        }
 
         ret = LW_RET_OK;
     }
