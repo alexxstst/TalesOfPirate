@@ -76,6 +76,7 @@ type GateServerSystem
         system.OnCommand.Add(fun (ch, packet) ->
             logger.LogInformation("IN << {Channel} {Packet}", ch, packet)
             let sess = packet.Sess
+
             if sess > 0u && sess < SESS_FLAG then
                 this.HandleServeCall(ch, sess, packet)
             elif sess = 0u || sess = SESS_FLAG then
@@ -84,8 +85,7 @@ type GateServerSystem
                 // Ответ от AccountServer relay (не используется напрямую)
                 logger.LogDebug("GateServerSystem: SESS ответ {Sess}", sess))
 
-        system.OnDisconnected.Add(fun ch ->
-            this.OnGateDisconnected(ch))
+        system.OnDisconnected.Add(fun ch -> this.OnGateDisconnected(ch))
 
     /// Получить HandlerContext.
     member this.GetCtx() =
@@ -114,6 +114,7 @@ type GateServerSystem
                   AllocateGpAddr = registry.AllocateGpAddr
                   AllocateTeamId = this.AllocateTeamId
                   AllocateSessionId = this.AllocateSessionId }
+
             _handlerCtx <- Some ctx
             ctx
 
@@ -132,18 +133,12 @@ type GateServerSystem
 
         match cmd with
         // Команды без сессии игрока
-        | Commands.CMD_TP_LOGIN ->
-            Auth.handleTpLogin ctx ch sess packet
-        | Commands.CMD_TP_USER_LOGIN ->
-            Auth.handleTpUserLogin ctx ch sess packet
-        | Commands.CMD_TP_REQPLYLST ->
-            Auth.handleTpReqPlylst ctx ch sess packet
-        | Commands.CMD_TP_SYNC_PLYLST ->
-            Auth.handleTpSyncPlylst ctx ch sess packet
-        | Commands.CMD_TP_REGISTER ->
-            Auth.handleTpRegister ctx ch sess packet
-        | Commands.CMD_OS_LOGIN ->
-            Auth.handleOsLogin ctx ch sess packet
+        | Commands.CMD_TP_LOGIN -> Auth.handleTpLogin ctx ch sess packet
+        | Commands.CMD_TP_USER_LOGIN -> Auth.handleTpUserLogin ctx ch sess packet
+        | Commands.CMD_TP_REQPLYLST -> Auth.handleTpReqPlylst ctx ch sess packet
+        | Commands.CMD_TP_SYNC_PLYLST -> Auth.handleTpSyncPlylst ctx ch sess packet
+        | Commands.CMD_TP_REGISTER -> Auth.handleTpRegister ctx ch sess packet
+        | Commands.CMD_OS_LOGIN -> Auth.handleOsLogin ctx ch sess packet
         // Команды с сессией игрока (player pointer в trailer)
         | Commands.CMD_TP_USER_LOGOUT
         | Commands.CMD_TP_BGNPLAY
@@ -155,34 +150,30 @@ type GateServerSystem
         | Commands.CMD_TP_CHANGEPASS ->
             match this.TryGetPlayerFromPacket(packet) with
             | None ->
-                logger.LogWarning("HandleServeCall: игрок не найден для cmd={Cmd}", cmd)
+                logger.LogWarning(
+                    "HandleServeCall: игрок не найден для cmd={Cmd}",
+                    packet.ToString()
+                )
+
                 let mutable w = WPacket(16)
                 w.WriteCmd(cmd)
                 w.WriteInt64(int64 Commands.ERR_PT_INERR)
                 this.SendRpcResponse(ch, sess, w)
             | Some player ->
                 match cmd with
-                | Commands.CMD_TP_USER_LOGOUT ->
-                    Auth.handleTpUserLogout ctx ch sess player
-                | Commands.CMD_TP_BGNPLAY ->
-                    Cha.handleTpBgnplay ctx ch sess player packet
-                | Commands.CMD_TP_ENDPLAY ->
-                    Cha.handleTpEndplay ctx ch sess player packet
-                | Commands.CMD_TP_NEWCHA ->
-                    Cha.handleTpNewcha ctx ch sess player packet
-                | Commands.CMD_TP_DELCHA ->
-                    Cha.handleTpDelcha ctx ch sess player packet
+                | Commands.CMD_TP_USER_LOGOUT -> Auth.handleTpUserLogout ctx ch sess player
+                | Commands.CMD_TP_BGNPLAY -> Cha.handleTpBgnplay ctx ch sess player packet
+                | Commands.CMD_TP_ENDPLAY -> Cha.handleTpEndplay ctx ch sess player packet
+                | Commands.CMD_TP_NEWCHA -> Cha.handleTpNewcha ctx ch sess player packet
+                | Commands.CMD_TP_DELCHA -> Cha.handleTpDelcha ctx ch sess player packet
                 | Commands.CMD_TP_CREATE_PASSWORD2 ->
                     Auth.handleTpCreatePassword2 ctx ch sess player packet
                 | Commands.CMD_TP_UPDATE_PASSWORD2 ->
                     Auth.handleTpUpdatePassword2 ctx ch sess player packet
-                | Commands.CMD_TP_CHANGEPASS ->
-                    Auth.handleTpChangepass ctx ch sess player packet
+                | Commands.CMD_TP_CHANGEPASS -> Auth.handleTpChangepass ctx ch sess player packet
                 | _ -> ()
-        | Commands.CMD_TP_DISC ->
-            Auth.handleTpDisc ctx ch packet
-        | _ ->
-            logger.LogWarning("HandleServeCall: неизвестная команда {Cmd}", cmd)
+        | Commands.CMD_TP_DISC -> Auth.handleTpDisc ctx ch packet
+        | _ -> logger.LogWarning("HandleServeCall: неизвестная команда {Cmd}", cmd)
 
     // ── OnProcessData: async-диспатч ──
     member private this.OnProcessData(ch: GateServerIO, packet: IRPacket) =
@@ -192,14 +183,10 @@ type GateServerSystem
 
         match cmd with
         // ── MP_* от GameServer (без trailer) ──
-        | Commands.CMD_MP_TEAM_CREATE ->
-            Team.handleMpTeamCreate ctx packet
-        | Commands.CMD_MP_MASTER_CREATE ->
-            Master.handleMpMasterCreate ctx packet
-        | Commands.CMD_MP_MASTER_DEL ->
-            Master.handleMpMasterDel ctx packet
-        | Commands.CMD_MP_MASTER_FINISH ->
-            Master.handleMpMasterFinish ctx packet
+        | Commands.CMD_MP_TEAM_CREATE -> Team.handleMpTeamCreate ctx packet
+        | Commands.CMD_MP_MASTER_CREATE -> Master.handleMpMasterCreate ctx packet
+        | Commands.CMD_MP_MASTER_DEL -> Master.handleMpMasterDel ctx packet
+        | Commands.CMD_MP_MASTER_FINISH -> Master.handleMpMasterFinish ctx packet
         // MP_* от GameServer с player в trailer
         | Commands.CMD_MP_ENTERMAP
         | Commands.CMD_MP_GUILD_CREATE
@@ -213,64 +200,40 @@ type GateServerSystem
         | Commands.CMD_MP_GARNER2_UPDATE
         | Commands.CMD_MP_GARNER2_CGETORDER ->
             match this.TryGetPlayerFromPacket(packet) with
-            | None ->
-                logger.LogWarning("OnProcessData: игрок не найден для MP cmd={Cmd}", cmd)
+            | None -> logger.LogWarning("OnProcessData: игрок не найден для MP cmd={Cmd}", cmd)
             | Some player ->
                 match cmd with
-                | Commands.CMD_MP_ENTERMAP ->
-                    PInfo.handleMpEntermap ctx player packet
-                | Commands.CMD_MP_GUILD_CREATE ->
-                    Guild.handleMpGuildCreate ctx player packet
-                | Commands.CMD_MP_GUILD_APPROVE ->
-                    Guild.handleMpGuildApprove ctx player packet
-                | Commands.CMD_MP_GUILD_KICK ->
-                    Guild.handleMpGuildKick ctx player packet
-                | Commands.CMD_MP_GUILD_LEAVE ->
-                    Guild.handleMpGuildLeave ctx player packet
-                | Commands.CMD_MP_GUILD_DISBAND ->
-                    Guild.handleMpGuildDisband ctx player packet
-                | Commands.CMD_MP_GUILD_MOTTO ->
-                    Guild.handleMpGuildMotto ctx player packet
-                | Commands.CMD_MP_GUILD_PERM ->
-                    Guild.handleMpGuildPerm ctx player packet
-                | Commands.CMD_MP_GUILDBANK ->
-                    Guild.handleMpGuildBankAck ctx player packet
-                | Commands.CMD_MP_GARNER2_UPDATE ->
-                    Ranking.handleMpGarner2Update ctx player packet
+                | Commands.CMD_MP_ENTERMAP -> PInfo.handleMpEntermap ctx player packet
+                | Commands.CMD_MP_GUILD_CREATE -> Guild.handleMpGuildCreate ctx player packet
+                | Commands.CMD_MP_GUILD_APPROVE -> Guild.handleMpGuildApprove ctx player packet
+                | Commands.CMD_MP_GUILD_KICK -> Guild.handleMpGuildKick ctx player packet
+                | Commands.CMD_MP_GUILD_LEAVE -> Guild.handleMpGuildLeave ctx player packet
+                | Commands.CMD_MP_GUILD_DISBAND -> Guild.handleMpGuildDisband ctx player packet
+                | Commands.CMD_MP_GUILD_MOTTO -> Guild.handleMpGuildMotto ctx player packet
+                | Commands.CMD_MP_GUILD_PERM -> Guild.handleMpGuildPerm ctx player packet
+                | Commands.CMD_MP_GUILDBANK -> Guild.handleMpGuildBankAck ctx player packet
+                | Commands.CMD_MP_GARNER2_UPDATE -> Ranking.handleMpGarner2Update ctx player packet
                 | Commands.CMD_MP_GARNER2_CGETORDER ->
                     Ranking.handleMpGarner2GetOrder ctx player packet
                 | _ -> ()
 
         // MP_* broadcast (от GameServer, без trailer)
-        | Commands.CMD_MP_SAY2ALL ->
-            Chat.handleMpSay2All ctx packet
-        | Commands.CMD_MP_SAY2TRADE ->
-            Chat.handleMpSay2Trade ctx packet
-        | Commands.CMD_MP_GM1SAY ->
-            Chat.handleMpGm1Say ctx packet
-        | Commands.CMD_MP_GM1SAY1 ->
-            Chat.handleMpGm1Say1 ctx packet
+        | Commands.CMD_MP_SAY2ALL -> Chat.handleMpSay2All ctx packet
+        | Commands.CMD_MP_SAY2TRADE -> Chat.handleMpSay2Trade ctx packet
+        | Commands.CMD_MP_GM1SAY -> Chat.handleMpGm1Say ctx packet
+        | Commands.CMD_MP_GM1SAY1 -> Chat.handleMpGm1Say1 ctx packet
         // MP_* admin (от GameServer, без trailer)
-        | Commands.CMD_MP_GMBANACCOUNT ->
-            Admin.handleMpGmbanaccount ctx packet
-        | Commands.CMD_MP_GMUNBANACCOUNT ->
-            Admin.handleMpGmunbanaccount ctx packet
-        | Commands.CMD_MP_MUTE_PLAYER ->
-            Admin.handleMpMutePlayer ctx packet
-        | Commands.CMD_MP_CANRECEIVEREQUESTS ->
-            Admin.handleMpCanreceiverequests ctx packet
-        | Commands.CMD_MP_GUILDNOTICE ->
-            Admin.handleMpGuildnotice ctx packet
-        | Commands.CMD_MP_GUILD_CHALLMONEY ->
-            Guild.handleMpGuildChallMoney ctx packet
-        | Commands.CMD_MP_GUILD_CHALL_PRIZEMONEY ->
-            Guild.handleMpGuildChallPrizeMoney ctx packet
-        | Commands.CMD_TP_ESTOPUSER_CHECK ->
-            Admin.handleTpEstopuserCheck ctx packet
+        | Commands.CMD_MP_GMBANACCOUNT -> Admin.handleMpGmbanaccount ctx packet
+        | Commands.CMD_MP_GMUNBANACCOUNT -> Admin.handleMpGmunbanaccount ctx packet
+        | Commands.CMD_MP_MUTE_PLAYER -> Admin.handleMpMutePlayer ctx packet
+        | Commands.CMD_MP_CANRECEIVEREQUESTS -> Admin.handleMpCanreceiverequests ctx packet
+        | Commands.CMD_MP_GUILDNOTICE -> Admin.handleMpGuildnotice ctx packet
+        | Commands.CMD_MP_GUILD_CHALLMONEY -> Guild.handleMpGuildChallMoney ctx packet
+        | Commands.CMD_MP_GUILD_CHALL_PRIZEMONEY -> Guild.handleMpGuildChallPrizeMoney ctx packet
+        | Commands.CMD_TP_ESTOPUSER_CHECK -> Admin.handleTpEstopuserCheck ctx packet
 
         // ── TP_DISC (Sess=0, без RPC) ──
-        | Commands.CMD_TP_DISC ->
-            Auth.handleTpDisc ctx ch packet
+        | Commands.CMD_TP_DISC -> Auth.handleTpDisc ctx ch packet
 
         // ── CP_* от клиента (через trailer) ──
         | Commands.CMD_CP_TEAM_INVITE
@@ -304,30 +267,20 @@ type GateServerSystem
         | Commands.CMD_CP_PING
         | Commands.CMD_CP_REPORT_WG ->
             match this.TryGetPlayerFromPacket(packet) with
-            | None ->
-                logger.LogWarning("OnProcessData: игрок не найден для cmd={Cmd}", cmd)
+            | None -> logger.LogWarning("OnProcessData: игрок не найден для cmd={Cmd}", cmd)
             | Some player ->
                 match cmd with
                 // Team
-                | Commands.CMD_CP_TEAM_INVITE ->
-                    Team.handleCpTeamInvite ctx player packet
-                | Commands.CMD_CP_TEAM_ACCEPT ->
-                    Team.handleCpTeamAccept ctx player packet
-                | Commands.CMD_CP_TEAM_REFUSE ->
-                    Team.handleCpTeamRefuse ctx player packet
-                | Commands.CMD_CP_TEAM_LEAVE ->
-                    Team.handleCpTeamLeave ctx player packet
-                | Commands.CMD_CP_TEAM_KICK ->
-                    Team.handleCpTeamKick ctx player packet
+                | Commands.CMD_CP_TEAM_INVITE -> Team.handleCpTeamInvite ctx player packet
+                | Commands.CMD_CP_TEAM_ACCEPT -> Team.handleCpTeamAccept ctx player packet
+                | Commands.CMD_CP_TEAM_REFUSE -> Team.handleCpTeamRefuse ctx player packet
+                | Commands.CMD_CP_TEAM_LEAVE -> Team.handleCpTeamLeave ctx player packet
+                | Commands.CMD_CP_TEAM_KICK -> Team.handleCpTeamKick ctx player packet
                 // Friends
-                | Commands.CMD_CP_FRND_INVITE ->
-                    Frnd.handleCpFrndInvite ctx player packet
-                | Commands.CMD_CP_FRND_ACCEPT ->
-                    Frnd.handleCpFrndAccept ctx player packet
-                | Commands.CMD_CP_FRND_REFUSE ->
-                    Frnd.handleCpFrndRefuse ctx player packet
-                | Commands.CMD_CP_FRND_DELETE ->
-                    Frnd.handleCpFrndDelete ctx player packet
+                | Commands.CMD_CP_FRND_INVITE -> Frnd.handleCpFrndInvite ctx player packet
+                | Commands.CMD_CP_FRND_ACCEPT -> Frnd.handleCpFrndAccept ctx player packet
+                | Commands.CMD_CP_FRND_REFUSE -> Frnd.handleCpFrndRefuse ctx player packet
+                | Commands.CMD_CP_FRND_DELETE -> Frnd.handleCpFrndDelete ctx player packet
                 | Commands.CMD_CP_FRND_CHANGE_GROUP ->
                     Frnd.handleCpFrndChangeGroup ctx player packet
                 | Commands.CMD_CP_FRND_REFRESH_INFO ->
@@ -338,55 +291,39 @@ type GateServerSystem
                 | Commands.CMD_CP_PRENTICE_REFRESH_INFO ->
                     Master.handleCpPrenticeRefreshInfo ctx player packet
                 // Chat
-                | Commands.CMD_CP_SAY2ALL ->
-                    Chat.handleCpSay2All ctx player packet
-                | Commands.CMD_CP_SAY2TRADE ->
-                    Chat.handleCpSay2Trade ctx player packet
-                | Commands.CMD_CP_SAY2YOU ->
-                    Chat.handleCpSay2You ctx player packet
-                | Commands.CMD_CP_SAY2TEM ->
-                    Chat.handleCpSay2Tem ctx player packet
-                | Commands.CMD_CP_SAY2GUD ->
-                    Chat.handleCpSay2Gud ctx player packet
-                | Commands.CMD_CP_GM1SAY ->
-                    Chat.handleCpGm1Say ctx player packet
-                | Commands.CMD_CP_GM1SAY1 ->
-                    Chat.handleCpGm1Say1 ctx player packet
+                | Commands.CMD_CP_SAY2ALL -> Chat.handleCpSay2All ctx player packet
+                | Commands.CMD_CP_SAY2TRADE -> Chat.handleCpSay2Trade ctx player packet
+                | Commands.CMD_CP_SAY2YOU -> Chat.handleCpSay2You ctx player packet
+                | Commands.CMD_CP_SAY2TEM -> Chat.handleCpSay2Tem ctx player packet
+                | Commands.CMD_CP_SAY2GUD -> Chat.handleCpSay2Gud ctx player packet
+                | Commands.CMD_CP_GM1SAY -> Chat.handleCpGm1Say ctx player packet
+                | Commands.CMD_CP_GM1SAY1 -> Chat.handleCpGm1Say1 ctx player packet
                 // Sessions
-                | Commands.CMD_CP_SESS_CREATE ->
-                    Chat.handleCpSessCreate ctx player packet
-                | Commands.CMD_CP_SESS_SAY ->
-                    Chat.handleCpSessSay ctx player packet
-                | Commands.CMD_CP_SESS_ADD ->
-                    Chat.handleCpSessAdd ctx player packet
-                | Commands.CMD_CP_SESS_LEAVE ->
-                    Chat.handleCpSessLeave ctx player packet
+                | Commands.CMD_CP_SESS_CREATE -> Chat.handleCpSessCreate ctx player packet
+                | Commands.CMD_CP_SESS_SAY -> Chat.handleCpSessSay ctx player packet
+                | Commands.CMD_CP_SESS_ADD -> Chat.handleCpSessAdd ctx player packet
+                | Commands.CMD_CP_SESS_LEAVE -> Chat.handleCpSessLeave ctx player packet
                 // PersonInfo
-                | Commands.CMD_CP_REFUSETOME ->
-                    Chat.handleCpRefuseToMe ctx player packet
+                | Commands.CMD_CP_REFUSETOME -> Chat.handleCpRefuseToMe ctx player packet
                 | Commands.CMD_CP_CHANGE_PERSONINFO ->
                     PInfo.handleCpChangePersoninfo ctx player packet
-                | Commands.CMD_CP_PING ->
-                    PInfo.handleCpPing ctx player packet
+                | Commands.CMD_CP_PING -> PInfo.handleCpPing ctx player packet
                 // Guild Bank
-                | Commands.CMD_CP_GUILDBANK ->
-                    Guild.handleCpGuildBank ctx player packet
-                | Commands.CMD_MP_PUSHTOGUILDBANK ->
-                    Guild.handleMpPushToGuildBank ctx player packet
+                | Commands.CMD_CP_GUILDBANK -> Guild.handleCpGuildBank ctx player packet
+                | Commands.CMD_MP_PUSHTOGUILDBANK -> Guild.handleMpPushToGuildBank ctx player packet
                 // Admin
-                | Commands.CMD_CP_REPORT_WG ->
-                    Admin.handleCpReportWg ctx player packet
+                | Commands.CMD_CP_REPORT_WG -> Admin.handleCpReportWg ctx player packet
                 | _ -> ()
-        | _ ->
-            logger.LogDebug("OnProcessData: неизвестная команда {Cmd}", cmd)
+        | _ -> logger.LogDebug("OnProcessData: неизвестная команда {Cmd}", cmd)
 
     // ── Отключение GateServer ──
     member private this.OnGateDisconnected(ch: GateServerIO) =
         logger.LogInformation("GateServer отключён: {Name}", ch.Name)
         let idx = ch.GateIndex
+
         if idx >= 0 && idx < _gates.Length then
             _gates[idx] <- null
-        // TODO: EndPlay всех игроков этого гейта
+    // TODO: EndPlay всех игроков этого гейта
 
     // ── Публичные свойства для обработчиков ──
     member _.Registry = registry
@@ -413,6 +350,7 @@ type GateServerSystem
     /// Отправить пакет одному клиенту через GateServer (с trailer).
     member _.SendToSingleClient(player: PlayerRecord, wpk: WPacket) =
         let gate = player.Gate
+
         if not (isNull gate) && gate.IsRegistered then
             wpk.WriteInt64(int64 player.GpAddr)
             wpk.WriteInt64(int64 player.GateAddr)
@@ -425,17 +363,22 @@ type GateServerSystem
             players
             |> Array.filter (fun p -> p.IsPlaying && not (isNull p.Gate) && p.Gate.IsRegistered)
             |> Array.groupBy (fun p -> p.Gate)
+
         for gate, gatePlayers in groups do
             let mutable clone = wpk.Clone()
+
             for p in gatePlayers do
                 clone.WriteInt64(int64 p.GpAddr)
                 clone.WriteInt64(int64 p.GateAddr)
+
             clone.WriteInt64(int64 gatePlayers.Length)
             gate.SendPacket(clone)
 
     /// Broadcast пакет всем онлайн-клиентам.
     member this.SendToAllClients(wpk: WPacket) =
-        let players = registry.GetAllPlayers() |> Seq.filter (fun p -> p.IsPlaying) |> Seq.toArray
+        let players =
+            registry.GetAllPlayers() |> Seq.filter (fun p -> p.IsPlaying) |> Seq.toArray
+
         if players.Length > 0 then
             this.SendToClients(players, wpk)
 
@@ -446,16 +389,17 @@ type GateServerSystem
         w.WriteInt64(int64 gpAddr)
         w.WriteInt64(int64 gtAddr)
         w.WriteInt64(1L)
+
         match registry.TryGetByGpAddr(gpAddr) with
         | Some player ->
             let gate = player.Gate
+
             if not (isNull gate) && gate.IsRegistered then
                 gate.SendPacket(w)
         | None -> ()
 
     /// Загрузить рейтинг из БД при старте.
-    member this.LoadRanking() =
-        Ranking.loadParam (this.GetCtx()) _ranking
+    member this.LoadRanking() = Ranking.loadParam (this.GetCtx()) _ranking
 
     /// Загрузить гильдии из БД при старте (аналог C++ TBLGuilds::InitAllGuilds).
     member _.LoadGuildsFromDb() =
@@ -465,6 +409,7 @@ type GateServerSystem
 
             // Загружаем все гильдии
             let guilds = db.Guilds.ToArray()
+
             for g in guilds do
                 // Загружаем участников гильдии (все персонажи с данным GuildId)
                 // guild_id = 0 в legacy означает «нет гильдии», конвертер не используется
@@ -473,11 +418,14 @@ type GateServerSystem
 
                 let members =
                     memberChars
-                    |> Array.fold (fun (acc: Map<int, GuildMemberInfo>) c ->
-                        acc.Add(c.Id,
-                            { ChaId = c.Id
-                              ChaName = c.Name
-                              Permission = uint32 c.GuildPermissions }))
+                    |> Array.fold
+                        (fun (acc: Map<int, GuildMemberInfo>) c ->
+                            acc.Add(
+                                c.Id,
+                                { ChaId = c.Id
+                                  ChaName = c.Name
+                                  Permission = uint32 c.GuildPermissions }
+                            ))
                         Map.empty
 
                 let guildData =
@@ -488,8 +436,10 @@ type GateServerSystem
                       Status = GuildStatus.None
                       RemainMinute =
                         if g.DisbandScheduledAt.HasValue then
-                            int (g.DisbandScheduledAt.Value - DateTimeOffset.UtcNow).TotalMinutes |> max 0
-                        else 0
+                            int (g.DisbandScheduledAt.Value - DateTimeOffset.UtcNow).TotalMinutes
+                            |> max 0
+                        else
+                            0
                       Tick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                       Members = members
                       ChallMoney = int g.ChallengeMoney
@@ -512,13 +462,15 @@ type GateServerSystem
             for m in mentorships do
                 _masterRelations[struct (m.PrenticeCharacterId, m.MasterCharacterId)] <- true
 
-            logger.LogInformation("LoadMasterRelationsFromDb: загружено {Count} связей", _masterRelations.Count)
+            logger.LogInformation(
+                "LoadMasterRelationsFromDb: загружено {Count} связей",
+                _masterRelations.Count
+            )
         with ex ->
             logger.LogError(ex, "LoadMasterRelationsFromDb: ошибка загрузки мастер-связей")
 
     // ── Связывание систем ──
-    member _.SetSystems(account: IAccountServerSystem) =
-        _accountSystem <- account
+    member _.SetSystems(account: IAccountServerSystem) = _accountSystem <- account
 
     // ── Lifecycle ──
     member _.Start(ct: CancellationToken) =
@@ -530,5 +482,6 @@ type GateServerSystem
         member this.SendToClients(players, packet) = this.SendToClients(players, packet)
         member this.SendToAllClients(packet) = this.SendToAllClients(packet)
         member this.KickUser(gpAddr, gtAddr) = this.KickUser(gpAddr, gtAddr)
+
         member _.FindGateByName(name) =
             _gates |> Array.tryFind (fun g -> not (isNull g) && g.IsRegistered && g.Name = name)

@@ -519,31 +519,42 @@ module rec Packets =
             | true, name -> name
             | _ -> string cmd
 
+        /// Команды, шумящие в логах при штатной работе. Печать пакетного ToString
+        /// возвращает "" для них; коллер сам должен пропустить лог-строку, если
+        /// не хочет видеть пустое "IN << " в консоли.
+        static member IsMuted(cmd: uint16) =
+            match cmd with
+            | Commands.CMD_MT_MAPENTRY -> true
+            | Commands.CMD_TM_MAPENTRY -> true
+            | _-> false
+
         static member PrintShortPacketData(packet: IRPacket) =
             $"RPacket[{PacketHelper.CmdName(packet.GetCmd())} Sess={packet.Sess} PayloadLength={packet.PayloadLength}]"
 
         static member PrintShortPacketData(w: WPacket) =
             if w.GetPacketSize() >= 8 then
-                $"WPacket[{PacketHelper.CmdName(w.GetCmd())} Sess={w.GetSess()} Size = {w.GetPacketSize()} PayloadLength={w.PayloadLength}]"
+                $"WPacket[{PacketHelper.CmdName(w.GetCmd())}({w.GetCmd()}) Sess={w.GetSess()} Size = {w.GetPacketSize()} PayloadLength={w.PayloadLength}]"
             else
                 "WPacket[Empty]"
 
-        static member PrintCommand(packet: IRPacket) =
-            if packet.GetPacketSize() < 8 then
+        static member PrintCommand(r: IRPacket) =
+            if PacketHelper.IsMuted(r.GetCmd()) then ""
+            elif r.GetPacketSize() < 8 then
                 "<< RPacket[Empty]"
             else
                 let payload =
-                    if packet.PayloadLength > 0 then
-                        MsgpackUtil.sequenceToString (packet.GetPayloadMemory().Span)
+                    if r.PayloadLength > 0 then
+                        MsgpackUtil.sequenceToString (r.GetPayloadMemory().Span)
                     else ""
-                $"<< RPacket[Cmd={PacketHelper.CmdName(packet.GetCmd())} Sess={packet.Sess} Size={packet.GetPacketSize()}{payload}]"
+                $"<< RPacket[Cmd={PacketHelper.CmdName(r.GetCmd())}({r.GetCmd()}) Sess={r.Sess} Size={r.GetPacketSize()}{payload}]"
 
         static member PrintCommand(w: WPacket) =
-            if w.GetPacketSize() < 8 then
+            if PacketHelper.IsMuted(w.GetCmd()) then ""
+            elif w.GetPacketSize() < 8 then
                 ">> WPacket[Empty]"
             else
                 let payload =
                     if w.PayloadLength > 0 then
                         MsgpackUtil.sequenceToString (w.GetPayloadMemory().Span)
                     else ""
-                $">> WPacket[Cmd={PacketHelper.CmdName(w.GetCmd())} Sess={w.GetSess()} Size={w.GetPacketSize()}{payload}]"
+                $">> WPacket[Cmd={PacketHelper.CmdName(w.GetCmd())}({w.GetCmd()}) Sess={w.GetSess()} Size={w.GetPacketSize()}{payload}]"

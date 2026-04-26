@@ -428,7 +428,7 @@ type ClientSystem
             logout.WriteCmd(Commands.CMD_TP_USER_LOGOUT)
             let (ChannelId_ rawId) = player.Id
             logout.WriteInt64(int64 rawId)
-            logout.WriteInt64(0L) // gp_addr = 0 для Authorized
+            logout.WriteInt64(auth.GroupServerPlayerId)
             this.SyncCallGroup(logout, fun _ -> ())
 
         | Playing_ playing ->

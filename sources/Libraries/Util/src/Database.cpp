@@ -452,6 +452,18 @@ void OdbcCommand::ParseNamedParameters() {
 			_processedSql += '?';
 		}
 		else if (c == '@') {
+			// T-SQL глобальная переменная: @@IDENTITY, @@ROWCOUNT и т.п. — копируем как есть, не подменяем
+			if (i + 1 < _sql.size() && _sql[i + 1] == '@') {
+				_processedSql += "@@";
+				i += 2;
+				while (i < _sql.size() && (std::isalnum(static_cast<unsigned char>(_sql[i])) || _sql[i] == '_')) {
+					_processedSql += _sql[i];
+					++i;
+				}
+				--i; // цикл сделает ++i
+				continue;
+			}
+
 			// Именованный параметр: @identifier
 			size_t start = i;
 			++i;
