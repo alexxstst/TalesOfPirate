@@ -18,7 +18,6 @@ lwSceneMgr::lwSceneMgr(lwISysGraphics* sys_graphics)
 {
     _vf = LW_NEW(lwViewFrustum);
 
-    // default sort_obj_size is 1024
     _sort_obj_seq_size = 1024;
     _sort_obj_seq = LW_NEW(lwSortPriInfo[_sort_obj_seq_size]);
 
@@ -197,7 +196,6 @@ LW_RESULT lwSceneMgr::CullPrimitive(lwIPrimitive* obj)
                 goto __ret;
             }
 
-            // for the compatible checking
             box = bbi->box;
             if (box.r.x < 0.0f)
             {
@@ -217,7 +215,6 @@ LW_RESULT lwSceneMgr::CullPrimitive(lwIPrimitive* obj)
             d = bb->GetData();
 
             // begin defined
-            //#define BOX_CP
 #define SPHERE_CP
 
 #if(defined BOX_CP)
@@ -228,9 +225,6 @@ LW_RESULT lwSceneMgr::CullPrimitive(lwIPrimitive* obj)
             {
                 lwSphere s;
 
-                //s.c = box.p + box.s / 2;
-                //s.r = max(max(box.s.x, box.s.y), box.s.z);
-                //lwVec3Mat44Mul(&s.c, &mat);
 
                 s.c = box.c;
                 lwVec3Mat44Mul(&s.c, &mat);

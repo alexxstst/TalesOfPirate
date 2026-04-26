@@ -20,7 +20,6 @@ namespace Corsairs::Engine::Input {
 			if (!extended) {
 				return base;
 			}
-			//  DIK_* для extended-клавиш имеет старший бит (например DIK_RCONTROL=0x9D).
 			return static_cast<std::uint8_t>(base | 0x80);
 		}
 	} // anonymous

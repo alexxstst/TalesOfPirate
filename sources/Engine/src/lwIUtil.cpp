@@ -233,12 +233,7 @@ LW_RESULT lwPrimitiveGetObjHeight(lwIPrimitive* p, float* out_height)
     if(h_obj == 0)
         goto __ret;
 
-    //lwIBoundingSphere* bs = h_obj->GetBoundingSphere();
-    //if(bs)
-    //{
-    //    lwBoundingSphereInfo* bsi = bs->GetObjInfo(0);        
     //    bsi->sphere.c
-    //}
     {
         lwIBoundingBox* bb = h_obj->GetBoundingBox();
         if (bb)
@@ -287,20 +282,6 @@ LW_RESULT lwTexUVAnim0(lwIAnimCtrlTexUV* ctrl_texuv)
 
     ctrl_texuv->SetAnimKeySetPRS(keyset_prs);
 
-    //const int t = 120;
-    //lwMatrix44 uvmat_seq[t];
-    //float u = 0.0f;
-    //float v = 0.0f;
-    //float x = 1.0f / t;
-    //for( DWORD i = 0; i < t; i++ )
-    //{
-    //    lwMatrix44Identity(&uvmat_seq[i]);
-    //    uvmat_seq[ i ]._31 = u;
-    //    uvmat_seq[ i ]._32 = v;
-    //    u += x;
-    //    v += x;
-    //};
-    //ctrl_texuv->LoadData(uvmat_seq, t);
 
     return LW_RET_OK;
 }
@@ -330,26 +311,9 @@ LW_RESULT lwTexUVAnim1(lwIAnimCtrlTexUV* ctrl_texuv)
 
     ctrl_texuv->SetAnimKeySetPRS(keyset_prs);
 
-    //const int t = 120;
-    //lwMatrix44 uvmat_seq[t];
-    //float u = 0.0f;
-    //float v = 0.0f;
-    //float x = 1.0f / t;
-    //float y = LW_2_PI / t;
 
-    //for( DWORD i = 0; i < t; i++ )
-    //{
-    //    lwMatrix44Identity(&uvmat_seq[i]);
-    //    uvmat_seq[i]._11 = cosf(u);
-    //    uvmat_seq[i]._12 = -sinf(v);
-    //    uvmat_seq[i]._21 = sinf(u);
-    //    uvmat_seq[i]._22 = cosf(v);
 
-    //    u += y;
-    //    v += y;
-    //};
 
-    //ctrl_texuv->LoadData(uvmat_seq, t);
 
     return LW_RET_OK;
 }
@@ -391,28 +355,6 @@ LW_RESULT lwTexUVAnim2(lwIAnimCtrlTexUV* ctrl_texuv)
 
     ctrl_texuv->SetAnimKeySetPRS(keyset_prs);
 
-    //const int t = 120;
-    //lwMatrix44 uvmat_seq[t];
-    //float u = 0.0f;
-    //float v = 0.0f;
-    //float m = 0.0f;
-    //float n = 0.0f;
-    //float x = LW_2_PI / t;
-    //for( DWORD i = 0; i < t; i++ )
-    //{
-    //    lwMatrix44Identity(&uvmat_seq[i]);
-    //    uvmat_seq[i]._31 = m;
-    //    uvmat_seq[i]._32 = n;
-    //    uvmat_seq[i]._11 = cosf(u);
-    //    uvmat_seq[i]._12 = -sinf(v);
-    //    uvmat_seq[i]._21 = sinf(u);
-    //    uvmat_seq[i]._22 = cosf(v);
-    //    m += x;
-    //    n += x;
-    //    u += x;
-    //    v += x;
-    //};
-    //ctrl_texuv->LoadData(uvmat_seq, t);
 
     return LW_RET_OK;
 }
@@ -438,26 +380,9 @@ LW_RESULT lwTexUVAnim3(lwIAnimCtrlTexUV* ctrl_texuv)
     keyset_prs->AddKeyRotation(0, buf, 3);
     ctrl_texuv->SetAnimKeySetPRS(keyset_prs);
 
-    //const int t = 360;
-    //lwMatrix44 uvmat_seq[t];
-    //float u = 0.0f;
-    //float v = 0.0f;
-    //float x = 1.0f / t;
-    //float y = LW_2_PI / t;
 
-    //for( DWORD i = 0; i < t; i++ )
-    //{
-    //    lwMatrix44Identity(&uvmat_seq[i]);
-    //    uvmat_seq[i]._11 = cosf(u);
-    //    uvmat_seq[i]._12 = -sinf(v);
-    //    uvmat_seq[i]._21 = sinf(u);
-    //    uvmat_seq[i]._22 = cosf(v);
 
-    //    u += y;
-    //    v += y;
-    //};
 
-    //ctrl_texuv->LoadData(uvmat_seq, t);
 
     return LW_RET_OK;
 }
@@ -478,20 +403,6 @@ LW_RESULT lwTexUVAnim4(lwIAnimCtrlTexUV* ctrl_texuv)
     keyset_prs->AddKeyPosition(0, buf, 2);
     ctrl_texuv->SetAnimKeySetPRS(keyset_prs);
 
-    //const int t = 360;
-    //lwMatrix44 uvmat_seq[t];
-    //float u = 0.0f;
-    //float v = 0.0f;
-    //float x = 1.0f / t;
-    //for( DWORD i = 0; i < t; i++ )
-    //{
-    //    lwMatrix44Identity(&uvmat_seq[i]);
-    //    uvmat_seq[ i ]._31 = u;
-    //    uvmat_seq[ i ]._32 = v;
-    //    u += x;
-    //    v += x;
-    //};
-    //ctrl_texuv->LoadData(uvmat_seq, t);
 
     return LW_RET_OK;
 }
@@ -522,11 +433,6 @@ LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_p
     tex_info.pool = D3DPOOL_DEFAULT;
     tex_info.colorkey_type = COLORKEY_TYPE_NONE;
 
-    //_tcscpy( tex_info.file_name, "boxlight2.tga" );
-    //_tcscpy( tex_info.file_name, "shlight.tga" );
-    //_tcscpy( tex_info.file_name, "multi009.tga" );
-    //@@_tcscpy( tex_info.file_name, "ocean_h.08.bmp" );
-    //_tcscpy( tex_info.file_name, "water_gsc012.BMP" );
     _tcscpy( tex_info.file_name, file );
 
     RSA_VALUE(&tex_info.tss_set[0], D3DTSS_COLOROP, color_op);
@@ -544,7 +450,6 @@ LW_RESULT lwPrimitiveTexLit(lwIPrimitive* p, const char* file, const char* tex_p
     }
 
     lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
-    //mtltex_agent->LoadTextureStage(&tex_info,
     lwITex* ret_tex = 0;
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);
@@ -607,11 +512,6 @@ LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_
     tex_info.pool = D3DPOOL_DEFAULT;
     tex_info.colorkey_type = COLORKEY_TYPE_NONE;
 
-    //_tcscpy( tex_info.file_name, "boxlight2.tga" );
-    //_tcscpy( tex_info.file_name, "shlight.tga" );
-    //_tcscpy( tex_info.file_name, "multi009.tga" );
-    //@@_tcscpy( tex_info.file_name, "ocean_h.08.bmp" );
-    //_tcscpy( tex_info.file_name, "water_gsc012.BMP" );
     _tcscpy( tex_info.file_name, file );
 
     RSA_VALUE(&tex_info.tss_set[0], D3DTSS_COLOROP, D3DTOP_MODULATE2X    );
@@ -628,7 +528,6 @@ LW_RESULT lwPrimitiveTexLitC(lwIPrimitive* p, const char* file, const char* tex_
     }
 
     lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
-    //mtltex_agent->LoadTextureStage(&tex_info,
     lwITex* ret_tex = 0;
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);
@@ -731,7 +630,6 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     }
 
     mtltex_agent = p->GetMtlTexAgent(0);
-    //mtltex_agent->LoadTextureStage(&tex_info,
 
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);
@@ -764,7 +662,6 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* alpha_file, const char
     }
 
     mtltex_agent = p->GetMtlTexAgent(0);
-    //mtltex_agent->LoadTextureStage(&tex_info,
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);
 
@@ -871,7 +768,6 @@ LW_RESULT lwPrimitiveTexLitA(lwIPrimitive* p, const char* tex_file, const char* 
     }
 
     mtltex_agent = p->GetMtlTexAgent(0);
-    //mtltex_agent->LoadTextureStage(&tex_info,
 
     mtltex_agent->SetTex(tex_info.stage, tex, &ret_tex);
     LW_SAFE_RELEASE(ret_tex);

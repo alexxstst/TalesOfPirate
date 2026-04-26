@@ -1,9 +1,7 @@
 ﻿//
 #pragma once
 
-/////////
 
-////////////
 #ifdef MINDPOWER_USE_DLL
 
 #ifdef MINDPOWER_EXPORTS
@@ -17,4 +15,3 @@
 #define MINDPOWER_API
 
 #endif
-

@@ -1,6 +1,5 @@
 ﻿#include "StdAfx.h"
 
-//#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
 
@@ -89,11 +88,7 @@ CMPPartSys::CMPPartSys() {
 
 	//_vecParticle.resize(100);//100
 
-	//_vecFrameSize.resize(100);
-	//_vecFrameAngle.resize(100);
-	//_vecFrameColor.resize(100);
 
-	//_vecBone.resize(100);
 	_pcPath = NULL;
 
 	_pCModel = NULL;
@@ -135,12 +130,9 @@ CMPPartSys::CMPPartSys() {
 
 CMPPartSys::~CMPPartSys() {
 	SAFE_DELETE(_pcPath);
-	//if(_bMediay)
 	{
 		SAFE_DELETE_ARRAY(_CPPart);
 	}
-	/*else
-	{	SAFE_DELETE(_CPPart);}*/
 
 	SAFE_DELETE_ARRAY(_pcEffFont);
 }
@@ -183,12 +175,6 @@ void CMPPartSys::unFontEffCom() {
 void CMPPartSys::setUseZBuff(bool bUseZ) {
 	_bUseZ = bUseZ;
 
-	//#ifdef MUD_PART
-	//	for (int n= 0 ; n < _iParNum; n++)
-	//	{
-	//		_vecPart[n]->UseZBuffer(bUseZ);
-	//	}
-	//#else
 	if (_CPPart) {
 		if (_bMediay) {
 			for (int t = 0; t < _iParNum; t++) {
@@ -198,7 +184,6 @@ void CMPPartSys::setUseZBuff(bool bUseZ) {
 		else
 			_CPPart->UseZBuffer(bUseZ);
 	}
-	//#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -224,7 +209,6 @@ bool CMPPartSys::UpdateDelay() {
 		}
 		else {
 			if (_fCurPlayTime >= _fDelayTime) {
-				//Play(!_bLoop);
 				if (!IsCreatePart()) {
 					switch (_iType) {
 					case PARTTICLE_BLAST:
@@ -295,12 +279,9 @@ bool CMPPartSys::Create(int iType, const s_string& strPartName, int iNumPart,
 		_lpCurTex = _pTex->GetTex(); //pCResMagr->GetTextureByID(id);
 	}
 
-	//if(_bMediay)
 	{
 		SAFE_DELETE_ARRAY(_CPPart);
 	}
-	/*else
-	{	SAFE_DELETE(_CPPart);}*/
 
 	_strModelName = strModelName;
 	_pCModel = NULL;
@@ -312,27 +293,9 @@ bool CMPPartSys::Create(int iType, const s_string& strPartName, int iNumPart,
 			return false;
 		}
 		else {
-			//#ifdef MUD_PART
-			//			if(IsPartArray())
-			//			{
-			//				_vecPart.resize(_iParNum);
-			//				_vecPart.setsize(_iParNum);
-			//				for (int n= 0 ; n < _iParNum; n++)
-			//				{
-			//					_vecPart[n]->BindingEffect(pCResMagr->GetEffectByID(id));
-			//					_vecPart[n]->BindingRes(pCResMagr);
-			//				}
-			//			}else
-			//			{
-			//				_CPPart = new CMPModelEff;
-			//				_CPPart->BindingEffect(pCResMagr->GetEffectByID(id));
-			//				_CPPart->BindingRes(pCResMagr);
-			//			}
-			//#else
 			_CPPart = new CMPModelEff[1];
 			_CPPart->BindingEffect(pCResMagr->GetEffectByID(id));
 			_CPPart->BindingRes(pCResMagr);
-			//#endif
 		}
 	}
 	else
@@ -432,19 +395,11 @@ void CMPPartSys::SetOpertion() {
 void CMPPartSys::SetSkillCtrl(SkillCtrl* pCtrl) {
 	if (!pCtrl)
 		return;
-	//if(pCtrl->_fDelayTime > -1)
-	//	_fDelayTime = pCtrl->_fDelayTime;
-	//if(pCtrl->fPlayTime > -1)
-	//	_fPlayTime = pCtrl->_fDelayTime;
 
-	//if(pCtrl->fRange[0] > -1)
 	_fRange[0] *= pCtrl->fSize;
-	//if(pCtrl->fRange[1] > -1)
 	_fRange[1] *= pCtrl->fSize;
-	//if(pCtrl->fRange[2] > -1)
 	_fRange[2] *= pCtrl->fSize;
 
-	//if(pCtrl->iParNum > -1)
 	SetSysNum((int)(_iParNum * pCtrl->fSize));
 
 	if (pCtrl->fSize > -1) {
@@ -456,24 +411,6 @@ void CMPPartSys::SetSkillCtrl(SkillCtrl* pCtrl) {
 			m_cShade.Create(_strTexName, m_pCResMagr, *_vecFrameSize[0]);
 	}
 
-	//switch(_iType)
-	//{
-	//case PARTTICLE_SNOW:
-	//case PARTTICLE_FIRE:
-	//case PARTTICLE_BLAST:
-	//case PARTTICLE_RIPPLE:
-	//case PARTTICLE_MODEL:
-	//case PARTTICLE_STRIP:
-	//case PARTTICLE_WIND:
-	//case PARTTICLE_ARRAW:
-	//case PARTTICLE_ROUND:
-	//case PARTTICLE_BLAST2:
-	//case PARTTICLE_BLAST3:
-	//case PARTTICLE_SHRINK:
-	//case PARTTICLE_SHADE:
-	//case PARTTICLE_RANGE:
-	//case PARTTICLE_RANGE2:
-	//}
 }
 
 
@@ -561,12 +498,9 @@ void CMPPartSys::SetMediayEff(bool bMediay) {
 void CMPPartSys::BindingRes(CMPResManger* pCResMagr) {
 	m_pCResMagr = pCResMagr;
 
-	//if(_bMediay)
 	{
 		SAFE_DELETE_ARRAY(_CPPart);
 	}
-	//else
-	//{	SAFE_DELETE(_CPPart);}
 
 	_pdwVShader = 0L;
 	_pfDailTime = pCResMagr->GetDailTime();
@@ -621,16 +555,12 @@ void CMPPartSys::BindingRes(CMPResManger* pCResMagr) {
 			MessageBox(NULL, _strTexName.c_str(), "ERROR", 0);
 			goto __ret;
 		}
-		//_lpCurTex = pCResMagr->GetTextureByID(id);
 		_pTex = pCResMagr->GetTextureByIDlw(id);
 		if (_pTex) {
 			_lpCurTex = _pTex->GetTex();
 		}
 
 		if (_pCModel->IsItem()) {
-			//char pszn[128];
-			//sprintf(pszn, "texture\\effect\\%s",_strTexName.c_str());
-			//_pCModel->ResetItemTexture(pszn);
 			_pTex = pCResMagr->GetTextureByIDlw(id);
 		}
 	}
@@ -640,21 +570,9 @@ __ret:
 		_SpmatBBoard = pCResMagr->GetBBoardMat();
 	else {
 		_SpmatBBoard = pCResMagr->GetBBoardMat();
-		//_bBillBoard = false;
 	}
 
-	//if(_bModelRange)
-	//{
-	//	id = pCResMagr->GetMeshID(_strVirualModel);//
-	//	if(id == -1)
-	//	{
-	//		MessageBox(NULL,_strVirualModel.c_str(),"ERROR",0);
-	//	}
-	//	else
-	//	{
 	//		//
-	//	}
-	//}
 }
 
 void CMPPartSys::SetTextureName(const s_string& strTexName, CMPResManger* pCResMagr) {
@@ -666,7 +584,6 @@ void CMPPartSys::SetTextureName(const s_string& strTexName, CMPResManger* pCResM
 		_lpCurTex = NULL;
 		return;
 	}
-	//_lpCurTex = pCResMagr->GetTextureByID(id);
 	_pTex = pCResMagr->GetTextureByIDlw(id);
 
 	_lpCurTex = _pTex->GetTex();
@@ -674,26 +591,13 @@ void CMPPartSys::SetTextureName(const s_string& strTexName, CMPResManger* pCResM
 	if (m_bShade)
 		m_cShade.setFrameTexture(_strTexName, pCResMagr);
 
-	//if(_pCModel)
-	//{
-	//	if(_pCModel->IsItem())
-	//	{
-	//		//char pszn[128];
-	//		//sprintf(pszn, "texture\\effect\\%s",_strTexName.c_str());
-	//		//_pCModel->ResetItemTexture(pszn);
-	//	}
-	//}
 }
 
 void CMPPartSys::SetModelName(const s_string& strModelName, CMPResManger* pCResMagr) {
 	_strModelName = strModelName;
-	//
-	//if(_bMediay)
 	{
 		SAFE_DELETE_ARRAY(_CPPart);
 	}
-	/*else
-	{	SAFE_DELETE(_CPPart);}*/
 
 	if (_pCModel && _pCModel->IsItem()) {
 		pCResMagr->DeleteMesh(*_pCModel);
@@ -747,7 +651,6 @@ void CMPPartSys::SetEmissionPath(CEffPath* pcPath) {
 
 //-----------------------------------------------------------------------------
 void CMPPartSys::InitParam() {
-	///////////////////////////////////////////////////////////////////////////
 	_bPlay = false;
 	_bStop = true;
 	_bLoop = true;
@@ -760,7 +663,6 @@ void CMPPartSys::InitParam() {
 	_vDir = D3DXVECTOR3(1.23f, 1.25f, 3.48f);
 	_fVecl = 2.8f;
 	_vAccel = D3DXVECTOR3(0, 0, 0);
-	//_fInfXY = 0;//XY
 
 	_fStep = 0.0f; //
 	_fCurTime = 0;
@@ -768,7 +670,6 @@ void CMPPartSys::InitParam() {
 	_fPlayTime = 0;
 	_fCurPlayTime = 0;
 
-	//////////////////////////////////////////////////////////////////////////
 	_vecFrameSize.clear();
 	_vecFrameAngle.clear();
 	_vecFrameColor.clear();
@@ -776,7 +677,6 @@ void CMPPartSys::InitParam() {
 	float fv = 2.0f;
 	D3DXCOLOR sv = 0xffffffff;
 	for (int n = 0; n < _wFrameCount; n++) {
-		//fv = Randf(fv);
 		fv = 1.0f;
 		_vecFrameSize.push_back(fv);
 		auto v = D3DXVECTOR3(0, 0, 0);
@@ -808,11 +708,7 @@ void CMPPartSys::SetLoop(bool bLoop) {
 
 //-----------------------------------------------------------------------------
 void CMPPartSys::Play(int iTime) {
-	//if(_fDelayTime > 0 && _fCurPlayTime < _fDelayTime)
-	//{
-	//	_bPlay = true;
 	//	return;
-	//}
 	_fCurPlayTime = 0;
 
 	switch (_iType) {
@@ -834,7 +730,6 @@ void CMPPartSys::Play(int iTime) {
 	}
 	case PARTTICLE_RIPPLE: {
 		_bStop = false;
-		//if(IsPlaying())
 		//	return;
 		_bPlay = true;
 		_bLoop = iTime == 0 ? true : false;
@@ -884,7 +779,6 @@ void CMPPartSys::Play(int iTime) {
 	}
 	case PARTTICLE_WIND: {
 		_bStop = false;
-		//_CreateWind(this,NULL);
 		_bLoop = iTime == 0 ? true : false;
 		_fCurTime = 0;
 		_bPlay = true;
@@ -1019,7 +913,6 @@ void CMPPartSys::Play(int iTime) {
 	_bPlay = true;
 	_bLoop = iTime == 0 ? true : false;
 	_fCurTime = 0;
-	//_wDeath = 0;
 	if (_CPPart) {
 		if (_bMediay) {
 			for (int t = 0; t < _iParNum; t++)
@@ -1167,20 +1060,7 @@ void CMPPartSys::RenderVS() {
 
 //-----------------------------------------------------------------------------
 void CMPPartSys::RenderSoft() {
-	//if(_bFontEff)
-	//{
-	//	_pFont->SetRenderIdx(6);
-	//	for(WORD n = 0; n < _iParNum; ++n)
-	//	{
-	//		if(_vecParticle[n]->m_bLive)
-	//		{
-	//			_pFont->Draw3DText((CHAR*)(LPCSTR)_strText.c_str(),*(D3DXVECTOR3*)&_vecParticle[n]->m_SCurMat._41,\
-	//				_vecParticle[n]->m_SCurColor,_vecParticle[n]->m_fSize);
-	//		}
-	//	}
-	//	_pFont->SetRenderIdx(5);
 	//	return;
-	//}
 	if (m_bShade) {
 		CMPParticle* pParticle;
 		pParticle = _vecParticle[0];
@@ -1217,20 +1097,13 @@ void CMPPartSys::RenderSoft() {
 															_vecParticle[n]->m_SCurColor);
 					_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 					_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-					//_pCEffectFile->m_pDev->SetTransform(D3DTS_WORLDMATRIX(0),
-					//	&_vecParticle[n]->m_SCurMat);
 					_pcEffFont[n].RenderEffectFont(&_vecParticle[n]->m_SCurMat);
 					_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 					_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 				}
 			}
 		}
-		//_pCEffectFile->GetDev()->SetRenderState( D3DRS_SRCBLEND,D3DBLEND_SRCALPHA );
-		//_pCEffectFile->GetDev()->SetRenderState( D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
-		//_pCEffectFile->GetDev()->SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		//_pCEffectFile->GetDev()->SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
 		_pCEffectFile->End();
-		//_pCEffectFile->GetDev()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 		return;
 	}
 	if (_pCModel) {
@@ -1256,7 +1129,6 @@ void CMPPartSys::RenderSoft() {
 			return;
 		}
 
-		//_pCModel->GetDev()->SetVertexShader(EFFECT_VER_FVF);
 
 		_pCModel->GetDev()->SetRenderState(D3DRS_SRCBLEND, _eSrcBlend);
 		_pCModel->GetDev()->SetRenderState(D3DRS_DESTBLEND, _eDestBlend);
@@ -1282,8 +1154,6 @@ void CMPPartSys::RenderSoft() {
 							_pCModel->ResetItemTexture(0, _pTex, &tex);
 							_pCModel->ResetItemTexture(1, _pTex, &tex2);
 						}
-						//else
-						//	_pCModel->ResetItemTexture(NULL,&tex);
 
 						_pCModel->FrameMove(0);
 					}
@@ -1305,16 +1175,8 @@ void CMPPartSys::RenderSoft() {
 		_pCEffectFile->End();
 	}
 	else {
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
 
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);
 
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ADDRESSU,   D3DTADDRESS_WRAP);
-		//_pCEffectFile->GetDev()->SetTextureStageStateForced(0, D3DTSS_ADDRESSV,   D3DTADDRESS_WRAP);
 
 		CMPParticle* pParticle;
 
@@ -1393,7 +1255,6 @@ void CMPPartSys::RenderSoft() {
 					pPart->MoveTo(pParticle->m_vPos.x, pParticle->m_vPos.y,
 								  pParticle->m_vPos.z);
 					if (_bModelDir) {
-						//if(_iType == PARTTICLE_MODEL ||  _iType == PARTTICLE_STRIP)
 						D3DXMatrixIdentity(&pPart->m_SMatTempRota);
 					}
 					if (pParticle->m_vCurAngle.x != 0)
@@ -1427,7 +1288,6 @@ void CMPPartSys::RenderSoft() {
 //-----------------------------------------------------------------------------
 void CMPPartSys::setYaw(float fYaw) {
 	if (_CPPart) {
-		//	_CPPart->RotatingYaw(fYaw);
 
 		for (WORD n = 0; n < _wFrameCount; ++n) {
 			_vecFrameAngle[n]->z = fYaw;
@@ -1438,7 +1298,6 @@ void CMPPartSys::setYaw(float fYaw) {
 //-----------------------------------------------------------------------------
 void CMPPartSys::setPitch(float fPitch) {
 	if (_CPPart) {
-		//_CPPart->RotatingPitch(fPitch);
 
 
 		for (WORD n = 0; n < _wFrameCount; ++n) {
@@ -1450,7 +1309,6 @@ void CMPPartSys::setPitch(float fPitch) {
 //-----------------------------------------------------------------------------
 void CMPPartSys::setRoll(float fRoll) {
 	if (_CPPart) {
-		//_CPPart->RotatingRoll(fRoll);
 		for (WORD n = 0; n < _wFrameCount; ++n) {
 			_vecFrameAngle[n]->y = fRoll;
 		}
@@ -1468,8 +1326,6 @@ void CMPPartSys::setScale(float fx, float fy, float fz) {
 void CMPPartSys::setDir(float fx, float fy, float fz) {
 	if (!_bModelDir)
 		return;
-	//float fDist;
-	//float fDirXZ[2];
 	switch (_iType) {
 	case PARTTICLE_FIRE: {
 		SetSysDirX(fx);
@@ -1490,26 +1346,7 @@ void CMPPartSys::setDir(float fx, float fy, float fz) {
 		D3DXVECTOR3 vDir(fx, fy, fz);
 		GetDirRotation(&_vTemDir, &vDir);
 
-		//fDist = D3DXVec3Length(&vDir);
-		//if(fz == 0)
-		//	fDirXZ[0] = 0;
-		//else
-		//{
-		//	fDirXZ[0] = asinf(D3DXVec3Dot(&vDir,
-		//		&D3DXVECTOR3(0.0f, 0.0f, 1.0f))/ fDist);
-		//}
 		////X
-		//if(vDir.x == 0 && vDir.y == 0)
-		//	fDirXZ[1] = 0;
-		//else
-		//{
-		//	fDist = D3DXVec3Length(&D3DXVECTOR3(vDir.x, vDir.y, 0.0f));
-		//	fDirXZ[1] = acosf(D3DXVec3Dot(&D3DXVECTOR3(vDir.x, vDir.y, 0.0f),
-		//		&D3DXVECTOR3(0.0f, 1.0f, 0.0f))/fDist);
-		//	if( vDir.x >= 0.0f )
-		//		fDirXZ[1]	= -fDirXZ[1];
-		//}
-		//_CPPart->RotatingXZ(vAngle.x, vAngle.y);
 		break;
 	}
 	}
@@ -1538,7 +1375,6 @@ void CMPPartSys::Reset(bool bLife) {
 	D3DXMatrixIdentity(&_SBoneMat);
 	_fCurPlayTime = 0;
 
-	//_vPos		= D3DXVECTOR3( -_fRange[0] / 2, -_fRange[1] / 2,-_fRange[2] / 2);
 	const auto v = D3DXVECTOR3(0, 0, 0);
 	MoveTo(&v);
 	for (WORD n = 0; n < _iParNum; ++n) {
@@ -1582,15 +1418,6 @@ bool _CreateDummy(CMPPartSys* pPart, CMPParticle* pCtrl) {
 		pCtrl->m_fCurTime = 0;
 		pCtrl->m_wCurFrame = 0;
 
-		//if(pPart->_CPPart)
-		//{
-		//	if(pPart->_bMediay)
-		//	{
-		//		pPart->_CPPart[pPart->_idt].Reset();
-		//		pPart->_CPPart[pPart->_idt].Play(0);
-		//	}
-		//}
-		//pCtrl->m_fPartTime = ((float)Rand(100))/1000.0f;
 
 		return true;
 	}
@@ -1608,12 +1435,6 @@ void _FrameMoveDummy(CMPPartSys* pPart, DWORD dwDailTime) {
 	CMPParticle* pParticle;
 
 	if (pPart->_CPPart) {
-		//if(pPart->_bMediay)
-		//{
-		//	for(WORD n = 0; n < pPart->_iParNum; ++n)
-		//		pPart->_CPPart[n].FrameMove(dwDailTime);
-		//}
-		//else
 		pPart->_CPPart->FrameMove(dwDailTime);
 	}
 
@@ -1675,7 +1496,6 @@ void _FrameMoveDummy(CMPPartSys* pPart, DWORD dwDailTime) {
 			}
 		}
 		else {
-			//pPart->_idt = n;
 			_CreateDummy(pPart, pParticle);
 		}
 	}
@@ -1729,7 +1549,6 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime) {
 	//_fDummyDist
 	//_vDummyPos
 
-	//
 	CMPParticle* pParticle(0);
 	for (WORD n = 0; n < pPart->_iParNum; ++n) {
 		pParticle = pPart->_vecParticle[n];
@@ -1749,15 +1568,8 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime) {
 				(*pPart->_vecFrameSize[wNextFrame] - *pPart->_vecFrameSize[wCurFrame]) * fLerp;
 
 
-			//pParticle->m_vVel = pParticle->m_vOldPos * (pPart->_fVecl * *pPart->_pfDailTime);
-			//if(rand() % 2)
-			//	pParticle->m_vAccel = (pPart->_vAccel* *pPart->_pfDailTime);
-			//else
-			//	pParticle->m_vAccel = -(pPart->_vAccel* *pPart->_pfDailTime);
 
-			//pParticle->m_vVel += pParticle->m_vAccel;
 
-			//pParticle->m_vPos += pParticle->m_vVel;
 			float fDailTime = *(pPart->_pfDailTime);
 			pParticle->m_vPos += pParticle->m_vVel * fDailTime + 0.5 * pParticle->m_vAccel * fDailTime * fDailTime;
 
@@ -1792,7 +1604,6 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime) {
 			}
 		}
 		else {
-			//pPart->_idt = n;
 			_CreateLineSingle(pPart, pParticle);
 		}
 	}
@@ -1846,7 +1657,6 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime) {
 	//_fDummyDist
 	//_vDummyPos
 
-	//
 	CMPParticle* pParticle(0);
 	for (WORD n = 0; n < pPart->_iParNum; ++n) {
 		pParticle = pPart->_vecParticle[n];
@@ -1866,15 +1676,8 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime) {
 				(*pPart->_vecFrameSize[wNextFrame] - *pPart->_vecFrameSize[wCurFrame]) * fLerp;
 
 
-			//pParticle->m_vVel = pParticle->m_vOldPos * (pPart->_fVecl * *pPart->_pfDailTime);
-			//if(rand() % 2)
-			//	pParticle->m_vAccel = (pPart->_vAccel* *pPart->_pfDailTime);
-			//else
-			//	pParticle->m_vAccel = -(pPart->_vAccel* *pPart->_pfDailTime);
 
-			//pParticle->m_vVel += pParticle->m_vAccel;
 
-			//pParticle->m_vPos += pParticle->m_vVel;
 			float fDailTime = *(pPart->_pfDailTime);
 			if (pParticle->m_fCurTime > pParticle->m_fLife / 2
 				&& pParticle->m_fCurTime - fDailTime < pParticle->m_fLife / 2)
@@ -1913,7 +1716,6 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime) {
 			}
 		}
 		else {
-			//pPart->_idt = n;
 			_CreateLineSingle(pPart, pParticle);
 		}
 	}
@@ -1921,7 +1723,6 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime) {
 
 //-----------------------------------------------------------------------------
 
-//////////////////////////////////////////////////////////////////////////
 bool _CreateRange2(CMPPartSys* pPart, CMPParticle* pCtrl) {
 	pPart->_fCurTime += *pPart->_pfDailTime;
 
@@ -1973,7 +1774,6 @@ bool _CreateRange2(CMPPartSys* pPart, CMPParticle* pCtrl) {
 void _FrameMoveRange2(CMPPartSys* pPart, DWORD dwDailTime) {
 	CMPParticle* pParticle;
 
-	//float dirxz[2];
 
 	pParticle = pPart->_vecParticle[0];
 	pParticle->m_fLife += *pPart->_pfDailTime;
@@ -1983,12 +1783,6 @@ void _FrameMoveRange2(CMPPartSys* pPart, DWORD dwDailTime) {
 	bool bcon = false;
 
 	if (pPart->_CPPart) {
-		//if(pPart->_bMediay)
-		//{
-		//	for(WORD n = 0; n < pPart->_iParNum; ++n)
-		//		pPart->_CPPart[n].FrameMove(dwDailTime);
-		//}
-		//else
 		pPart->_CPPart->FrameMove(dwDailTime);
 	}
 	for (WORD n = 0; n < pPart->_iParNum; ++n) {
@@ -2057,14 +1851,9 @@ bool _CreateRange(CMPPartSys* pPart, CMPParticle* pCtrl) {
 		D3DXMatrixIdentity(&pParticle->m_SCurMat);
 		pParticle->m_vCurAngle = D3DXVECTOR3(0, 0, 0);
 
-		//pParticle->m_fLife		=  pPart->_fLife;
 
-		//pParticle->m_fFrameTime = pParticle->m_fLife / pPart->_wFrameCount;
 
-		//pParticle->m_fCurTime	= 0;
-		//pParticle->m_wCurFrame  = 0;
 
-		//pParticle->m_fPartTime = ((float)Rand(100))/1000.0f;
 	}
 	return true;
 }
@@ -2132,7 +1921,6 @@ void _FrameMoveRange(CMPPartSys* pPart, DWORD dwDailTime) {
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
 bool _CreateShade(CMPPartSys* pPart, CMPParticle* pCtrl) {
 	pPart->_iParNum = 1;
 	pCtrl->m_bLive = true;
@@ -2154,16 +1942,12 @@ void _FrameMoveShade(CMPPartSys* pPart, DWORD dwDailTime) {
 	pParticle = pPart->_vecParticle[0];
 	pParticle->m_vPos = pPart->_vPos;
 
-	//D3DXMATRIX mat;
-	//D3DXMatrixRotationZ(&mat, -0.3f);
-	//pPart->m_cShade.SetUpdate();
 	pPart->m_cShade.MoveTo(pParticle->m_vPos, pPart->m_pMap);
 	pPart->m_cShade.FrameMove(0);
 
 	wCurFrame = pParticle->GetCurFrame(*pPart->_pfDailTime, pPart->_wFrameCount);
 	if (wCurFrame == pPart->_wFrameCount) {
 		pPart->_bPlay = false;
-		//_CreateShade(pPart,pParticle);
 		return;
 	}
 	else {
@@ -2201,7 +1985,6 @@ bool _CreateShrink(CMPPartSys* pPart, CMPParticle* pCtrl) {
 
 			pCtrl->m_vCurAngle.x = vangle.x;
 			pCtrl->m_vCurAngle.y = vangle.y;
-			//pPart->_CPPart->RotatingXZ(vangle.x,vangle.y);
 
 			if (pPart->_bMediay) {
 				pPart->_CPPart[pPart->_idt].Reset();
@@ -2229,7 +2012,6 @@ void _FrameMoveShrink(CMPPartSys* pPart, DWORD dwDailTime) {
 	float fLerp;
 	CMPParticle* pParticle;
 
-	//D3DXVECTOR3 vpos = pPart->_vPos + D3DXVECTOR3(pPart->_fRange[0] / 2,pPart->_fRange[1] / 2, pPart->_fRange[2] / 2);
 
 	if (pPart->_CPPart) {
 		if (pPart->_bMediay) {
@@ -2294,11 +2076,6 @@ void _FrameMoveShrink(CMPPartSys* pPart, DWORD dwDailTime) {
 			}
 			else {
 				//D3DXVec3Lerp(&pParticle->m_vCurAngle,pPart->_vecFrameAngle[wCurFrame],
-				//	pPart->_vecFrameAngle[wNextFrame],fLerp);
-				//if(pPart->_bUseBone)
-				//{
-				//	D3DXMatrixIdentity(&pParticle->m_SCurMat);
-				//}
 			}
 		}
 		else {
@@ -2375,17 +2152,12 @@ void _FrameMoveBlast3(CMPPartSys* pPart, DWORD dwDailTime) {
 			pParticle->m_fSize = *pPart->_vecFrameSize[wCurFrame] +
 				(*pPart->_vecFrameSize[wNextFrame] - *pPart->_vecFrameSize[wCurFrame]) * fLerp;
 
-			//D3DXVec3Transform(&pos,&pParticle->m_vOldPos,&mat);
-			//pParticle->m_vPos.x = pos.x;
 			//pParticle->m_vPos.y = pos.y;0
-			//pParticle->m_vPos.z = pos.z;
-			//pParticle->m_vPos += pPart->_vPos;
 
 			float fvel = pPart->_fVecl * *pPart->_pfDailTime;
 
 			pParticle->m_vPos += pParticle->m_vOldPos * fvel;
 			pParticle->m_vOldPos += pPart->_vAccel * *pPart->_pfDailTime;
-			//pParticle->m_vPos += pPart->_vPos;
 
 			D3DXColorLerp(&pParticle->m_SCurColor,
 						  pPart->_vecFrameColor[wCurFrame], pPart->_vecFrameColor[wNextFrame], fLerp);
@@ -2415,7 +2187,6 @@ void _FrameMoveBlast3(CMPPartSys* pPart, DWORD dwDailTime) {
 				D3DXVec3Lerp(&pParticle->m_vCurAngle, pPart->_vecFrameAngle[wCurFrame],
 							 pPart->_vecFrameAngle[wNextFrame], fLerp);
 				if (pPart->_bUseBone) {
-					//D3DXMatrixIdentity(&pParticle->m_SCurMat);
 				}
 			}
 		}
@@ -2431,18 +2202,12 @@ bool _CreateBlast2(CMPPartSys* pPart, CMPParticle* pCtrl) {
 	for (int n = 0; n < pPart->_iParNum; ++n) {
 		pParticle = pPart->_vecParticle[n];
 
-		//D3DXMatrixRotationZ(&mat,angle * n);
-		//D3DXVec3Transform(&pos,&dir,&mat);
 
-		//pParticle->m_vOldPos.x = pos.x;
-		//pParticle->m_vOldPos.y = pos.y;
-		//pParticle->m_vOldPos.z = pos.z;
 
 		pParticle->m_vOldPos.x = dir.x;
 		pParticle->m_vOldPos.y = dir.y;
 		pParticle->m_vOldPos.z = dir.z;
 
-		//pParticle->m_vOldPos += pPart->_vDir;
 
 
 		pParticle->m_vPos = pPart->_vPos;
@@ -2487,12 +2252,7 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 					pParticle->m_vAccel.x += 1;
 					pParticle->m_vCurAngle = pParticle->m_vPos;
 				}
-			}/*else if(wCurFrame == 1)
-			{
-				wCurFrame = pParticle->GetCurFrame(*pPart->_pfDailTime,\
-					pPart->_wFrameCount,pParticle->m_fFrameTime / 3);
-
-			}*/else
+			}else
 				wCurFrame = pParticle->GetCurFrame(*pPart->_pfDailTime, pPart->_wFrameCount);
 
 			float fvel{};
@@ -2510,7 +2270,6 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 					else if (pParticle->m_vAccel.z == 1) {
 						pParticle->m_vPos.x = pParticle->m_vCurAngle.x - pParticle->m_vAccel.y;
 						pParticle->m_vAccel.z = 2;
-						//continue;
 					}
 					else if (pParticle->m_vAccel.z == 2) {
 						pParticle->m_vPos.x = pParticle->m_vCurAngle.x;
@@ -2519,11 +2278,6 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 						continue;
 					}
 
-					//pParticle->m_vAccel.y -= 0.02f;
-					//if(pParticle->m_vAccel.y < 0)
-					//{
-					//	pParticle->m_vAccel.y = 0;
-					//}
 					goto _ret;
 					//return;
 				}
@@ -2532,10 +2286,6 @@ void _FrameMoveBlast2(CMPPartSys* pPart, DWORD dwDailTime) {
 				else
 					wNextFrame = wCurFrame + 1;
 
-				//if(wCurFrame == 2)
-				//{
-				//	pParticle->m_vPos = pParticle->m_vCurAngle;
-				//}
 			}
 			fLerp = pParticle->GetLerpValue();
 			pParticle->m_fSize = *pPart->_vecFrameSize[wCurFrame] +
@@ -2595,9 +2345,6 @@ bool _CreateRound(CMPPartSys* pPart, CMPParticle* pCtrl) {
 
 		D3DXMatrixRotationZ(&mat, angle * n);
 		D3DXVec3Transform(&pos, &dir, &mat);
-		//pos.x +=  pPart->_vPos.x;
-		//pos.y +=  pPart->_vPos.y;
-		//pos.z +=  pPart->_vPos.z;
 
 		pParticle->m_vOldPos.x = pos.x;
 		pParticle->m_vOldPos.y = pos.y;
@@ -2787,11 +2534,7 @@ void _FrameMoveModel(CMPPartSys* pPart, DWORD dwDailTime) {
 
 	wCurFrame = pParticle->GetCurFrame(*pPart->_pfDailTime, pPart->_wFrameCount);
 	if (wCurFrame == pPart->_wFrameCount) {
-		//if(!pPart->_bLoop)
-		//{
-		//	pPart->_bPlay = false;
 		//	return;
-		//}
 		_CreateModel(pPart, pParticle);
 		return;
 	}
@@ -2903,24 +2646,13 @@ void _FrameMoveStrip(CMPPartSys* pPart, DWORD dwDailTime) {
 }
 
 bool _CreateWind(CMPPartSys* pPart, CMPParticle* pCtrl) {
-	//pPart->_vecBone.clear();
-	//CMPParticle* pParticle;
 
-	//pParticle = pPart->_vecParticle[0];
 
 	//float fFrameTime = pParticle->m_fLife / pPart->_wFrameCount;//
-	//for(int n = 0; n < pPart->_iParNum; ++n)
-	//{
-	//	pParticle = pPart->_vecParticle[n];
 
-	//	pParticle->m_bLive		= false;
 	//	pParticle->m_fLife		=   Randf(pPart->_fVecl);//pPart->_fLife;//
 
-	//	pParticle->m_fFrameTime = fFrameTime;
 
-	//	pParticle->m_fCurTime	= 0;
-	//	pParticle->m_wCurFrame = 0;
-	//}
 	pPart->_fCurTime += *pPart->_pfDailTime;
 
 	if (pPart->_fCurTime >= pPart->_fStep) {
@@ -2948,82 +2680,25 @@ bool _CreateWind(CMPPartSys* pPart, CMPParticle* pCtrl) {
 }
 
 void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
-	//CMPParticle* pParticle;
-	//if(pPart->_CPPart)
-	//{
-	//	pPart->_CPPart->FrameMove(dwDailTime);
-	//}
-	//pPart->_vecBone.clear();
-	//D3DXVECTOR3 tv = pPart->_vPos;
-	//pPart->_vecBone.push_back(tv);
-	//float fd = pPart->_fLife / pPart->_wFrameCount;
-	//for (int tn = 1; tn < pPart->_wFrameCount; ++tn)
-	//{
-	//	tv.z = tn * fd;
-	//	pPart->_vecBone.push_back(tv);
-	//}
 
-	////
-	//int iNum = (int)pPart->_iParNum / pPart->_wFrameCount;
-	////
-	//for(int m = 0; m < pPart->_wFrameCount - 1; ++m)
-	//{
 	//	//size
-	//	float fsize = *pPart->_vecFrameSize[m+1] - *pPart->_vecFrameSize[m];
-	//	D3DXVECTOR3 vDir = *pPart->_vecBone[m+1] - *pPart->_vecBone[m];
-	//	float fdist = D3DXVec3Length(&vDir);
-	//	D3DXVec3Normalize(&vDir,&vDir);
-	//	fdist /= iNum;//
-	//	fsize /= iNum;//
 	//	//
-	//	for(int n = 0; n < iNum; ++n)
-	//	{
 	//		int icurp = m * iNum + n;//
-	//		pParticle = pPart->_vecParticle[icurp];
 	//		//
-	//		pParticle->m_vPos = (*pPart->_vecBone[m])  + (vDir * (fdist * n));
-	//		pParticle->m_fSize = *pPart->_vecFrameSize[m] + fsize * n;
 
-	//		pParticle->m_bLive		= true;
 
-	//		if(pPart->_pCModel)
-	//		{
-	//			pParticle->m_SCurColor = *pPart->_vecFrameColor[0];
 
 	//			//D3DXColorLerp( &pParticle->m_SCurColor,
-	//			//	pPart->_vecFrameColor[wCurFrame], pPart->_vecFrameColor[wNextFrame], fLerp );
 
-	//			{
 	//				D3DXMatrixScaling(&pParticle->m_SCurMat,
-	//					pParticle->m_fSize,pParticle->m_fSize,pParticle->m_fSize);
 
-	//				pParticle->m_SCurMat._41 = pParticle->m_vPos.x;
-	//				pParticle->m_SCurMat._42 = pParticle->m_vPos.y;
-	//				pParticle->m_SCurMat._43 = pParticle->m_vPos.z;
-	//			}
-	//			if(pPart->_bBillBoard)
 	//				D3DXMatrixMultiply(&pParticle->m_SCurMat,
-	//				pPart->_SpmatBBoard, &pParticle->m_SCurMat);
-
-	//			D3DXMATRIX tm;
-	//			float* fz = &pPart->_vecFrameAngle[0]->z;
-	//			*fz += Randf(pPart->_fVecl) * *pPart->_pfDailTime;
-	//			if(*fz >= 6.283185f)
-	//				*fz = *fz - 6.283185f;
-	//			D3DXMatrixRotationZ(&tm,*fz);
-
-	//			D3DXMatrixMultiply(&pParticle->m_SCurMat,&tm, &pParticle->m_SCurMat);
 
 
-	//		}
-	//		else
-	//		{
+
+
 	//			//D3DXVec3Lerp(&pParticle->m_vCurAngle,pPart->_vecFrameAngle[wCurFrame],
-	//			//	pPart->_vecFrameAngle[wNextFrame],fLerp);
 
-	//		}
-	//	}
-	//}
 	WORD wCurFrame;
 	WORD wNextFrame;
 	float fLerp;
@@ -3066,7 +2741,6 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
 
 			D3DXMATRIX tm;
 			D3DXVECTOR4 tpos;
-			//D3DXVECTOR3 tpos2;
 
 			float* fz = &pParticle->m_vCurAngle.z;
 			*fz += pParticle->m_vVel.z * *pPart->_pfDailTime;
@@ -3077,14 +2751,7 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
 			pParticle->m_vPos = (D3DXVECTOR3)tpos + pParticle->m_vOldPos;
 
 			if (pPart->_pCModel) {
-				//if(pPart->_bUseBone)
-				//{
-				//	D3DXMATRIX	tm;
 				//	D3DXMatrixScaling(&tm,
-				//		pParticle->m_fSize,pParticle->m_fSize,pParticle->m_fSize);
-				//	D3DXMatrixMultiply(&pParticle->m_SCurMat, &tm, &pPart->_SBoneMat);
-				//}
-				//else
 				{
 					D3DXMatrixScaling(&pParticle->m_SCurMat,
 									  pParticle->m_fSize, pParticle->m_fSize, pParticle->m_fSize);
@@ -3094,7 +2761,6 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
 									   pPart->_SpmatBBoard, &pParticle->m_SCurMat);
 
 				//GetMatrixRotation(&tm, &pParticle->m_vPos,\
-				//	&D3DXVECTOR3(0,0,1),*fz);
 				pParticle->m_SCurMat._41 = pParticle->m_vPos.x;
 				pParticle->m_SCurMat._42 = pParticle->m_vPos.y;
 				pParticle->m_SCurMat._43 = pParticle->m_vPos.z;
@@ -3102,11 +2768,6 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime) {
 			}
 			else {
 				//D3DXVec3Lerp(&pParticle->m_vCurAngle,pPart->_vecFrameAngle[wCurFrame],
-				//	pPart->_vecFrameAngle[wNextFrame],fLerp);
-				//if(pPart->_bUseBone)
-				//{
-				//	pParticle->m_SCurMat = pPart->_SBoneMat;
-				//}
 			}
 		}
 		else {
@@ -3122,16 +2783,7 @@ bool _CreateFire(CMPPartSys* pPart, CMPParticle* pCtrl) {
 	if (pPart->_fCurTime >= pPart->_fStep) {
 		pPart->_fCurTime = 0;
 
-		//pCtrl->m_vOldPos = D3DXVECTOR3(pPart->_fVecl,pPart->_fVecl,pPart->_fVecl);
-		//pCtrl->m_vAccel = pPart->_vAccel;//;
 
-		//pCtrl->m_vOldPos.x *= pPart->_vDir.x;
-		//pCtrl->m_vOldPos.y *= pPart->_vDir.y;
-		//pCtrl->m_vOldPos.z *= pPart->_vDir.z;
-		//if(pPart->_bUseBone == true)
-		//{
-		//	pPart->_vPos= *(D3DXVECTOR3*)&pPart->_SBoneMat._41;
-		//}
 		D3DXVec3Normalize(&pCtrl->m_vOldPos, &pPart->_vDir);
 		if (pPart->_bUseBone) {
 			pPart->_vPos.x = pPart->_SBoneMat._41;
@@ -3180,9 +2832,6 @@ void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime) {
 	if (pPart->_bStop == false) {
 		if (pPart->m_strHitEff != "") {
 			if (pPart->m_pMap) {
-				//float fei = pPart->m_pMap->GetGridHeight((int)pPart->_vPos.x * 2,(int)pPart->_vPos.y * 2);
-				//if(fei < 0)
-				//	fei = 0.1f;
 				if (pPart->_pcPath) {
 					if (pPart->_pcPath->IsEnd()) {
 						D3DXVECTOR3 VPos = pPart->_vPos;
@@ -3197,7 +2846,6 @@ void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime) {
 					pPart->Stop();
 				}
 
-				//if(pPart->_vPos.z <= fei ||pPart->_vPos.z > 50.0f)
 			}
 			else {
 				if (pPart->_vPos.z <= 0.1f || pPart->_vPos.z > 50.0f) {
@@ -3279,16 +2927,8 @@ void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime) {
 			else {
 				D3DXVec3Lerp(&pParticle->m_vCurAngle, pPart->_vecFrameAngle[wCurFrame],
 							 pPart->_vecFrameAngle[wNextFrame], fLerp);
-				//pParticle->m_vCurAngle.y = Rand(2)?pParticle->m_vCurAngle.y:-pParticle->m_vCurAngle.y;
-				//pParticle->m_vCurAngle.x = Rand(2)?pParticle->m_vCurAngle.x:-pParticle->m_vCurAngle.x;
-				//pParticle->m_vCurAngle.z = Rand(2)?pParticle->m_vCurAngle.z:-pParticle->m_vCurAngle.z;
 
-				//if(pPart->_bUseBone)
 				{
-					//D3DXMatrixIdentity(&pParticle->m_SCurMat);
-					//pParticle->m_SCurMat = pPart->_SBoneMat;
-					//pPart->_vPos = *(D3DXVECTOR3*)&pPart->_SBoneMat._41;
-					//pParticle->m_vPos += *(D3DXVECTOR3*)&pPart->_SBoneMat._41;
 				}
 			}
 		}
@@ -3297,12 +2937,6 @@ void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime) {
 				pPart->_idt = n;
 				_CreateFire(pPart, pParticle);
 			}
-			//			else
-			//			{
-			//__ret:			pPart->_wDeath++;
-			//				if(pPart->_wDeath >= pPart->_iParNum)
-			//					pPart->_bPlay = false;
-			//			}
 		}
 	}
 }
@@ -3334,7 +2968,6 @@ bool _CreateSnow(CMPPartSys* pPart, CMPParticle* pCtrl) {
 		else {
 			pCtrl->m_vPos = pPart->_vPos + pPart->_vecPointRange[Rand(pPart->_wVecNum)];
 		}
-		//D3DXMatrixIdentity(&pCtrl->m_SCurMat);
 		pCtrl->m_bLive = true;
 		pCtrl->m_fLife = Randf(pPart->_fLife / pPart->_iRoadom, pPart->_fLife);
 
@@ -3440,12 +3073,6 @@ void _FrameMoveSnow(CMPPartSys* pPart, DWORD dwDailTime) {
 				pPart->_idt = n;
 				_CreateSnow(pPart, pParticle);
 			}
-			/*		else
-					{
-		__ret:				pPart->_wDeath++;
-						if(pPart->_wDeath >= pPart->_iParNum)
-							pPart->_bPlay = false;
-					}*/
 		}
 	}
 }
@@ -3607,8 +3234,6 @@ void _FrameMoveRipple(CMPPartSys* pPart, DWORD dwDailTime) {
 				if (pPart->_bStop) {
 					pPart->_wDeath++;
 					if (pPart->_wDeath == pPart->_iParNum) {
-						//pPart->_bPlay = false;
-						//pPart->_wDeath = 0;
 						pPart->Reset(false);
 						return;
 					}
@@ -3664,7 +3289,6 @@ void _FrameMoveRipple(CMPPartSys* pPart, DWORD dwDailTime) {
 bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 	int tm;
 
-	//_iType = PARTTICLE_BLAST;
 	fwrite(&_iType, sizeof(int), 1, t_pFile);
 
 	char t_pszName[32];
@@ -3711,18 +3335,14 @@ bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 	fwrite(&_vAccel, sizeof(D3DXVECTOR3), 1, t_pFile);
 	fwrite(&_fStep, sizeof(float), 1, t_pFile);
 
-	//
 	fwrite(&_bModelRange, sizeof(bool), 1, t_pFile);
 	lstrcpy(t_pszName, _strVirualModel.c_str());
 	fwrite(t_pszName, sizeof(char), 32, t_pFile);
 
-	//
 	fwrite(&_vOffset, sizeof(D3DXVECTOR3), 1, t_pFile);
-	//
 	fwrite(&_fDelayTime, sizeof(float), 1, t_pFile);
 	fwrite(&_fPlayTime, sizeof(float), 1, t_pFile);
 
-	//
 	bool busepsth = _pcPath ? true : false;
 	fwrite(&busepsth, sizeof(bool), 1, t_pFile);
 	if (busepsth)
@@ -3730,7 +3350,6 @@ bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 
 	fwrite(&m_bShade, sizeof(bool), 1, t_pFile);
 
-	//
 	lstrcpy(t_pszName, m_strHitEff.c_str());
 	fwrite(t_pszName, sizeof(char), 32, t_pFile);
 
@@ -3759,8 +3378,6 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 	_vecParticle.setsize(_iParNum);
 
 	fread(t_pszName, sizeof(char), 32, t_pFile);
-	//
-	//char *pDataName = _strlwr( _strdup( t_pszName ) );
 
 	s_string sFileName = t_pszName;
 	transform(sFileName.begin(), sFileName.end(),
@@ -3771,16 +3388,12 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 	memset(psname, 0, 32);
 
 
-	//if((strstr(pDataName,".dds")==NULL)&&strstr(pDataName,".tga")==NULL)
 	if (sFileName.rfind(".dds") == std::string::npos && sFileName.rfind(".tga") == std::string::npos) {
 		_strTexName = sFileName;
 	}
 	else {
-		//int len = lstrlen(pDataName);
-		//memcpy(psname, pDataName,len - 4);
 		_strTexName = sFileName.substr(0, sFileName.rfind('.'));
 	}
-	//SAFE_DELETE_ARRAY(pDataName);
 
 
 	fread(t_pszName, sizeof(char), 32, t_pFile);
@@ -3791,9 +3404,7 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 		transform(sFileName.begin(), sFileName.end(),
 				  sFileName.begin(),
 				  tolower);
-		//pDataName = _strlwr( _strdup( t_pszName ) );
 		_strModelName = sFileName;
-		//SAFE_DELETE_ARRAY(pDataName);
 	}
 	fread(&_fRange[0], sizeof(float), 1, t_pFile);
 	fread(&_fRange[1], sizeof(float), 1, t_pFile);
@@ -3801,17 +3412,14 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 
 	fread(&_wFrameCount, sizeof(WORD), 1, t_pFile);
 
-	//_vecFrameSize.resize(_wFrameCount);
 	_vecFrameSize.setsize(_wFrameCount);
 	for (WORD n = 0; n < _wFrameCount; n++) {
 		fread(_vecFrameSize[n], sizeof(float), 1, t_pFile);
 	}
-	//_vecFrameAngle.resize(_wFrameCount);
 	_vecFrameAngle.setsize(_wFrameCount);
 	for (WORD n = 0; n < _wFrameCount; n++) {
 		fread(_vecFrameAngle[n], sizeof(D3DXVECTOR3), 1, t_pFile);
 	}
-	//_vecFrameColor.resize(_wFrameCount);
 	_vecFrameColor.setsize(_wFrameCount);
 	for (WORD n = 0; n < _wFrameCount; n++) {
 		fread(_vecFrameColor[n], sizeof(D3DXCOLOR), 1, t_pFile);
@@ -3834,19 +3442,16 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 	fread(&_fStep, sizeof(float), 1, t_pFile);
 
 	if (dwVersion > 3) {
-		//
 		fread(&_bModelRange, sizeof(bool), 1, t_pFile);
 		fread(t_pszName, sizeof(char), 32, t_pFile);
 	}
 	if (dwVersion > 4) {
-		//
 		fread(&_vOffset, sizeof(D3DXVECTOR3), 1, t_pFile);
 	}
 	if (dwVersion > 5) {
 		fread(&_fDelayTime, sizeof(float), 1, t_pFile);
 		fread(&_fPlayTime, sizeof(float), 1, t_pFile);
 	}
-	//
 	if (dwVersion > 8) {
 		SAFE_DELETE(_pcPath);
 		bool busepsth;
@@ -3855,13 +3460,11 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 			_pcPath = new CEffPath;
 			_pcPath->LoadPath(t_pFile);
 			_pcPath->Reset();
-			//SAFE_DELETE(_pcPath);
 		}
 	}
 	if (dwVersion > 9) {
 		fread(&m_bShade, sizeof(bool), 1, t_pFile);
 	}
-	//
 	if (dwVersion > 10) {
 		fread(t_pszName, sizeof(char), 32, t_pFile);
 		m_strHitEff = t_pszName;
@@ -3924,17 +3527,12 @@ void CopyPartSys(CMPPartSys* part1, CMPPartSys* part2) {
 
 	part1->SetOpertion();
 
-	//if(part1->m_bShade)
-	//{
-	//	//part1->m_cShade.Create(part1->_strTexName,part1->pCResMagr, part1->_fLife);
-	//}
 
 	part1->_fLife = part2->_fLife;
 	part1->_vDir = part2->_vDir;
 	part1->_fVecl = part2->_fVecl;
 	part1->_vAccel = part2->_vAccel;
 	part1->_fStep = part2->_fStep;
-	//////////////////////////////////////////////////////////////////////////
 	part1->_vecFrameSize.clear();
 	part1->_vecFrameAngle.clear();
 	part1->_vecFrameColor.clear();

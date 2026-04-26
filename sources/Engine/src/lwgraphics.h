@@ -48,15 +48,8 @@ struct D3DFVF_XyzwDifTex1
 
 
 
-//inline lwColorValue4f lwMakeColorValue4f( float r, float g, float b, float a ) {
-//    lwColorValue4f c = { r, g, b, a };
 //    return c;
-//}
-//
-//inline lwColorValue4b lwMakeColorValue4b( BYTE r, BYTE g, BYTE b, BYTE a ) {
-//    lwColorValue4b c = { r, g, b, a };
 //    return c;
-//}
 
 struct lwTexParam
 {
@@ -72,7 +65,6 @@ struct lwVerParam
     D3DPOOL pool;
 };
 
-// class declaration
 class lwSprite;
 class lwD3DSprite;
 

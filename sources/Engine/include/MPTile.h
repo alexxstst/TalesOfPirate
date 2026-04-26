@@ -10,7 +10,6 @@
 struct MPTileVertex
 {
 	D3DXVECTOR3	p;
-	// D3DXVECTOR3 n;
 	DWORD		dwColor;
 	float		tu1, tv1;
 	float		tu2, tv2;
@@ -219,6 +218,5 @@ public:
 	static	MPTileVertex		_TVertex[4];
 	static  MPSeaTileVertex		_SVertex[4];
 };
-
 
 

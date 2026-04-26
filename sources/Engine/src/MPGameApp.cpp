@@ -1,6 +1,5 @@
 ﻿//################################
 // MindPower 3D Engine
-// class MPGameApp Implement
 // Created By   : Ryan Wang 
 // Last Modifed : 2004/02/06
 //################################
@@ -22,7 +21,6 @@
 
 using namespace std;
 //Del by lark.li 20080611
-//#include "FontSystem.h"
 
 LW_USING
 
@@ -32,7 +30,6 @@ MPGameApp::MPGameApp()
 	  _dwFrameMoveUseTime(0),
 	  _bCheckInputWnd(TRUE) {
 	_pConsole = new ConsoleProcessor;
-	//_pMainCam = new MPCamera;
 
 	_nMousePosX = 0;
 	_nMousePosY = 0;
@@ -114,7 +111,6 @@ BOOL MPGameApp::Init(HINSTANCE hInst, const char* pszClassName, int nScrWidth, i
 
 	// Del by lark.li 20080611
 	// Added by clp
-	//FontModule::FontSystem::getSingleton().init();
 
 	if (_Init() == 0)
 		return 0;
@@ -159,17 +155,11 @@ void MPGameApp::FrameMove(DWORD dwTimeParam) {
 
 	if (_pConsole->IsVisible()) {
 		// Tick — анимация мигающего курсора. Отрисовка текста — в клиенте
-		// (CGameApp::_RenderConsoleText) через FontManager::Get(FontSlot::Console).
 		_pConsole->Tick();
 	}
 
 	lwISceneMgr* sm = g_Render.GetInterfaceMgr()->sys_graphics->GetSceneMgr();
-	if (LW_RESULT r = sm->Update(); LW_FAILED(r))
-	{
-		ToLogService("errors", LogLevel::Error,
-		             "[{}] sm->Update failed: ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
-	}
+	sm->Update();
 
 	_FrameMove(_time = dwTimeParam);
 
@@ -182,32 +172,17 @@ void MPGameApp::Render() {
 
 	lwISceneMgr* sm = g_Render.GetInterfaceMgr()->sys_graphics->GetSceneMgr();
 
-	// g_Render.LookAt(_pMainCam->m_EyePos, _pMainCam->m_RefPos);
-
-	//  g_Render.SetCurrentView(MPRender::VIEW_WORLD);
 
 
-	///////////////////////////////////////////////////////////
+
 
 	if (!g_Render.BeginRender(true)) return;
 
-	// _RenderAxis();
 
-	if (LW_RESULT r = sm->BeginRender(); LW_FAILED(r))
-	{
-		ToLogService("errors", LogLevel::Error,
-		             "[{}] sm->BeginRender failed: ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
-	}
-	if (LW_RESULT r = sm->Render(); LW_FAILED(r))
-	{
-		ToLogService("errors", LogLevel::Error,
-		             "[{}] sm->Render failed: ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
-	}
+	sm->BeginRender();
+	sm->Render();
 
 	// Фон консоли — сплошной colored quad (без текстуры) через D3D. Рисуем
-	// ДО _Render(), чтобы UI и текст консоли (CGameApp::_RenderConsoleText)
 	// ложились поверх. Раньше использовалась лого-текстура с tint'ом, но у
 	// неё неоднородная alpha → фон казался "пропавшим" в местах prozrachnosti.
 	if (_pConsole->IsVisible()) {
@@ -247,18 +222,9 @@ void MPGameApp::Render() {
 
 	_Render(); //
 
-	if (LW_RESULT r = sm->EndRender(); LW_FAILED(r))
-	{
-		ToLogService("errors", LogLevel::Error,
-		             "[{}] sm->EndRender failed: ret={}",
-		             __FUNCTION__, static_cast<long long>(r));
-	}
+	sm->EndRender();
 
-	///////////////////////////////////////////////////////////
 
-	//g_Render.EnableZBuffer(FALSE);
-	//
-	//   g_Render.SetCurrentView(MPRender::VIEW_WORLD);
 
 	// INFO_CMD / INFO_FPS текст рисует клиент напрямую (через FontManager
 	// в CGameApp::_Render). Прежний RenderDebugInfo использовал _pFont,
@@ -266,7 +232,6 @@ void MPGameApp::Render() {
 
 	// Del by lark.l i20080611
 	// Draw font
-	// FontModule::FontSystem::getSingleton().update(0.01f);
 
 	g_Render.EndRender(true);
 
@@ -274,8 +239,6 @@ void MPGameApp::Render() {
 }
 
 // UpdateConsoleText удалён — отрисовка текста консоли перенесена в клиент:
-// CGameApp::_RenderConsoleText (sources/Client/src/GameAppRender.cpp)
-// использует FontManager::Get(FontSlot::Console).
 
 void MPGameApp::_RenderUI() {
 }
@@ -289,11 +252,7 @@ void MPGameApp::_RenderAxis() {
 	D3DXMATRIX mat;
 	D3DXMatrixIdentity(&mat);
 
-#if(defined USE_MANAGED_RES)
 	g_Render.SetTransformWorld(&mat);
-#else
-	g_Render.GetDevice()->SetTransform(D3DTS_WORLD, &mat);
-#endif
 
 
 	AXIS_VERTEX pVertices[6];
@@ -321,7 +280,6 @@ void MPGameApp::_RenderAxis() {
 	g_Render.SetVertexShader(NULL);
 	g_Render.SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
 	g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 3, &pVertices, sizeof(AXIS_VERTEX));
-	// _pD3DDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
 }
 
 BOOL MPGameApp::_InitInput() {
@@ -376,7 +334,6 @@ void MPGameApp::_ReadKeyboardInput() {
 
 	if (nOffsetX || nOffsetY) //
 	{
-		//MouseMove(nOffsetX, nOffsetY);
 		_bCanDB = false;
 
 		_dwMouseKey |= M_Move;
@@ -389,7 +346,6 @@ void MPGameApp::_ReadKeyboardInput() {
 
 	for (int i = 0; i < 3; i++) {
 		if (_btButtonState[i] && !_btLastButtonState[i]) {
-			//MouseButtonDown(i);
 			_dwMouseKey |= M_Down;
 			if (i == 0)
 				_dwMouseKey |= M_LDown;
@@ -406,7 +362,6 @@ void MPGameApp::_ReadKeyboardInput() {
 							_bLastDBClick = false;
 					}
 					if (!_bLastDBClick) {
-						//MouseButtonDB(i);
 						_bLastDBClick = true;
 						_nDBTime = time;
 
@@ -427,7 +382,6 @@ void MPGameApp::_ReadKeyboardInput() {
 		}
 
 		if (!_btButtonState[i] && _btLastButtonState[i]) {
-			//MouseButtonUp(i);
 			if (i == 0)
 				_dwMouseKey |= M_LUp;
 			else if (i == 1)
@@ -504,4 +458,3 @@ void MPGameApp::End() {
 
 	ToLogService("common", "exit game appliaction successful!");
 }
-

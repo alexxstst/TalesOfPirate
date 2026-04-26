@@ -15,7 +15,6 @@ String MPDataStream::getLine(bool trimAfter)
 {
 	MPStringUtil::StrStreamType str;
 	size_t c = MP_STREAM_TEMP_SIZE-1;
-	// 
 	while (c == MP_STREAM_TEMP_SIZE-1)
 	{
 		c = readLine(m_TmpArea, MP_STREAM_TEMP_SIZE-1);
@@ -33,7 +32,6 @@ String MPDataStream::getLine(bool trimAfter)
 //-----------------------------------------------------------------------------
 String MPDataStream::getAsString(void)
 {
-	// 
 	char* pBuf = new char[m_Size+1];
 	read(pBuf, m_Size);
 	pBuf[m_Size] = '\0';
@@ -67,7 +65,6 @@ MPMemoryDataStream::MPMemoryDataStream(const String& name, void* pMem, size_t si
 MPMemoryDataStream::MPMemoryDataStream(MPDataStream& sourceStream, bool freeOnClose)
 	: MPDataStream()
 {
-	// 
 	m_Size = sourceStream.size();
 	m_Data = new uchar[m_Size];
 	sourceStream.read(m_Data, m_Size);
@@ -79,7 +76,6 @@ MPMemoryDataStream::MPMemoryDataStream(MPDataStream& sourceStream, bool freeOnCl
 MPMemoryDataStream::MPMemoryDataStream(MPDataStreamPtr& sourceStream, bool freeOnClose)
 	: MPDataStream()
 {
-	// 
 	m_Size = sourceStream->size();
 	m_Data = new uchar[m_Size];
 	sourceStream->read(m_Data, m_Size);
@@ -91,7 +87,6 @@ MPMemoryDataStream::MPMemoryDataStream(MPDataStreamPtr& sourceStream, bool freeO
 MPMemoryDataStream::MPMemoryDataStream(const String& name, MPDataStream& sourceStream, bool freeOnClose)
 	: MPDataStream(name)
 {
-	// 
 	m_Size = sourceStream.size();
 	m_Data = new uchar[m_Size];
 	sourceStream.read(m_Data, m_Size);
@@ -103,7 +98,6 @@ MPMemoryDataStream::MPMemoryDataStream(const String& name, MPDataStream& sourceS
 MPMemoryDataStream::MPMemoryDataStream(const String& name, const MPDataStreamPtr& sourceStream, bool freeOnClose)
 	: MPDataStream(name)
 {
-	// 
 	m_Size = sourceStream->size();
 	m_Data = new uchar[m_Size];
 	sourceStream->read(m_Data, m_Size);
@@ -174,7 +168,6 @@ size_t MPMemoryDataStream::readLine(char* buf, size_t maxCount, const String& de
 		memcpy(buf, (const void*)m_Pos, pos);
 	}
 
-	// 
 	m_Pos += pos + 1;
 
 	// CR LF
@@ -183,7 +176,6 @@ size_t MPMemoryDataStream::readLine(char* buf, size_t maxCount, const String& de
 		// '\r'
 		--pos;
 	}
-	// 
 	buf[pos] = '\0';
 
 	return pos;
@@ -240,7 +232,6 @@ void MPMemoryDataStream::close(void)
 MPFileStreamDataStream::MPFileStreamDataStream(std::ifstream* s, bool freeOnClose)
 	: MPDataStream()
 {
-	// 
 	m_pStream->seekg(0, std::ios_base::end);
 	m_Size = m_pStream->tellg();
 	m_pStream->seekg(0, std::ios_base::beg);
@@ -249,7 +240,6 @@ MPFileStreamDataStream::MPFileStreamDataStream(std::ifstream* s, bool freeOnClos
 MPFileStreamDataStream::MPFileStreamDataStream(const String& name, std::ifstream* s, bool freeOnClose)
 	: MPDataStream(name)
 {
-	// 
 	m_pStream->seekg(0, std::ios_base::end);
 	m_Size = m_pStream->tellg();
 	m_pStream->seekg(0, std::ios_base::beg);
@@ -301,7 +291,6 @@ size_t MPFileStreamDataStream::readLine(char* buf, size_t maxCount, const String
 
 	if (m_pStream->eof()) 
 	{
-		// 
 	}
 	else if (m_pStream->fail())
 	{
@@ -385,7 +374,6 @@ void MPFileStreamDataStream::close(void)
 MPFileHandleDataStream::MPFileHandleDataStream(FILE* handle)
 	: MPDataStream(), m_FileHandle(handle)
 {
-	// 
 	fseek(m_FileHandle, 0, SEEK_END);
 	m_Size = ftell(m_FileHandle);
 	fseek(m_FileHandle, 0, SEEK_SET);
@@ -394,7 +382,6 @@ MPFileHandleDataStream::MPFileHandleDataStream(FILE* handle)
 MPFileHandleDataStream::MPFileHandleDataStream(const String& name, FILE* handle)
 	: MPDataStream(name), m_FileHandle(handle)
 {
-	// 
 	fseek(m_FileHandle, 0, SEEK_END);
 	m_Size = ftell(m_FileHandle);
 	fseek(m_FileHandle, 0, SEEK_SET);
@@ -424,14 +411,11 @@ size_t MPFileHandleDataStream::readLine(char* buf, size_t maxCount, const String
 	size_t readCount; 
 	while (chunkSize && (readCount = fread(m_TmpArea, chunkSize, 1, m_FileHandle)))
 	{
-		// 
 		m_TmpArea[readCount] = '\0';
-		// 
 		size_t pos = strcspn(m_TmpArea, delim.c_str());
 
 		if (pos < readCount)
 		{
-			// 
 			fseek(m_FileHandle, pos - readCount + 1, SEEK_CUR);
 		}
 
@@ -455,7 +439,6 @@ size_t MPFileHandleDataStream::readLine(char* buf, size_t maxCount, const String
 		{
 			break;
 		}
-		// 
 		chunkSize = min(maxCount-totalCount, (size_t)MP_STREAM_TEMP_SIZE-1);
 
 	}

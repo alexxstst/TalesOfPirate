@@ -14,6 +14,9 @@
 #include "lwItem.h"
 #include "lwExpObj.h"
 
+#include <stacktrace>
+#include <format>
+
 using namespace std;
 LW_BEGIN
 
@@ -92,9 +95,17 @@ bool lwGeomManager::LoadGeomobj( const char file[] )
 	lwGeomObjInfo* pInfo = new lwGeomObjInfo;
 	if( LW_RESULT r = pInfo->Load( path ); LW_FAILED(r) )
 	{
+		// TEMP: ищем источник массовой пробы character .lgo. Стектрейс через
+		std::string trace;
+		try {
+			const auto st = std::stacktrace::current(/*skip*/1, /*max_depth*/16);
+			trace = std::to_string(st);
+		} catch (...) {
+			trace = "<stacktrace unavailable>";
+		}
 		ToLogService("errors", LogLevel::Error,
-		             "[{}] lwGeomObjInfo::Load failed: file={}, path={}, ret={}",
-		             __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r));
+		             "[{}] lwGeomObjInfo::Load failed: file={}, path={}, ret={}\n  stack:\n{}",
+		             __FUNCTION__, file ? file : "(null)", path, static_cast<long long>(r), trace);
 		delete pInfo;
 		return false;
 	}
@@ -134,7 +145,6 @@ bool lwGeomManager::LoadBoneData( const char file[] )
 // lwPhysique
 LW_STD_IMPLEMENTATION( lwPhysique )
 
-//#define DYNAMIC_LOADING
 
 // begin construct
 lwPhysique::lwPhysique( lwIResourceMgr* res_mgr )
@@ -293,7 +303,6 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
     {
         bone_ctrl = (lwIAnimCtrlObjBone*)_anim_agent->RemoveAnimCtrlObj(&type_info);
         LW_SAFE_RELEASE(bone_ctrl);
-        //goto __ret;
     }
 
     if(_anim_agent == NULL)
@@ -424,7 +433,6 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
         bone_ctrl->AttachAnimCtrl(ctrl_bone);
         bone_ctrl->SetTypeInfo(&type_info);
 
-        //i_data->Release();
     }
         goto __addr_2;
 __addr_1:        
@@ -531,7 +539,6 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
     anim_agent->AddAnimCtrlObj(ctrl_obj);
     
 
-    // 
     imp->SetID(info->id);
     imp->SetParentID( info->parent_id );
 
@@ -604,11 +611,7 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     res.res_type = RES_FILE_TYPE_GEOMETRY;
     _tcscpy( res.file_name, path );
 
-    //lwGeomObjInfo info;
-    //if( LW_FAILED( info.Load( path ) ) )
-    //{
     //    return LW_RET_FAILED;
-    //}
 
 	lwGeomObjInfo* pInfo = g_GeomManager.GetGeomObjInfo( file );
 	if( !pInfo )
@@ -688,7 +691,6 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
 
                 lwITex* ret_tex = 0;
                 mtltex_agent->SetTex( i, tex, &ret_tex );
-                //LW_SAFE_RELEASE(ret_tex);
                 if(ret_tex)
                 {
                     if(ret_tex->GetRegisterID() != LW_INVALID_INDEX)
@@ -731,7 +733,6 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     anim_agent->AddAnimCtrlObj(ctrl_obj);
     
 
-    // 
     imp->SetID(pInfo->id);
     imp->SetParentID( pInfo->parent_id );
 
@@ -842,7 +843,6 @@ LW_RESULT lwPhysique::Update()
             continue;
 
 
-        // 
         lwMatrix44 mat( _mat_base );
         pp = imp;
         while( pp->GetParentID() != LW_INVALID_INDEX )

@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\Libraries\CryptoPP\;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;$(ProjectDir)..\Libraries\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>

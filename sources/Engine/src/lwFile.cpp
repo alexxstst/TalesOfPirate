@@ -55,7 +55,6 @@ LW_RESULT lwFile::CreateDirectory(const char* path, LPSECURITY_ATTRIBUTES attr)
 
     return LW_RET_OK;
 }
-//
 LW_RESULT lwFile::CreateFile(const char* file, DWORD access_flag, DWORD share_mode, LPSECURITY_ATTRIBUTES secu_attr, DWORD creation_flag, DWORD attributes_flag)
 {
     LW_RESULT ret = LW_RET_FAILED;
@@ -328,7 +327,6 @@ LW_RESULT lwFile::MoveData(DWORD src_pos, DWORD dst_pos, DWORD size)
                     loop_flag = 0;
                 }
 
-                //s = move_chunk_size;
 
                 // read src data
                 Seek(src_pos_end - op_size - move_chunk_size, FILE_BEGIN);
@@ -351,7 +349,6 @@ LW_RESULT lwFile::MoveData(DWORD src_pos, DWORD dst_pos, DWORD size)
                     loop_flag = 0;
                 }
 
-                //s = move_chunk_size;
 
                 // read src data
                 Seek(src_pos + op_size, FILE_BEGIN);
@@ -444,7 +441,6 @@ LW_RESULT lwFileDialog::GetOpenFileName(HWND hwnd, char* buf, int num, const cha
 	OPENFILENAME	ofn;				// common dialog box structure
     memset(&ofn,0,sizeof(ofn));
 
-	//char ret_buf[1024]={"\0"};
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
@@ -466,7 +462,6 @@ LW_RESULT lwFileDialog::GetOpenFileName(HWND hwnd, char* buf, int num, const cha
         *(ofn.lpstrFile + ofn.nFileOffset - 1 ) = '\0';
     }
 
-	//strcpy(buf,ofn.lpstrFile);
     return LW_RET_OK;
 }
 

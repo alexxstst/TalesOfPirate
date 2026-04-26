@@ -10,7 +10,6 @@
 LW_BEGIN
 
 // define base const register
-//; c0      = { 1.0f, 0.0f, 0.0f, 1020.01f };
 //; c1-c4   = projection matrix
 //; c5      = light direction
 //; c6      = ambient color

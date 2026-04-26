@@ -4,11 +4,8 @@
 #include <tchar.h>
 #include <shlobj.h>
 #include <olectl.h>
-//#include <windows.h>
 
-///////////////////////////////////
 
-/////////////////
 
 char* lwGetModuleFilePath( char* buf ); // buf size need be more than 256 byte
 char* lwGetModuleBaseFileName( char* buf ); // exclude extension
@@ -53,5 +50,3 @@ int LwGetFolderName(char *folder, HWND hwnd,const char *title,LPITEMIDLIST pid_r
 HBITMAP LoadBitmapFile(const char* file);
 OLE_HANDLE LoadImageFile(const char* file);
 
-
-//

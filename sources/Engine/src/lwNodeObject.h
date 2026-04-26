@@ -9,8 +9,6 @@
 #include "lwMisc.h"
 #include "lwInterfaceExt.h"
 
-//////////////
-//
 LW_BEGIN
 
 class lwNodeBase
@@ -30,11 +28,9 @@ protected:
     DWORD _link_id;
 
 protected:
-    //LW_RESULT _UpdateMatrix();
     BOOL _CheckVisibleState() { return _state_set.GetValue(STATE_VISIBLE); }
 public:
     lwNodeBase();
-    //~lwNodeBase();
 };
 
 class lwNodePrimitive : public lwNodeBase, public lwINodePrimitive
@@ -48,7 +44,6 @@ private:
     lwIAnimCtrlAgent* _anim_agent;
     lwIRenderCtrlAgent* _render_agent;
     lwIHelperObject* _helper_object;
-    //lwINodeBoneCtrl* _vertex_blend_ctrl;
     lwIAnimCtrlObjBone* _ref_ctrl_obj_bone;
 
     DWORD _mtltex_agent_seqsize;
@@ -88,7 +83,6 @@ public:
     void SetHelperObject(lwIHelperObject* obj) { _helper_object = obj; }
     void SetMaterial(const lwMaterial* mtl);
     void SetOpacity(float opacity);
-    //LW_RESULT SetVertexBlendCtrl(lwINodeBoneCtrl* ctrl);
 
     lwIResourceMgr* GetResourceMgr() { return _res_mgr; }
     lwIMtlTexAgent* GetMtlTexAgent(DWORD id) { return _mtltex_agent_seq[id]; }
@@ -96,7 +90,6 @@ public:
     lwIAnimCtrlAgent* GetAnimCtrlAgent() { return _anim_agent; }
     lwIRenderCtrlAgent* GetRenderCtrlAgent() { return _render_agent; }
     lwIHelperObject* GetHelperObject() { return _helper_object; }
-    //lwINodeBoneCtrl* GetVertexBlendCtrl() { return _vertex_blend_ctrl; }
     LW_RESULT AllocateMtlTexAgentSeq(DWORD num);
     DWORD GetMtlTexAgentSeqSize() const { return _mtltex_agent_seqsize; }
     LW_RESULT GetSubsetNum(DWORD* subset_num);
@@ -286,7 +279,6 @@ public:
 // assistant method
 LW_RESULT lwDestroyNodeObject(lwITreeNode* node);
 
-// if there is not available animation ctrl then the return value is LW_RET_OK_1
 LW_RESULT lwNodePrimitive_PlayPose(lwINodePrimitive* obj, const lwPlayPoseInfo* info, DWORD ctrl_type, DWORD subset, DWORD stage);
 LW_RESULT lwNodePrimitive_PlayPoseAll(lwINodePrimitive* obj, const lwPlayPoseInfo* info);
 LW_RESULT lwNodeBoneCtrl_PlayPose(lwINodeBoneCtrl* obj, const lwPlayPoseInfo* info);

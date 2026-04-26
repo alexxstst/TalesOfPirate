@@ -11,7 +11,6 @@
 #include "lwResourceMgr.h"
 
 // Del by lark.li 20080611
-//#include <FontSystem.h>
 
 LW_BEGIN
 
@@ -519,12 +518,10 @@ LW_RESULT lwDeviceObject::ResetDevice(D3DPRESENT_PARAMETERS* d3dpp)
 	}
 
 	// Del by lark.l i20080611
-	//FontModule::FontSystem::getSingleton()._preD3DReset();
 
 	hr = _dev->Reset( d3dpp );
 
 	// Del by lark.l i20080611
-	//FontModule::FontSystem::getSingleton()._postD3DReset();
 
 	if(FAILED(hr))
 	{
@@ -772,7 +769,6 @@ LW_RESULT lwDeviceObject::CreateTextureFromFileInMemory(IDirect3DTextureX** out_
     }
 
     _watch_vm_info.alloc_tex_size += lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-    //_watch_vm_info.alloc_tex_size += desc.Size;
     _watch_vm_info.alloc_tex_cnt += 1;
 
     *out_tex = t;
@@ -981,8 +977,6 @@ LW_RESULT lwDeviceObject::SetStreamSource(UINT stream_num, IDirect3DVertexBuffer
         goto __ret;
 
     //stream_dataoffset_byte,stride
-    //if(_vb_value[stream_num] == stream_data)
-    //    goto __addr_ok;
     
     ret = _dev->SetStreamSourceX(stream_num, stream_data, offset_byte, stride);
     if(FAILED(ret))
@@ -995,7 +989,6 @@ LW_RESULT lwDeviceObject::SetStreamSource(UINT stream_num, IDirect3DVertexBuffer
         goto __ret;
     }
 
-    //_vb_value[stream_num] = stream_data;
 
 //__addr_ok:
     ret = LW_RET_OK;
@@ -1008,8 +1001,6 @@ LW_RESULT lwDeviceObject::SetIndices(IDirect3DIndexBufferX* index_data, UINT bas
     LW_RESULT ret = LW_RET_FAILED;
 
     //index_database_vert_index
-    //if(_ib_value == index_data)
-    //    goto __addr_ok;
     
     ret = _dev->SetIndicesX(index_data, base_vert_index);
     if(FAILED(ret))
@@ -1021,7 +1012,6 @@ LW_RESULT lwDeviceObject::SetIndices(IDirect3DIndexBufferX* index_data, UINT bas
         goto __ret;
     }
 
-    //_ib_value = index_data;
 
 //__addr_ok:
     ret = LW_RET_OK;
@@ -1249,7 +1239,6 @@ LW_RESULT lwDeviceObject::GetWindowRect(RECT* rc_wnd, RECT* rc_client)
     return LW_RET_OK;
 }
 
-//
 void lwDeviceObject::BeginBenchMark()
 {
     _mark_vertex_num = 0;
@@ -1352,6 +1341,5 @@ LW_RESULT lwDeviceObject::DumpRenderState(const char* file)
     return LW_RET_OK;
 }
 
-///////////
 
 LW_END

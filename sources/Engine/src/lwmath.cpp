@@ -3,32 +3,15 @@
 #include "lwMath.h"
 
 LW_BEGIN
-////////////////
-////////////////////////////////
-//const lwVector2 lwVector2::Zero(0.0f,0.0f);
-//
-//const lwVector3 lwVector3::Zero(0.0f,0.0f,0.0f);
-//
-/////////////
-/////////////////////////////
-//const lwMatrix33 lwMatrix33::Identity( 1.0f, 0.0f, 0.0f,
 //                                       0.0f, 1.0f, 0.0f,
-//                                       0.0f, 0.0f, 1.0f );
-//
-//const lwMatrix43 lwMatrix43::Identity( 1.0f, 0.0f, 0.0f,
 //                                       0.0f, 1.0f, 0.0f,
 //                                       0.0f, 0.0f, 1.0f,
-//                                       0.0f, 0.0f, 0.0f );
-//
-//const lwMatrix44 lwMatrix44::Identity( 1.0f, 0.0f, 0.0f, 0.0f,
 //                                       0.0f, 1.0f, 0.0f, 0.0f,
 //                                       0.0f, 0.0f, 1.0f, 0.0f,
-//                                       0.0f, 0.0f, 0.0f, 1.0f );
 
 // =========
 
 // lwMatrix33
-///////////////////////
 lwMatrix33* _lwMatrix33Transpose( lwMatrix33* ret, const lwMatrix33* m )
 {
     lwMatrix33 tmp( *m );
@@ -209,7 +192,6 @@ lwMatrix33* lwMatrix33ReflectWithAxis( lwMatrix33* mat, const lwVector2* axis )
 }
 
 // 1. translate axis to origin; 2. rotate axis; 3. untraslate axis with origin
-// 
 lwMatrix33* lwMatrix33ReflectWithAxis( lwMatrix33* mat, const lwVector2* v1, const lwVector2* v2 )
 {
     lwVector2 axis( v2->x - v1->x, v2->y - v1->y );
@@ -261,7 +243,6 @@ lwMatrix33* _lwMatrix33Inverse(lwMatrix33* ret, float* determinant, const lwMatr
     return ret;
 }
 // lwMatrix44
-///////////////////////
 lwMatrix44* _lwMatrix44Multiply( lwMatrix44* ret,const lwMatrix44* m1,const lwMatrix44* m2)
 {
    lwMatrix44 tmp;
@@ -314,7 +295,6 @@ lwMatrix44* lwMatrix44MultiplyScale(lwMatrix44* ret,const lwMatrix44* mat_scale,
 	return ret;
 }
 
-///////////////
 lwMatrix44* lwMatrix44Translate(lwMatrix44* matrix,float x,float y,float z,DWORD op)
 {
 
@@ -324,8 +304,6 @@ lwMatrix44* lwMatrix44Translate(lwMatrix44* matrix,float x,float y,float z,DWORD
    if (op == OP_MATRIX_REPLACE) {
       /* replace the working one */
 
-      //lwMatrix44Identity(matrix);
-	  
       m[12] = x;
       m[13] = y;
       m[14] = z;
@@ -372,7 +350,6 @@ lwMatrix44* lwMatrix44RotateAxis(lwMatrix44* matrix,DWORD axis,float angle,DWORD
 
 	if (op == OP_MATRIX_REPLACE) {
 		// replace the working one
-		//lwMatrix44Identity(matrix);
 
 		m[4*nax1+nax1] = csv;
 		m[4*nax2+nax2] = csv;
@@ -412,7 +389,6 @@ lwMatrix44* lwMatrix44Scale(lwMatrix44* matrix,float x,float y,float z,DWORD op)
 
 	if( op == OP_MATRIX_REPLACE ) {
 		// replace the working one
-		//lwMatrix44Identity((lwMatrix44*)m);
 		m[0] = x;
 		m[5] = y;
 		m[10] = z;
@@ -559,9 +535,6 @@ inline float Determinant(const lwMatrix44* m)
 
 lwMatrix44* _lwMatrix44Inverse(lwMatrix44* ret, float* determinant, const lwMatrix44* m)
 {
-   //*ret = Adjoint(m);
-   //return lwMatrix44Scale(ret, 1.0f / Determinant(m) );
-	
     float d = Determinant( m );
 	*ret = (1.0f / d) * Adjoint(m);
     if( determinant )
@@ -674,7 +647,6 @@ lwMatrix44* lwMat44ReflectWithPoint( lwMatrix44* mat, const lwVector3* pt )
 lwMatrix44* lwMat44ReflectWithAxis( lwMatrix44* mat, const lwVector3* axis )
 {
     // quaternion rotate axis with 180 degree
-    //lwQuaternion quat = { axis->x, axis->y, axis->z, 0.0f };
     lwQuaternion quat;
     quat.x = axis->x;
     quat.y = axis->y;
@@ -846,7 +818,6 @@ lwVector3* lwGetTriangleNormal( lwVector3* n,const lwVector3* v0,const lwVector3
 	return n;
 }
 
-// for triangle
 int lwCheckVectorInTriangle2D(const lwVector2* vp,const lwVector2* v1,const lwVector2* v2,const lwVector2* v3)
 {
 
@@ -861,7 +832,6 @@ int lwCheckVectorInTriangle2D(const lwVector2* vp,const lwVector2* v1,const lwVe
     float vz2 = lwVec2Cross(&vec_2,&vec_3);
     float vz3 = lwVec2Cross(&vec_3,&vec_1);
 
-	// if the vp is on the side of triangle then return 0
     if( (vz1<0.0f && vz2<0.0f && vz3<0.0f) || (vz1>0.0f && vz2>0.0f && vz3>0.0f) )
         return 1;
     else
@@ -939,8 +909,6 @@ int lwCheckVectorInTriangle2D2(int* flag,const lwVector2* vp,const lwVector2* v1
         return 0;
 
 }
-/////////
-/////////////////
 lwQuaternion* lwMatrix44ToQuaternion(lwQuaternion* quat,const lwMatrix44* matrix)
 {
     float  tr, s, q[4];
@@ -992,16 +960,7 @@ lwQuaternion* lwMatrix44ToQuaternion(lwQuaternion* quat,const lwMatrix44* matrix
     return quat;
 }
 
-//lwQuaternion* lwMatrix44ToQuaternionLH(lwQuaternion* quat,const lwMatrix44* matrix)
-//{
-//    lwMatrix44ToQuaternionRH(quat,matrix);
-//    quat->x = - quat->x;
-//    quat->y = - quat->y;
-//    quat->z = - quat->z;
-//
 //    return quat;
-//}
-//
 lwMatrix44* lwQuaternionToMatrix44(lwMatrix44* matrix,lwQuaternion* quat)
 {
     float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
@@ -1086,15 +1045,7 @@ lwQuaternion* lwEulerAngleToQuaternion(lwQuaternion* quat,float roll,float pitch
 
     return quat;
 }
-//lwQuaternion* lwEulerAngleToQuaternionLH(lwQuaternion* quat,float roll,float pitch,float yaw)
-//{
-//    lwEulerAngleToQuaternionRH(quat,roll,pitch,yaw);
-//    quat->x = - quat->x;
-//    quat->y = - quat->y;
-//    quat->z = - quat->z;
-//
 //    return quat;
-//}
 lwQuaternion* _lwQuaternionMultiply( lwQuaternion* ret, const lwQuaternion* q1, const lwQuaternion* q2 )
 {
 
@@ -1132,7 +1083,6 @@ lwQuaternion* lwQuaternionSlerp(lwQuaternion* res, const lwQuaternion* from, con
         + from->w * to->w;
 
 
-    // adjust signs (if necessary)
     if ( cosom <0.0f ) { 
         cosom = -cosom; 
         to1[0] = - to->x;
@@ -1152,7 +1102,6 @@ lwQuaternion* lwQuaternionSlerp(lwQuaternion* res, const lwQuaternion* from, con
 
 
     if ( (1.0f - cosom) > 0.001f/*DELTA*/ ) {
-        // standard case (slerp)
         omega = acos(cosom);
         sinom = sin(omega);
         scale0 = sin((1.0f - t) * omega) / sinom;
@@ -1222,9 +1171,6 @@ lwQuaternion* lwQuaternionRotationSpherical( lwQuaternion* quat, float longitude
 
 lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwQuaternion* nrm_q)
 {
-    // normalize N(q) = 
-    // conjugate q* = [-v, w];
-    // inverse q^ = q* / N(q);
     lwQuaternion inv_q(-nrm_q->x, -nrm_q->y, -nrm_q->z, nrm_q->w);
     lwQuaternion vec_q(v->x, v->y, v->z, 0);
     lwQuaternion t;
@@ -1240,7 +1186,6 @@ lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwQuater
 }
 lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwVector3* nrm_axis, float angle)
 {
-    //
     float cosv = cosf(angle);
     float sinv = sinf(angle);
     float d = lwVector3Dot(v, nrm_axis);
@@ -1411,26 +1356,11 @@ int lwIntersectBoxBoxOBB( const lwBox* b1, const lwBox* b2, const lwMatrix44* ma
 {
     // 3
     // boxhalf_size
-    //lwVector3 b_cen( b.GetCenter() );
-    //lwVec3Mat44Mul( &b_cen, mat );
-    //lwVector3 vec_cen;
-    //lwVector3Sub( &vec_cen, &b_cen, &GetCenter() );
 
-    //lwVector3 ea = 0.5f * GetSize();
-    //lwVector3 eb = 0.5f * b.GetSize();
 
-    //for( int i = 0; i < 3; i++ ) {
-    //    float ro = fabsf( vec_cen[i] );
-    //    lwVector3 vv( fabsf(mat->o
-    //    float r1 = ea[i];
     //    float r2 = b.GetCenter()
-    //}
     //// bmatbox
-    //lwMatrix44 mat_inv;
-    //lwMatrix44Inverse( &mat_inv, mat );
 
-    //lwVector3& p( b.GetPosition() );
-    //lwVector3& s( b.GetSize() );
 
 
     //lwVector3 pt[] = {
@@ -1445,32 +1375,17 @@ int lwIntersectBoxBoxOBB( const lwBox* b1, const lwBox* b2, const lwMatrix44* ma
     //    lwVector3( p.x + s.x, p.y + s.y, p.z + s.z ),
     //    lwVector3( p.x + s.x, p.y + s.y, p.z )
 
-    //};
 
-    //int r = 0;
 
-    //for( int i = 0; i < 8; i++ ) {
-    //    lwVec3Mat44Mul( &pt[i], mat );
-    //    r += PointInBox( &pt[i] );
-    //}
 
-    //if( r == 0 ) {
-    //    lwVector3 cen( b.GetCenter() );
-    //    lwVec3Mat44Mul( &cen, &mat );
-    //    if( PointInBox( &cen ) )
     //        return 1;
-    //    cen = GetCenter();
     //    return 1;
-    //}
-    //else {
     //    return 1;
-    //}
 
     return 1;
     
 }
 // vector, line equation API
-//////////////////////////////////
 int lwIntersectLineLine2D( lwVector2* v, const lwVector2* u1, const lwVector2* u2, const lwVector2* v1, const lwVector2* v2, int be_ray )
 {
     float t1, t2;
@@ -1489,10 +1404,6 @@ int lwIntersectLineLine2D( lwVector2* v, const lwVector2* u1, const lwVector2* u
     d2 = (*v1)[1];
 
     // t1, t2 range [0,1]
-    // l1 :  x = a1 * t1 + b1;
-    //       y = c1 * t1 + d1;
-    // l2 :  x = a2 * t2 + b2;
-    //       y = c2 * t2 + d2;
 
     if( a1*c2 == a2*c1 )
 		return 0;
@@ -1554,10 +1465,6 @@ int lwIntersectLineLine3D( lwVector3* v, const lwVector3* u1, const lwVector3* u
     f2 = (*v1)[i3];
 
     // t1, t2 range [0,1]
-    // l1 :  x = a1 * t1 + b1;
-    //       y = c1 * t1 + d1;
-    // l2 :  x = a2 * t2 + b2;
-    //       y = c2 * t2 + d2;
 
     if( a1*c2 == a2*c1 )
 		return 0;
@@ -1565,11 +1472,6 @@ int lwIntersectLineLine3D( lwVector3* v, const lwVector3* u1, const lwVector3* u
 
     t2 = (b1*c1 + a1*d2 - a1*d1 - b2*c1) / (a2*c1 - a1*c2);
 
-    //if( fabsf(a1)>1e-3f )
-    //    t1 = (a2*t2 + b2 - b1) / a1;
-    //else if( c1 )
-    //    t1 = (c2*t2 + d2 - d1) / c1;
-    //else
     //    return 0;
     if( fabsf( a1 ) > fabsf( c1 ) )
         t1 = (a2*t2 + b2 - b1) / a1;
@@ -1735,8 +1637,6 @@ int lwGetVec3WeightWithNormal(lwVector3* face,lwVector3* up,const lwVector3* vec
 	int ret = 1;
 	float cs = lwVector3Dot(vec,normal);
 	if( cs < 0.0f ) {
-		// if the angle between vector and normal is exceed 90 degree , we set negative cos value
-		//cs = -cs;
 		ret = 0;
 	}
 
@@ -1753,7 +1653,6 @@ int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec)
 	int ret;
     lwVector3 vn( fabsf(vec->x),fabsf(vec->y),fabsf(vec->z) );
 
-	// 
     if( vn.x > vn.y ) {
       if( vn.x > vn.z ) { 
 		  t1 = 1; 
@@ -1833,7 +1732,6 @@ int lwCheckVectorInTriangle3D( const lwVector3* v, const lwVector3* v0, const lw
 }
 
 
-///////
 int lwCheckVectorInTriangle3D2( int* flag, const lwVector3* v, const lwVector3* v0, const lwVector3* v1, const lwVector3* v2, const lwVector3* n )
 {
 	// begin
@@ -1968,7 +1866,6 @@ void lwGetEquation3( float* ret, const float* e1, const float* e2, const float* 
 }
 
 // use equation paramters
-// if v1 == v2 then the distance is point to point
 float lwGetLineOriginDistance2( const lwVector2* v1, const lwVector2* v2 )
 {
     lwVector2 k( v2->x - v1->x, v2->y - v1->y );

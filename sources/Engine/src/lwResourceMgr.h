@@ -57,8 +57,6 @@ LW_BEGIN
 
 		IDirect3DTextureX* _tex;
 
-		//lwTextureStageStateSetTex2 _tss_set;
-		//lwRenderStateSetTex2 _rs_set;
 		lwRenderStateAtomSet _rsa_0;
 
 		DWORD _load_type;
@@ -202,7 +200,6 @@ LW_BEGIN
 	//    lwMesh
 	// 2lwMeshInfoclasslwIMeshInfo
 	//    lwMesh
-	//
 	class lwMesh : public lwIMesh {
 		LW_STD_DECLARATION()
 
@@ -655,7 +652,6 @@ LW_BEGIN
 		LW_RESULT GetTex(lwITex** ret_obj, DWORD id);
 		LW_RESULT GetAnimCtrl(lwIAnimCtrl** ret_obj, DWORD id);
 
-		//
 		// BoundingBox
 		LW_RESULT RegisterMesh(lwIMesh* obj);
 		LW_RESULT RegisterTex(lwITex* obj);

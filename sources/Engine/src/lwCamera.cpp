@@ -5,7 +5,6 @@
 LW_BEGIN
 
 // lwCamera
-////////////////////////////////////////
 void lwCamera::GetMatrixCameraToView( lwMatrix44* mat, const lwMatrix44* mat_cam )
 {
 	mat->m[0][0] = mat_cam->m[0][0];
@@ -66,9 +65,6 @@ lwCamera::lwCamera()
 int lwCamera::SetPerspectiveFov(float fov,float aspect,float zn,float zf)
 {
 	//Here we specify the field of view, aspect ration and near and far clipping planes.
-    //D3DXMATRIX m_proj;
-    //D3DXMatrixPerspectiveFovLH(&m_proj, fov, aspect, zn, zf);
-    //_dev->SetTransform(D3DTS_PROJECTION, &m_proj);
 
 	_fov = fov;
 	_aspect = aspect;
@@ -97,27 +93,18 @@ void lwCamera::SetTransform()
 {
     D3DXMATRIX m_view;
 
-	//_m.m[2][0] = 100.0f;
-	//_m.m[2][1] = 0.0f;
-	//_m.m[2][2] = 0.0f;
 
 	//D3DXMatrixLookAtLH( &m_view, 
 	//	(D3DXVECTOR3*)(&_m.m[3][0]), //Camera Position
 	//	(D3DXVECTOR3*)(&_m.m[2][0]), //Look At Position
 	//	(D3DXVECTOR3*)(&_m.m[1][0]));  //Up Direction
 
-	//zaxis = normal(At - Eye)
-	//	xaxis = normal(cross(Up, zaxis))
-	//	yaxis = cross(zaxis, xaxis)
 
 	//	xaxis.x           yaxis.x           zaxis.x          0
 	//	xaxis.y           yaxis.y           zaxis.y          0
 	//	xaxis.z           yaxis.z           zaxis.z          0
 	//	-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-	//_m.m[2][0] = 0.0f;
-	//_m.m[2][1] = 0.0f;
-	//_m.m[2][2] = 1.0f;
 	
 	m_view.m[0][0] = _m.m[0][0];
 	m_view.m[1][0] = _m.m[0][1];
@@ -140,7 +127,6 @@ void lwCamera::SetTransform()
 	m_view.m[2][3] = 0.0f;
 	m_view.m[3][3] = 1.0f;
 
-    //_dev->SetTransform(D3DTS_VIEW, &m_view);
  
 }
 

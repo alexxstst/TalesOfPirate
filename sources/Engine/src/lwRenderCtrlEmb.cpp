@@ -85,16 +85,7 @@ LW_RESULT lwRenderCtrlVSFixedFunction::BeginSetSubset(DWORD subset, lwIRenderCtr
                     dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
                 }
                 // moved into Primitive.Update procedure
-                //else if(anim_type == ANIM_CTRL_TYPE_MTLOPACITY)
-                //{
-                //    lwIAnimCtrlObjMtlOpacity* this_ctrl = (lwIAnimCtrlObjMtlOpacity*)animctrl_obj;
 
-                //    float opacity = 1.0f;
-                //    if(LW_SUCCEEDED(this_ctrl->GetRunTimeOpacity(&opacity)))
-                //    {
-                //        agent->GetMtlTexAgent()->SetOpacity(opacity);
-                //    }
-                //}
             }
         }
     }
@@ -131,12 +122,6 @@ LW_RESULT lwRenderCtrlVSFixedFunction::EndSetSubset(DWORD subset, lwIRenderCtrlA
                 {
                     dev_obj->SetTextureStageState(stage_id, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
                 }
-                //else if(anim_type == ANIM_CTRL_TYPE_TEXIMG)
-                //{
-                //    lwIAnimCtrlObjTexImg* this_ctrl = (lwIAnimCtrlObjTexImg*)animctrl_obj;
-                //    lwITex* this_tex = this_ctrl->GetRunTimeTex();
-                //    this_tex->EndSet();
-                //}
             }
         }
     }

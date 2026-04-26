@@ -17,6 +17,7 @@
 #include "Main.h"
 #include "GameApp.h"
 #include "SceneObjFile.h"
+#include "MPResManger.h"
 #include "TextureLog.h"
 #include "UIImeinput.h"
 #include "GameConfig.h"
@@ -127,6 +128,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	g_SystemIni = dbc::IniFile("./user/system.ini");
 	g_Config.Load();
+
+	//  Передаём в Engine флаг прогрева массовых ресурсов (см. GameConfig.h
+	//  m_bResourcePreload + [Resources] preload_at_start). Должно быть до
+	//  любого вызова InitRes/InitRes3 у MPResManger.
+	CMPResManger::SetResourcePreload(g_Config.m_bResourcePreload != FALSE);
 
 	//  TextureLog (диагностический канал "textures") — runtime-тогл из
 	//  [TextureLog] enabled. По умолчанию выключен; при включении регистрируем

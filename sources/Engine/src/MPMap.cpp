@@ -224,26 +224,14 @@ void MPMap::Render()
 	
 
 
-	//g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);		
-	//g_Render.SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	//g_Render.SetTextureStageState( 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 	
-	//g_Render.SetTextureStageState( 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);		
-	//g_Render.SetTextureStageState( 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	//g_Render.SetTextureStageState( 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
-    //g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_ANISOTROPIC);
-    //g_Render.SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_ANISOTROPIC);
-    //g_Render.SetTextureStageState( 1, D3DTSS_MAGFILTER, D3DTEXF_ANISOTROPIC);
-    //g_Render.SetTextureStageState( 1, D3DTSS_MINFILTER, D3DTEXF_ANISOTROPIC);
-    //g_Render.SetTextureStageState(0, D3DTSS_MAXANISOTROPY, 16);
-    //g_Render.SetTextureStageState(1, D3DTSS_MAXANISOTROPY, 16);
 
 
 	g_Render.SetVertexShader(NULL);
@@ -265,13 +253,8 @@ void MPMap::Render()
        _nLastGridStartY = nTileStartY * 2;
     }
 
-	//int nCurSectionX = _fShowCenterX / _nSectionWidth;
-	//int	nCurSectionY = _fShowCenterY / _nSectionHeight;
 
-	//if( nCurSectionX != _nLastSectionX || nCurSectionY != _nLastSectionY )
-	//{
 
-	//}
     
 	if(m_bCullTile)
 	{
@@ -342,15 +325,11 @@ void MPMap::RenderSmMap()
     g_Render.SetRenderState(D3DRS_COLORVERTEX, TRUE);
 
 	//g_Render.SetTextureStageState( 1, D3DTSS_MAGFILTER, D3DTEXF_POINT);	// tile texture
-	//g_Render.SetTextureStageState( 1, D3DTSS_MINFILTER, D3DTEXF_POINT);
-	//g_Render.SetTextureStageState( 1, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 	g_Render.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 	
 	//g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_POINT);	// tile texture
-	//g_Render.SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_POINT);
-	//g_Render.SetTextureStageState( 0, D3DTSS_MIPFILTER, D3DTEXF_POINT);
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
@@ -381,17 +360,10 @@ void MPMap::RenderSmMap()
 	g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
 	
 	
-	//g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);		
-	//g_Render.SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	//g_Render.SetTextureStageState( 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
-	//
-	//g_Render.SetTextureStageState( 1, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);		
-	//g_Render.SetTextureStageState( 1, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	//g_Render.SetTextureStageState( 1, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	g_Render.SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
@@ -402,7 +374,6 @@ void MPMap::RenderSmMap()
 	int nTileStartX = (int)(_fShowCenterX - (float)(_nShowWidth)  / 2.0f);
 	int nTileStartY = (int)(_fShowCenterY - (float)(_nShowHeight) / 2.0f);
 
-	// if(nTileStartX < 0) nTileStartX
 	
 	MPTile *TileList[4];
 	int x, y, i;
@@ -439,8 +410,6 @@ void MPMap::RenderSmMap()
 				
 				if(pLayer->btAlphaNo==15)
 				{
-					//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-					//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 					g_Render.EnableAlpha(FALSE);
@@ -453,8 +422,6 @@ void MPMap::RenderSmMap()
 				}
 				else
 				{
-					//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_MIRROR);
-					//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_MIRROR);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_MIRROR);
 					g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_MIRROR);
 					g_Render.EnableAlpha(TRUE);
@@ -471,10 +438,6 @@ void MPMap::RenderSmMap()
 		}
 	}
 	
-	//g_Render.SetTexture(0, NULL); 
-	//g_Render.SetTexture(1, NULL);
-	//
-	//g_Render.SetRenderState(D3DRS_CLIPPING, TRUE);
 }
 
 void MPMap::_RenderFocusRect()
@@ -593,7 +556,6 @@ void MPMap::RenderSea()
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,  D3DTOP_SELECTARG1  );
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1,D3DTA_DIFFUSE );
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2,D3DTA_TEXTURE);
-	// g_Render.SetTexture(1, NULL);
 
 	int nSize = SEA_TILE_SIZE;
 	int nSeaStartX = nStartX / nSize;
@@ -609,62 +571,13 @@ void MPMap::RenderSea()
 	int nVertexCnt = nTileCnt * 6;
 	int nTriCnt    = nTileCnt * 2;
 
-	// LPDIRECT3DINDEXBUFFER8   _pIB = NULL;
 	MPSeaTileVertex   *pCurVertex = NULL;
 	
 	int x, y;
 	if(_bUseVB)
 	{
-//#if(defined DRAW_SEA_USE_DYNAMIC_BUFFER)
-//        DWORD num = 0;
-//
-//		for(y = 0; y < nSeaCntY; y++)
-//		{
-//			for(x = 0; x < nSeaCntX; x++)
-//			{
-//				int nX = (nSeaStartX + x) * nSize;
-//				int nY = (nSeaStartY + y) * nSize;
-//
-//				if(nX < 0 || nX >= _nWidth || nY < 0 || nY >= _nHeight) continue;
-//			
-//				SVertex[0].dwColor = _dwSeaDefaultColor;
-//				SVertex[1].dwColor = _dwSeaDefaultColor;
-//				SVertex[2].dwColor = _dwSeaDefaultColor;
-//				SVertex[3].dwColor = _dwSeaDefaultColor;
-//			
-//				for(int i = 0; i < 4; i++)
-//				{
-//					int nCurX = nX + MPTile::Offset[i][0] * nSize;
-//					int nCurY = nY + MPTile::Offset[i][1] * nSize;
-//				
-//					SVertex[i].p = VECTOR3( (float)nCurX, (float)nCurY, SEA_LEVEL);
-//				
-//					MPTile *pTile = GetTile(nCurX, nCurY);
-//					if((SEA_LEVEL - pTile->fHeight) < 0.5f)
-//					{
-//						SVertex[i].dwColor = 0x00ffffff; 
-//					}
-//				}   
 //				// 0 1 2 
-//				memcpy(&_pVertBuf[num], &SVertex, 3 * sizeof(MPSeaTileVertex));
-//				num += 3;  
-//				
 //				// 1 3 4
-//                _pVertBuf[num++] = SVertex[3];
-//                _pVertBuf[num++] = SVertex[2];
-//                _pVertBuf[num++] = SVertex[1];
-//			} 
-//		}
-//	
-//        assert(nTriCnt == num / 3);
-//
-//        lwInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
-//        lwIDynamicStreamMgr* dsm = imgr->res_mgr->GetDynamicStreamMgr();
-//        dsm->BindDataVB(0, _pVertBuf, sizeof(MPSeaTileVertex) * num, sizeof(MPSeaTileVertex));
-//        if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLELIST, 0, num / 3)))
-//            LG("error","msg render sea");
-//
-//#else
 		HRESULT hr = _pVB->Lock(0, nVertexCnt * sizeof(MPSeaTileVertex), (void**)&pCurVertex, D3DLOCK_NOOVERWRITE );
 	    if(FAILED(hr))
 	    {
@@ -720,7 +633,6 @@ void MPMap::RenderSea()
 			ToLogService("errors", LogLevel::Error,
 			             "[{}] DrawPrimitive (sea) failed: nTriCnt={}, hr=0x{:08X}",
 			             __FUNCTION__, nTriCnt, static_cast<std::uint32_t>(hr));
-//#endif
 	}
 	else
 	{
@@ -885,20 +797,9 @@ BOOL MPMap::GetPickPosEditor(int nPosX, int nPosY, D3DXVECTOR3 &vPickPos)
 			}
 		}
 
-		//MPTile *pTile = GetTile(nX, nY);
-		//if(pTile) 
-		//{
-		//	for(int i = 0; i < 4; i++)
-		//	{
-		//		MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-		//		if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
-		//	}
-		//}
 #else
 		for(int i = 0; i < 4; i++)
 		{
-			//MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-			//if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
 			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0])* 2,\
 				(nY + MPTile::Offset[i][1])* 2);
 		}
@@ -996,10 +897,8 @@ void MPMap::_CalTileNormal(int nX, int nY)
 	vNormal[ 3 ] = ComputeNormalVector( v, vAround[0], vAround[3]);
 	VECTOR3 vR = ( vNormal[ 0 ] + vNormal[ 1 ]  + vNormal[ 2 ] + vNormal[ 3 ] ) / 4;
 	
-	// vR = VECTOR3(0, 0, 1.0f);
 	D3DXVec3Normalize(&vR, &vR);
 	
-	// GetTile(nX, nY)->vN = vR;
 }
 
 
@@ -1081,9 +980,6 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 
     BOOL bFull = FALSE;
 
-    // memset(_fHeightBuffer, 0, 4 * 200 * 200);
-    // memset(_btBlockBuffer, 1, 200 * 200);
-	// memset(_fTileHeightBuffer, 0, 100 * 100 * 4);
     float fh[4];
 	_bRenderSea = FALSE;
 
@@ -1208,7 +1104,6 @@ groupend:
     }
     DWORD dwGroupTime = t.End();
 
-    // if(rand()%10==5) LG("group", "G : %d A : %d L : %d F : %d \n", dwGroupTime, dwArrangeTime, dwLockTime, dwFillTime);
 }
 
 void MPMap::_FillVB()
@@ -1295,7 +1190,6 @@ void MPMap::_RenderVB(BOOL bWireframe)
     if(_pLandVB==NULL) return;
     
     g_Render.GetDevice()->SetStreamSource(0, _pLandVB, 0, sizeof(MPTileVertex));
-    //g_Render.SetTexture(0, NULL);
         
     int nStartVertex = 0;
     for(int j = 0; j < nRenderGroupCnt; j++)
@@ -1306,12 +1200,9 @@ void MPMap::_RenderVB(BOOL bWireframe)
         if(pGroup->btLayer==0)
         {
             g_Render.EnableAlpha(FALSE);
-		    //g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		    //g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
             g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_DISABLE);
-            //g_Render.SetTexture(1, NULL);
             if(!bWireframe) 
             {
                 g_Render.SetTexture(0, GetTextureByID(GetTerrainTextureID(pGroup->btTextureID)));
@@ -1322,8 +1213,6 @@ void MPMap::_RenderVB(BOOL bWireframe)
             if(bWireframe) continue;
             g_Render.SetTexture(0, GetTextureByID(GetTerrainAlphaTextureID_I()));
             g_Render.EnableAlpha(TRUE);
-			//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_MIRROR);
-            //g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_MIRROR);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_MIRROR);
 			g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_MIRROR);
             g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);
@@ -1338,9 +1227,6 @@ void MPMap::_RenderVB(BOOL bWireframe)
         }
     }
 	g_Render.EnableAlpha(TRUE);
-	//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_MIRROR);
-	//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_MIRROR);
-	//g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);
 }
 
 

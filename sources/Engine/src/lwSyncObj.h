@@ -5,8 +5,6 @@
 #include "lwStdInc.h"
 #include "lwErrorCode.h"
 
-//////////////
-//
 LW_BEGIN
 
 class lwEvent

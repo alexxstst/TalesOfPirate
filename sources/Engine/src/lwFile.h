@@ -64,7 +64,6 @@ public:
     LW_RESULT GetOpenFileName(HWND hwnd, char* buf, int num, const char* dir, const char* title = 0,
                                const char* filter = "all files(*.*)\0*.*\0\0", int flag = OFN_PATHMUSTEXIST | OFN_EXPLORER);
 
-    // flag = OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY
     LW_RESULT GetSaveFileName(HWND hwnd, char* buf, int num, const char* dir, const char* title = 0,
                                const char* filter = "all files(*.*)\0*.*\0\0",const char* ext = 0, int flag = OFN_PATHMUSTEXIST | OFN_EXPLORER);
 

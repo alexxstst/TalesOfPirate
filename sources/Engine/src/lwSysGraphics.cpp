@@ -12,7 +12,6 @@ lwISysGraphics* lwSysGraphics::__sys_graphics = LW_NULL;
 
 
 LW_STD_RELEASE( lwSysGraphics );
-//LW_STD_IMPLEMENTATION( lwSysGraphics );
 
 LW_RESULT lwSysGraphics::GetInterface( LW_VOID** i, lwGUID guid )
 {
@@ -227,7 +226,6 @@ LW_RESULT lwSysGraphics::TestCooperativeLevel()
     
     HRESULT hr = _dev_obj->GetDevice()->TestCooperativeLevel();
 
-    //LG("ttt", "&&& %d\n", GetTickCount());
 
     if(SUCCEEDED(hr))
     {
@@ -245,7 +243,6 @@ LW_RESULT lwSysGraphics::TestCooperativeLevel()
         goto __ret;
 
     {
-        // hr == D3DERR_DEVICENOTRESET
         lwD3DCreateParam* d3dcp = _dev_obj->GetD3DCreateParam();
 
         // check windowed mode and use desktop backbuffer format
@@ -284,7 +281,6 @@ LW_RESULT lwSysGraphics::TestCooperativeLevel()
             goto __ret;
         }
 
-        //LG("ttt", "*** %\n", GetTickCount());
 
         if (LW_RESULT r = _dev_obj->ResetDeviceStateCache(); LW_FAILED(r))
         {

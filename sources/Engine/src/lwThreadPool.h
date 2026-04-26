@@ -8,8 +8,6 @@
 #include "lwInterfaceExt.h"
 #include <process.h>
 #include <queue>
-//////////////
-//
 LW_BEGIN
 
 

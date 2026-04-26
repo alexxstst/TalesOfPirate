@@ -45,8 +45,7 @@ inline float Randf(float _f1, float _f2) {
 
 inline bool PointInstrPointRange(D3DXVECTOR3* vPoint1, D3DXVECTOR3* vPoint2, float fRange) {
 	return ((fabs(vPoint1->x - vPoint2->x) < fRange) &&
-			(fabs(vPoint1->y - vPoint2->y) < fRange))/* &&
-			(fabs(vPoint1->z - vPoint2->z) < fRange))*/;
+			(fabs(vPoint1->y - vPoint2->y) < fRange));
 }
 
 inline bool PointPointRange(D3DXVECTOR3* vPoint1, D3DXVECTOR3* vPoint2, float fRange) {
@@ -207,7 +206,6 @@ void _FrameMoveWind(CMPPartSys* pPart, DWORD dwDailTime);
 bool _CreateFire(CMPPartSys* pPart, CMPParticle* pCtrl);
 void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime);
 
-//
 bool _CreateArraw(CMPPartSys* pPart, CMPParticle* pCtrl);
 void _FrameMoveArraw(CMPPartSys* pPart, DWORD dwDailTime);
 
@@ -382,7 +380,6 @@ public:
 	void SetFrameSize(int iFrame, float fsize, CMPResManger* pCResMagr);
 
 	D3DXVECTOR3 GetFrameAngle(int iFrame) {
-		//if(iFrame <_wFrameCount)
 		return *_vecFrameAngle[iFrame];
 		//return D3DXVECTOR3(0,0,0);
 	}
@@ -393,7 +390,6 @@ public:
 	}
 
 	D3DXCOLOR GetFrameColor(int iFrame) {
-		//if(iFrame <_wFrameCount)
 		return *_vecFrameColor[iFrame];
 		//return 0x00000000;
 	}
@@ -402,8 +398,6 @@ public:
 		if (iFrame < _wFrameCount)
 			*_vecFrameColor[iFrame] = dwColor;
 
-		//if(m_bShade)
-		//	m_cShade.setColor(*_vecFrameColor[0]);
 	}
 
 	void SetAlpha(float falpha);
@@ -428,7 +422,6 @@ public:
 
 	void SetModelName(const s_string& strModelName, CMPResManger* pCResMagr);
 
-	//s_string			GetVirualModelName(){return _strVirualModel;}
 	void SetEmissionPath(CEffPath* pcPath);
 
 
@@ -515,7 +508,6 @@ public:
 	}
 
 	void setUseZBuff(bool bUseZ);
-	//void setTarget(D3DXVECTOR3* vTarget);
 
 	bool IsDelay() {
 		return (_fDelayTime > 0 && _fCurPlayTime < _fDelayTime);
@@ -563,7 +555,6 @@ public:
 		D3DMATRIX matDummy1, matDummy2;
 		_pItem->GetObjDummyRunTimeMatrix((lwMatrix44*)&matDummy1, _iDummy1);
 		_pItem->GetObjDummyRunTimeMatrix((lwMatrix44*)&matDummy2, _iDummy2);
-		//_bModelRange  = true;
 
 		D3DXVECTOR3* pv1 = (D3DXVECTOR3*)&matDummy1._41;
 		D3DXVECTOR3* pv2 = (D3DXVECTOR3*)&matDummy2._41;
@@ -643,7 +634,6 @@ protected:
 	friend bool _CreateFire(CMPPartSys* pPart, CMPParticle* pCtrl);
 	friend void _FrameMoveFire(CMPPartSys* pPart, DWORD dwDailTime);
 
-	//
 	friend bool _CreateArraw(CMPPartSys* pPart, CMPParticle* pCtrl);
 	friend void _FrameMoveArraw(CMPPartSys* pPart, DWORD dwDailTime);
 
@@ -702,9 +692,7 @@ protected:
 
 	// bool _bFontEff; — удалено вместе с _pFont (использовалось только
 	// в связке setFontEffect и в закомментированном коде отрисовки).
-	// CMPFont* _pFont; — удалено. Шрифт не хранится в поле: использование
 	// было закомментировано, а правильный способ — резолвить через
-	// FontManager::Instance().Get(FontSlot::...) в клиенте на момент отрисовки.
 	// См. memory/font-api-refactor-todo.md.
 	s_string _strText;
 
@@ -727,7 +715,6 @@ protected:
 	s_string _strTexName;
 	IDirect3DTextureX* _lpCurTex;
 	lwITex* _pTex;
-	//lwITex*									_oldtex;
 
 
 	s_string _strModelName;
@@ -737,9 +724,6 @@ protected:
 	bool _bMediay;
 
 	int _idt;
-	//#ifdef MUD_PART
-	//	S_BVECTOR<CMPModelEff>					_vecPart;
-	//#endif
 
 	D3DXVECTOR3 _vPos;
 
@@ -776,7 +760,6 @@ protected:
 	D3DTEXTUREFILTERTYPE _eMinFilter;
 	D3DTEXTUREFILTERTYPE _eMagFilter;
 
-	//
 	CEffPath* _pcPath;
 	D3DXVECTOR3 _vSavePos;
 
@@ -810,125 +793,15 @@ inline void RotatingXZ(D3DXMATRIX* pmat, float fAngleX, float fAngleZ) {
 ///************************************************************************/
 ///* class CMPParticleMagr*/
 ///************************************************************************/
-//
-//#define	 PARTTYPE_RAIN		1
-//#define	 PARTTYPE_BLAST		2
-//#define	 PARTTYPE_LINK		3
-//#define	 PARTTYPE_STRIP		4
-//
-//
-//class CMPMagrPart: public CEffectBase
-//{
-//public:
 //	CMPMagrPart(void){}
 //	~CMPMagrPart(void){}
-//
-//public:
-//	bool				Create(int iType, s_string	strPartName,int iNumPart,s_string strModelName,
-//									D3DXVECTOR2 vRange, WORD wFrameCount, CMPResManger	*pCResMagr);
 //	//
-//	void				InitParam(D3DXVECTOR3 vDir,D3DXVECTOR3	vVecl,
-//									D3DXVECTOR3 vAccel, int iLife, int iInfXY  =0);
-//
-//
-//	void				MoveTo(D3DXVECTOR3 vPos);
-//
-//	void				FrameMove(DWORD	dwDailTime);
-//
-//	void				Render();
-//	void				RenderVS();
-//	void				RenderSoft();
-//
-//
-//	//void				play(int Time);
-//	void				Stop()
-//	{
-//		_bPlay = false;
-//	}
-//	
-//	bool				IsPlaying()
-//	{
 //		return _bPlay;
-//	}
-//
-//	void				Emission(int iID, D3DXVECTOR3& vTarget);
-//	void				SetTarget(D3DXVECTOR3& vTarget);
 //	////////////////////////////////////////////////////////
-//	int					GetType()			{ return _iType;}
-//
 //	///////////////////////////////////////////////////////
-//	void				setFrameSizeSame(float	fsize);
-//	void				setFrameSizeBig(float	fsize);
-//	void				setFrameSizeSmall(float	fsize);
-//
-//public:
 //	//
-//	void				(*FrameUpdate)(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//
-//	friend bool	_CreateRain(CMPMagrPart* pPart, CMPParticle* pCtrl);
-//	friend void	_FrameMoveRain(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//	friend bool	_CreateBlast(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//	friend void	_FrameMoveBlast(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//	friend bool	_CreateLink(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//	friend void	_FrameMoveLink(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//	friend bool	_CreateStrip(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//	friend void	_FrameMoveStrip(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//protected:
-//	s_string								_strPartName;
-//	s_string								_strModelName;
-//
-//
-//protected:
-//	S_BVECTOR<CMPModelEff>				_vecParticle;
-//	S_BVECTOR<CMPParticle>				_vecCtrl;
-//
-//
-//	S_BVECTOR<float>					_vecFrameSize;
-//	S_BVECTOR<D3DXVECTOR3>				_vecFrameAngle;
-//
-//	int									_iType;
-//	bool								_bPlay;
-//	bool								_bLoop;
-//
-//	int									_iParNum;
-//	WORD								_wFrameCount;
-//
-//	D3DXVECTOR3							_vPos;
-//	D3DXVECTOR3							_vOldPos;
-//
 //	D3DXVECTOR2							_vRange;	//!
-//
-//
-//	float*								_pfDailTime;
-///////////////////////////////////////////////////
-//	int									_iLife;
-//	D3DXVECTOR3							_vDir;
-//	D3DXVECTOR3							_vVecl;
-//	D3DXVECTOR3							_vAccel;
 //	int									_iInfXY;//XY
-//
 //	WORD								_wDeath;//
-//
 //	D3DXVECTOR3							_vTarget;//
 //	float								_fDirXZ[2];//XZ
-//};
-//
-//////////////////////
-//bool	_CreateRain(CMPMagrPart* pPart,CMPParticle* pCtrl);
-//void	_FrameMoveRain(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//
-//bool	_CreateBlast(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//void	_FrameMoveBlast(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//
-//bool	_CreateLink(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//void	_FrameMoveLink(CMPMagrPart* pPart,DWORD	dwDailTime);
-//
-//bool	_CreateStrip(CMPMagrPart* pPart,CMPParticle* pCtrl,CMPModelEff* pEff);
-//void	_FrameMoveStrip(CMPMagrPart* pPart,DWORD	dwDailTime);

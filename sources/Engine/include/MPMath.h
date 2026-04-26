@@ -1,6 +1,5 @@
 ﻿//#########################
 // Mind Power Math Routines
-// 
 // Created By Ryan Wang
 //#########################
 
@@ -40,14 +39,6 @@ BOOL EdgeIntersectsFace(D3DXVECTOR3* pEdges, D3DXVECTOR3* pFacePoints, D3DXPLANE
 inline float GetVectorAngle2D(float *pfVector1 , float *pfVector2)
 {
     return 0.0f;
-	/*
-	float m1 = GetM2D(pfVector1);
-    float m2 = GetM2D(pfVector2);
-    float a = LzDot2D(pfVector1 , pfVector2) / (m1 * m2);
-    if(a >  1.0f)  a = 1.0f;
-    if(a < -1.0f)  a = -1.0f;
-    return Radian2Angle(acos(a));
-	*/
 }
 
 

@@ -17,8 +17,6 @@
 #include <vector>
 #include "lwIFunc.h"
 
-#define USE_MANAGED_RES
-
 #define MAX_INFO_TYPE 5
 
 #define LPTEXTURE			IDirect3DTextureX*
@@ -30,7 +28,6 @@
 
 enum INFO_TYPE
 {
-// 
 	 INFO_DEBUG  = 0,  // 
 	 INFO_PERF      ,  // Performance
 	 INFO_CMD       ,  // Console
@@ -52,8 +49,6 @@ struct MPCullInfo
     D3DXPLANE planeFrustum[6];    // 6
 };  //added by billy 
 
-//class  CMPFont;
-//class CD3DFont;
 struct MPTexRect;
 
 class MPRender
@@ -191,13 +186,7 @@ public:
 	void		RenderTextureRect(int nX, int nY, MPTexRect *pRect);
 	
 	// Render Basic Geometry
-    // void        RenderLine(float x1, float y1, float z1, float x2, float y2, float z2, DWORD dwColor = 0xffffffff);
-	// void		RenderLine(D3DXVECTOR3& v0, D3DXVECTOR3& v1, DWORD dwColor = 0xffffffff);
 	//not change matrix
-    //void        RenderLine2(float x1, float y1, float z1, float x2, float y2, float z2, DWORD dwColor = 0xffffffff);
-	//void		RenderLine2(D3DXVECTOR3& v0, D3DXVECTOR3& v1, DWORD dwColor = 0xffffffff);
-	//void		RenderWireFrameBox(D3DXVECTOR3& vCenter, D3DXVECTOR3& vRadius, DWORD dwColor = 0xffffffff,BOOL UseStack_ = FALSE);
-	//void		RenderWireFrameBox(D3DXVECTOR3* v, DWORD dwColor = 0xffffffff);
     
 	BOOL		IsFullScreen()		            { return _bFullScreen;          }
 	void        EnableCaptureAVI(BOOL bEnable)  { _bEnableCaptureAVI = bEnable; }
@@ -260,7 +249,6 @@ protected:
     IDirect3DX*             _pD3D;
     HWND                    _hWnd;
 	// Шрифт не хранится в поле MPRender: владение и выбор — через
-	// FontManager::Instance().Get(FontSlot::...) в клиенте.
 	// См. memory/font-api-refactor-todo.md.
 	IDirect3DDeviceX*		_pD3DDevice;
     D3DVIEWPORTX            _view;
@@ -310,7 +298,6 @@ protected:
 
 	std::vector<MPLine*>					_LineList;
 
-	//CMPEffectFile					_CEffectFile;
     BOOL                            _bEnableCaptureAVI;
     BOOL                            _bCaptureScreen;
     D3DCAPSX                        _d3dCaps;
@@ -382,47 +369,27 @@ inline void MPRender::SetBackgroundColor(DWORD dwColor)
 
 inline void MPRender::SetTexture(int nStageNo, IDirect3DTextureX* pTexture)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetTexture(nStageNo, pTexture);
-#else
-	_pD3DDevice->SetTexture(nStageNo, pTexture);
-#endif
 }
 
 inline void MPRender::SetTextureStageState(int nStage, TEXTURE_STAGE_STATE nState, int nValue)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetTextureStageState(nStage, nState, nValue);
-#else
-	_pD3DDevice->SetTextureStageState(nStage, nState, nValue);
-#endif
 }
 
 inline void MPRender::SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetSamplerState(sampler, type, value);
-#else
-    _pD3DDevice->SetSamplerState(sampler, type, value);
-#endif
 }
 
 inline void MPRender::SetSamplerStateForced(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetSamplerStateForced(sampler, type, value);
-#else
-    _pD3DDevice->SetSamplerStateForced(sampler, type, value);
-#endif
 }
 
 inline void MPRender::SetRenderState(RENDER_STATE renState, int nValue)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetRenderState(renState, nValue);
-#else
-	_pD3DDevice->SetRenderState(renState, nValue);
-#endif
 }
 inline void MPRender::SetTextureForced(DWORD stage, IDirect3DTextureX* tex)
 {
@@ -456,22 +423,13 @@ inline void MPRender::LightEnable(DWORD id, DWORD flag)
 
 inline void MPRender::EnableAlpha(BOOL bEnable)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetRenderState(D3DRS_ALPHABLENDENABLE, bEnable);
-#else
-	_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, bEnable);
-#endif
 }
 
 inline void MPRender::EnableZBuffer(BOOL bEnable)
 {
-#if(defined USE_MANAGED_RES)
     _IMgr.dev_obj->SetRenderState(D3DRS_ZENABLE, bEnable);
     _IMgr.dev_obj->SetRenderState(D3DRS_ZWRITEENABLE, bEnable);
-#else
-	_pD3DDevice->SetRenderState(D3DRS_ZENABLE,      bEnable);
-	_pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, bEnable);
-#endif
 }
 
 inline void MPRender::SetWorldView(int nX, int nY, int nW, int nH)
@@ -498,43 +456,6 @@ inline bool MPRender::IsInWorldView(int nPosX, int nPosY)
 }
 
 
-/*
-inline bool SGRender::WorldToScreen(float fX, float fY, float fZ, int *pnX, int *pnY)
-{
-    D3DXVECTOR4 vOriginal;
-    vOriginal.x = fX;
-    vOriginal.y = fY;
-    vOriginal.z = fZ;
-    vOriginal.w = 1.f;
- 
-    //vOriginal *= _matViewWorld;
-    //vOriginal *= _matProjWorld;
-    
-    D3DXVECTOR4 vTemp;
-    D3DXVec4Transform( &vTemp, &vOriginal, &_matViewWorld );
-	D3DXVec4Transform( &vOriginal, &vTemp, &_matProjWorld );	
-	
-    if ((vOriginal.w > 0.000001f || vOriginal.w < -0.000001f))
-    {
-        vOriginal.w = 1.f / vOriginal.w;
-        vOriginal.x *= vOriginal.w;
-        vOriginal.y *= vOriginal.w;
-        vOriginal.z *= vOriginal.w;
-    }
- 
-    int nPosX = (int)(( vOriginal.x + 1) *  (float)_nWorldViewWidth  / 2.0f);
-    int nPosY = (int)((-vOriginal.y + 1) *  (float)_nWorldViewHeight / 2.0f);
-    
-    if(pnX) *pnX = nPosX;
-    if(pnY) *pnY = nPosY;
- 
-    if( (nPosX >= 0 && nPosY < _nWorldViewWidth) && 
-        (nPosY >= 0 && nPosY < _nWorldViewHeight))
-    {
-        return true;  
-    }
-    return false;    
-}*/
 
 
 
@@ -565,11 +486,7 @@ inline void MPRender::ResetWorldTransform()
 {
 	D3DXMATRIXA16 mat; D3DXMatrixIdentity(&mat);
 	D3DXMatrixTranslation(&mat, 0.0f, 0.0f, 0.0f);
-#if(defined USE_MANAGED_RES)
     SetTransformWorld(&mat);
-#else
-	_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-#endif
 }
 
 inline void MPRender::UpdateLight()

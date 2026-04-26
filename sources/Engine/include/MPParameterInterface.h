@@ -3,7 +3,6 @@
 
 #include "MPEffPrerequisites.h"
 
-/// 
 enum MPParameterType
 {
 	PT_BOOL,
@@ -49,7 +48,6 @@ class MPParamDictionary
 {
 	friend class MPParameterInterface;
 protected:
-	/// 
 	MPParameterList m_ParamDefs;
 
 	/// get/set
@@ -151,12 +149,10 @@ public:
 
 	virtual String getParameter(const String& name) const
 	{
-		// 
 		const MPParamDictionary* dict = getParamDictionary();
 
 		if (dict)
 		{
-			// 
 			const MPParamCommand* cmd = dict->getParamCommand(name);
 
 			if (cmd)
@@ -165,18 +161,15 @@ public:
 			}
 		}
 
-		// 
 		return "";
 	}
 
 	virtual void copyParametersTo(MPParameterInterface* dest) const
 	{
-		// 
 		const MPParamDictionary* dict = getParamDictionary();
 
 		if (dict)
 		{
-			// 
 			ParameterList::const_iterator i;
 
 			for (i = dict->mParamDefs.begin(); 
@@ -215,7 +208,6 @@ protected:
 
 protected:
 
-	/// 
 	static MPParamDictionaryMap m_sDictionary;
 	///  ()
 	String m_ParamDictName;

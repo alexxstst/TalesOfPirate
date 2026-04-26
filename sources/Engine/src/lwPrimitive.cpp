@@ -18,19 +18,11 @@
 LW_BEGIN
 
 //LW_STD_RELEASE( lwPrimitive )
-//
-//LW_RESULT lwPrimitive::GetInterface( LW_VOID** i, lwGUID guid )
-//{ 
-//    LW_RESULT ret = LW_RET_FAILED;
-//
 //    //switch( guid )
 //    //{
 //    //default:
-//    //    ret = LW_RET_NULL;
 //    //}
-//
 //    return ret;
-//}
 LW_STD_IMPLEMENTATION(lwPrimitive)
 
 // lwPrimitive
@@ -158,8 +150,6 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
     BYTE create_helper_primitive = opt_mgr->GetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE);
 
-    //info->rcci.ctrl_id = 2;
-    //info->rcci.vs_id = VST_PNDT0_LD_TT0;
 
     if(LW_RESULT r = LoadRenderCtrl(&info->rcci); LW_FAILED(r))
     {
@@ -175,7 +165,6 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
     _parent_id = info->parent_id;
     _render_agent->SetLocalMatrix( &info->mat_local );
     _state_ctrl = info->state_ctrl;
-    //
 
     // mtltex info
     for( i = 0; i < info->mtl_num; i++ )
@@ -338,7 +327,6 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
     void* data;
     lwAnimCtrlObjTypeInfo type_info;
 
-    //LW_SAFE_RELEASE(_anim_agent);
     if(_anim_agent == 0)
     {
         if(LW_RESULT r = _res_mgr->CreateAnimCtrlAgent(&_anim_agent); LW_FAILED(r))
@@ -540,7 +528,6 @@ LW_RESULT lwPrimitive::LoadAnimData( lwIAnimDataInfo* data_info, const char* tex
                 _anim_agent->AddAnimCtrlObj(ctrl_obj);        
             }
 
-            //continue;
             // image
             if(info->anim_img[i][j])
             {
@@ -720,7 +707,6 @@ void lwPrimitive::SetOpacity(float opacity)
         _mtltex_agent_seq[i]->SetOpacity(opacity);
     }
 
-    //SetState(STATE_TRANSPARENT, opacity == 1.0f ? 0 : 1);
 }
 
 LW_RESULT lwPrimitive::Update()
@@ -1026,8 +1012,6 @@ LW_RESULT lwPrimitive::RenderSubset( DWORD subset )
     }
 
     // subset render doest not render helper object
-    //_dummy_object.Render( dev_obj, &mat );
-    //_bounding_object.Render( dev_obj, &mat );
 
 
     return LW_RET_OK;
@@ -1189,7 +1173,6 @@ LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwIGeomObjInfo* info)
                 }
             }
 
-            //
             a->mtl_size = lwGetMtlTexInfoSize(&a->mtl_seq[0], a->mtl_num);
             a->mesh_size = lwMeshInfo_GetDataSize(&a->mesh);
             a->helper_size = a->helper_data.GetDataSize();
@@ -1217,7 +1200,6 @@ LW_RESULT lwPrimitive::PlayDefaultAnimation(bool IsGlitched)
     if(_anim_agent == NULL)
         goto __ret_ok;
 
-    //lwAnimCtrlObjTypeInfo type_info;
     {
         lwIAnimCtrlObj* ctrl_obj;
         DWORD n = _anim_agent->GetAnimCtrlObjNum();
@@ -1231,13 +1213,6 @@ LW_RESULT lwPrimitive::PlayDefaultAnimation(bool IsGlitched)
                              __FUNCTION__, i, n, static_cast<long long>(r));
             }
 
-            //if(LW_SUCCEEDED(ctrl_obj->GetTypeInfo(&type_info)))
-            //{
-            //    if(type_info.type == ANIM_CTRL_TYPE_MTLOPACITY)
-            //    {
-            //        SetState(STATE_TRANSPARENT, TRUE);
-            //    }
-            //}
         }
     }
 __ret_ok:
@@ -1261,7 +1236,6 @@ LW_RESULT lwPrimitivePlayDefaultAnimation( lwIPrimitive* obj, bool IsGlitched )
     if(anim_agent == NULL)
         return LW_RET_FAILED;
 
-    //lwAnimCtrlObjTypeInfo type_info;
 
     lwIAnimCtrlObj* ctrl_obj;
     DWORD n = anim_agent->GetAnimCtrlObjNum();
@@ -1277,13 +1251,6 @@ LW_RESULT lwPrimitivePlayDefaultAnimation( lwIPrimitive* obj, bool IsGlitched )
                          "[{}] ctrl_obj->PlayPose failed: i={}, n={}, ret={}",
                          __FUNCTION__, i, n, static_cast<long long>(r));
         }
-        //if(LW_SUCCEEDED(ctrl_obj->GetTypeInfo(&type_info)))
-        //{
-        //    if(type_info.type == ANIM_CTRL_TYPE_MTLOPACITY)
-        //    {
-        //        obj->SetState(STATE_TRANSPARENT, TRUE);
-        //    }
-        //}
          
     }
 

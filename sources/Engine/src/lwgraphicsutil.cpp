@@ -22,7 +22,6 @@ LW_BEGIN
 		MessageBox(NULL, buf, "error", MB_OK);
 	}
 #endif
-	//
 	float lwGetFPS() {
 		static double __tick_frequency_reci = 0.0; // 1000ms
 		static DWORD __last_tick_time = 0;
@@ -125,7 +124,6 @@ LW_BEGIN
 		LW_DELETE_A(buf);
 	}
 
-	//
 
 	DWORD lwGetD3DFormatStride(DWORD format) {
 		DWORD stride;
@@ -378,7 +376,6 @@ LW_BEGIN
 	void _ConvertMeshData_xb2unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
 	void _ConvertMeshData_xb3unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
 	void _ConvertMeshData_xb4unt2(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info);
-	//
 	LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num,
 								D3DFORMAT vb_fvf, D3DFORMAT ib_fvf) {
 		LW_RESULT ret = LW_RET_FAILED;
@@ -734,7 +731,6 @@ LW_BEGIN
 	}
 
 	LW_RESULT _ConvertMeshDataVB(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info) {
-		//
 		switch (info->fvf) {
 		case FVF_XYZNORMAL: // bin: 10010,  Dec: 18
 			_ConvertMeshData_xn(data, size, stride, info);
@@ -1193,7 +1189,6 @@ LW_BEGIN
 		v.z = 1.0f;
 
 		lwMatrix44Inverse(&mat_inv, NULL, mat_view);
-		//lwMatrix44InverseNoScaleFactor(&mat_inv, mat_view);
 
 		ray->x = v.x * mat_inv._11 + v.y * mat_inv._21 + v.z * mat_inv._31;
 		ray->y = v.x * mat_inv._12 + v.y * mat_inv._22 + v.z * mat_inv._32;
@@ -1299,8 +1294,6 @@ LW_BEGIN
 	//   | /
 	//   |/
 	// 0  ------3----------> x
-	//
-	//
 	void lwGetBoxTriangleList(lwVector3* vert_seq, DWORD* index_seq, const lwBox* box) {
 		lwVector3 v0 = box->c - box->r;
 		lwVector3 v1 = box->c + box->r;
@@ -1308,15 +1301,7 @@ LW_BEGIN
 #define v vert_seq
 
 		//// bottom
-		//v[0].x = v0.x; v[0].y = v0.y; v[0].z = v0.z;
-		//v[1].x = v0.x; v[1].y = v1.y; v[1].z = v0.z;
-		//v[2].x = v1.x; v[2].y = v1.y; v[2].z = v0.z;
-		//v[3].x = v1.x; v[3].y = v0.y; v[3].z = v0.z;
 		//// up
-		//v[4].x = v0.x; v[4].y = v0.y; v[4].z = v1.z;
-		//v[5].x = v0.x; v[5].y = v1.y; v[5].z = v1.z;
-		//v[6].x = v1.x; v[6].y = v1.y; v[6].z = v1.z;
-		//v[7].x = v1.x; v[7].y = v0.y; v[7].z = v1.z;
 
 		// bottom
 		v[0].x = v0.x;
@@ -1350,23 +1335,11 @@ LW_BEGIN
 #define i index_seq
 
 		//// bottom
-		//i[0] = 0; i[1] = 1; i[2] = 2;
-		//i[3] = 2; i[4] = 3; i[5] = 0;
 		//// up
-		//i[6] = 4; i[7] = 5; i[8] = 6;
-		//i[9] = 6; i[10] = 7; i[11] = 4;
 		//// front
-		//i[12] = 0; i[13] = 4; i[14] = 7;
-		//i[15] = 7; i[16] = 3; i[17] = 0;
 		//// back
-		//i[18] = 2; i[19] = 6; i[20] = 5;
-		//i[21] = 5; i[22] = 1; i[23] = 2;
 		//// left
-		//i[24] = 0; i[25] = 1; i[26] = 5;
-		//i[27] = 5; i[28] = 4; i[29] = 0;
 		//// right
-		//i[30] = 3; i[31] = 7; i[32] = 6;
-		//i[33] = 6; i[34] = 2; i[35] = 3;
 
 		// bottom
 		i[0] = 0;

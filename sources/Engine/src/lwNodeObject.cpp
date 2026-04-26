@@ -34,42 +34,9 @@ lwNodeBase::lwNodeBase()
 
 }
 
-//LW_RESULT lwNodeBase::_UpdateMatrix()
-//{
-//    LW_RESULT ret = LW_RET_FAILED;
-//
-//    if(_parent)
-//    {
 //        // update world matrix
-//        lwMatrix44 mat_parent;
-//
-//        if(LW_FAILED(_parent->GetLinkMatrix(&mat_parent, _link_parent_id)))
-//            goto __ret;
-//
-//        if(_link_id != LW_INVALID_INDEX)
-//        {
-//            lwMatrix44 mat_link;
-//
-//            if(LW_FAILED(GetLinkMatrix(&mat_link, _link_id)))
-//                goto __ret;
-//
-//            lwMatrix44InverseNoScaleFactor(&mat_link, &mat_link);
-//
-//            lwMatrix44Multiply(&mat_parent, &mat_link, &mat_parent);
-//        }
-//
-//        lwMatrix44Multiply(&_mat_world, &_mat_local, &mat_parent);
-//    }
-//    else
-//    {
-//        _mat_world = _mat_local;
-//    }
-//
-//    ret = LW_RET_OK;
 //__ret:
 //    return ret;
-//}
-//
 
 static DWORD __tree_proc_loadmodel(lwITreeNode* node, void* param)
 {
@@ -90,7 +57,6 @@ static DWORD __tree_proc_loadmodel(lwITreeNode* node, void* param)
     }
 
     model_node->SetID(node_info->_id);
-    // for the reason of compatible,
     // link_id and link_parent_id cannot be asigned here
     // because the initialize value of them is zero
     // which is valid for link_id and link_parent_id
@@ -191,7 +157,6 @@ lwNodePrimitive::lwNodePrimitive(lwIResourceMgr* res_mgr)
     _anim_agent = 0;
     _render_agent = 0;
     _helper_object = 0;
-    //_vertex_blend_ctrl = 0;
     _ref_ctrl_obj_bone = 0;
 
     _mtltex_agent_seqsize = 0;
@@ -326,15 +291,10 @@ LW_RESULT lwNodePrimitive::Load(lwIGeomObjInfo* geom_info, const char* tex_path,
     // base info
     // warning:_typeMODELNODE_
     // type
-    //_type = info->type;
 
     // _id, _link_id, _link_parent_idlwLoadModelInfo
-    //_id = info->id;
     _mat_local = info->mat_local;
-    //_state_ctrl = info->state_ctrl;
     _state_set.SetValueSeq(0, info->state_ctrl._state_seq, OBJECT_STATE_NUM);
-    //_parent;
-    //
 
     // mtltex info
     if(LW_RESULT r = AllocateMtlTexAgentSeq(info->mtl_num); LW_FAILED(r))
@@ -655,7 +615,6 @@ LW_RESULT lwNodePrimitive::LoadAnimData(lwIAnimDataInfo* data_info, const char* 
                 _anim_agent->AddAnimCtrlObj(ctrl_obj);
             }
 
-            //continue;
             // image
             if(info->anim_img[i][j])
             {
@@ -951,32 +910,6 @@ LW_RESULT lwNodePrimitive::Update()
         }
     }
 
-    /*
-    if(_vertex_blend_ctrl)
-    {
-        // update world matrix
-        lwMatrix44 mat_parent;
-
-        if(LW_FAILED(_vertex_blend_ctrl->GetLinkMatrix(&mat_parent, LW_INVALID_INDEX)))
-            goto __ret;
-
-        lwMatrix44Multiply(&_mat_world, &_mat_local, &mat_parent);
-
-        // update render ctrl blend matrix
-        lwIAnimCtrlObjBone* ctrl_obj = _vertex_blend_ctrl->GetAnimCtrlObj();
-        if(ctrl_obj == 0)
-            goto __ret;
-
-        ctrl_obj->UpdateObject(_ref_ctrl_obj_bone, this);
-
-        // update bounding object
-        // has been done in ctrl_obj->UpdateObject
-        //if(LW_FAILED(_UpdateBoundingObject(ctrl_obj)))
-        //    goto __ret;
-    }
-    // update world matrix
-    else 
-    */
     if(_parent)
     {
         if(_ref_ctrl_obj_bone)
@@ -1308,7 +1241,6 @@ void lwNodePrimitive::SetOpacity(float opacity)
         _mtltex_agent_seq[i]->SetOpacity(opacity);
     }
 
-    //_state_ctrl.SetState(STATE_TRANSPARENT, opacity == 1.0f ? 0 : 1);
 }
 
 // SetParentparentVertexBlendCtrl
@@ -1316,7 +1248,6 @@ void lwNodePrimitive::SetOpacity(float opacity)
 // 2._ref_ctrl_obj_bone
 // 3.lwRenderCtrlAgentvs_typevs_ctrlvs_type
 //   fvfvs_typevs_ctrl
-//   
 //   vs_type,vs_ctrl
 LW_RESULT lwNodePrimitive::SetParent(lwINode* parent)
 {
@@ -1433,56 +1364,6 @@ __ret:
     return ret;
 }
 
-/*
-LW_RESULT lwNodePrimitive::SetVertexBlendCtrl(lwINodeBoneCtrl* ctrl)
-{
-    LW_RESULT ret = LW_RET_FAILED;
-
-    // add
-    if(ctrl)
-    {
-        lwIAnimCtrlObj* ctrl_obj = 0;
-
-        // create anim ctrl agent
-        if(_anim_agent == 0)
-        {
-            if(LW_FAILED(_res_mgr->CreateAnimCtrlAgent(&_anim_agent)))
-                goto __ret;
-        }
-        else
-        {
-            ctrl_obj = _anim_agent->GetAnimCtrlObj(LW_INVALID_INDEX, LW_INVALID_INDEX, ANIM_CTRL_TYPE_MAT);
-        }
-
-        // create ctrl bone 
-        if(ctrl_obj == 0)
-        {
-            if(LW_FAILED(_res_mgr->CreateAnimCtrlObj(&ctrl_obj, ANIM_CTRL_TYPE_BONE)))
-                goto __ret;
-
-            _anim_agent->AddAnimCtrlObj(ctrl_obj);
-
-            _ref_ctrl_obj_bone = (lwIAnimCtrlObjBone*)ctrl_obj;
-        }                
-    }
-    // remove
-    else
-    {
-        if(_anim_agent)
-        {
-            lwIAnimCtrlObj* ctrl_obj = _anim_agent->RemoveAnimCtrlObj(LW_INVALID_INDEX, LW_INVALID_INDEX, ANIM_CTRL_TYPE_MAT);
-            LW_IF_RELEASE(ctrl_obj);
-
-            _ref_ctrl_obj_bone = 0;
-        }
-    }
-
-    ret = LW_RET_OK;
-__ret:
-    return ret;
-
-}
-*/
 // lwNodeBoneCtrl
 LW_STD_IMPLEMENTATION(lwNodeBoneCtrl)
 
@@ -1847,13 +1728,7 @@ LW_RESULT lwNodeDummy::CreateAssistantObject(const lwVector3* size, DWORD color)
     lwVector3 axis_y(0.0f, s.y, 0.0f);
     lwVector3 axis_z(0.0f, 0.0f, s.z);
 
-    //lwMatrix44 coord_mat;
-    //lwICoordinateSys* coord_sys = _res_mgr->GetSysGraphics()->GetCoordinateSys();
-    //coord_sys->GetCurCoordSysMatrix(&coord_mat);
 
-    //lwVec3Mat44Mul(&axis_x, &coord_mat);
-    //lwVec3Mat44Mul(&axis_y, &coord_mat);
-    //lwVec3Mat44Mul(&axis_z, &coord_mat);
 
 
     if(LW_RESULT r = _res_mgr->CreateNode((lwINode**)&_ass_obj, NODE_PRIMITIVE); LW_FAILED(r))
@@ -2183,8 +2058,6 @@ static DWORD __tree_enum_render(lwITreeNode* node, void* param)
         goto __ret;
     }
 
-    //if(obj->GetType() == NODE_PRIMITIVE)
-    //{
         if(LW_RESULT r = ((lwINodePrimitive*)obj)->Render(); LW_FAILED(r))
         {
             ToLogService("errors", LogLevel::Error,
@@ -2192,7 +2065,6 @@ static DWORD __tree_enum_render(lwITreeNode* node, void* param)
                 __FUNCTION__, obj->GetID(), static_cast<long long>(r));
             goto __ret;
         }
-    //}
 
     ret = TREENODE_PROC_RET_CONTINUE;
 __ret:
@@ -2215,8 +2087,6 @@ static DWORD __tree_proc_cullprimitive(lwITreeNode* node, void* param)
     if(obj->GetType() == NODE_PRIMITIVE)
     {
         __debugbreak();
-        //BYTE v = LW_SUCCEEDED(scn_mgr->CullPrimitive(obj)) ? 1 : 0;
-        //obj->GetStateCtrl()->SetState(STATE_FRAMECULLING, v);
     }
 
     ret = TREENODE_PROC_RET_CONTINUE;
@@ -2576,7 +2446,6 @@ LW_RESULT lwNodeObject::Load(const char* file, DWORD flag, lwITreeNode* parent_n
 
         tree_node->SetChild(0);
         // release root dummy node
-        //LW_RELEASE((lwINodeDummy*)tree_node->GetData());
     }
     else if(flag == MODELOBJECT_LOAD_MERGE2)
     {
@@ -2595,7 +2464,6 @@ __ret:
     {
         lwDestroyNodeObject(tree_node);
     }
-    //LW_IF_RELEASE(tree_node);
     return ret;
 }
 

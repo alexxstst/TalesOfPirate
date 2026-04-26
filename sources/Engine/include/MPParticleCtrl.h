@@ -18,114 +18,12 @@ class  CMPModelEff;
 ///************************************************************************/
 ///* class CMPParticleCtrl*/ 
 ///************************************************************************/
-//class CMPParticleCtrl: publ ic CEffectBase
-//{
-//public:
-//	CMPParticleCtrl(void);
-//	~CMPParticleCtrl(void);
-//
-//public:
-//	virtual void				BindingRes(CMPResManger* pResMagr) {}
-//
-//	virtual void				FrameMove(DWORD	dwDailTime)		 {}
-//
-//	virtual void				Render()						 {}
-//	virtual void				RenderVS()						 {}
-//	virtual void				RenderSoft()					 {}
-//
-//	virtual void				Emission(WORD wID, D3DXVECTOR3 vBegin, D3DXVECTOR3 vEnd) {}
-//
-//public:
-//
-//	D3DXVECTOR3			m_CPath[2];
-//
-//	WORD				m_wID;
-//
-//
-//	float*				m_pfDailTime;
-//	bool				m_bEmiss;
-//};
-//
 ///************************************************************************/
 ///* class CMPParticleTrace*/
 ///************************************************************************/
-//class CMPParticleTrace :public CMPParticleCtrl
-//{
-//public:
-//	CMPParticleTrace(void);
-//	~CMPParticleTrace(void);
-//
-//public:
-//	void				BindingRes(CMPResManger* pResMagr);
-//
-//	void				FrameMove(DWORD	dwDailTime);
-//
-//	void				Render();
-//
-//	void				Emission(WORD wID, D3DXVECTOR3 vBegin, D3DXVECTOR3 vEnd);
-//
-//public:
-//	bool				IsPlaying()					{ return (m_bEmiss || m_CBlast->IsPlaying());}
-//	bool				IsHit()						{ bool bhit = _bHit; _bHit = false; return bhit;}
-//	void				SetTarget(D3DXVECTOR3 vTarget);
-//
-//	void				Blast();
-//
-//	void				MoveTo(D3DXVECTOR3 vPos,MPMap* pMap);
-//public:
-//	bool				_bHit;
-//	CMPModelEff*		_pCModelEff;
-//
-//	CMPShadeMap*		_pCShade;
-//
-//	CMPFire*			m_CFire;
-//
-//	CMPBlast*			m_CBlast;
-//
-//
-//	float				m_fTargDist;
-//	D3DXVECTOR3			m_vTargDir;
-//
-//
-//	D3DXVECTOR3			m_vPos;
-//	float				m_fDist;
-//	D3DXVECTOR3			m_vDir;
-//
-//	float				m_fVel;
-//
-//	float				m_fRadius;
-//};
-//
 ///************************************************************************/
 ///* class CMPParticleRipple*/
 ///************************************************************************/
-//class CMPParticleRipple :public CMPParticleCtrl
-//{
-//public:
-//	CMPParticleRipple(void);
-//	~CMPParticleRipple(void);
-//
-//public:
-//	void				BindingRes(CMPResManger* pResMagr);
-//
-//	void				FrameMove(DWORD	dwDailTime);
-//
-//	void				Render();
-//
-//	void				Emission(WORD wID, D3DXVECTOR3 vBegin, D3DXVECTOR3 vEnd);
-//
-//public:
-//	void				SetTarget(D3DXVECTOR3 vTarget, D3DXVECTOR3 vTarget2, float fAngle);
-//	void				Walk();
-//	void				Stop();
-//public:
-//	CMPRipple*			m_CRippleStop;
-//
-//	CMPRipple*			m_CRippleMove;
-//
-//	D3DXVECTOR3			m_vPos;
-//};
-//////////////////////////////////////////////////////////////////////////
 #define		LINK_FVF	(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define     LINK_FACE	100
 
@@ -157,10 +55,7 @@ public:
 
 		_iCurTex = 0;
 		_fCurTime = 0;
-		//_fRadius = 1.0f;
 
-		//_vStart = D3DXVECTOR3(0,0,0);
-		//_vEnd = D3DXVECTOR3(0,0,0);
 	}
 	~CMPLink()
 	{
@@ -206,7 +101,6 @@ protected:
 	float       _fCurTime;
 	float*		_fDailTime;
 };
-//////////////////////////////////////////////////////////////////////////
 
 
 class CChaModel : public MPCharacter
@@ -288,8 +182,6 @@ protected:
 
 protected:
 	WORD									_wFrameCount;
-	//S_BVECTOR<float>						_vecFrameSize;
-	//S_BVECTOR<D3DXCOLOR>					_vecFrameColor;
 
 	D3DBLEND								_eSrcBlend;
 	D3DBLEND								_eDestBlend;
@@ -340,14 +232,6 @@ public:
 	void	MoveTo(const D3DXVECTOR3* vPos, MPMap* pmap = NULL);
 	void	BindingBone(D3DXMATRIX* pMatBone);
 
-	//void						BindingBoneDir(D3DXMATRIX* pMatBone)
-	//{
-	//	for(int i(0); i<m_iPartNum; ++i)  
-	//		m_vecPartSys[i]->BindingBoneDir(pMatBone);
-	//	for(int i(0); i<m_iModelNum; ++i) 
-	//		if(m_vecModel[i]->IsPlaying())
-	//			m_vecModel[i]->BindingBone(pMatBone);
-	//}
 
 	void setYaw(float fYaw)
 	{
@@ -438,9 +322,6 @@ public:
 	void						GetRes(CMPResManger* pResMagr,std::vector<INT>& vecTex,std::vector<INT>& vecModel,
 		std::vector<INT>& vecEff);
 	void						GetHitRes(CMPResManger* pResMagr,std::vector<s_string>& vecPar);
-	//CMPShadeCtrl*				NewShade(s_string strID,CMPResManger* pResMagr);
-	//CMPShadeCtrl*				GetShade(int iIdx);
-	//int							GetShadeNum(){return m_iShadeNum;}
 
 	//!	
 	bool		 SaveToFile(char* pszName);
@@ -456,17 +337,10 @@ public:
 	float						m_fLength;
 	float						m_fCurTime;
 
-	//
 	int							m_iStripNum;
 	CMPStrip*					m_pcStrip;
 
-	//
 	int							m_iModelNum;
 	std::vector<CChaModel*>		m_vecModel;
 
-	////
-	//int							m_iShadeNum;
-	//std::vector<CMPShadeCtrl>	m_vecShade;
 };
-
-

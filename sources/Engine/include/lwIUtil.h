@@ -27,7 +27,6 @@ LW_RESULT lwPrimitiveTexUnLitA(lwIPrimitive* p);
 LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const char* file, const char* tex_path, D3DFORMAT fmt);
 LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info);
 // Для TEX_TYPE_DATA: пользовательский указатель пробрасывается параметром,
-// а не полем lwTexInfo::data (убрано из-за x86/x64 binary-format mismatch).
 LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info, void* user_data);
 
 lwPoseInfo* lwAnimCtrlAgentGetPoseInfo(lwIAnimCtrlAgent* agent, DWORD subset, DWORD stage, DWORD type, DWORD id);

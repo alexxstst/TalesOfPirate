@@ -77,11 +77,13 @@ void CGameConfig::SetDefault()   //
 
     m_fLgtFactor = 0.0f;
     m_dwLgtBkColor = 0xffc0c0c0;
-    // 
-	m_dwMaxCha	= 300;   
+    //
+	m_dwMaxCha	= 300;
 	m_dwMaxEff	= 500;
 	m_dwMaxItem = 400;
 	m_dwMaxObj	= 800;
+
+	m_bResourcePreload = TRUE;
 
 	strcpy(m_szMD5Pass, "");  // MD5
 	memset( m_szVerErrorHTTP, 0, sizeof(m_szVerErrorHTTP) ); 
@@ -264,6 +266,7 @@ void CGameConfig::Load()
 		m_dwMaxEff  = static_cast<DWORD>(sec.GetInt64("MaxEffNum", 500));
 		m_dwMaxItem = static_cast<DWORD>(sec.GetInt64("MaxItemNum", 400));
 		m_dwMaxObj  = static_cast<DWORD>(sec.GetInt64("MaxObjNum", 800));
+		m_bResourcePreload = static_cast<int>(sec.GetInt64("preload_at_start", 1));
 		auto locale = sec.GetString("locale");
 		if (!locale.empty()) strcpy(m_szLocale, locale.c_str());
 		auto path = sec.GetString("path");

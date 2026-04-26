@@ -152,7 +152,6 @@ lwISysGraphics* lwGetActiveIGraphicsSystem()
     return lwSysGraphics::GetActiveIGraphicsSystem();
 }
 
-//
 LW_RESULT lwAdjustD3DCreateParam(IDirect3DX* d3d, lwD3DCreateParam* param, lwD3DCreateParamAdjustInfo* adjust_info)
 {
     if(param->present_param.BackBufferFormat == D3DFMT_UNKNOWN)
@@ -388,7 +387,6 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, 1);
         opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 1);
 
-        //
         lwInitUserRenderCtrlVSProc(res_mgr);
 
         g_system = sys;
@@ -553,29 +551,7 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
         lwSetActiveIGraphicsSystem(sys_graphics);
         // end
 
-        //
         lwInitUserRenderCtrlVSProc(res_mgr);
-
-        /*
-        // set render state
-        dev_obj->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-        dev_obj->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-        dev_obj->SetRenderState(D3DRS_LIGHTING, TRUE);
-
-        ////Enable alpha blending so we can use transparent textures
-        dev_obj->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-        dev_obj->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-        //dev_obj->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-        //dev_obj->SetRenderState(D3DRS_ALPHAREF, 200);
-
-        //Set how the texture should be blended (use alpha)
-        dev_obj->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-        dev_obj->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-        dev_obj->SetRenderState(D3DRS_AMBIENT, D3DCOLOR_XRGB(128, 128, 128));
-        // end
-        */
-
 
         lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
         opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, 1);
@@ -662,7 +638,6 @@ void lwUpdateSceneTransparentObject()
 {
     lwISceneMgr* scene_mgr = g_sys_graphics->GetSceneMgr();
 
-    //scene_mgr->Update();
     scene_mgr->SortTransparentPrimitive();
     scene_mgr->RenderTransparentPrimitive();
 }

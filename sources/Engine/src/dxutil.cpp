@@ -1,9 +1,6 @@
 ﻿//-----------------------------------------------------------------------------
 // File: DXUtil.cpp
-//
 // Desc: Shortcut macros and functions for using DX objects
-//
-//
 // Copyright (c) 1997-2000 Microsoft Corporation. All rights reserved
 //-----------------------------------------------------------------------------
 #define STRICT
@@ -19,7 +16,6 @@
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_GetDXSDKMediaPath()
 // Desc: Returns the DirectX SDK media path
 //-----------------------------------------------------------------------------
 const TCHAR* DXUtil_GetDXSDKMediaPath()
@@ -53,7 +49,6 @@ const TCHAR* DXUtil_GetDXSDKMediaPath()
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_FindMediaFile()
 // Desc: Returns a valid path to a DXSDK media file
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_FindMediaFile( TCHAR* strPath, TCHAR* strFilename )
@@ -94,7 +89,6 @@ HRESULT DXUtil_FindMediaFile( TCHAR* strPath, TCHAR* strFilename )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ReadStringRegKey()
 // Desc: Helper function to read a registry key string
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_ReadStringRegKey( HKEY hKey, TCHAR* strRegName, TCHAR* strValue, 
@@ -115,7 +109,6 @@ HRESULT DXUtil_ReadStringRegKey( HKEY hKey, TCHAR* strRegName, TCHAR* strValue,
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_WriteStringRegKey()
 // Desc: Helper function to write a registry key string
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_WriteStringRegKey( HKEY hKey, TCHAR* strRegName,
@@ -133,7 +126,6 @@ HRESULT DXUtil_WriteStringRegKey( HKEY hKey, TCHAR* strRegName,
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ReadIntRegKey()
 // Desc: Helper function to read a registry key int
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_ReadIntRegKey( HKEY hKey, TCHAR* strRegName, DWORD* pdwValue, 
@@ -155,7 +147,6 @@ HRESULT DXUtil_ReadIntRegKey( HKEY hKey, TCHAR* strRegName, DWORD* pdwValue,
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_WriteIntRegKey()
 // Desc: Helper function to write a registry key int
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_WriteIntRegKey( HKEY hKey, TCHAR* strRegName, DWORD dwValue )
@@ -171,7 +162,6 @@ HRESULT DXUtil_WriteIntRegKey( HKEY hKey, TCHAR* strRegName, DWORD dwValue )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ReadBoolRegKey()
 // Desc: Helper function to read a registry key BOOL
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_ReadBoolRegKey( HKEY hKey, TCHAR* strRegName, BOOL* pbValue, 
@@ -193,7 +183,6 @@ HRESULT DXUtil_ReadBoolRegKey( HKEY hKey, TCHAR* strRegName, BOOL* pbValue,
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_WriteBoolRegKey()
 // Desc: Helper function to write a registry key BOOL
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_WriteBoolRegKey( HKEY hKey, TCHAR* strRegName, BOOL bValue )
@@ -209,7 +198,6 @@ HRESULT DXUtil_WriteBoolRegKey( HKEY hKey, TCHAR* strRegName, BOOL bValue )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ReadGuidRegKey()
 // Desc: Helper function to read a registry key guid
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_ReadGuidRegKey( HKEY hKey, TCHAR* strRegName, GUID* pGuidValue, 
@@ -231,7 +219,6 @@ HRESULT DXUtil_ReadGuidRegKey( HKEY hKey, TCHAR* strRegName, GUID* pGuidValue,
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_WriteGuidRegKey()
 // Desc: Helper function to write a registry key guid
 //-----------------------------------------------------------------------------
 HRESULT DXUtil_WriteGuidRegKey( HKEY hKey, TCHAR* strRegName, GUID guidValue )
@@ -247,7 +234,6 @@ HRESULT DXUtil_WriteGuidRegKey( HKEY hKey, TCHAR* strRegName, GUID guidValue )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_Timer()
 // Desc: Performs timer opertations. Use the following commands:
 //          TIMER_RESET           - to reset the timer
 //          TIMER_START           - to start the timer
@@ -269,7 +255,6 @@ FLOAT __stdcall DXUtil_Timer( TIMER_COMMAND command )
     {
         m_bTimerInitialized = TRUE;
 
-        // Use QueryPerformanceFrequency() to get frequency of timer.  If QPF is
         // not supported, we will timeGetTime() which returns milliseconds.
         LARGE_INTEGER qwTicksPerSec;
         m_bUsingQPF = QueryPerformanceFrequency( &qwTicksPerSec );
@@ -422,7 +407,6 @@ FLOAT __stdcall DXUtil_Timer( TIMER_COMMAND command )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertAnsiStringToWide()
 // Desc: This is a UNICODE conversion utility to convert a CHAR string into a
 //       WCHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -446,7 +430,6 @@ VOID DXUtil_ConvertAnsiStringToWide( WCHAR* wstrDestination, const CHAR* strSour
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertWideStringToAnsi()
 // Desc: This is a UNICODE conversion utility to convert a WCHAR string into a
 //       CHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -470,7 +453,6 @@ VOID DXUtil_ConvertWideStringToAnsi( CHAR* strDestination, const WCHAR* wstrSour
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertGenericStringToAnsi()
 // Desc: This is a UNICODE conversion utility to convert a TCHAR string into a
 //       CHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -495,7 +477,6 @@ VOID DXUtil_ConvertGenericStringToAnsi( CHAR* strDestination, const TCHAR* tstrS
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertGenericStringToWide()
 // Desc: This is a UNICODE conversion utility to convert a TCHAR string into a
 //       WCHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -520,7 +501,6 @@ VOID DXUtil_ConvertGenericStringToWide( WCHAR* wstrDestination, const TCHAR* tst
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertAnsiStringToGeneric()
 // Desc: This is a UNICODE conversion utility to convert a CHAR string into a
 //       TCHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -545,7 +525,6 @@ VOID DXUtil_ConvertAnsiStringToGeneric( TCHAR* tstrDestination, const CHAR* strS
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_ConvertAnsiStringToGeneric()
 // Desc: This is a UNICODE conversion utility to convert a WCHAR string into a
 //       TCHAR string. cchDestChar defaults -1 which means it 
 //       assumes strDest is large enough to store strSource
@@ -570,7 +549,6 @@ VOID DXUtil_ConvertWideStringToGeneric( TCHAR* tstrDestination, const WCHAR* wst
 
 
 //-----------------------------------------------------------------------------
-// Name: _DbgOut()
 // Desc: Outputs a message to the debug stream
 //-----------------------------------------------------------------------------
 HRESULT _DbgOut( TCHAR* strFile, DWORD dwLine, HRESULT hr, TCHAR* strMsg )
@@ -595,7 +573,6 @@ HRESULT _DbgOut( TCHAR* strFile, DWORD dwLine, HRESULT hr, TCHAR* strMsg )
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_Trace()
 // Desc: Outputs to the debug stream a formatted string with a variable-
 //       argument list.
 //-----------------------------------------------------------------------------
@@ -612,6 +589,4 @@ VOID DXUtil_Trace( TCHAR* strMsg, ... )
     OutputDebugString( strBuffer );
 #endif
 }
-
-
 

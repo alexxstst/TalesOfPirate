@@ -133,15 +133,12 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
 
 
     // ======== DX9: Vertex Shaders ========
-    //
     // Все 11 static-mesh VS сведены к двум HLSL-мастерам:
-    //
     //   static_skin.hlsl — 4 permutations via NUM_EXPLICIT_WEIGHTS:
     //     0 → pu4nt0_ld    (single-bone, no blend)
     //     1 → pb1u4nt0_ld  (2-bone blend)
     //     2 → pb2u4nt0_ld  (3-bone blend)
     //     3 → pb3u4nt0_ld  (4-bone blend)
-    //
     //   vs_pndt0.hlsl — 7 permutations via NO_LIGHTING/NO_DIFFUSE/USE_TEX_TRANSFORM.
     static const DWORD shader_type[] = {
         VST_PU4NT0_LD, VST_PB1U4NT0_LD, VST_PB2U4NT0_LD, VST_PB3U4NT0_LD,
@@ -259,15 +256,11 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
 
 
     // dx9
-    //const char* shader_file[] = 
-    //{
     //    "skinmesh9_1.vsh",
     //    "skinmesh9_2.vsh",
     //    "skinmesh9_3.vsh",
     //    "skinmesh9_4.vsh",
-    //};
 
-	// Skinmesh8 VS (1-weight + 2-weight, 3 texture-transform modes) — все 6
 	// permutations через общий мастер-HLSL skinmesh.hlsl с defines
 	// NUM_SKIN_WEIGHTS (1|2) и TT_MODE (1|2|3).
 	const char* shader_file[] =
@@ -312,5 +305,3 @@ __ret:
 
     return ret;
 }
-
-

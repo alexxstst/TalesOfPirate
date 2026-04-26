@@ -6,7 +6,6 @@
 #include <string>
 #include <math.h>
 
-/// 
 class MPDegree;
 
 /** .
@@ -172,7 +171,6 @@ public:
 
 	static const std::string BLANK;
 
-/// 
 	static inline float DegreesToRadians(float degrees) { return degrees * fDeg2Rad; }
 	static inline float RadiansToDegrees(float radians) { return radians * fRad2Deg; }
 	/** API	*/
@@ -189,11 +187,9 @@ public:
 	/** . */
 	static float DegreesToAngleUnits(float degrees);
 
-/// 
 	static float UnitRandom ();  // [0,1]
 	static float RangeRandom (float fLow, float fHigh);  // in [fLow,fHigh]
 
-/// 
 	/** Sine .
 	@param
 		fValue 

@@ -51,7 +51,9 @@ if lines < 3   then lines = 3   end
 if lines > 200 then lines = 200 end
 
 -- Шрифт консоли. Fallback — g_SystemFont, если в INI семейство не указано.
-local family = (font_name ~= "" and font_name) or g_SystemFont or "Arial"
+-- Финальный fallback — Roboto (см. font_bootstrap.lua: системный Arial
+-- через FreeType+fontstash не резолвится).
+local family = (font_name ~= "" and font_name) or g_SystemFont or "Roboto"
 local flags  = (font_bold ~= 0) and MPFONT_BOLD or 0
 UI_CreateFont("Console", family, font_size, font_size, 1, flags)
 

@@ -7,7 +7,6 @@
 #include "lwResourceMgr.h"
 #include "lwRenderImp.h"
 
-//static int g_x = 0;
 //FILE* g_fp = 0;
 
 LW_BEGIN
@@ -111,7 +110,6 @@ LW_RESULT lwAnimCtrlBone::_BuildRunTimeBoneMatrix(lwMatrix44* out_buf, float fra
 
         if(parent_id == LW_INVALID_INDEX)
         {
-            //lwMatrix44Multiply(mat_run, mat_run, mat);
         }
         else
         {
@@ -138,7 +136,6 @@ __ret:
 
 LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix44* mat_buf, float frame, DWORD start_frame, DWORD end_frame, BOOL loop_flag)
 {
-    // 
     LW_RESULT ret = LW_RET_FAILED;
 
     DWORD i;
@@ -192,33 +189,17 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
                 }
             }
 
-            //if(g_x == 1)
-            //{
-            //    fprintf(g_fp, "Frame: %f\n", frame);
-            //}
 
-            //for(i = 0; i < _data._bone_num; i++)
-            //{
-            //    if(g_x == 1)
-            //    {
             //        fprintf(g_fp, "%8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f\n",
             //            rtbd_f->data[i]._11, rtbd_f->data[i]._12, rtbd_f->data[i]._13, rtbd_f->data[i]._14,
             //            rtbd_f->data[i]._21, rtbd_f->data[i]._22, rtbd_f->data[i]._23, rtbd_f->data[i]._24,
             //            rtbd_f->data[i]._31, rtbd_f->data[i]._32, rtbd_f->data[i]._33, rtbd_f->data[i]._34,
-            //            rtbd_f->data[i]._41, rtbd_f->data[i]._42, rtbd_f->data[i]._43, rtbd_f->data[i]._44);
-            //    }
-            //}
 
-            //if(g_x == 1)
-            //{
-            //    fprintf(g_fp, "\n");
-            //}
 
             this_mat_ptr = rtbd_f->data;
         }
         else
         {
-            //goto __rt_get_value;
 
             min_f = lwFloatRoundDec(frame);
             max_f = min_f + 1;
@@ -269,30 +250,17 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBone(lwMatrix44** o_mat_ptr, lwMatrix4
                 }
             }
 
-            //if(g_x == 1)
-            //{
-            //    fprintf(g_fp, "Frame: %f\n", frame);
-            //}
 
             for(i = 0; i < _data._bone_num; i++)
             {
                 lwMat44Slerp(&mat_buf[i], &rtbd_min->data[i], &rtbd_max->data[i], t);
-                //lwMatrix44Slerp(&rtbd_min->data[i], &rtbd_max->data[i], t, &mat_buf[i]);
 
-                //if(g_x == 1)
-                //{
                 //    fprintf(g_fp, "%8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f\n",
                 //        mat_buf[i]._11, mat_buf[i]._12, mat_buf[i]._13, mat_buf[i]._14,
                 //        mat_buf[i]._21, mat_buf[i]._22, mat_buf[i]._23, mat_buf[i]._24,
                 //        mat_buf[i]._31, mat_buf[i]._32, mat_buf[i]._33, mat_buf[i]._34,
-                //        mat_buf[i]._41, mat_buf[i]._42, mat_buf[i]._43, mat_buf[i]._44);
-                //}
             }
 
-            //if(g_x == 1)
-            //{
-            //    fprintf(g_fp, "\n");
-            //}
 
             this_mat_ptr = mat_buf;
         }
@@ -335,7 +303,6 @@ LW_RESULT lwAnimCtrlBone::_UpdateFrameDataBoneDummy()
         if(dummy_info->parent_bone_id != LW_INVALID_INDEX)
         {
             lwMatrix44Multiply(&_dummy_rtmat_seq[i].mat, &dummy_info->mat, &_rtmat_ptr[dummy_info->parent_bone_id]);
-            //_dummy_rtmat_seq[i].mat = _rtmat_ptr[dummy_info->parent_bone_id];
         }
     }
 
@@ -348,7 +315,6 @@ LW_RESULT lwAnimCtrlBone::_BlendBoneData(lwMatrix44* dst_mat_ptr, lwMatrix44* sr
     for(DWORD i = 0; i < _data._bone_num; i++)
     {
         lwMat44Slerp(&dst_mat_ptr[i], &src_mat_ptr0[i], &src_mat_ptr1[i], t);
-        //lwMatrix44Slerp(&src_mat_ptr0[i], &src_mat_ptr1[i], t, &dst_mat_ptr[i]);
     }
 
     return LW_RET_OK;
@@ -367,7 +333,6 @@ lwMatrix44* lwAnimCtrlBone::GetDummyRTM(DWORD id)
 
 LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_frame)
 {
-    // 
     LW_RESULT ret = LW_RET_FAILED;
 
     // by lsh
@@ -454,7 +419,6 @@ LW_RESULT lwAnimCtrlBone::SetFrame(float frame, DWORD start_frame, DWORD end_fra
             for(DWORD i = 0; i < _data._bone_num; i++)
             {
                 lwMat44Slerp(&_bone_rtmat_seq[i], &rtbd_min->data[i], &rtbd_max->data[i], t);
-                //lwMatrix44Slerp(&rtbd_min->data[i], &rtbd_max->data[i], t, &_bone_rtmat_seq[i]);
             }
 
             _rtmat_ptr = _bone_rtmat_seq;
@@ -493,7 +457,6 @@ __rt_get_value:
 
         if(parent_id == LW_INVALID_INDEX)
         {
-        //lwMatrix44Multiply(mat_run, mat_run, mat);
         }
         else
         {
@@ -721,10 +684,7 @@ LW_RESULT lwAnimCtrlBone::UpdatePose(lwPlayPoseInfo* info)
         goto __ret;
     }
 
-    //lwPoseInfo* pi = _pose_ctrl.GetPoseInfo(info->pose);
 
-    //if(LW_FAILED(SetFrame(info->ret_frame, pi->start, pi->end)))
-    //    goto __ret;
 
 __addr_ret_ok:
     ret = LW_RET_OK;
@@ -1135,7 +1095,6 @@ LW_RESULT lwAnimCtrlTexUV::GetRunTimeMatrix(lwMatrix44* mat)
     return LW_RET_OK;
 }
 
-//
 //LW_STD_IMPLEMENTATION(lwAnimCtrlTexImg)
 LW_STD_GETINTERFACE(lwAnimCtrlTexImg)
 LW_RESULT lwAnimCtrlTexImg::Release()

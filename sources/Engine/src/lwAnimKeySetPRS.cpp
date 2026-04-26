@@ -30,16 +30,6 @@ LW_RESULT lwKeyDataSearch( DWORD* ret_min, DWORD* ret_max, DWORD key, T* data_se
 
         if( l == data_num )
         {
-            //if( key == data_seq[ k ].key )
-            //{
-            //    *ret_min = k;
-            //    *ret_max = k;
-            //    break;
-            //}
-            //else
-            //{
-            //    assert( 0 );
-            //}
             *ret_min = k;
             *ret_max = k;
             break;
@@ -113,8 +103,6 @@ LW_RESULT lwGetKeySlerpCoefficent(float* out, DWORD slerp_type, float key, float
     return LW_RET_OK;
 }
 
-//DWORD lwKeyDataSearch< lwKeyDataVector3 >;
-//DWORD lwKeyDataSearch< lwKeyDataQuaternion >;
 
 LW_STD_IMPLEMENTATION(lwAnimKeySetPRS2)
 
@@ -184,7 +172,6 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
                 lwKeyVector3* k0 = &_pos_seq[key_pos[0]];
                 lwKeyVector3* k1 = &_pos_seq[key_pos[1]];
 
-                //t = (float)( f - k0->key ) / (float)( k1->key - k0->key );
                 lwGetKeySlerpCoefficent(&t, k0->slerp_type, frame, (float)k0->key, (float)k1->key);
 
                 lwVector3Slerp(&pos, &k0->data, &k1->data, t);
@@ -213,7 +200,6 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
                 lwKeyQuaternion* k0 = &_rot_seq[key_rot[0]];
                 lwKeyQuaternion* k1 = &_rot_seq[key_rot[1]];
 
-                //t = (float)( f - k0->key ) / (float)( k1->key - k0->key );
                 lwGetKeySlerpCoefficent(&t, k0->slerp_type, frame, (float)k0->key, (float)k1->key);
 
                 lwQuaternionSlerp(&quat, &k0->data, &k1->data, t);
@@ -244,7 +230,6 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
                 lwKeyVector3* k0 = &_sca_seq[key_sca[0]];
                 lwKeyVector3* k1 = &_sca_seq[key_sca[1]];
 
-                //t = (float)(f - k0->key) / (float)(k1->key - k0->key);
                 lwGetKeySlerpCoefficent(&t, k0->slerp_type, frame, (float)k0->key, (float)k1->key);
 
                 lwVector3Slerp(&scale, &k0->data, &k1->data, t);
@@ -256,12 +241,8 @@ LW_RESULT lwAnimKeySetPRS2::GetValue( lwMatrix44* mat, float frame )
         const auto matrix = lwMatrix44Translate(pos);
         lwMatrix44Multiply(mat, mat, &matrix);
 
-        //lwMatrix44Multiply( mat, &lwMatrix44Scale( scale ), mat );
 
 
-        //mat->_41 = pos.x;
-        //mat->_42 = pos.y;
-        //mat->_43 = pos.z;
 
         lwMatrix44Identity(mat);
 

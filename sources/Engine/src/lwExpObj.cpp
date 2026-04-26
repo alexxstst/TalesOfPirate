@@ -18,7 +18,6 @@ LW_BEGIN
 // добавления поля-указателя (его размер 4 на x86 и 8 на x64), либо смены
 // порядка полей — смещения в файле съезжают, в поля типа `index_num`
 // попадает мусор, и клиент падает на `LW_NEW(DWORD[info->index_num])`.
-//
 // Static_assert'ы ниже ловят это на этапе компиляции. Если какая-то из проверок
 // упала — ЗАПРЕЩЕНО "подправлять" ожидаемое число; нужно вернуть размер
 // структуры к прежнему, иначе существующие файлы перестанут читаться.
@@ -81,29 +80,6 @@ static_assert(sizeof(lwBoneDummyInfo)        == 72,   "lwBoneDummyInfo layout ch
 static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed — breaks .lpc pose block");
 
 #define VERSION_BONESKIN            0x0001
-
-	/*
-	LW_STD_IMPLEMENTATION(lwMtlTexInfo)
-	DWORD lwMtlTexInfo::version = VERSION;
-
-	LW_RESULT lwMtlTexInfo::Load(FILE* fp)
-	{
-		fread(&mtl, sizeof(mtl), 1, fp);
-		fread(&rs_set, sizeof(rs_set), 1, fp);
-		fread(&tex_seq[0], sizeof(tex_seq), 1, fp);
-
-		return LW_RET_OK;
-	}
-
-	LW_RESULT lwMtlTexInfo::Save(FILE* fp) const
-	{
-		fwrite(&mtl, sizeof(mtl), 1, fp);
-		fwrite(&rs_set, sizeof(rs_set), 1, fp);
-		fwrite(&tex_seq[0], sizeof(tex_seq), 1, fp);
-
-		return LW_RET_OK;
-	}
-	*/
 
 	// lwMtlTexInfo io method
 	LW_RESULT lwMtlTexInfo_Load(lwMtlTexInfo* info, FILE* fp, DWORD version) {
@@ -267,13 +243,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		// mipmap level = 3
-		//if(info->tex_seq[0].colorkey_type == COLORKEY_TYPE_NONE)
 		{
 			info->tex_seq[0].pool = D3DPOOL_MANAGED;
 			info->tex_seq[0].level = D3DX_DEFAULT;
 		}
 
-		//
 		BOOL transp_flag = 0;
 		lwRenderStateAtom* rsa;
 		DWORD i = 0;
@@ -296,12 +270,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		// warning:
-		//enum lwMtlTexInfoTransparencyTypeEnum
-		//{
-		//    MTLTEX_TRANSP_FILTER =          0,
-		//    MTLTEX_TRANSP_ADDITIVE =        1,
-		//    MTLTEX_TRANSP_SUBTRACTIVE =     2,
-		//};
 		if (info->transp_type == 1)
 			info->transp_type = MTLTEX_TRANSP_ADDITIVE;
 		else if (info->transp_type == 2)
@@ -345,7 +313,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwSaveMtlTexInfo(FILE* fp, const lwMtlTexInfo* info, DWORD num) {
-		//fwrite(&MTLTEX_VERSION, sizeof(MTLTEX_VERSION), 1, fp);
 
 		fwrite(&num, sizeof(DWORD), 1, fp);
 
@@ -364,7 +331,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 
 	// lwAnimDataTexUV
-	///////////////////////
 	LW_STD_IMPLEMENTATION(lwAnimDataTexUV)
 
 	LW_RESULT lwAnimDataTexUV::Load(FILE* fp, DWORD version) {
@@ -374,7 +340,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fread(&_mat_seq[0], sizeof(lwMatrix44), _frame_num, fp);
 
 		// pose_ctrl
-		//_pose_ctrl.Load(fp);
 
 		return LW_RET_OK;
 	}
@@ -384,7 +349,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&_mat_seq[0], sizeof(lwMatrix44), _frame_num, fp);
 
 		// pose_ctrl
-		//_pose_ctrl.Save(fp);
 
 		return LW_RET_OK;
 	}
@@ -404,7 +368,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			memcpy(&_mat_seq[0], &src->_mat_seq[0], sizeof(lwMatrix44) * _frame_num);
 		}
 
-		//_pose_ctrl.Copy(&src->_pose_ctrl);
 
 		return LW_RET_OK;
 	}
@@ -415,7 +378,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		if (_frame_num > 0) {
 			size += sizeof(_frame_num);
 			size += sizeof(lwMatrix44) * _frame_num;
-			//size += _pose_ctrl.GetDataSize();
 		}
 
 		return size;
@@ -443,40 +405,19 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		return LW_RET_OK;
 
-		//if((frame < 0) || (frame >= (int)_frame_num))
 		//    return 0;
 
 
-		//lwMatrix44Identity(mat);
 
-		//if(_data_seq[frame].w_angle != 0.0f) {
 
 		//    // DirectXUVUV
 		//    //
-		//    lwMatrix44 tmp;
-		//    lwMatrix44Identity(&tmp);
 
-		//    tmp._31 = -_data_seq[frame].u - 0.5f;
-		//    tmp._32 = _data_seq[frame].v - 0.5f;
 
-		//    float cos_w = cosf(_data_seq[frame].w_angle);
-		//    float sin_w = sinf(_data_seq[frame].w_angle);
 
-		//    mat->_11 = cos_w;
-		//    mat->_12 = -sin_w;
-		//    mat->_21 = sin_w;
-		//    mat->_22 = cos_w;
 
-		//    lwMatrix44Multiply(mat, &tmp, mat);
 
-		//    mat->_31 += 0.5f;
-		//    mat->_32 += 0.5f;
-		//}
-		//else {
 
-		//    mat->_31 += -_data_seq[frame].u;
-		//    mat->_32 += _data_seq[frame].v;
-		//}
 
 		//return 1;
 	}
@@ -646,7 +587,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		_bone_num = 0;
 		_frame_num = 0;
 		_dummy_num = 0;
-		//_subset_type = LW_INVALID_INDEX;
 		_key_type = BONE_KEY_TYPE_MAT43;
 
 		return LW_RET_OK;
@@ -730,14 +670,11 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		// pose_ctrl
-		//_pose_ctrl.Load(fp);
 
 		return LW_RET_OK;
 	}
 
 	LW_RESULT lwAnimDataBone::Save(FILE* fp) const {
-		//const DWORD version = VERSION_BONESKIN;
-		//fwrite(&version, sizeof(DWORD), 1, fp);
 
 		fwrite(&_header, sizeof(lwBoneInfoHeader), 1, fp);
 
@@ -774,7 +711,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 
-		//_pose_ctrl.Save(fp);
 
 		return LW_RET_OK;
 	}
@@ -892,7 +828,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			assert(0);
 		}
 
-		//_pose_ctrl.Copy(&src->_pose_ctrl);
 
 		return LW_RET_OK;
 	}
@@ -986,7 +921,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				if (max_f == _frame_num) {
 					// 0_data._frame_num - 1
 					max_f = 0;
-					//max_f = _frame_num - 1;
 				}
 
 				lwMatrix44 mat_0;
@@ -1039,7 +973,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fread(&_mat_seq[0], sizeof(lwMatrix43), _frame_num, fp);
 
 		// pose_ctrl
-		//_pose_ctrl.Load(fp);
 
 		return LW_RET_OK;
 	}
@@ -1049,7 +982,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		fwrite(&_mat_seq[0], sizeof(lwMatrix43), _frame_num, fp);
 
 		// pose_ctrl
-		//_pose_ctrl.Save(fp);
 
 		return LW_RET_OK;
 	}
@@ -1072,7 +1004,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			memcpy(&_mat_seq[0], &src->_mat_seq[0], sizeof(lwMatrix43) * _frame_num);
 		}
 
-		//_pose_ctrl.Copy(&src->_pose_ctrl);
 
 		return LW_RET_OK;
 	}
@@ -1084,7 +1015,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			size += sizeof(_frame_num);
 			size += sizeof(lwMatrix43) * _frame_num;
 
-			//size += _pose_ctrl.GetDataSize();
 		}
 
 		return size;
@@ -1129,16 +1059,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			l = k + 1;
 
 			if (l == data_num) {
-				//if(key == data_seq[k].key)
-				//{
-				//    *ret_min = k;
-				//    *ret_max = k;
-				//    break;
-				//}
-				//else
-				//{
-				//    assert(0);
-				//}
 				*ret_min = k;
 				*ret_max = k;
 				break;
@@ -1162,8 +1082,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		return (low <= high) ? LW_RET_OK : LW_INVALID_INDEX;
 	}
 
-	//DWORD lwKeyDataSearch< lwKeyDataVector3 >;
-	//DWORD lwKeyDataSearch< lwKeyDataQuaternion >;
 
 	LW_RESULT lwAnimKeySetPRS::GetValue(lwMatrix44* mat, float frame) {
 		DWORD f = (DWORD)frame;
@@ -1244,8 +1162,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		const auto matrix = lwMatrix44Translate(pos);
 		lwMatrix44Multiply(mat, mat, &matrix);
 
-		//lwMatrix44Multiply(mat, &lwMatrix44Scale(scale), mat);
-		//lwMatrix44MultiplyScale(mat, &lwMatrix44Scale(scale), mat);
 		mat->_11 *= scale.x;
 		mat->_12 *= scale.x;
 		mat->_13 *= scale.x;
@@ -1261,9 +1177,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		mat->_33 *= scale.z;
 		mat->_34 *= scale.z;
 
-		//mat->_41 = pos.x;
-		//mat->_42 = pos.y;
-		//mat->_43 = pos.z;
 
 
 		return LW_RET_OK;
@@ -1289,10 +1202,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			memcpy(dst->texcoord0_seq, src->texcoord0_seq, sizeof(lwVector2) * dst->vertex_num);
 
 			//// added by clp
-			//dst->texcoord1_seq = LW_NEW(lwVector2[dst->vertex_num]);
-			//memcpy(dst->texcoord1_seq, src->texcoord0_seq, sizeof(lwVector2) * dst->vertex_num);
-			//dst->fvf |= D3DFVF_TEX2;
-			//dst->fvf ^= D3DFVF_TEX1;
 		}
 		else if (dst->fvf & D3DFVF_TEX2) {
 			dst->texcoord0_seq = LW_NEW(lwVector2[dst->vertex_num]);
@@ -1435,10 +1344,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				fread(&info->texcoord0_seq[0], sizeof(lwVector2), info->vertex_num, fp);
 
 				//// added by clp
-				//info->texcoord1_seq = LW_NEW(lwVector2[info->vertex_num]);
-				//memcpy(info->texcoord1_seq, info->texcoord0_seq, sizeof(lwVector2) * info->vertex_num);
-				//info->fvf |= D3DFVF_TEX2;
-				//info->fvf ^= D3DFVF_TEX1;
 			}
 			else if (info->fvf & D3DFVF_TEX2) {
 				info->texcoord0_seq = LW_NEW(lwVector2[info->vertex_num]);
@@ -1504,10 +1409,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				fread(&info->texcoord0_seq[0], sizeof(lwVector2), info->vertex_num, fp);
 
 				//// added by clp
-				//info->texcoord1_seq = LW_NEW(lwVector2[info->vertex_num]);
-				//memcpy(info->texcoord1_seq, info->texcoord0_seq, sizeof(lwVector2) * info->vertex_num);
-				//info->fvf |= D3DFVF_TEX2;
-				//info->fvf ^= D3DFVF_TEX1;
 			}
 			else if (info->fvf & D3DFVF_TEX2) {
 				info->texcoord0_seq = LW_NEW(lwVector2[info->vertex_num]);
@@ -1620,7 +1521,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	DWORD lwMeshInfo_GetDataSize(lwMeshInfo* info) {
 		DWORD size = 0;
 
-		//size += sizeof(MESH_VERSION);
 		size += sizeof(lwMeshInfoHeader);
 		size += sizeof(D3DVERTEXELEMENTX) * info->vertex_element_num;
 		size += sizeof(lwSubsetInfo) * info->subset_num;
@@ -1756,7 +1656,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwAnimDataInfo::Save(FILE* fp) {
-		//fwrite(&VERSION, sizeof(VERSION), 1, fp);
 
 
 		DWORD data_bone_size = 0;
@@ -1903,7 +1802,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (size > 0) {
 			size += sizeof(DWORD) * ANIM_DATA_NUM;
-			//size += sizeof(VERSION);
 		}
 
 		return size;
@@ -1918,7 +1816,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		}
 
 		if (size > 0) {
-			//size += sizeof(MTLTEX_VERSION);
 			size += sizeof(DWORD); // number
 		}
 
@@ -2252,7 +2149,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	}
 
 	LW_RESULT lwHelperInfo::Save(FILE* fp) const {
-		//fwrite(&VERSION, sizeof(VERSION), 1, fp);
 
 		fwrite(&type, sizeof(type), 1, fp);
 
@@ -2349,7 +2245,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 
 		if (size > 0) {
 			size += sizeof(type);
-			//size += sizeof(VERSION);
 		}
 
 		return size;
@@ -2537,7 +2432,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	LW_RESULT lwGeomObjInfo::Load(FILE* fp, DWORD version) {
 		fread((lwGeomObjInfoHeader*)&id, sizeof(lwGeomObjInfoHeader), 1, fp);
 
-		// for compatible version
 		state_ctrl.SetState(STATE_FRAMECULLING, 0);
 		state_ctrl.SetState(STATE_UPDATETRANSPSTATE, 1);
 
@@ -2572,16 +2466,12 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 			|| (rcci.vs_id == VST_PB1U4NT0_LD)
 			|| (rcci.vs_id == VST_PB2U4NT0_LD)
 			|| (rcci.vs_id == VST_PB3U4NT0_LD)) {
-			//rcci.ctrl_id = RENDERCTRL_VS_VERTEXBLEND_DX9;
-			//rcci.vs_id = VST_PB4U4NT0_LD_DX9;
-			//rcci.decl_id = VDT_PB4U4NT0_DX9;
 		}
 
 		return LW_RET_OK;
 	}
 
 	LW_RESULT lwGeomObjInfo::Save(FILE* fp) {
-		//fwrite(&VERSION, sizeof(VERSION), 1, fp);
 
 		fwrite((lwGeomObjInfoHeader*)&id, sizeof(lwGeomObjInfoHeader), 1, fp);
 
@@ -2660,7 +2550,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	DWORD lwGeomObjInfo::GetDataSize() const {
 		DWORD size = 0;
 
-		//size += sizeof(VERSION);
 
 		size += sizeof(lwGeomObjInfoHeader);
 		size += mtl_size;
@@ -2915,7 +2804,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 		return ret;
 	}
 
-	//
 	lwModelNodeInfo::~lwModelNodeInfo() {
 		if (_type == NODE_PRIMITIVE) {
 			lwGeomObjInfo* data = (lwGeomObjInfo*)_data;
@@ -3103,7 +2991,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 	LW_RESULT lwModelInfo::Destroy() {
 		if (_obj_tree) {
 			_obj_tree->EnumTree(__tree_proc_modlinfo_destroy, 0, TREENODE_PROC_PREORDER);
-			//lwReleaseTreeNodeList(_obj_tree);
 			lwReleaseTreeNodeList_(_obj_tree);
 		}
 
@@ -3188,16 +3075,7 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 				}
 			}
 
-			//if(_obj_tree)
-			//{
-			//    __load_param lp;
-			//    lp.fp = fp;
-			//    lp.version = _head.version;
 
-			//    LW_RESULT r = _obj_tree->EnumTree(__tree_proc_modlinfo_load, &lp, TREENODE_PROC_INORDER);
-			//    if(r == TREENODE_PROC_RET_ABORT)
-			//        goto __ret;
-			//}
 		}
 	__addr_ret_ok:
 		ret = LW_RET_OK;

@@ -1,7 +1,6 @@
 ﻿// stdafx.h : include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
-//
 
 #pragma once
 
@@ -38,4 +37,3 @@
 #include "lwITypes.h"       // lwITypes  ,   
 #include "lwClassDecl.h"    // forward-declarations  
 #include "lwInterfaceExt.h" // lwInterface.h (~900 ) + 
-

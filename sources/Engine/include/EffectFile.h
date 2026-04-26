@@ -1,12 +1,9 @@
 ﻿// DXEffectFile.h: interface for the CMPEffectFile class.
-//
-//////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_DXEFFECTFILE_H__F7B73B81_55EE_11BD_AC67_0008C720ECD1__INCLUDED_)
 #define AFX_DXEFFECTFILE_H__F7B73B81_55EE_11BD_AC67_0008C720ECD1__INCLUDED_
 
 #if _MSC_VER > 1000
-//#pragma once
 #endif // _MSC_VER > 1000
 class   MPRender;
 
@@ -26,13 +23,10 @@ public:
 	BOOL OnResetDevice();
 	BOOL OnLostDevice();
 
-	//BOOL LoadEffectFromResource(TCHAR* pszsrc);
 	BOOL LoadEffectFromFile(LPCSTR pszfile);
 
 	BOOL SetTechnique(int iIdx);
 
-	//BOOL CreateVertexShader();
-	//BOOL SetVertexShader();
 
 	BOOL SetTexture(LPCSTR TextureValue,IDirect3DTextureX* pTexture);
 	BOOL SetDword(LPCSTR DwName, DWORD dwvalue);

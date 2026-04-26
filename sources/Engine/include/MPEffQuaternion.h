@@ -20,7 +20,6 @@ public:
 
 	D3DXQUATERNION& GetDXValue() { return m_qSelf; }
 
-	// 
 	MPEffVector3 operator* (const MPEffVector3& rkVector) const;
 
 

@@ -117,7 +117,6 @@ class lwAnimCtrlMatrix : public lwIAnimCtrlMatrix, public lwAnimDataMatrix, publ
 LW_STD_DECLARATION()
 
 private:
-    //lwAnimDataMatrix _data;
 
 #ifdef USE_ANIMKEY_PRS
     lwAnimKeySetPRS _data;

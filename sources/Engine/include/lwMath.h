@@ -5,7 +5,6 @@
 #include "lwHeader.h"
 #include "lwStdInc.h"
 
-//
 
 // =============================
 #define LW_USE_DXMATH_LIB
@@ -43,7 +42,6 @@ typedef D3DXQUATERNION lwQuaternion;
 LW_BEGIN
 
 
-/////////
 
 #define OP_MATRIX_REPLACE		0
 #define OP_MATRIX_LOCAL			1
@@ -80,17 +78,10 @@ enum lwPlaneClassifyType
     PLANE_FRONT_SIDE =       1,
     PLANE_BACK_SIDE =        2,
 };
-///////////
-//////////////////
 
 
 
-//#ifdef LW_USE_LWMATH_LIB
 
-//class lwVector3;
-//class lwMatrix33;
-//class lwMatrix44;
-//class lwPlane;
 
 class _lwVector2
 {
@@ -231,7 +222,6 @@ typedef _lwVector3i lwVector3i;
 #endif
 
 // lwVector3
-/////////////////////////////////////
 class _lwVector3
 {
 public:
@@ -281,7 +271,6 @@ typedef _lwVector3 lwVector3;
 
 
 // lwVector4
-/////////////////////////////////
 class _lwVector4
 {
 public:
@@ -330,7 +319,6 @@ typedef _lwVector4 lwVector4;
 #endif
 
 // lwMatrix44
-///////////////////////
 class _lwMatrix44
 {
 public:
@@ -446,10 +434,8 @@ typedef _lwQuaternion lwQuaternion;
 
 
 
-//#endif
 
 // lwMatrix33
-///////////////////////
 class lwMatrix33
 {
 public:
@@ -510,7 +496,6 @@ public:
 };
 
 // lwMatrix43
-///////////////////////
 class lwMatrix43
 {
 public:
@@ -525,7 +510,6 @@ public:
     };
 
 public:
-  //static const lwMatrix43 Identity;
 
   lwMatrix43() {}
 
@@ -545,12 +529,6 @@ public:
       *this = m;
   }
   //lwMatrix43(const lwMatrix44& m)
-  //{
-  //    _11 = m._11; _12 = m._12; _13 = m._13;
-  //    _21 = m._21; _22 = m._22; _23 = m._23;
-  //    _31 = m._31; _32 = m._32; _33 = m._33;
-  //    _41 = m._41; _42 = m._42; _43 = m._43;
-  //}
 
   inline float operator() (int i, int j) const { return m[i][j]; }
   inline float& operator() (int i, int j) { return m[i][j]; }
@@ -610,8 +588,6 @@ public:
   lwTriangle(const lwVector3& v0_, const lwVector3& v1_, const lwVector3& v2_)
 	  : v0(v0_), v1(v1_), v2(v2_)
   {
-      // do not use  outside funciton, expand vector cross
-	  //lwVector3Cross(&n, &lwVector3(v1_ - v0_), &lwVector3(v2_ - v0_));
       lwVector3 c0(v1_ - v0_);
       lwVector3 c1(v2_ - v0_);
       n.x = c0.y * c1.z - c0.z * c1.y;
@@ -762,7 +738,6 @@ const static lwMatrix44 lwMatrix44_Identity(1.0f, 0.0f, 0.0f, 0.0f,
                                             0.0f, 0.0f, 1.0f, 0.0f,
                                             0.0f, 0.0f, 0.0f, 1.0f);
 // ---------------------------------------
-// inline method
 // ---------------------------------------
 LW_INLINE float lwFloatSlerp(float v0, float v1, float t)
 {
@@ -845,7 +820,6 @@ int lwCheckVectorInBox(const lwVector3* v, const lwBox* b);
 // mat_box[in]: scale factor forbidden
 int lwCheckVectorInBox(const lwVector3* v, const lwBox* b, const lwMatrix44* mat_box);
 
-// vp[in]: checked vector;
 // v1, v2, v3[in]: triangle vector
 int lwCheckVectorInTriangle2D(const lwVector2* vp,const lwVector2* v1,const lwVector2* v2,const lwVector2* v3);
 
@@ -903,11 +877,8 @@ int lwIntersectSphereSphere(lwVector3* ret, const lwSphere* s1, const lwSphere* 
 // t[in]: triangle 
 int lwIntersectRayTriangle(lwVector3* v, float* d, const lwVector3* org,const lwVector3* ray, const lwTriangle* tri);
 
-////////////
-//////////////////////////////////
 lwVector3* lwGetTriangleNormal(lwVector3* n,const lwVector3* v0,const lwVector3* v1,const lwVector3* v2);
 
-//
 // i1,i2: mapping axis, ret: exclude axis , vec: donot need normalized
 int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec); 
 
@@ -967,7 +938,6 @@ float lwGetDirTurnAngle(const lwVector2* src_dir, const lwVector2* dst_dir);
 void lwGetLinearTransformParam(float* ret_param, const float* x_var, const float* y_var);
 
 // lwPlane
-// Normalize plane (so that |a,b,c| == 1)
 lwPlane* WINAPI lwPlaneNormalize(lwPlane *p_out, const lwPlane *p);
 
 // Find the intersection between a plane and a line.  If the line is
@@ -984,28 +954,9 @@ DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b);
 DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b, const lwMatrix44* b_mat);
 // extension class
 
-//class lwMatrix44X : public lwMatrix44
-//{
-//public:
-//
-//	inline void Translate(float x, float y, float z, DWORD op) { lwMatrix44Translate(this, x, y, z, op); }
-//	inline void RotateAxis(DWORD axis, float angle, DWORD op) { lwMatrix44RotateAxis(this, axis, angle, op); }
-//	inline void Scale(float x, float y, float z, DWORD op) { lwMatrix44Scale(this, x, y, z, op); }
-//    inline lwVector3* GetRow(int row) { return (lwVector3*)m[row]; }
-//    inline void SetRow(const lwVector3* ver, int row) { lwMat44SetRow(this, ver, row); }
-//	inline void Identity() { lwMatrix44Identity(this); }
-//
-//    inline lwMatrix44X& operator=(const lwMatrix44& mat) { *(static_cast<lwMatrix44*>(this)) = mat; return *this; }
-//
-//};
 
 
 // compatiable old method
-//#define lwMat44GetLinearValue lwMat44Slerp
-//#define CheckVertexInPolygon2D lwCheckVectorInTriangle2D
-//#define lwCheckVectorInTriangle2D2 lwCheckVectorInTriangle2D2
-//#define lwLineIntersect2D lwIntersectLineLine2D
-//#define lwLineIntersect3D lwIntersectLineLine3D
 // end namesapce lsh
 LW_END
 
@@ -1042,4 +993,3 @@ LW_END
 #endif 
 
 #include "lwMath.inl"
-

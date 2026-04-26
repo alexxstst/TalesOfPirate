@@ -8,7 +8,6 @@
 #include "lwResourceMgr.h"
 #include "lwDeviceObject.h"
 #include "lwHelperGeometry.h"
-//#include "lwTimer.h"
 
 #define USE_VS_INDEXED
 
@@ -722,7 +721,6 @@ LW_RESULT lwHelperMesh::CreateInstance()
         lwMtlTexInfo mti;
         lwMaterial mtl;
 
-        //memset( &mti, 0, sizeof( mti ) );
         memset( &mtl, 0, sizeof( mtl ) );
         mtl.amb.a = mtl.amb.r = mtl.amb.g = mtl.amb.b = 1.0f;
 
@@ -747,9 +745,6 @@ LW_RESULT lwHelperMesh::CreateInstance()
                      __FUNCTION__, static_cast<long long>(r));
     }
 
-    //lwIRenderCtrl* render_ctrl;
-    //_res_mgr->RequestRenderCtrl( &render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION );
-    //_obj->GetRenderCtrlAgent()->SetRenderCtrl(render_ctrl);
     
 
     return LW_RET_OK;
@@ -761,14 +756,9 @@ LW_RESULT lwHelperMesh::CreateInstance()
 // LW_RET_OK: hit test succeeded
 LW_RESULT lwHelperMesh::HitTest( lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwMatrix44* mat_parent, const char* type_name )
 {
-//#define USE_INVERSE_MAT
 // USE_INVERSE_MAThit test
 #ifdef USE_INVERSE_MAT
-    //static int xx = 1;
-    //float time_u, time_v;
     ////if(xx == 1)
-    //{
-    //lwResetTick();
 
     if( _obj_num == 0 )
         return LW_RET_FAILED_2;
@@ -801,8 +791,6 @@ LW_RESULT lwHelperMesh::HitTest( lwPickInfo* info, const lwVector3* org, const l
 
         hmi = &_obj_seq[ k ];
 
-        //lwMatrix44Multiply( &mat, &hmi->mat, mat_parent );
-        //lwMatrix44Inverse( &mat_inv, &mat );
         D3DXMatrixMultiply( (D3DXMATRIX*)&mat, (D3DXMATRIX*)&hmi->mat, (D3DXMATRIX*)mat_parent );
         D3DXMatrixInverse( (D3DXMATRIX*)&mat_inv, NULL, (D3DXMATRIX*)&mat );
 
@@ -849,15 +837,10 @@ LW_RESULT lwHelperMesh::HitTest( lwPickInfo* info, const lwVector3* org, const l
 
     *info = v;
 
-    //time_u = lwGetCurrentTickTime();
 
     return LW_RET_OK;
-    //}
 
 #else
-    //else
-    //{
-        //lwResetTick();
 
     if( _obj_num == 0 )
         return LW_RET_FAILED_2;
@@ -924,12 +907,9 @@ LW_RESULT lwHelperMesh::HitTest( lwPickInfo* info, const lwVector3* org, const l
 
     *info = v;
 
-    //time_v = lwGetCurrentTickTime();
 
-    //LG( "iii", "face num:%d | %10.5f %10.5f\n", f, time_u, time_v );
 
     return LW_RET_OK;
-    //}
 #endif
 }
 

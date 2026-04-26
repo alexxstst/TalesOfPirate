@@ -1,8 +1,6 @@
 ﻿//-----------------------------------------------------------------------------
 // File: DXUtil.h
-//
 // Desc: Helper functions and typing shortcuts for DirectX programming.
-//
 // Copyright (c) 1997-2000 Microsoft Corporation. All rights reserved
 //-----------------------------------------------------------------------------
 #ifndef DXUTIL_H
@@ -20,7 +18,6 @@
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_GetDXSDKMediaPath() and DXUtil_FindMediaFile() 
 // Desc: Returns the DirectX SDK path, as stored in the system registry
 //       during the SDK install.
 //-----------------------------------------------------------------------------
@@ -48,7 +45,6 @@ HRESULT DXUtil_ReadBoolRegKey( HKEY hKey, TCHAR* strRegName, BOOL* pbValue, BOOL
 
 
 //-----------------------------------------------------------------------------
-// Name: DXUtil_Timer()
 // Desc: Performs timer opertations. Use the following commands:
 //          TIMER_RESET           - to reset the timer
 //          TIMER_START           - to start the timer

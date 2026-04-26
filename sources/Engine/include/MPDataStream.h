@@ -23,13 +23,10 @@ ArchiveMPDataStream
 class MPDataStream
 {
 public:
-	/// 
 	MPDataStream() : m_Size(0) {}
-	/// 
 	MPDataStream(const String& name) : m_Name(name), m_Size(0) {}
 	virtual ~MPDataStream() {}
 
-	// 
 	template<typename T> MPDataStream& operator>>(T& val);
 	/** , eof.
 	@param buf 
@@ -97,7 +94,6 @@ protected:
 	/// (0)
 	size_t m_Size;
 #define MP_STREAM_TEMP_SIZE 128
-	/// 
 	char m_TmpArea[MP_STREAM_TEMP_SIZE];
 };
 
@@ -189,13 +185,9 @@ public:
 	void close(void);
 
 protected:
-	/// 
 	uchar* m_Data;
-	/// 
 	uchar* m_Pos;
-	/// 
 	uchar* m_End;
-	/// 
 	bool m_FreeOnClose;			
 };
 

@@ -5,7 +5,6 @@
 #include <string>
 
 LW_BEGIN
-	////////////////////////////
 
 	LW_STD_IMPLEMENTATION(lwPoseCtrl)
 
@@ -457,13 +456,6 @@ LW_BEGIN
 					}
 				}
 				// smooth type cannot modify frame variable arbitrarily
-				//else
-				//{
-				//    if(src->bit_mask & PPI_MASK_FRAME)
-				//    {
-				//        dst->frame = src->frame;
-				//    }
-				//}
 			}
 			else {
 				if (src->bit_mask & PPI_MASK_POSE) {

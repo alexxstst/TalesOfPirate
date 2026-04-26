@@ -10,8 +10,6 @@
 
 LW_BEGIN
 
-//
-////////////////////////////
 // lwRenderCtrlAgent
 LW_STD_IMPLEMENTATION(lwRenderCtrlAgent)
 

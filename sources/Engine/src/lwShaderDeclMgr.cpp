@@ -3,7 +3,6 @@
 
 LW_BEGIN
 
-//
 LW_STD_IMPLEMENTATION( lwShaderDeclMgr )
 
 

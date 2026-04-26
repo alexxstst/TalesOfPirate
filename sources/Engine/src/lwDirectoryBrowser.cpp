@@ -92,9 +92,6 @@ LW_RESULT lwDirectoryBrowser::Browse(const char *file, DWORD flag)
     if(_proc == 0)
         goto __ret;
 
-    //char* p = strrchr(file, '\\');
-    //if((p == 0) || (p[1] == '\0'))
-    //    goto __ret;
 
     ret = _Go(file, flag);
 

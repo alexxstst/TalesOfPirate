@@ -127,7 +127,6 @@ typedef lxi32 lxhandle;
 #define LW_INLINE __forceinline
 #define LW_DECLSPEC_NOVTABLE __declspec( novtable )
 #define PURE_METHOD = 0
-//#define LW_DECLSPEC_NOVTABLE
 
 #define LW_NULL                 0
 #define LW_MAKEINT64( l, h ) ( ( ((LW_INT64)l & 0xffffffff) | (((LW_INT64)h & 0xffffffff) << 32)) )

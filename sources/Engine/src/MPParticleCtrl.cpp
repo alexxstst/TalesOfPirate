@@ -1,5 +1,4 @@
 ﻿#include "StdAfx.h"
-//#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
 #include "MPRender.h"
@@ -13,287 +12,31 @@ using namespace std;
 ///************************************************************************/
 ///*                                                                      */
 ///************************************************************************/
-//CMPParticleCtrl::CMPParticleCtrl(void)
-//{
-//}
-//
 //CMPParticleCtrl::~CMPParticleCtrl(void)
-//{
-//}
 ///************************************************************************/
 ///*                                                                      */
 ///************************************************************************/
-//
-//CMPParticleTrace::CMPParticleTrace(void)
-//{
-//	_pCModelEff = NULL;
-//	_pCShade	= NULL;
-//	m_CFire = NULL;
-//	m_CBlast = NULL;
-//}
-//
 //CMPParticleTrace::~CMPParticleTrace(void)
-//{
-//	SAFE_DELETE(_pCModelEff);
-//	SAFE_DELETE(_pCShade);
-//
-//	SAFE_DELETE(m_CFire);
-//	SAFE_DELETE(m_CBlast);
-//
-//}
 ////float f = 0;
-//
-//void	CMPParticleTrace::BindingRes(CMPResManger* pResMagr)
-//{
-//	m_CFire = new CMPFire;
-//
-//	m_CFire->Init("",5,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(0,0),5,true);
-//	m_CFire->BindingRes(pResMagr);
-//	m_CFire->setParticleVel(10);
-//	m_CFire->setParticleLife(10);
-//	m_CFire->setParticleSizeSmall(1.0f);
-//	m_CFire->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_ONE);
-//	m_CFire->setParticleColor(0xfffff080);
-//	//m_CFire->setParticleFrameColor(m_CFire->getFrameCount() - 1,0x00000000);
-//
-//
-//	m_CBlast = new CMPBlast;
-//	m_CBlast->Init("",10,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(1.0f,1.0f),5,true);
-//	m_CBlast->BindingRes(pResMagr);
-//	m_CBlast->setParticleColor(0xffff7000);
-//
-//	m_bEmiss	= false;
-//	m_pfDailTime = pResMagr->GetDailTime();
-//	m_vPos		= D3DXVECTOR3(0,0,0);
-//	m_vDir		= D3DXVECTOR3(0,0,0);
-//	m_fVel		= 7.0f;
-//	m_fRadius = 0.2f;
-//
-//	_pCModelEff = new CMPModelEff;
-//	s_string str = "ballfire.eff";
-//	int id = pResMagr->GetEffectID(str);
-//	_pCModelEff->BindingEffect(pResMagr->GetEffectByID(id));
-//	_pCModelEff->BindingRes(pResMagr);
-//	_pCModelEff->Scaling(2.f,2.f,2.f);
-//
 //	//
-//	_pCShade	= new CMPShadeMap;
-//	_pCShade->setTextureName("boxlight2.tga");
-//	_pCShade->BoundingRes(pResMagr);
-//	_pCShade->CreateShadeMap(4.0f);
-//	//_pCShade->CreateSpliteTexture(4,1);
-//	_pCShade->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_ONE);
-//	_pCShade->SetColor(0xffff8000);
-//	//_pCShade->Play();
-//
-//}
-//void	CMPParticleTrace::MoveTo(D3DXVECTOR3 vPos,MPMap* pMap)
-//{
-//	if(m_bEmiss)
-//	{
-//		_pCModelEff->MoveTo(m_vPos.x,m_vPos.y,m_vPos.z);
-//
-//		_pCShade->MoveTo(m_vPos,pMap);
-//	}
-//}
-//
-//void	CMPParticleTrace::FrameMove(DWORD	dwDailTime)
-//{
-//	if(m_bEmiss)
-//	{
-//
 //		//! ID
-//
-//		//SetTarget(D3DXVECTOR3(f,20,0));
-//
-//		m_CFire->MoveTo(m_vPos);
-//
-//		m_CFire->FrameMove(dwDailTime);
-//
-//
-//		_pCModelEff->FrameMove(dwDailTime);
-//	
-//		_pCShade->FrameMove(dwDailTime);
-//
-//	}
-//	m_CBlast->FrameMove(dwDailTime);
-//
-//}
-//
-//void	CMPParticleTrace::Render()
-//{
-//
-//	if(m_bEmiss)
-//	{
-//		m_CFire->Render();
-//		_pCModelEff->Render();
-//		_pCShade->Render();
-//
-//	}
-//	m_CBlast->Render();
-//}
-//
-//void	CMPParticleTrace::Emission(WORD wID, D3DXVECTOR3 vBegin, D3DXVECTOR3 vEnd)
-//{
-//	if(m_bEmiss)
 //		return;
-//	m_wID = wID;
-//
-//	m_CPath[0] = vBegin;
-//	m_CPath[1] = vEnd;
-//	m_vPos		= vBegin;
 
-//
-//	m_CFire->Reset(false);
-//	m_CFire->MoveTo(vBegin);
-//
-//	m_vDir = vEnd - vBegin;
-//	m_fDist = D3DXVec3LengthSq(&m_vDir);
-//
-//	D3DXVec3Normalize(&m_vDir,&m_vDir);
-//	m_bEmiss	= true;
-//
-//	_pCModelEff->Play();
-//	_pCShade->Show(TRUE);
-//
-//	_bHit = false;
-//	//f = 0;
-//}
-//void	CMPParticleTrace::Blast()
-//{
-//		m_bEmiss	= false;
-//		m_CBlast->MoveTo(m_vPos);
-//		m_CBlast->Play();
-//
-//		_pCModelEff->Stop();
-//		_pCShade->Show(FALSE);
-//
-//		_bHit =  true;
-//}
-//
-//void	CMPParticleTrace::SetTarget(D3DXVECTOR3 vTarget)
-//{
-//	float fDist  = m_fVel * *m_pfDailTime;
-//	m_vPos	 += m_vDir * fDist;
-//	if(PointInstrPointRange(&m_vPos,&m_CPath[1] ,m_fRadius))
-//	{
-//		//m_vPos.z -= 0.9f;
-//		Blast();
-//		return;
-//	}
-//	//!
-//	if(vTarget  == m_CPath[1])
 //		return;
 //	//!
-//	m_vTargDir = vTarget - m_CPath[1];
+//		return;
 //	//!
-//	m_fTargDist = D3DXVec3LengthSq(&m_vTargDir);
-//	D3DXVec3Normalize(&m_vTargDir, &m_vTargDir);
-//
+//	//!
 //	//!.
 //	//	 =  /  * 
-//	float flerp = (m_fTargDist / m_fDist) * fDist;
-//	//m_fDist = fDist;//D3DXVec3Length(&(m_vPos - m_vOldPos));
-//
 //	//!
-//	m_vPos	 += m_vTargDir * flerp;
 //	//!
-//	m_CPath[1] = vTarget;
-//	m_vDir = vTarget - m_vPos;
-//	m_fDist = D3DXVec3LengthSq(&m_vDir);
-//	D3DXVec3Normalize(&m_vDir,&m_vDir);
-//}
-//
 ///************************************************************************/
 ///*                                                                      */
 ///************************************************************************/
-//
-//CMPParticleRipple::CMPParticleRipple(void)
-//{
-//}
-//
 //CMPParticleRipple::~CMPParticleRipple(void)
-//{
-//	SAFE_DELETE(m_CRippleStop);
-//	SAFE_DELETE(m_CRippleMove);
-//}
-//
-//void	CMPParticleRipple::BindingRes(CMPResManger* pResMagr)
-//{
-//
-//	m_CRippleStop = new CMPRipple;
-//	m_CRippleStop->Init("",5,"Ripple.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
-//	m_CRippleStop->BindingRes(pResMagr);
-//	m_CRippleStop->setParticleLife(100);
-//	m_CRippleStop->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_INVSRCALPHA);
-//	m_CRippleStop->setParticleSize(1.0f);
-//	//m_CRipple->Play();
-//
-//	m_CRippleMove = new CMPRipple;
-//	m_CRippleMove->Init("2",13,"Ripple2.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
-//	m_CRippleMove->BindingRes(pResMagr);
-//	m_CRippleMove->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_INVSRCALPHA);
-//	m_CRippleMove->setParticleLife(200);
-//	m_CRippleMove->setParticleSize(2.0f);
-//
-//
-//	//m_CRipple.Play();
-//
-//	m_pfDailTime = pResMagr->GetDailTime();
-//	//m_vPos		= D3DXVECTOR3(0,0,0);
-//}
-//
-//void	CMPParticleRipple::FrameMove(DWORD	dwDailTime)
-//{
-//
 //		//! ID
-//
-//
-//		//SetTarget(D3DXVECTOR3(0,20,0));
-//
-//	m_CRippleStop->FrameMove(dwDailTime);
-//
-//	m_CRippleMove->FrameMove(dwDailTime);
-//}
-//
-//void	CMPParticleRipple::Render()
-//{
-//	m_CRippleStop->Render();
-//	m_CRippleMove->Render();
-//}
-//
-//void	CMPParticleRipple::Emission(WORD wID, D3DXVECTOR3 vBegin, D3DXVECTOR3 vEnd)
-//{
-//	//m_wID = wID;
-//	Walk();
-//}
-//
-//void	CMPParticleRipple::SetTarget(D3DXVECTOR3 vTarget, D3DXVECTOR3 vTarget2,float fAngle)
-//{	
-//	m_CRippleMove->SetAngle(fAngle);
-//	m_CRippleStop->SetAngle(fAngle);
-//	if(m_vPos == vTarget)
 //		return;
-//	m_vPos = vTarget;
-//	m_CRippleMove->MoveTo(vTarget2);
-//	m_CRippleStop->MoveTo(vTarget);
-//}
-//void	CMPParticleRipple::Walk()
-//{
-//	//if(!m_CRippleMove->IsPlaying())
-//		m_CRippleMove->Play();
-//	m_CRippleStop->Stop();
-//	//m_CRippleStop->Reset(m_vPos);
-//
-//}
-//void	CMPParticleRipple::Stop()
-//{
-//	m_CRippleMove->Stop();
-//	//m_CRippleMove->Reset(m_vPos);
-//
-//	//if(!m_CRippleStop->IsPlaying())
-//		m_CRippleStop->Play();
-//}
 
 
 /************************************************************************/
@@ -312,7 +55,6 @@ CMPPartCtrl::CMPPartCtrl(void) {
 	m_pcStrip = NULL;
 
 	m_iModelNum = 0;
-	//m_iShadeNum = 0;;
 }
 
 CMPPartCtrl::~CMPPartCtrl(void) {
@@ -321,7 +63,6 @@ CMPPartCtrl::~CMPPartCtrl(void) {
 		SAFE_DELETE(m_vecModel[n]);
 	}
 	m_vecModel.clear();
-	//m_vecShade.clear();
 }
 
 void CMPPartCtrl::SetStripCharacter(MPCharacter* pCha) {
@@ -386,27 +127,12 @@ void CMPPartCtrl::SetPlayType(int nType) {
 	{
 		for (int n = 0; n < m_iPartNum; ++n) {
 			m_vecPartSys[n]->SetPlayTime(0);
-			//m_vecPartSys[n]->SetDelayTime(0);
 			m_vecPartSys[n]->SetLoop(true);
 		}
 		for (int n = 0; n < m_iModelNum; n++) {
 			m_vecModel[n]->SetPlayType(PLAY_LOOP);
 			m_vecModel[n]->Play();
 		}
-		//}else if(nType == 1)//
-		//{
-		//	for (int n = 0; n < m_iPartNum; ++n)
-		//	{
-		//		m_vecPartSys[n]->SetPlayTime(0);
-		//		m_vecPartSys[n]->SetDelayTime(0);
-		//		m_vecPartSys[n]->SetLoop(false);
-		//	}
-		//}else if(nType == 2)//
-		//{
-		//	for (int n = 0; n < m_iPartNum; ++n)
-		//	{
-		//		m_vecPartSys[n]->SetLoop(true);
-		//	}
 	}
 }
 
@@ -429,7 +155,6 @@ bool CMPPartCtrl::IsPlaying() {
 			if (m_vecPartSys[n]->IsPlaying())
 				return true;
 		}
-		//Reset();
 	}
 	else if (m_iStripNum > 0) {
 		for (int n = 0; n < m_iStripNum; ++n) {
@@ -508,7 +233,6 @@ CMPPartSys* CMPPartCtrl::AddPartSys(CMPPartSys* part) {
 	m_vecPartSys.setsize(m_iPartNum);
 	CopyPartSys(m_vecPartSys[m_iPartNum - 1], part);
 
-	//Reset();
 	return m_vecPartSys[m_iPartNum - 1];
 }
 
@@ -599,7 +323,6 @@ bool CMPPartCtrl::SaveToFile(char* pszName) {
 	for (int n = 0; n < m_iPartNum; ++n) {
 		m_vecPartSys[n]->SaveToFile(t_pFile);
 	}
-	//////////////////////////////////////////////////////////////////////////
 	fwrite(&m_iStripNum, sizeof(int), 1, t_pFile);
 	for (int n = 0; n < m_iStripNum; ++n) {
 		m_pcStrip[n].SaveToFile(t_pFile);
@@ -662,7 +385,6 @@ bool CMPPartCtrl::LoadFromFile(char* pszName) {
 			m_vecPartSys[n]->SetPlayTime(m_fLength);
 		}
 	}
-	//////////////////////////////////////////////////////////////////////////
 	if (t_dwVersion >= 7) {
 		SAFE_DELETE_ARRAY(m_pcStrip);
 
@@ -767,19 +489,13 @@ static void keyframe_proc(DWORD type, DWORD pose_id, DWORD key_id, DWORD key_fra
 	CChaModel* pCha = ((CChaModel*)param);
 	switch (type) {
 	case KEYFRAME_TYPE_BEGIN: {
-		//if(pCha->GetStrip())
-		//	pCha->GetStrip()->Play(0);
 		pCha->SetPlaying(true);
 		break;
 	}
 	case KEYFRAME_TYPE_KEY: {
-		//if(pCha->GetStrip())
-		//	pCha->GetStrip()->UpdateStrip();
 		break;
 	}
 	case KEYFRAME_TYPE_END:
-		//if(pCha->GetStrip())
-		//	pCha->GetStrip()->UpdateStrip();
 		if (pCha->GetPlayType() != PLAY_LOOP) {
 			pCha->SetPlaying(false);
 		}
@@ -933,8 +649,6 @@ void CChaModel::LoadFromFile(FILE* file) {
 	PlayPose(_iCurPose, PLAY_PAUSE);
 }
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
 
 bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, int iDummy2,
 					 char* pszTex, int iTexNum, CMPResManger* pResMgr, D3DXVECTOR3* pEyePos, MPRender* pDev) {
@@ -949,7 +663,6 @@ bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, i
 	_fdist = D3DXVec3Length(&_vdir);
 	D3DXVec3Normalize(&_vdir, &_vdir);
 
-	//D3DXVec3Cross(&_vcross,&D3DXVECTOR3(0,0,-1), &_vdir);
 
 	int n;
 
@@ -981,8 +694,6 @@ bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, i
 }
 
 void CMPLink::ColArc(float fradius) {
-	//if(!_pPath)
-	//	_pPath = new D3DXVECTOR3[LINK_FACE];
 
 	D3DXVECTOR3 veyedir, vcross;
 	const auto v = *_pEyePos - _vStart;
@@ -990,9 +701,7 @@ void CMPLink::ColArc(float fradius) {
 	D3DXVec3Normalize(&veyedir, &v);
 	D3DXVec3Cross(&vcross, &_vdir, &veyedir);
 	D3DXVec3Normalize(&vcross, &vcross);
-	//D3DXVec3Cross(&vcross,&veyedir,&vcross);
 
-	//vcross = D3DXVECTOR3(0,0,1);
 
 	D3DXVECTOR3 vOrg(-fradius, 0, 0);
 	D3DXVECTOR3 vTemp;
@@ -1018,7 +727,6 @@ void CMPLink::ColArc(float fradius) {
 
 		ft = ft / _fdist;
 
-		//vTemp = _vStart + _vdir * (n * 1.0f);
 
 		_pFrame[n].vPos1.m_SPos = vTemp + (-vcross * 1.0f);
 		_pFrame[n].vPos2.m_SPos = vTemp + (vcross * 1.0f);
@@ -1049,27 +757,14 @@ void CMPLink::ColArc(float fradius) {
 }
 
 void CMPLink::GetPhysique() {
-#if 0
-	lwMatrix44 mat1, mat2;
-	if (_pChaMain->GetObjDummyRunTimeMatrix(&mat1, _iDummy1) != 0)
-		return false;
-	if (_pChaTag->GetObjDummyRunTimeMatrix(&mat2, _iDummy2) != 0)
-		return false;
-
-	_vStart = (*(D3DXVECTOR3*)&mat1._41);
-	_vEnd = (*(D3DXVECTOR3*)&mat2._41);
-#else
 	_vStart = D3DXVECTOR3(0, 0, 0);
 	_vEnd = D3DXVECTOR3(10, 0, 0);
-#endif
 
 	_vdir = _vEnd - _vStart;
 	_fdist = D3DXVec3Length(&_vdir);
 	D3DXVec3Normalize(&_vdir, &_vdir);
 
-	//D3DXVec3Cross(&_vcross,&D3DXVECTOR3(0,0,-1), &_vdir);
 
-	//
 	float frad = 3.0f;
 	if (_fdist > frad * 2) {
 		_fRadius = frad - (frad * ((_fdist / frad - 1.0f) / 10.0f));
@@ -1098,7 +793,6 @@ void CMPLink::Render() {
 	_pCEffFile->Begin();
 	_pCEffFile->Pass(0);
 
-	//m_pDev->SetRenderStateForced( D3DRS_ALPHABLENDENABLE,FALSE );
 
 	m_pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);

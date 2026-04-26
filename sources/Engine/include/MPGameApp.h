@@ -1,7 +1,6 @@
 ﻿//#################################
 // MindPower GameApp Header File
 // Render & GameApp Routines
-//
 // Created By Ryan Wang
 // Last Modified : 2004/02/04 
 //#################################
@@ -104,7 +103,6 @@ public:
 	// Console
 	ConsoleProcessor*	GetConsole() { return _pConsole; }
 
-	//MPCamera*			GetMainCam()  { return _pMainCam; } 
 
 	void				SetCaption(const char *pszCaption);
 
@@ -170,7 +168,6 @@ protected:
 	ConsoleProcessor*		_pConsole;
 
 
-	//MPCamera*				_pMainCam;
 
 	BOOL					_bEnSpScreen;
 	BOOL					_bEnSpAvi;

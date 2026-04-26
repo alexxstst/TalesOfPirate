@@ -245,96 +245,17 @@ __ret:
     return ret;
 }
 
-//LW_RESULT lwTreeNode::InsertNode(lwITreeNode* parent_node, lwITreeNode* node)
-//{
-//    LW_RESULT ret = LW_RET_FAILED;
-//
 //    // insert to last child node
-//    if(parent_node == 0)
-//    {
-//        if(_child == 0)
-//        {
-//            _child = node;
-//            node->SetParent(this);
-//        }
-//        else
-//        {
-//            lwITreeNode* p = _child;
-//            lwITreeNode* s;
-//            while((s = p->GetSibling()))
-//                p = s;
-//
-//            p->SetChild(node);
-//            node->SetParent(p);
-//        }
-//    }
-//    else
-//    {
 //        // find parent node
-//        lwITreeNode* p = FindNode(parent_node);
-//        if(p == 0)
-//            goto __ret;
-//
-//        if(LW_FAILED(p->InsertNode(0, node)))
-//            goto __ret;
-//    }
-//
-//    ret = LW_RET_OK;
 //__ret:
 //    return ret;
-//}
-//LW_RESULT lwTreeNode::RemoveNode(lwITreeNode* node)
-//{
 //    // reset parent, child, sibling node
-//    LW_RESULT ret = LW_RET_FAILED;
-//
-//    lwITreeNode* p = FindNode(node);
-//    if(p == 0)
-//        goto __ret;
-//
-//    lwITreeNode* pp = p->GetParent();
-//
 //    // remove root node
-//    if(pp == 0)
-//    {
-//        assert(pp == this && "invalid tree node hierachy");
-//    }
 //    // remove non-root node
-//    else
-//    {
-//        lwITreeNode* new_sibling = p->GetSibling();
-//        lwITreeNode* pp_child = pp->GetChild();
 //        // p is first child node
-//        if(pp_child == p)
-//        {
-//            pp->SetChild(new_sibling);            
-//        }
 //        // p is non-first child node
-//        else
-//        {
-//            lwITreeNode* z = pp_child->GetSibling();
-//            while(z != p)
-//            {
-//                pp_child = z;
-//                z = z->GetSibling();
-//            }
-//
-//            pp_child->SetSibling(new_sibling);
-//        }
-//        
-//    }
-//
-//    lwITreeNode* x = p->GetChild();
-//    x->SetParent(pp);
-//    while((x = x->GetSibling()))
-//    {
-//        x->SetParent(pp);
-//    }
-//
-//    ret = LW_RET_OK;
 //__ret:
 //    return ret;
-//}
 
 lwITreeNode* lwTreeNode::FindNode(lwITreeNode* node)
 {

@@ -222,7 +222,6 @@ inline void lwTexInfo_Construct(lwTexInfo* obj)
     obj->file_name[0] = '\0';
     obj->_reserved_data = 0;
 
-    //lwRenderStateSetTemplate_Construct(&obj->tss_set);
     lwRenderStateAtom_Construct_A(obj->tss_set, LW_TEX_TSS_NUM);
 }
 
@@ -475,12 +474,6 @@ inline void lwMeshInfo_Destruct(lwMeshInfo* obj)
     LW_IF_DELETE_A(obj->blend_seq);        
 }
 
-//enum lwMtlTexInfoTransparencyTypeEnum
-//{
-//    MTLTEX_TRANSP_FILTER =          0,
-//    MTLTEX_TRANSP_ADDITIVE =        1,
-//    MTLTEX_TRANSP_SUBTRACTIVE =     2,
-//};
 
 enum lwMtlTexInfoTransparencyTypeEnum
 {
@@ -500,7 +493,6 @@ struct lwMtlTexInfo
     float opacity;
     DWORD transp_type;
     lwMaterial mtl;
-    //lwRenderStateSetMtl2 rs_set;
     lwRenderStateAtom rs_set[LW_MTL_RS_NUM];
     lwTexInfo tex_seq[LW_MAX_TEXTURESTAGE_NUM];
 

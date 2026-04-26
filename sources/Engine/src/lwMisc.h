@@ -7,8 +7,6 @@
 #include "lwITypes2.h"
 #include "lwInterfaceExt.h"
 
-//////////////
-//
 LW_BEGIN
 
 

@@ -75,7 +75,6 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 
 	_fp = fp;
 
-    // 
     _pOffsetIdx = new DWORD[_nSectionCnt];
     fread(_pOffsetIdx, _nSectionCnt * 4, 1, _fp);
 	dwReadSize += _nSectionCnt * 4;
@@ -137,7 +136,6 @@ void MPMap::SetSectionTileData(int nX, int nY, BYTE btTexNo)
             pTile->sRegion = 1; // 
 		}
 	}
-	// pSection->dwDataOffset = 0;
 
 	_SaveSection(pSection);
 }
@@ -162,7 +160,6 @@ DWORD MPMap::_ReadSectionDataOffset(int nSectionX, int nSectionY)
 }
 
 //-----------------
-// 
 //-----------------
 void MPMap::_SaveSection(MPActiveMapSection *pSection)
 {
@@ -207,7 +204,6 @@ void MPMap::_SaveSection(MPActiveMapSection *pSection)
 }
 
 //-----------------
-// 
 //-----------------
 void MPMap::_LoadSectionData(MPActiveMapSection *pSection)
 {
@@ -284,10 +280,8 @@ MPActiveMapSection *MPMap::LoadSectionData(int nSectionX, int nSectionY)
 
 void MPMap::ClearSectionData(int nSectionX, int nSectionY)
 {
-    // 
     _WriteSectionDataOffset(nSectionX, nSectionY, 0);
     
-    // 
     MPActiveMapSection *pSection = GetActiveSection(nSectionX, nSectionY);
 	if(pSection) // Section
     {
@@ -415,7 +409,6 @@ void MPMap::DynamicLoading(DWORD dwTimeParam)
 
     _NewList.clear();
     
-    // g_Render.Print(INFO_DEBUG, 10, 30, "Active Map Section = %d\n", _ActiveSectionList.size());
 
     m_dwActiveSectionCnt = (DWORD)(_ActiveSectionList.size());
     
@@ -464,7 +457,5 @@ void MPMap::ClearSectionArray()
 {
 	memset(&_ActiveSectionArray, 0, 512 * 512 * 4);
 }
-
-
 
 

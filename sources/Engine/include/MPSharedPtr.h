@@ -88,7 +88,6 @@ public:
 	inline void setNull(void) { 
 		if (m_pRep)
 		{
-			// 
 			release();
 			m_pRep = 0;
 			m_pUseCount = 0;
@@ -120,7 +119,6 @@ protected:
 
 	virtual void destroy(void)
 	{
-		// 
 		// setNull(),
 		delete m_pRep;
 		delete m_pUseCount;

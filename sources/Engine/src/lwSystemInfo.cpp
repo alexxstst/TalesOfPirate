@@ -13,7 +13,6 @@ LW_BEGIN
 
 //-----------------------------------------------------------------------------
 // this routine was copyed from GetDxVer example
-// Name: GetDirectXVersionViaDxDiag()
 // Desc: Tries to get the DirectX version from DxDiag's COM interface
 //-----------------------------------------------------------------------------
 HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor, 
@@ -129,7 +128,6 @@ HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor,
 
 
 //-----------------------------------------------------------------------------
-// Name: GetFileVersion()
 // Desc: Returns ULARGE_INTEGER with a file version of a file, or a failure code.
 //-----------------------------------------------------------------------------
 HRESULT GetFileVersion( TCHAR* szPath, ULARGE_INTEGER* pllFileVersion )
@@ -169,7 +167,6 @@ HRESULT GetFileVersion( TCHAR* szPath, ULARGE_INTEGER* pllFileVersion )
 
 
 //-----------------------------------------------------------------------------
-// Name: CompareLargeInts()
 // Desc: Returns 1 if ullParam1 > ullParam2
 //       Returns 0 if ullParam1 = ullParam2
 //       Returns -1 if ullParam1 < ullParam2
@@ -190,7 +187,6 @@ int CompareLargeInts( ULARGE_INTEGER ullParam1, ULARGE_INTEGER ullParam2 )
 }
 
 //-----------------------------------------------------------------------------
-// Name: MakeInt64()
 // Desc: Returns a ULARGE_INTEGER where a<<48|b<<32|c<<16|d<<0
 //-----------------------------------------------------------------------------
 ULARGE_INTEGER MakeInt64( WORD a, WORD b, WORD c, WORD d )
@@ -202,7 +198,6 @@ ULARGE_INTEGER MakeInt64( WORD a, WORD b, WORD c, WORD d )
 }
 
 //-----------------------------------------------------------------------------
-// Name: GetDirectXVerionViaFileVersions()
 // Desc: Tries to get the DirectX version by looking at DirectX file versions
 //-----------------------------------------------------------------------------
 HRESULT GetDirectXVerionViaFileVersions( DWORD* pdwDirectXVersionMajor, 
@@ -492,21 +487,6 @@ __ret:
 
 DWORD lwSystemInfo::GetDirectXVersion()
 {
-//    DWORD ret = DX_VERSION_INVALID;
-//
-//
-//    if(_dx_ver_info.version < DX_VERSION_9_BASE)
-//        goto __ret;
-//
-//    switch(_dx_ver_info.version)
-//    {
-//    case DX_VERSION_9_BASE:
-//        ret = DX_VERSION_9_BASE + _dx_ver_info.revision;
-//        break;
-//    default:
-//        ret = DX_VERSION_X_X;
-//    }
-//
 //__ret:
 //    return ret;
 

@@ -6,8 +6,6 @@
 #include "lwErrorCode.h"
 #include "lwInterfaceExt.h"
 
-//////////////
-//
 LW_BEGIN
 
 

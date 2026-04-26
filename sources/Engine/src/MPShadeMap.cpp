@@ -1,5 +1,4 @@
 ﻿#include "StdAfx.h"
-//#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
 
@@ -10,7 +9,6 @@
 
 #define	 TILESIZE	1.0f
 
-//#include "..\include\mpshademap.h"
 
 #define CLAMP(A, MIN, MAX)		( (A) > (MAX) ) ? (MAX) :  ( ( (A) < (MIN) ) ? (MIN) : (A) )
 
@@ -20,8 +18,6 @@ CMPShadeMap::CMPShadeMap(void)
 {
 	m_iType = SHADE_SINGLE;
 
-	//_fSin = sinf(3.141592654f / 2); 
-	//_fCos = cosf(3.141592654f / 2);
 
 	_SVerPos = D3DXVECTOR3(0.0f,0.0f,0);
 
@@ -71,14 +67,11 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 	}
 	else
 	{
-		//m_CResMagr->GetTextureByID(t_iID);
 		_lpCurTex = m_CResMagr->GetTextureByIDlw(t_iID);
 
 	}
 
-	//_pModel = m_CResMagr->GetShadeMesh();
 
-	//SAFE_DELETE(_pModel);
 	if(!_pModel)
 	{
 		_pModel = new CEffectModel;
@@ -95,23 +88,15 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 	m_bUseSoft = m_CResMagr->m_bUseSoftOrg;
 
 
-	//m_bUseSoft = TRUE;
 
-	//if(m_bUseSoft)
-	//	LG("debug","msguse soft vertex processing");
-	//else
-	//	LG("debug","msguse hard vertex processing");
 
 	m_dwVsConst = m_CResMagr->GetDevCap()->MaxVertexShaderConst;
-	//m_bUseSoft = TRUE;
 
 	_UpSea = false;
 }
 
 bool	CMPShadeMap::CreateShadeMap(float fRadius)
 {
-	//if(fRadius > 7.0f)
-	//	UseSoft(TRUE);
 
 	_fRadius = fRadius;
 	_fGridMax      = _fRadius / TILESIZE + 1;
@@ -145,62 +130,11 @@ bool	CMPShadeMap::SetGridNum(int iNum)
 	if(DWORD(_iVerNum * 2 + 8)>m_dwVsConst)
 		m_bUseSoft = TRUE;
 
-	//m_bUseSoft = TRUE;
 
-	//HRESULT hr;
-	//hr	= _pModel->m_pDev->CreateVertexBuffer(sizeof(SEFFECT_SHADE_VERTEX)*4, 
-	//	D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-	//	EFFECT_SHADE_FVF, 
-	//	D3DPOOL_DEFAULT, &_lpVB);
-	//if( FAILED(hr) )
-	//	return false;
-	//SEFFECT_SHADE_VERTEX *pVertex;
-	//_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
-	//pVertex[0].m_SPos			= D3DXVECTOR3(0, 0, 0);//*/D3DXVECTOR3(-0.5f, -0.5f, 0);
-	//pVertex[0].m_dwDiffuse	= 0xffffffff;
-	//pVertex[0].m_SUV			= D3DXVECTOR2(0.0f, 1.0f);
-	//pVertex[0].m_SUV2			= D3DXVECTOR2(0, 1);
-
-	//pVertex[1].m_SPos			= D3DXVECTOR3(0, 0, 0);//*/D3DXVECTOR3(-0.5f, 0.5f, 0);
-	//pVertex[1].m_dwDiffuse	= 0xffffffff;
-	//pVertex[1].m_SUV			= D3DXVECTOR2(0.0f, 0);
-	//pVertex[1].m_SUV2			= D3DXVECTOR2(2, 3);
-
-	//pVertex[2].m_SPos			= D3DXVECTOR3(0, 0, 0);//*/D3DXVECTOR3(0.5f, 0.5f, 0);
-	//pVertex[2].m_dwDiffuse	= 0xffffffff;
-	//pVertex[2].m_SUV			= D3DXVECTOR2(1.0f, 0.0f);
-	//pVertex[2].m_SUV2			= D3DXVECTOR2(4, 5);
-
-	//pVertex[3].m_SPos			= D3DXVECTOR3(0, 0, 0);//*/D3DXVECTOR3(0.5f, -0.5f, 0);
-	//pVertex[3].m_dwDiffuse	= 0xffffffff;
-	//pVertex[3].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
-	//pVertex[3].m_SUV2			= D3DXVECTOR2(6, 7);
-
-	//_lpVB->Unlock();
 	//!IB
 
 
 	_pModel->CreateShadeModel(_iVerNum,_iFaceCount,_iGridCrossNum,m_bUseSoft);
-
-	/*int nIndex = 0;
-	for( int nY = 0; nY < _iGridCrossNum; nY++ )
-	{
-		for( int nX = 0; nX < _iGridCrossNum; nX++ )
-		{
-			_wIndex[nIndex++] = nX + nY * (_iGridCrossNum + 1);
-			_wIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			_wIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-
-			_wIndex[nIndex++] = nX + (nY+1) * (_iGridCrossNum + 1);
-			_wIndex[nIndex++] = (nX+1) + nY * (_iGridCrossNum + 1);
-			_wIndex[nIndex++] = (nX+1) + (nY+1) * (_iGridCrossNum + 1);
-		}
-	}*/
-
-	/*WORD* wIdx= NULL;
-	_pModel->LockIB((BYTE**)&wIdx);
-	memcpy(wIdx,_wIndex,sizeof(WORD)*_iIndexNum);
-	_pModel->UnlockIB();*/
 
 
 	return true;
@@ -219,11 +153,8 @@ void	CMPShadeMap::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
 	}
 	else
 	{
-		//LPDIRECT3DTEXTURE8 tex=  pCResMagr->GetTextureByID(t_iID);
 		_lpCurTex = pCResMagr->GetTextureByIDlw(t_iID);
 	}
-
-	//assert(_lpCurTex);
 }
 
 
@@ -246,9 +177,7 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 		return;
 	if(!_bUpdate)
 	{
-		//if(_SVerPos == SVerPos)
-		//	return;
-		if(fEquat(_SVerPos.x,SVerPos.x) &&fEquat(_SVerPos.y,SVerPos.y)/*&&fEquat(_SVerPos.z,SVerPos.z)*/)
+		if(fEquat(_SVerPos.x,SVerPos.x) &&fEquat(_SVerPos.y,SVerPos.y))
 		{
 			return;
 		}
@@ -259,60 +188,22 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 
 
 	//TILE
-	int nX	= (int)((_SVerPos.x - _fRadius / 2 ) /*/ TILESIZE*/);
-	int nY	= (int)((_SVerPos.y - _fRadius / 2 ) /*/ TILESIZE*/);
+	int nX	= (int)((_SVerPos.x - _fRadius / 2 ));
+	int nY	= (int)((_SVerPos.y - _fRadius / 2 ));
 
-	//D3DXVECTOR2 vCenter;
-	//vCenter.x = nX* TILESIZE + ((_fGridMax * TILESIZE) / 2);
-	//vCenter.y = nY* TILESIZE + ((_fGridMax * TILESIZE) / 2);
-	//TILE
-	//float X = nX / TILESIZE + 0.5f;
-	//float Y = nY / TILESIZE + 0.5f;
-	
-	//MPTile *TileList;
 	for( int y = 0; y < _iGridCrossNum + 1; y++ )
 	{
 		for( int x = 0; x < _iGridCrossNum + 1; x++ )
 		{
 			int iIndex = x + y*(_iGridCrossNum + 1);
-			//if(pMap)
-			//	TileList = pMap->GetTile(int(nX) + x, int(nY) + y);
 
-			float	fGridX = (float)(nX + x * TILESIZE)/* / TILESIZE*/;
-			float	fGridY = (float)(nY + y * TILESIZE)/* / TILESIZE*/;
+			float	fGridX = (float)(nX + x * TILESIZE);
+			float	fGridY = (float)(nY + y * TILESIZE);
 			_SShadePos[iIndex].x = fGridX;
 			_SShadePos[iIndex].y = fGridY;
 			if(pMap)
 			{
-				//int iUnitNo = int(fGridY) % 2 + int(fGridX ) % 2;
-				//float height = pMap ? pMap->GetHeight(fGridX,fGridY) : 0.0f; // TileList->getHeight();
 				float objHeight,height;
- 				//float height;
-	///*			for(int q =0; q < 4; q++)
-	//			{
-	//				objHeight = float(TileList->sObjHeight[q])/100;
-	//				if(objHeight > height)
-	//				{
-	//					height = objHeight;
-	//					height  += 0.001f;
-	//				}
-	//			}*/
-	//			//_SShadePos[iIndex].z = height;
-	//			
-	//			objHeight = 0.0f; // float(TileList->sObjHeight[iUnitNo])/100;
-	//			/*if(TileList->Block[iUnitNo])
-	//			{
-	//				objHeight += 1.0f;
-	//			}*/
-
-				//if(objHeight > height) 
-				//{
-				//	height = objHeight; 
-				//}
-
-	/*			if(!TileList ||TileList->IsDefault())
-					height = 0.0f;
-				else*/
 				{
 					int iGridx = (int)(fGridX * 2);
 					int iGridy = (int)(fGridY* 2);
@@ -321,7 +212,6 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 					if(x == _iGridCrossNum)
 						iGridx -= 1;
 					height = pMap->GetGridHeight(iGridx, iGridy);
-					//objHeight = pMap ? pMap->GetGridHeight((int)(fGridX * 2), (int)(fGridY* 2)) : 0.0f;
 					objHeight = pMap->GetTileHeight((int)(fGridX), (int)(fGridY));
 
 					if(_UpSea)
@@ -333,10 +223,6 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 						objHeight = height;
 				}
 
-				//if(objHeight > 0 && objHeight > height) 
-				//{
-				//	height = objHeight;
-				//}
 				_SShadePos[iIndex].z = objHeight  + 0.015f;
 			}
 			else
@@ -347,8 +233,8 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 			{
 				fU = ( fGridX - _SVerPos.x ) / ( _fGridMax * TILESIZE);
 				fV = ( fGridY - _SVerPos.y ) / ( _fGridMax * TILESIZE);
-				_SShadeUV[iIndex].x	=  CLAMP(fU + 0.5f, 0.0f, 1.0f); //*/_fCos * fU - _fSin * fV   + 0.5f;
-				_SShadeUV[iIndex].y	=  CLAMP(fV + 0.5f, 0.0f, 1.0f);//*/_fSin * fU + _fCos * fV   + 0.5f;
+				_SShadeUV[iIndex].x	=  CLAMP(fU + 0.5f, 0.0f, 1.0f);
+				_SShadeUV[iIndex].y	=  CLAMP(fV + 0.5f, 0.0f, 1.0f);
 
 			}
 			if(fAngle != 0)
@@ -360,8 +246,6 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 				GetMatrixRotation(&mat, &vpos, &v, fAngle);
 
 				D3DXVec2TransformCoord(&_SShadeUV[iIndex], &_SShadeUV[iIndex], &mat);
-
-				//_SShadeUV[iIndex] = vUV;
 
 			}
 
@@ -379,7 +263,6 @@ void CMPShadeMap::RenderVS()
 	D3DXMatrixIdentity(&t_mat);
 	if (_lpCurTex && _lpCurTex->IsLoadingOK())
 	{
-		// Here SetTexture is your method, inside which pD3DDevice->SetTexture(0, _lpCurTex->GetTex()) is probably called
 		_pModel->m_pDev->SetTexture(0, _lpCurTex->GetTex());
 	}
 	else
@@ -448,7 +331,6 @@ void	CMPShadeMap::FillVertex()
 	if(pVertex == 0)
 	{
 		MessageBox(NULL, "msgLockFailed lock error msglock error CMPShadeMap::FillVertex() line 552", "error", 0);
-		//LG("error","msgLockFailed CMPShadeMap::FillVertex() %s\n ", _pModel->m_strName.c_str());
 		return;
 	}
 
@@ -477,7 +359,6 @@ void CMPShadeMap::RenderSoft() {
 
 
 	_pModel->Begin();
-	//for fontand circle shadow onflict 
 	_pCEffectFile->m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, _dwColor);
 	_pCEffectFile->m_pDev->SetTextureStageStateForced(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 	_pCEffectFile->m_pDev->SetTextureStageStateForced(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
@@ -560,14 +441,10 @@ bool	CMPShadeMap::SaveToFile(FILE* pFile)
 }
 bool	CMPShadeMap::LoadFromFile(FILE* pFile)
 {
-	//char t_pszName[32];
 
 	int t_temp;
 	////!
-	//fread(&_fRadius,sizeof(float),1,pFile);
 
-	//fread(t_pszName, sizeof(char),32,pFile);
-	//_strTexName = t_pszName;
 
 	//!
 	fread(&t_temp,sizeof(int),1,pFile);
@@ -580,15 +457,11 @@ bool	CMPShadeMap::LoadFromFile(FILE* pFile)
 	return true;
 }
 
-///////////////////////////////////////////////////////////
-//class CMPShadeEX
-///////////////////////////////////////////////////////////
 CMPShadeEX::CMPShadeEX(int iFrameCount)
 {
 	m_iType = SHADE_ANI;
 
 	_iFrameCount = iFrameCount;
-	//_fLife = 0.1f * _iFrameCount;
 	_iCurFrame =0;
 	_fCurTime = 0;
 	_vecFrameColor.resize(_iFrameCount);
@@ -737,14 +610,11 @@ void	CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 	int nX	= (int)((_SVerPos.x - _fRadius / 2 ) /*/ TILESIZE*/);
 	int nY	= (int)((_SVerPos.y - _fRadius / 2 ) /*/ TILESIZE*/);
 	
-	//MPTile *TileList;
 	for( int y = 0; y < _iGridCrossNum + 1; y++ )
 	{
 		for( int x = 0; x < _iGridCrossNum + 1; x++ )
 		{
 			int iIndex = x + y*(_iGridCrossNum + 1);
-			//if(pMap)
-			//	TileList = pMap->GetTile(nX + x, nY + y);
 
 			float	fGridX = (float)(nX + x * TILESIZE) /*/ TILESIZE*/;
 			float	fGridY = (float)(nY + y * TILESIZE) /*/ TILESIZE*/;
@@ -753,16 +623,6 @@ void	CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 			if(pMap)
 			{
 				float height,objheight;
-        //        if(!TileList->IsDefault())
-        //        {
-        //            int iUnitNo     = int(fGridY) % 2 + int(fGridX) % 2;
-        //            height    = TileList->fHeight; // getHeight();
-				    //float objHeight = TileList->getObjHeight(iUnitNo);
-				    //if(objHeight > height) 
-				    //{
-					   // height = objHeight;  
-				    //}
-        //        }
 				int iGridx = (int)(fGridX * 2);
 				int iGridy = (int)(fGridY* 2);
 				if(y == _iGridCrossNum)
@@ -838,7 +698,6 @@ bool	CMPShadeEX::SaveToFile(FILE* pFile)
 
 
 	//!
-	//fwrite(&_fLife,sizeof(float),1,pFile);
 	//!
 	fwrite(&_iFrameCount,sizeof(int),1,pFile);
 	//!
@@ -859,17 +718,11 @@ bool	CMPShadeEX::SaveToFile(FILE* pFile)
 
 bool	CMPShadeEX::LoadFromFile(FILE* pFile)
 {
-	//char t_pszName[32];
 
 	int t_temp;
 	////!
-	//fread(&_fRadius,sizeof(float),1,pFile);
 
-	//fread(t_pszName, sizeof(char),32,pFile);
-	//_strTexName = t_pszName;
 
-	//fread(&_iRow,sizeof(int),1,pFile);
-	//fread(&_iCol,sizeof(int),1,pFile);
 
 	//!
 	fread(&t_temp,sizeof(int),1,pFile);
@@ -897,9 +750,6 @@ bool	CMPShadeEX::LoadFromFile(FILE* pFile)
 	return true;
 }
 
-///////////////////////////////////////////////////////////
-//class CMPShadeCtrl
-///////////////////////////////////////////////////////////
 CMPShadeCtrl::CMPShadeCtrl(void)
 {
 	_pShadeMap = NULL;
@@ -932,7 +782,6 @@ void	CMPShadeCtrl::SetAlphaType(D3DBLEND eSrcBlend, D3DBLEND eDestBlend)
 { 
 	_pShadeMap->SetAlphaType(eSrcBlend,eDestBlend);
 }
-/////////////////////
 void	CMPShadeCtrl::setFrameCount(int iCount)
 {
 	if(_pShadeMap->m_iType == SHADE_ANI)
@@ -990,10 +839,8 @@ void	CMPShadeCtrl::getFrameColor(int iIdx, D3DCOLOR* pSColor)
 }
 void	CMPShadeCtrl::getColor(D3DXCOLOR* pSColor)
 {
-	//if(_pShadeMap->m_iType == SHADE_SINGLE)
 		_pShadeMap->getColor(pSColor);
 }
-/////////////////////
 void	CMPShadeCtrl::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
 {
 	_pShadeMap->setFrameTexture(strTexName,pCResMagr);
@@ -1034,4 +881,3 @@ bool	CMPShadeCtrl::LoadFromFile(char* pchName)
 {
 	return true;
 }
-

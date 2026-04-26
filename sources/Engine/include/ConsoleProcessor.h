@@ -1,18 +1,13 @@
 // ConsoleProcessor — игровая отладочная консоль (преемник MPConsole).
-//
 // Чистый C++23: std::string / std::list / std::function вместо char-буферов
 // и C-указателей. Хранит историю введённых команд, историю вывода, текущую
 // строку ввода и состояние курсора. Отрисовка — ответственность клиента
 // (CGameApp::_RenderConsoleText), здесь только состояние + логика.
-//
 // Backdrop-цвет и геометрия задаются извне (Lua → console_bootstrap.lua):
 //   - SetBackdropColor(uint32_t argb)
 //   - Resize(int width, int height)
-//
 // Обработчики команд и permission задаются как std::function:
-//   - SetCmdHandler(std::function<std::string(std::string_view)>)
 //   - SetCanOpenCheck(std::function<bool()>)
-//
 // Thread-safety: ожидается работа только из главного потока (сам guard —
 // в ConsoleBridge; здесь опускаем).
 #pragma once

@@ -5,7 +5,6 @@
 LW_BEGIN
 
 
-//////////////
 // lwTimer
 LW_STD_IMPLEMENTATION(lwTimer)
 

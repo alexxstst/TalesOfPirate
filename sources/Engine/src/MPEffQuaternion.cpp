@@ -8,9 +8,6 @@
 void MPEffQuaternion::FromAngleAxis(const MPRadian& rfAngle, const MPEffVector3& rkAxis)
 {
 	// :  
-	//
-	// 
-	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
 	MPRadian fHalfAngle(rfAngle * 0.5);
 	float fSin = MPEffectMath::Sin(fHalfAngle);
@@ -32,4 +29,3 @@ MPEffVector3 MPEffQuaternion::operator*(const MPEffVector3& v) const
 
 	return v + uv + uuv;
 }
-

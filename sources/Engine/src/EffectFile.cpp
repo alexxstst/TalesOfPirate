@@ -1,19 +1,12 @@
 ﻿// DXEffectFile.cpp: implementation of the CMPEffectFile class.
-//
-//////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-//#include "../../../proj/EffectEditer.h"
-//#include <mindpower.h>
 #include "GlobalInc.h"
 
 #include "EffectFile.h"
-//#include "DXUtil.h"
 #include "MPRender.h"
 
-//////////////////////////////////////////////////////////////////////
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 CMPEffectFile::CMPEffectFile()
 {
 	m_pEffect = NULL;
@@ -53,14 +46,8 @@ BOOL CMPEffectFile::LoadEffectFromFile( LPCSTR pszfile)
 
 	D3DXHANDLE   technique;
 
-	//if (FAILED(m_pEffect->FindNextValidTechnique(NULL, &technique)))
-	//{
 	//	return FALSE;
-	//}
-	//_vecTechniques.push_back(technique);
-	//_iTechNum++;
 
-	//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
 
 	char t_psz[4];
 	strcpy(t_psz, "t0");
@@ -68,65 +55,20 @@ BOOL CMPEffectFile::LoadEffectFromFile( LPCSTR pszfile)
 	{
 		_vecTechniques.push_back(technique);
 		_iTechNum++;
-		//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
 
 		sprintf(t_psz,"t%d",_iTechNum);
 	}
-	//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
 
 
 	return TRUE;
 }
 
-//BOOL CMPEffectFile::LoadEffectFromResource(TCHAR*  pszsrc)
-//{
-//    HRESULT hr;
-//    HMODULE hModule = NULL;
-//    HRSRC rsrc;
-//    HGLOBAL hgData;
-//    LPVOID pvData;
-//    DWORD cbData;
-//	D3DXTECHNIQUE_DESC   technique;
-//
-//    rsrc = FindResource( hModule, pszsrc, "EFFECT" );
-//    if( rsrc != NULL )
-//    {
-//        cbData = SizeofResource( hModule, rsrc );
-//        if( cbData > 0 )
-//        {
-//            hgData = LoadResource( hModule, rsrc );
-//            if( hgData != NULL )
-//            {
-//                pvData = LockResource( hgData );
-//                if( pvData != NULL )
-//                {
-//                    if( FAILED( hr = D3DXCreateEffect( 
 //                        m_pDev, pvData, cbData, 
 //						&m_pEffect,NULL) ) )
-//                    {
 //                        return FALSE;
-//                    }
-//					else
 //						return TRUE;
-//                }
-//            }
-//        }
-//    }
-//	if (FAILED(m_pEffect->FindNextValidTechnique(NULL, &technique)))
-//	{
 //		return FALSE;
-//	}
-//	_vecTechniques.push_back(technique);
-//	_iTechNum++;
-//
-//	while(SUCCEEDED(m_pEffect->FindNextValidTechnique(technique.Name, &technique)))
-//	{
-//		_vecTechniques.push_back(technique);
-//		_iTechNum++;
-//	}
-//
 //	return FALSE;
-//}
 
 
 void CMPEffectFile::free()
@@ -135,11 +77,6 @@ void CMPEffectFile::free()
 	_vecTechniques.clear();
 	_iTechNum = 0;
 	_dwVShader = 0;
-//	if(_dwVShader)
-//	{
-//		m_pDev->DeleteVertexShader(_dwVShader);
-//		_dwVShader = 0;
-//	}
 }
 
 BOOL CMPEffectFile::OnLostDevice()
@@ -255,4 +192,3 @@ BOOL CMPEffectFile::End()
 	}
 	return TRUE;
 }
-

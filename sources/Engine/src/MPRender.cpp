@@ -57,8 +57,6 @@ void MPRender::End()
     ToLogService("common", "end release mesh lib");
 
     // by lsh has been released in mesh lib
-	//SAFE_RELEASE(_pD3DDevice);
-	//SAFE_RELEASE(_pD3D);
 }
 
 BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOOL bFullScreen)
@@ -87,31 +85,21 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
     d3dcp.present_param.SwapEffect = D3DSWAPEFFECT_DISCARD;//bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY_VSYNC ;
 	// Modified by clp 2
 	d3dcp.present_param.BackBufferCount = 2;
-    //d3dcp.present_param.BackBufferCount = 1;
     d3dcp.present_param.BackBufferFormat = d3ddm.Format;//D3DFMT_UNKNOWN;
     d3dcp.present_param.BackBufferWidth = nScrWidth;
     d3dcp.present_param.BackBufferHeight = nScrHeight;
 	d3dcp.present_param.EnableAutoDepthStencil = 1;
 
-	//if( FAILED( d3d->CheckDeviceFormat( D3DADAPTER_DEFAULT,
 	//	D3DDEVTYPE_HAL,
 	//	d3ddm.Format,
 	//	D3DUSAGE_DEPTHSTENCIL,
 	//	D3DRTYPE_SURFACE,
 	//	D3DFMT_D24S8 ) ) )
-	//{
-	//	d3dcp.present_param.AutoDepthStencilFormat = D3DFMT_D16;
-	//}
-	//else
-	//{
-	//	d3dcp.present_param.AutoDepthStencilFormat = D3DFMT_D24S8;
-	//}
 
 	d3dcp.present_param.AutoDepthStencilFormat = D3DFMT_D16;
 
 	// Modified by clp 
 	d3dcp.present_param.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-    // d3dcp.present_param.FullScreen_PresentationInterval = bFullScreen ? D3DPRESENT_INTERVAL_IMMEDIATE : D3DPRESENT_INTERVAL_DEFAULT;
     // vsd3d
     if(_d3dCaps.VertexShaderVersion < D3DVS_VERSION(1,0))
     {
@@ -127,7 +115,6 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
 
     if(bFullScreen)
     {
-        //d3dcp.present_param.FullScreen_RefreshRateInHz = 85;
     }
 
     d3dcp.behavior_flag |= D3DCREATE_MULTITHREADED;
@@ -295,7 +282,6 @@ int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL 
 
     lwD3DCreateParam d3dcp = *dev_obj->GetD3DCreateParam();
     d3dcp.present_param.Windowed = be_windowed;
-    //d3dcp.present_param.BackBufferFormat = back_fmt;
     d3dcp.present_param.BackBufferWidth = width;
     d3dcp.present_param.BackBufferHeight = height;
     d3dcp.present_param.AutoDepthStencilFormat = depth_fmt;
@@ -337,9 +323,6 @@ int MPRender::ToggleFullScreen()
     lwD3DCreateParam* d3dcp = _IMgr.dev_obj->GetD3DCreateParam();
 
     _bFullScreen    = !d3dcp->present_param.Windowed;
-	//char ws[16];
-	//sprintf( ws, "fullscreen %d",(int)_bFullScreen);
-	// OutputDebugString( ws );
 	
     RECT rc;
     GetClientRect(d3dcp->present_param.hDeviceWindow, &rc);
@@ -350,8 +333,6 @@ int MPRender::ToggleFullScreen()
 
     SetViewport(0, 0, d3dcp->present_param.BackBufferWidth, d3dcp->present_param.BackBufferHeight);
 
-    //LightEnable(0, TRUE);
-    //UpdateLight();
 
     if(InitMPTextureSetFormat() == 0)
         return 0;
@@ -364,7 +345,6 @@ int MPRender::InitMPTextureSetFormat()
     // Форматы текстур для TextureManager:
     //   _TexSetFmt[0] — без альфы (сцена/мир, .tga без альфа-канала)
     //   _TexSetFmt[1] — с альфой (UI, .tga с альфой)
-    //
     // На всех современных GPU A8R8G8B8/X8R8G8B8 поддерживаются нативно.
     // Раньше был fallback на A4R4G4B4/R5G6B5 для старых видеокарт —
     // удалён, так как 16-bit форматы дают ступенчатую альфу и, как правило,
@@ -404,7 +384,6 @@ void MPRender::SetViewport(int nStartX, int nStartY, int nWidth, int nHeight)
 		             "[{}] SetViewport failed: x={}, y={}, w={}, h={}, hr=0x{:08X}",
 		             __FUNCTION__, nStartX, nStartY, nWidth, nHeight, static_cast<std::uint32_t>(hr));
 	}
-    // LG("render", "Set View Port [x = %d, y = %d , w = %d, h = %d\n", nStartX, nStartY, nWidth, nHeight);
 }
 
 BOOL MPRender::IsLineInWorldView(float fX1, float fY1, float fX2, float fY2)
@@ -483,13 +462,8 @@ void MPRender::SetCurrentView(int nType, BOOL bReset)
         {
 			D3DXMatrixIdentity(&_matProjWorld);
 			D3DXMatrixPerspectiveFovLH(&_matProjWorld, _fWorldViewFOV, _fAspect, _fNearClip, _fFarClip);
-			
 
-#if(defined USE_MANAGED_RES)
             SetTransformProj(&_matProjWorld);
-#else
-			_pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_matProjWorld );
-#endif
             _matViewProj = _matViewWorld * _matProjWorld;
 			break;
         }
@@ -500,34 +474,20 @@ void MPRender::SetCurrentView(int nType, BOOL bReset)
 
 			D3DXMatrixPerspectiveFovLH(&_matUIProj, 0.1f, _fAspect, 10, 100);
 
-
-#if(defined USE_MANAGED_RES)
             SetTransformProj(&_matUIProj);
-#else
-            _pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_matUIProj );
-#endif
 
-	        D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );	
+	        D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
 	        D3DXVECTOR3	vecCam(0, 0, -50);
 	        D3DXVECTOR3	vecLookAt(0, 0, 0);
 	        D3DXMatrixLookAtLH( &_matUIView, &vecCam, &vecLookAt, &upVector );
-#if(defined USE_MANAGED_RES)
             SetTransformView(&_matUIView);
-#else
-	        _pD3DDevice->SetTransform( D3DTS_VIEW, &_matUIView );
-#endif
 			break;
         }
         case VIEW_SCREEN:
             break;
         case VIEW_3DUI:
-#if(defined USE_MANAGED_RES)
             SetTransformProj(&_mat3DUIProj);
             SetTransformView(&_mat3DUIView);
-#else
-            _pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_mat3DUIProj );
-            _pD3DDevice->SetTransform( D3DTS_VIEW, &_mat3DUIView ); 
-#endif
             _matViewProj = _mat3DUIView * _mat3DUIProj;
             break;
         default:
@@ -537,77 +497,6 @@ void MPRender::SetCurrentView(int nType, BOOL bReset)
     }
 }
 
-/*
-void MPRender::SetCurrentView(int nType, BOOL bReset)
-{
-	if(nType==_nCurViewType && !bReset) return;
-
-    //_nCurViewType = nType;
-
-	switch(nType)
-	{
-	    case VIEW_WORLD:
-        {
-            D3DXMatrixIdentity(&_matProjWorld);
-            // SetViewport(_nWorldViewStartX, _nWorldViewStartY, _nWorldViewWidth, _nWorldViewHeight);
-            //float fAspect = (float)_nWorldViewWidth / ((float)(_nWorldViewHeight));
-	        D3DXMatrixPerspectiveFovLH(&_matProjWorld, _fWorldViewFOV, _fAspect, _fNearClip, _fFarClip);
-
-#if(defined USE_MANAGED_RES)
-            SetTransformProj(&_matProjWorld);
-#else
-            _pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_matProjWorld);
-#endif
-            _matViewProj = _matViewWorld * _matProjWorld;
-			break;
-        }
-        case VIEW_UI:
-        {
-            D3DXMatrixIdentity(&_matUIView);
-			D3DXMatrixIdentity(&_matUIProj);
-
-			//SetViewport(0, 0, _nScrWidth, _nScrHeight);
-            //FLOAT fAspect = (float)_nScrWidth / (float)_nScrHeight;
-            D3DXMatrixPerspectiveFovLH(&_matUIProj, 0.1f, _fAspect, 10, 100);
-
-#if(defined USE_MANAGED_RES)
-            SetTransformProj(&_matUIProj);
-#else
-            _pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_matUIProj );
-#endif
-
-	        D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );	
-	        D3DXVECTOR3	vecCam(0, 0, -50);
-	        D3DXVECTOR3	vecLookAt(0, 0, 0);
-	        D3DXMatrixLookAtLH( &_matUIView, &vecCam, &vecLookAt, &upVector );
-#if(defined USE_MANAGED_RES)
-            SetTransformView(&_matUIView);
-#else
-	        _pD3DDevice->SetTransform( D3DTS_VIEW, &_matUIView );
-#endif
-			break;
-        }
-        case VIEW_SCREEN:
-            break;
-        case VIEW_3DUI:
-#if(defined USE_MANAGED_RES)
-            SetTransformProj(&_mat3DUIProj);
-            SetTransformView(&_mat3DUIView);
-#else
-            _pD3DDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&_mat3DUIProj );
-            _pD3DDevice->SetTransform( D3DTS_VIEW, &_mat3DUIView ); 
-#endif
-            _matViewProj = _mat3DUIView * _mat3DUIProj;
-            break;
-        default:
-        {
-            //SetViewport(0, 0, _nScrWidth, _nScrHeight);
-            break;
-        }
-    }
-}
-*/
-////////////////////////////////////////////////////////////////
 // VIM END
 
 
@@ -665,20 +554,12 @@ void MPRender::LookAt(D3DXVECTOR3 vecPos, D3DXVECTOR3 vecLookAt,DWORD dwViewType
     }
 
     D3DXVECTOR3	upVector = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
-	D3DXMatrixLookAtLH( mat, &vecPos, &vecLookAt, &upVector );	
+	D3DXMatrixLookAtLH( mat, &vecPos, &vecLookAt, &upVector );
 
-#if(defined USE_MANAGED_RES)
     SetTransformView(mat);
-#else
-    _pD3DDevice->SetTransform( D3DTS_VIEW, mat );
-#endif
 
 
-	//D3DXMATRIX matProj;
-    //D3DXMatrixPerspectiveFovLH( &_matProjWorld, D3DX_PI/4, 1.0f, 1.0f, 1000.0f );
-    //_pD3DDevice->SetTransform( D3DTS_PROJECTION, &_matProjWorld );
 
-	// _matViewProj = _matViewWorld * _matProjWorld;
 }
 
 BOOL MPRender::BeginRender(bool clear)//vim
@@ -760,17 +641,6 @@ void MPRender::EndRender(const bool present) // vim
 
 			char pszName[64];
 
-			/*int nidx = 0;
-			while(1)
-			{
-				sprintf(pszName,"screenshot\\%d\\",nidx);
-				if(_access(pszName,0)== -1)
-				{
-					Util_MakeDir(pszName);
-					break;
-				}
-				nidx++;
-			}*/
 			struct tm *newtime;
 			__int64 ltime;
 			char buff[80];
@@ -827,8 +697,6 @@ void MPRender::RenderDebugInfo()
     // No-op. Ранее метод рисовал накопленный INFO_* текст через _pFont,
     // но _pFont никогда не инициализировался и вызывал AV. Шрифт хранить
     // в поле MPRender некорректно — owner это FontManager в клиенте.
-    // Отрисовка INFO_CMD (консоль) перенесена в CGameApp::_Render через
-    // FontManager::Instance().Get(FontSlot::TipText). INFO_FPS / INFO_GAME
     // можно вернуть аналогично — в клиенте, если понадобится.
     // Метод оставлен для обратной совместимости: внешний код может
     // продолжать вызывать Print(INFO_*) — данные накапливаются в _InfoIdx
@@ -868,7 +736,6 @@ void MPRender::RenderTextureRect(int nX, int nY, MPTexRect *pRect)
 	RECT *pTexRect = NULL;
 	RECT TexRect = { pRect->nTexSX, pRect->nTexSY, pRect->nTexSX + pRect->nTexW, pRect->nTexSY + pRect->nTexH };
 	if(pRect->nTexW!=0) pTexRect = &TexRect;
-	// _p2DSprite->Draw(NULL, NULL, NULL , NULL, 0, &vecDest, pRect->dwColor);
 	_p2DSprite->Begin(D3DXSPRITE_ALPHABLEND);
 	D3DXMATRIX scaleMat;
 	D3DXMatrixIdentity(&scaleMat);
@@ -884,11 +751,7 @@ void MPRender::RenderLine(float x1, float y1, float z1, float x2, float y2, floa
 	D3DXMatrixIdentity(&mat);
 	
 	D3DXMatrixTranslation(&mat, 0.0f, 0.0f, 0.0f);
-#if(defined USE_MANAGED_RES)
     SetTransformWorld(&mat);
-#else
-	_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-#endif
 
 	struct TMP_VERTEX
     {
@@ -910,7 +773,6 @@ void MPRender::RenderLine(float x1, float y1, float z1, float x2, float y2, floa
 	SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
 	_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, 1 , pVertices , sizeof(TMP_VERTEX));
 	SetRenderState( D3DRS_LIGHTING, TRUE );
-	//SetRenderState( D3DRS_ZENABLE,  TRUE );
 }
 
 void MPRender::AddLine(const D3DXVECTOR3 &v1, const D3DXVECTOR3& v2,DWORD dwColor)
@@ -945,7 +807,6 @@ void	MPRender::EndState()
 {
 }
 
-///////////////////////////////////////////////
 ////////rework screenshot to remove asm and use smart pointer @mothannakh///////////
 bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 	D3DSURFACE_DESC Desc;
@@ -988,8 +849,6 @@ bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 	bitinfo.biCompression = BI_RGB;
 	bitinfo.biSizeImage = 0;
 	//we use 72 dpi screenshot if want use 300 use:
-	//bitinfo.biXPelsPerMeter = 11811;
-	//bitinfo.biYPelsPerMeter = 11811;
 	bitinfo.biXPelsPerMeter = 72;
 	bitinfo.biYPelsPerMeter = 72;
 	bitinfo.biClrUsed = 0;

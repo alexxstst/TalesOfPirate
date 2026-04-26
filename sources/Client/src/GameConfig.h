@@ -95,11 +95,18 @@ public:
 
     DWORD   m_dwFullScreenAntialias;
 
-	// 
+	//
 	DWORD	m_dwMaxCha;
 	DWORD	m_dwMaxEff;
 	DWORD	m_dwMaxItem;
 	DWORD	m_dwMaxObj;
+
+	// [Resources] preload_at_start (default 1).
+	// Прогревает g_GeomManager (character meshes + bones) при старте,
+	// чтобы первый спавн персонажа не делал file IO. Можно выключить
+	// для ускорения dev-loop'а — ресурсы будут грузиться on-demand.
+	// Раньше управлялось define'ом _UNLOADRES в Engine vcxproj.
+	BOOL	m_bResourcePreload;
 
 	char	m_szMD5Pass[48];	// MD5
 

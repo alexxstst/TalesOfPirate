@@ -107,13 +107,6 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimData : public lwInterface {
 	public:
-		//virtual DWORD GetAnimDataType() const PURE_METHOD;
-		//virtual DWORD GetSubsetType() const PURE_METHOD;
-		//virtual void SetSubsetType(DWORD subset_type) PURE_METHOD;
-		//virtual LW_RESULT Load(FILE* fp, DWORD version) PURE_METHOD;
-		//virtual LW_RESULT Save(FILE* fp) const PURE_METHOD;
-		//virtual LW_RESULT Load(const char* file) PURE_METHOD;
-		//virtual LW_RESULT Save(const char* file) const PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataBone : public lwIAnimData {
@@ -560,7 +553,6 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwISurfaceStreamMgr : public lwInterface {
 	public:
-		// for dx8, multi_sample_quality and handle are null
 		virtual LW_RESULT CreateRenderTarget(LW_HANDLE* ret_handle, UINT width, UINT height, D3DFORMAT format,
 											 D3DMULTISAMPLE_TYPE multi_sample, DWORD multi_sample_quality,
 											 BOOL lockable, HANDLE* handle) PURE_METHOD;
@@ -691,8 +683,6 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwITex : public lwInterface {
 	public:
-		//virtual LW_RESULT Register() PURE_METHOD;
-		//virtual LW_RESULT Unregister() PURE_METHOD;
 		virtual int AddRef(int i) PURE_METHOD;
 		virtual int GetRef() PURE_METHOD;
 
@@ -765,8 +755,6 @@ LW_STD_GETINTERFACE( cls )
 		virtual DWORD GetStreamType() const PURE_METHOD;
 		virtual void SetColorkey(DWORD key) PURE_METHOD;
 
-		//virtual LW_RESULT Register() PURE_METHOD;
-		//virtual LW_RESULT Unregister() PURE_METHOD;
 
 		virtual LW_RESULT BeginSet() PURE_METHOD;
 		virtual LW_RESULT EndSet() PURE_METHOD;
@@ -1296,7 +1284,6 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT AddKeyRotation(DWORD id, const lwKeyQuaternion* data, DWORD num) PURE_METHOD;
 		virtual LW_RESULT AddKeyScale(DWORD id, const lwKeyVector3* data, DWORD num);
 		virtual LW_RESULT DelKeyPosition(DWORD id, DWORD num) PURE_METHOD;
-		// if num == 0xffffffff(-1) then delete all sequence
 		virtual LW_RESULT DelKeyRotation(DWORD id, DWORD num) PURE_METHOD;
 		virtual LW_RESULT DelKeyScale(DWORD id, DWORD num) PURE_METHOD;
 		virtual DWORD GetFrameNum() const PURE_METHOD;
@@ -1356,7 +1343,6 @@ LW_STD_GETINTERFACE( cls )
 		virtual void SetHelperObject(lwIHelperObject* obj) PURE_METHOD;
 		virtual void SetMaterial(const lwMaterial* mtl) PURE_METHOD;
 		virtual void SetOpacity(float opacity) PURE_METHOD;
-		//virtual LW_RESULT SetVertexBlendCtrl(lwINodeBoneCtrl* ctrl) PURE_METHOD;
 
 		virtual lwIResourceMgr* GetResourceMgr() PURE_METHOD;
 		virtual lwIMtlTexAgent* GetMtlTexAgent(DWORD id) PURE_METHOD;
@@ -1364,7 +1350,6 @@ LW_STD_GETINTERFACE( cls )
 		virtual lwIAnimCtrlAgent* GetAnimCtrlAgent() PURE_METHOD;
 		virtual lwIRenderCtrlAgent* GetRenderCtrlAgent() PURE_METHOD;
 		virtual lwIHelperObject* GetHelperObject() PURE_METHOD;
-		//virtual lwINodeBoneCtrl* GetVertexBlendCtrl() PURE_METHOD;
 		virtual LW_RESULT AllocateMtlTexAgentSeq(DWORD num) PURE_METHOD;
 		virtual DWORD GetMtlTexAgentSeqSize() const PURE_METHOD;
 		virtual LW_RESULT GetSubsetNum(DWORD* subset_num) PURE_METHOD;
@@ -1551,7 +1536,6 @@ LW_STD_GETINTERFACE( cls )
 										  const char* filter = "all files(*.*)\0*.*\0\0",
 										  int flag = OFN_PATHMUSTEXIST | OFN_EXPLORER) PURE_METHOD;
 
-		// flag = OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY
 		virtual LW_RESULT GetSaveFileName(HWND hwnd, char* buf, int num, const char* dir, const char* title = 0,
 										  const char* filter = "all files(*.*)\0*.*\0\0", const char* ext = 0,
 										  int flag = OFN_PATHMUSTEXIST | OFN_EXPLORER) PURE_METHOD;

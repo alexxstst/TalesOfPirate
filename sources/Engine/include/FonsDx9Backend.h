@@ -1,14 +1,11 @@
 #pragma once
 
 // DX9-бэкенд fontstash.
-//
 // fontstash управляет CPU-буфером атласа (один байт на пиксель, grayscale) и
 // зовёт 5 колбеков через FONSparams. Этот файл реализует их поверх lwITex
 // (A8R8G8B8: RGB=white, A=grayscale) и FontVertex/DrawPrimitiveUP — тот же
 // pipeline, что уже используется в FontRender.
-//
 // Владение: Dx9Backend создаёт пользователь (обычно FontManager). FONScontext
-// создаётся через fons::CreateContext(backend, w, h) и хранит weak-указатель
 // на Dx9Backend. Backend должен жить дольше контекста.
 
 #include "lwHeader.h"

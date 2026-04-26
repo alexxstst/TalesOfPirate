@@ -1,15 +1,12 @@
 #pragma once
 
 // FontRender — тонкая обёртка над общим fontstash-контекстом.
-//
 // Пайплайн:
 //   - Регистрация шрифта и FONScontext — в FontManager (lazy init).
 //   - FontRender хранит только fonsFontId + указатель на FONScontext.
 //   - DrawText/GetTextSize идут через fonsDrawText/fonsTextBounds; атлас,
 //     растеризация (FreeType через FONS_USE_FREETYPE) и draw-call — внутри
 //     fontstash + DX9-бэкенда (см. fons::Dx9Backend).
-//
-// Метрики строки (_lineHeight, _baseline, _avgCharW, _spaceAdvance) берутся
 // из fontstash через fonsVertMetrics / fonsTextBounds при CreateFont.
 
 #include <d3d9.h>
@@ -51,7 +48,6 @@ public:
 					float sizeScale = 1.0f);
 
 	// Legacy-заглушка: в старом GDI/Effect-пути здесь сохранялся CMPEffectFile.
-	// Теперь Effect владеет fons::Dx9Backend (создан FontManager), метод no-op.
 	void BindingRes(CMPResManger*) {}
 
 	void Begin() {}

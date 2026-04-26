@@ -43,7 +43,6 @@ public:
 	~MPMap();
 	
 	BOOL		Load(const char *pszMapName, BOOL bEdit = FALSE);
-	// void		Create(int nWidth, int nHeight, const char *pszMapName, int nSectionWidth = 16, int nSectionHeight = 16);
 	
 	void		SetSectionTileData(int nX, int nY, BYTE btTexNo);
 	void		SetMapProcFN(MAP_PROC pfn)				{	_pfnProc = pfn;						  }
@@ -148,7 +147,6 @@ public:
 	bool		m_bCullTile;
 protected:
 
-	// MPMapSection*	_GetSection(int nSectionX, int nSectionY);
 	void				_LoadSectionData(MPActiveMapSection *pSection);
 	void				_SaveSection(MPActiveMapSection *pSection);
 	void				_RenderSea(int nStartX, int nStartY);
@@ -162,7 +160,6 @@ protected:
     void                _RenderVB(BOOL bWireframe = FALSE);
 	
 
-	// MPMapSection*			_pSectionData;
 	
 	MPTile* _pDefaultTile{ nullptr };
 	MPTile* _RenderTileList[4096]{ nullptr };

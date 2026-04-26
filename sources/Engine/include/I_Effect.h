@@ -16,7 +16,6 @@ class CMPResManger;
 using namespace MindPower;
 
 //--------------------------------------------------------------------------------------
-//struct or type.
 //--------------------------------------------------------------------------------------
 #define    s_string								std::string
 #define    LIST_string							std::list<s_string>
@@ -31,7 +30,6 @@ using namespace MindPower;
 #define    VEC_BYTE								std::vector<BYTE>
 #define    VEC_float							std::vector<float>
 
-/////////////////////////////////////////////////////////////////////////
 template <class _Ty>
 class S_BVECTOR {
 	std::vector<_Ty> m_VECPath;
@@ -59,7 +57,6 @@ public:
 	void setsize(WORD _nSize = 1) {
 		if (m_VECPath.size() < _nSize) {
 			m_VECPath.resize(_nSize);
-			//setsizeNew( _nSize );
 		}
 		clear();
 		m_nCount = _nSize;
@@ -158,10 +155,8 @@ public:
 	}
 };
 
-//#include <mindpower.h>
 
 class MPRender;
-////////////////////////////////////////////////////////////////////
 class CMPResManger;
 class CEffectModel;
 class CTexCoordList;
@@ -170,9 +165,7 @@ class I_Effect;
 class CEffPath;
 class EffParameter;
 
-//class lwSceneItem ;
 //!40VS,95 - 15
-//
 #define  MAX_SHADER_VERNUM		300
 #define  MAX_SHADER_IDXNUM		MAX_SHADER_VERNUM  * 3 * 3
 
@@ -245,7 +238,6 @@ inline bool IsDefaultMesh(const s_string& strName) {
 #define _MAX_STRING					256
 
 // Одно действие персонажа: номер анимации, диапазон кадров, ключевые кадры.
-// _actionNo = 1-based идентификатор (0 = пустая ячейка в _actions[]).
 struct ActionInfo {
 	short _actionNo{0};
 	short _startFrame{0};
@@ -273,7 +265,6 @@ struct ActionInfo {
 
 // Блок действий одного типа персонажа.
 // _actions[i] соответствует actionNo = i + 1 (1-based). Ячейки с _actionNo == 0 — пустые.
-// _validCount = число ячеек с _actionNo >= 1.
 struct SChaAction {
 	short _characterType{0};
 	short _validCount{0};
@@ -286,14 +277,12 @@ struct SChaAction {
 
 // Кэш действий персонажей в Engine-формате.
 // Заполняется из CharacterActionStore (SQLite) через LoadActionDataFromStore().
-// Потребитель: MPParticleCtrl::LoadPose (анимация партиклов на костях).
 class CCharacterActionCache {
 public:
 	CCharacterActionCache() = default;
 	~CCharacterActionCache() = default;
 
 	// Загрузить данные анимаций из CharacterActionStore в кэш.
-	// Предварительно данные должны быть загружены в store: CharacterActionStore::Instance()->Load(db).
 	bool LoadActionDataFromStore();
 	void Free();
 
@@ -321,7 +310,6 @@ protected:
 long StringGetT(char* out, long out_max, const char* in, long* in_from, const char* end_list, long end_len);
 void StringSkipCompartmentT(const char* in, long* in_from, const char* skip_list, long skip_len);
 
-//class  lwSceneItem;
 LW_USING
 
 
@@ -354,10 +342,8 @@ public:
 	bool CreatePlaneRect();
 	bool CreateRectZ();
 
-	//
 	bool CreateShadeModel(WORD wVerNum = 6, WORD wFaceNum = 2, int iGridCrossNum = 1, bool usesoft = false);
 
-	//
 	bool CreateTob(const s_string& str, int nSeg, float fHei, float fTopRadius, float fBottomRadius) {
 		if (str == MESH_CYLINDER)
 			return CreateCylinder(nSeg, fHei, fTopRadius, fBottomRadius);
@@ -368,7 +354,6 @@ public:
 
 	bool CreateCylinder(int nSeg, float fHei, float fTopRadius, float fBottomRadius);
 	bool CreateCone(int nSeg, float fHei, float fRadius);
-	//bool	CreateSphere(int nSeg,float fHei,float fRadius);
 
 
 	bool IsBoard() {
@@ -437,7 +422,6 @@ public:
 
 	SEFFECT_VERTEX* m_vEffVer;
 
-	//MPSceneItem*				m_pModel;
 	lwITex* m_oldtex;
 	lwITex* m_oldtex2;
 	bool m_bItem;
@@ -455,7 +439,6 @@ protected:
 	DWORD _dwVerCount;
 	DWORD _dwFaceCount;
 
-	//CChaModel*					_pChaModel;
 
 public:
 	// Getters and Setters
@@ -495,17 +478,12 @@ public:
 	WORD m_wVerCount;
 	//.
 	WORD m_wCoordCount;
-	//
 	float m_fFrameTime;
-	//
 	std::vector<TEXCOORD> m_vecCoordList;
 
 	////!
-	//WORD					m_wCurIndex;
 	////!
-	//float					m_fCurTime;
 	//!
-	//TEXCOORD				m_vecCurCoord;
 };
 
 /************************************************************************/
@@ -533,11 +511,8 @@ public:
 	void Copy(CTexList* pList);
 
 public:
-	//
 	WORD m_wTexCount;
-	//
 	float m_fFrameTime;
-	//
 	std::vector<TEXCOORD> m_vecTexList;
 
 	//!
@@ -568,9 +543,7 @@ public:
 	void Copy(CTexFrame* pList);
 
 public:
-	//
 	WORD m_wTexCount;
-	//
 	float m_fFrameTime;
 	//!
 	std::vector<s_string> m_vecTexName;
@@ -603,7 +576,6 @@ protected:
 	std::vector<int> _vecCurText;
 	int _iTextureID;
 
-	//
 	bool _bUseBack;
 	s_string _strBackBmp;
 	lwITex* _lpBackTex;
@@ -639,19 +611,10 @@ public:
 	virtual void ReleaseAll();
 	//!
 	virtual void Reset();
-	//
 	virtual void Init(MPRender* pDev, EFFECT_TYPE eType,
 					  WPARAM wParam, LPARAM lParam);
 
 	void SetTexture();
-	//{
-	//	if(m_pCModel->IsItem())
-	//	{
-	//		lwITex* tex;
-	//		m_pCModel->ResetItemTexture(m_CTextruelist.m_pTex,&tex);
-	//	}else
-	//		m_pDev->SetTexture(0, m_CTextruelist.m_lpCurTex);
-	//}
 	void SetVertexShader(); //		{ m_pDev->SetVertexShader(*_pdwVShader);}
 	//!
 	virtual void Begin() {
@@ -660,11 +623,6 @@ public:
 	}
 
 	virtual void Render();
-	//{
-	//	m_pDev->SetRenderState( D3DRS_SRCBLEND,_eSrcBlend );
-	//	m_pDev->SetRenderState( D3DRS_DESTBLEND,_eDestBlend);
-	//	m_pCModel->RenderModel();
-	//}
 	virtual void End() {
 		if (m_pCModel)
 			m_pCModel->End();
@@ -772,10 +730,6 @@ public:
 	}
 
 	void setFrameCoord(TEXCOORD& vecInCoord, WORD wIndex) {
-		//for(WORD n = 0; n < m_CTexCoordlist.m_wVerCount; ++n)
-		//{
-		//	m_CTexCoordlist.m_vecCoordList[wIndex][n] = vecInCoord[n];
-		//}
 		m_CTexCoordlist.m_vecCoordList[wIndex] = vecInCoord;
 	}
 
@@ -791,7 +745,6 @@ public:
 	void SpliteTexture(int iRow, int iCol);
 	void SetTextureTime(float ftime);
 
-	///////////////////////////////////////////////////////////
 	bool IsModelRect() {
 		return m_strModelName == MESH_RECT;
 	}
@@ -834,7 +787,6 @@ public:
 
 	void GetRotaLoopMatrix(D3DXMATRIX* pmat, float& pCurRota, float fTime);
 
-	//////////////////////////////////////////////////////////////////////////
 	//!
 	void BindingResInit(CMPResManger* m_CResMagr);
 	//!0123shade
@@ -849,7 +801,6 @@ public:
 	}
 
 	void SetModel(CEffectModel* pCModel);
-	//
 	void ChangeTexture(const s_string& pszName) {
 		if (_eEffectType == EFFECT_FRAMETEX) {
 		}
@@ -862,7 +813,6 @@ public:
 	//!
 	void ChangeModel(CEffectModel* pCModel, CMPResManger* pCResMagr);
 
-	///////////////////////////////////////////////////////////////////////////
 	//!
 	s_string& getEffectName() {
 		return m_strEffectName;
@@ -944,7 +894,6 @@ public:
 	}
 
 	VEC_string& GetFrameTex() {
-		//if(_eEffectType == EFFECT_FRAMETEX)
 		{
 			return m_CTexFrame.m_vecTexName;
 		}
@@ -993,7 +942,6 @@ public:
 
 	void DeleteItem(CMPResManger* pResMgr);
 
-	//
 public:
 	//!3D
 	MPRender* m_pDev;
@@ -1022,7 +970,6 @@ protected:
 	EFFECT_TYPE _eEffectType;
 	//()
 	float _fLength;
-	//
 	WORD _wFrameCount;
 	//!
 	VEC_float _vecFrameTime;
@@ -1063,23 +1010,8 @@ protected:
 	D3DBLEND _eDestBlend;
 };
 
-//class CEffectBase
-//{
-//public:
 //	CEffectBase(){}
 //	~CEffectBase(){}
-//public:
-//	virtual void FrameMove(DWORD	dwDailTime)	{}
 //	//!
-//	virtual void Render()						{}
-//
-//	virtual void RenderVS()						{}
-//
-//	virtual void RenderSoft()					{}
-//
-//
-//protected:
-//private:
-//};
 
 void Transpose(D3DMATRIX& result, D3DMATRIX& m);

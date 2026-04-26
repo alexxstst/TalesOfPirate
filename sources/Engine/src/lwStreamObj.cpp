@@ -49,7 +49,6 @@ LW_RESULT lwStreamObject::BindData(DWORD* out_off_addr, DWORD size, DWORD stride
         o += stride;
     }
 
-    //assert(o / 4 * 4 == o);
     if((o + size) >= GetTotalSize())
         goto __ret;
 
@@ -85,7 +84,6 @@ LW_RESULT lwStreamObject::ApplyRoom(DWORD* out_off_addr, DWORD size, DWORD strid
             o += stride;
         }
 
-        //assert(o / 4 * 4 == o);
 
         if ((o + size) >= GetTotalSize())
             goto __ret;
@@ -803,8 +801,6 @@ LW_RESULT lwStaticStreamMgr::BindIndexBuffer(LW_HANDLE handle)
             e->state = STREAMENTITY_STATE_BIND;
         }
 
-        //if(IsBadReadPtr(s->_buf,e->size))
-        //	goto __ret;
 
         _dev_obj->SetIndices(s->_buf, _vertex_entry_offset);
 
@@ -954,7 +950,6 @@ LW_RESULT lwDynamicStream::GetEntryOffset(DWORD* offset, DWORD size, DWORD strid
         o += stride;
     }
 
-    //assert(o / 4 * 4 == o);
 
     if((o + size) >= GetTotalSize())
         return LW_RET_FAILED;

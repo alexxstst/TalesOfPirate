@@ -118,7 +118,6 @@ void MPTile::RenderTerrain(int nX, int nY, MPTile *TileList[4])
     for(int i = 0; i < 4; i++)
 	{
 		MPTile* _pCurTile = TileList[i];
-        // if(_pCurTile->getBlock()) _pCurTile->dwColor = 0xf1000000;		
             
         _TVertex[i].dwColor = _pCurTile->dwTColor;
 		
@@ -130,7 +129,6 @@ void MPTile::RenderTerrain(int nX, int nY, MPTile *TileList[4])
         vert_amb.r = (amb.r * c.r) / 255;
         vert_amb.g = (amb.g * c.g) / 255;
         vert_amb.b = (amb.b * c.b) / 255;
-        //_TVertex[i].dwColor = vert_amb.color;
         x.a = (vert_amb.a + t.a) > 255 ? 255 : (vert_amb.a + t.a);
         x.r = (DWORD)(vert_amb.r + t.r) > 255 ? 255 : (vert_amb.r + t.r);
         x.g = (DWORD)(vert_amb.g + t.g) > 255 ? 255 : (vert_amb.g + t.g);
@@ -230,5 +228,4 @@ bool MPTile::IsVisibale(int sx, int sy, float* hei)
 	}
 	return false;
 }
-
 

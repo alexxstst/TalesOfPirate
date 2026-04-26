@@ -303,15 +303,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSetSubset(DWORD subset, lwIRender
         c->r = c->g = c->b = c->a = 0.0f;
     }
     
-    //c = &amb_dif[0];
-    //if(c->r > 1.0f)
-    //    c->r = 1.0f;
-    //if(c->g > 1.0f)
-    //    c->g = 1.0f;
-    //if(c->b > 1.0f)
-    //    c->b = 1.0f;
-    //if(c->a > 1.0f)
-    //    c->a = 1.0f;
 
     dev_obj->SetVertexShaderConstantF(VS_CONST_REG_LIGHT_AMB, (float*)&amb_dif, 2);
 
@@ -452,7 +443,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
 
         mat = *viewProj;
         lwMatrix44Multiply(&mat, mat_global, &mat);
-        // lwMatrix44Transpose(&mat, &mat); // (mantido comentado como estava)
     }
 
     // --- ambiente e luz (mantido) ---
@@ -735,11 +725,8 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
                     lwMatrix44Transpose(&mat, &rtm);
 
                     // Se quiser reativar o envio para VS, descomente:
-                    // dev_obj->SetVertexShaderConstantF(stage_id, (float*)&mat, 4);
 
                     // OU, se existir constante nomeada no shader (ex.: "ts0_uvmat" / "ts1_uvmat"...):
-                    // if (FAILED(_const_tab->SetMatrix(dev, "ts0_uvmat", &mat)))
-                    //     goto __ret;
                 }
                 // se no for [0..2], ignora silenciosamente
             }

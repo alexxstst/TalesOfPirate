@@ -19,7 +19,6 @@ public:
 
 	D3DXVECTOR3& GetDXValue()	{ return m_vSelf; }
 
-	// 
 	inline MPEffVector3 operator + ( const MPEffVector3& rkVector ) const
 	{
 		MPEffVector3 kSum;
@@ -69,7 +68,6 @@ public:
 	{
 		float fLength = D3DXVec3Length(&m_vSelf);
 
-		// 
 		if ( fLength > 1e-06f )
 		{
 			D3DXVec3Normalize(&m_vSelf, &m_vSelf);
@@ -128,7 +126,6 @@ public:
 
 		if (up == MPEffVector3::ZERO)
 		{
-			// 
 			newUp = this->perpendicular();
 		}
 		else
@@ -146,7 +143,6 @@ public:
 		return q * (*this);
 	}
 
-	// 
 	static const MPEffVector3 ZERO;
 	static const MPEffVector3 UNIT_X;
 	static const MPEffVector3 UNIT_Y;

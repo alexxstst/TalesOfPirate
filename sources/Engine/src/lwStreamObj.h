@@ -120,7 +120,6 @@ public:
 
 };
 
-// static stream object manager
 class lwStaticStreamMgr : public lwIStaticStreamMgr
 {
 LW_STD_DECLARATION()
@@ -194,8 +193,6 @@ public:
     LW_RESULT GetEntryOffset(DWORD* offset, DWORD size, DWORD stride);
     LW_RESULT ResetFreeSize(DWORD size, DWORD offset);
 
-    //virtual LW_RESULT Create(IDirect3DDeviceX* dev, DWORD buf_size, D3DFORMAT fmt) = 0;
-    //virtual LW_RESULT Bind(IDirect3DDeviceX* dev, DWORD channel, const void* data, DWORD size, DWORD stride) = 0;
 };
 
 class lwDynamicStreamVB : public lwDynamicStream
@@ -401,11 +398,6 @@ private:
     lwISurfaceStreamMgr* _ss_mgr;
     lwIDeviceObject* _dev_obj;
     DWORD _reg_id;
-    //BYTE* _data;
-    //UINT _lock_offset;
-    //UINT _lock_size;
-    //DWORD _lock_flag;
-    //DWORD _lock_cnt;
 
 public:
     lwSurfaceStream(lwISurfaceStreamMgr* ss_mgr);
@@ -435,7 +427,6 @@ public:
     lwSurfaceStreamMgr(lwIResourceMgr* res_mgr);
     ~lwSurfaceStreamMgr();
 
-    // for dx8, multi_sample_quality and handle are null
     LW_RESULT CreateRenderTarget(LW_HANDLE* ret_handle, UINT width, UINT height, D3DFORMAT format, D3DMULTISAMPLE_TYPE multi_sample, DWORD multi_sample_quality, BOOL lockable, HANDLE* handle);
     LW_RESULT CreateDepthStencilSurface(LW_HANDLE* ret_handle, UINT width, UINT height, D3DFORMAT format, D3DMULTISAMPLE_TYPE multi_sample, DWORD multi_sample_quality, BOOL discard, HANDLE* handle);
     LW_RESULT UnregisterSurface(LW_HANDLE handle);

@@ -152,6 +152,18 @@ const std::string* FontManager::GetFontFilePath(const std::string& family) const
 	return (it == _familyToPath.end()) ? nullptr : &it->second;
 }
 
+std::string FontManager::FormatRegisteredFamilies() const {
+	if (_familyToPath.empty()) {
+		return " <нет зарегистрированных семейств — InstallFontFile/InstallFontsFromDir не вызывался?>";
+	}
+	std::string result;
+	result.reserve(_familyToPath.size() * 64);
+	for (const auto& [family, path] : _familyToPath) {
+		result += std::format("\n  '{}' -> '{}'", family, path);
+	}
+	return result;
+}
+
 FONScontext* FontManager::GetFonsContext() {
 	if (_fons) {
 		return _fons;
@@ -318,8 +330,9 @@ int FontManager::CreateFont(std::string name, const std::string& family,
 									 path, fons, fonsFontId, sizeScale);
 	if (!ok) {
 		ToLogService("errors", LogLevel::Error,
-					 "FontManager::CreateFont('{}', family='{}', size={}): CreateFont failed",
-					 name, family, size);
+					 "FontManager::CreateFont('{}', family='{}', size={}): CreateFont failed. "
+					 "Зарегистрированные семейства:{}",
+					 name, family, size, FormatRegisteredFamilies());
 		return -1;
 	}
 	font->BindingRes(&ResMgr);

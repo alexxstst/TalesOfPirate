@@ -23,8 +23,10 @@
 --    — через UI_CreateFont его можно запрашивать наравне с системным.
 UI_InstallFontDir("./font")
 
--- 2) Резолв семейства из [Fonts] SystemFont. Fallback — Arial.
-local family = g_SystemFont or "Arial"
+-- 2) Резолв семейства из [Fonts] SystemFont. Fallback — Roboto
+--    (есть в client/font/Roboto/, в отличие от системного Arial,
+--    который через FreeType+fontstash не подхватывается — см. баг ниже).
+local family = g_SystemFont or "Roboto"
 
 -- 3) Слоты C++ (имя слота совпадает с FontSlot::X).
 UI_CreateFont("TipText",      family, 12, 12, 1, 0)
@@ -39,7 +41,7 @@ FONT16       = UI_CreateFont("FONT16",       family,  13, 13, 1, MPFONT_BOLD)
 FONT20       = UI_CreateFont("FONT20",       family,  20, 20, 1, MPFONT_BOLD)
 FONT28       = UI_CreateFont("FONT28",       family,  28, 28, 1, MPFONT_BOLD)
 BIGFONT      = UI_CreateFont("BIGFONT",      family,  48, 48, 1, 0)
-ARIAL_FONT   = UI_CreateFont("ARIAL_FONT",  "Arial",  12, 12, 1, 0)
+ARIAL_FONT   = UI_CreateFont("ARIAL_FONT",  "Roboto", 12, 12, 1, 0)
 TIPFONT      = DEFAULT_FONT
 
 -- 5) DrawTextShadow рендерит текст дважды (shadow + main), что может давать

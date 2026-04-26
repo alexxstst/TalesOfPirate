@@ -7,7 +7,6 @@ class MPMapIterator
 private:
 	typename T::iterator mCurrent;
 	typename T::iterator mEnd;
-	/// 
 	MapIterator() {};
 public:
 	typedef typename T::mapped_type MappedType;

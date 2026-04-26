@@ -9,7 +9,6 @@
 LW_BEGIN
 
 
-//
 
 // =================================
 
@@ -136,7 +135,6 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
 #if(defined LW_SHADER_DEBUG_VS)
         DWORD compile_flag = 0;
         compile_flag |= D3DXSHADER_DEBUG;
-        //compile_flag |= D3DXSHADER_FORCE_VS_SOFTWARE_NOOPT;
 
         if(file_flag == VS_FILE_ASM)
         {
@@ -246,7 +244,6 @@ LW_RESULT lwShaderMgr9::RegisterVertexDeclaration(DWORD type, D3DVERTEXELEMENT9*
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    // Declaraes antecipadas (evita "init skipped by goto")
     IDirect3DVertexDeclarationX* handle = 0;
     IDirect3DDeviceX* dev = _dev_obj->GetDevice();
     int i = 0;

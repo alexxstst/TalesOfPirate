@@ -71,6 +71,11 @@ public:
 	// nullptr — если семейство не зарегистрировано через InstallFontFile*.
 	const std::string* GetFontFilePath(const std::string& family) const;
 
+	// Многострочный дамп `_familyToPath` (family → path). Используется в логах
+	// при провале CreateFont, чтобы было видно, какие семейства реально
+	// зарегистрированы (помогает ловить опечатки в family-name из Lua).
+	std::string FormatRegisteredFamilies() const;
+
 	// Общий FONScontext процесса — владеет картой атласных страниц fontstash и
 	// DX9-бэкендом. Lazy-init при первом вызове (требует g_Render + ResMgr
 	// инициализированными). nullptr — если создание провалилось.

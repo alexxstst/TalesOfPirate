@@ -1,17 +1,14 @@
 // lwSlotMap.h
-//
 // Slot-map фиксированной ёмкости с refcount и generation-проверкой ABA.
 // Пришёл на смену lwObjectPool. Основные отличия:
 //   - handle = (generation:12 | slot:20), DWORD. Старый handle был просто
 //     slot index, из-за чего после Unregister тот же id мог вернуться к
-//     другому объекту (ABA).
 //   - freelist интрузивный, FIFO (через head/tail) — generation растёт
 //     равномерно по слотам, минимизируя раннее переиспользование.
 //   - AddRef реально учитывает ref_cnt (в lwObjectPool он молча игнорировался).
 //   - GetRef/GetObj валидируют handle (generation + refcount), битый id
 //     возвращает 0/ERR, а не OOB-чтение.
 //   - Итерация только через ForEach(fn) — fn получает актуальный handle.
-//
 // LW_INVALID_INDEX (0xFFFFFFFF) зарезервирован как невалидный handle:
 // у всех живых handle generation ∈ [1..0xFFF], slot < Capacity, поэтому
 // LW_INVALID_INDEX никогда не совпадёт с живым.

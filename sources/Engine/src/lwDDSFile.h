@@ -41,15 +41,11 @@ public:
 
     void SetDevice(IDirect3DDeviceX* dev) { _dev = dev; }
     LW_RESULT Clear();
-    //LW_RESULT Load(BYTE* data);
-    //LW_RESULT Load(const char* file);
     LW_RESULT LoadOriginTexture(const char* file, DWORD mip_level, D3DFORMAT format, DWORD colorkey);
     LW_RESULT Convert(const char* file, D3DFORMAT src_fmt, D3DFORMAT dds_fmt, DWORD mip_level, DWORD src_colorkey);
     LW_RESULT Save(const char* file);
     
 
-    //IDirect3DBaseTextureX* DetachOriginTexture();
-    //IDirect3DBaseTextureX* DetachDDSTexture();
 
 };
 

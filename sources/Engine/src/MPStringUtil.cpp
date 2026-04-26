@@ -24,22 +24,18 @@ MPStringVector MPStringUtil::split( const std::string& str, const std::string& d
 		pos = str.find_first_of(delims, start);
 		if (pos == start)
 		{
-			// 
 			start = pos + 1;
 		}
 		else if (pos == std::string::npos || (maxSplits && numSplits == maxSplits))
 		{
-			// 
 			ret.push_back( str.substr(start) );
 			break;
 		}
 		else
 		{
-			// 
 			ret.push_back( str.substr(start, pos - start) );
 			start = pos + 1;
 		}
-		// 
 		start = str.find_first_not_of(delims, start);
 		++numSplits;
 

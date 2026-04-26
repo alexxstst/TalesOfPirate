@@ -39,7 +39,6 @@ LW_RESULT lwLoadPrimitiveLineList(lwINodePrimitive* obj, const char* name, DWORD
     lwMtlTexInfo mti;
     lwMaterial mtl;
 
-    //memset(&mti, 0, sizeof(mti));
     memset(&mtl, 0, sizeof(mtl));
     mtl.amb.a = mtl.amb.r = mtl.amb.g = mtl.amb.b = 1.0f;
 
@@ -106,7 +105,6 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
     lwMtlTexInfo mti;
     lwMaterial mtl;
 
-    //memset(&mti, 0, sizeof(mti));
     memset(&mtl, 0, sizeof(mtl));
     mtl.amb.a = mtl.amb.r = mtl.amb.g = mtl.amb.b = 1.0f;
 
@@ -130,9 +128,6 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
                      __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
     }
 
-    //lwIRenderCtrl* render_ctrl;
-    //obj->GetResourceMgr()->RequestRenderCtrl(&render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION);
-    //obj->GetRenderCtrlAgent()->SetRenderCtrl(render_ctrl);
 
     return LW_RET_OK;
 }
@@ -168,7 +163,6 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
     lwMtlTexInfo mti;
     lwMaterial mtl;
 
-    //memset(&mti, 0, sizeof(mti));
     memset(&mtl, 0, sizeof(mtl));
     mtl.amb.a = mtl.amb.r = mtl.amb.g = mtl.amb.b = 1.0f;
 
@@ -195,9 +189,6 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
                      __FUNCTION__, name ? name : "(null)", static_cast<long long>(r));
     }
 
-    //lwIRenderCtrl* render_ctrl;
-    //obj->GetResourceMgr()->RequestRenderCtrl(&render_ctrl, RENDERCTRL_VS_FIXEDFUNCTION);
-    //obj->GetRenderCtrlAgent()->SetRenderCtrl(render_ctrl);
 
     return LW_RET_OK;
 }
@@ -424,17 +415,14 @@ LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color,
     // index seq
 
     // diagram
-    //
     //  d---------
     //   |   |   |
     //  c---e-----b
     //   |   |   |
     //   ---------a
-    //
     //   ab[bc]cde
     //   abb-bbc-bcc-ccd
     //   4 trianges
-    //
     const int e = 2; // ecdysis point
     int seg_j = seg_width + 1;
     int ind_num = seg_j * 2 * seg_height + (seg_height - 1) * e;
@@ -504,7 +492,6 @@ LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color,
     lwMtlTexInfo mti;
     lwMaterial mtl;
 
-    //memset(&mti, 0, sizeof(mti));
     memset(&mtl, 0, sizeof(mtl));
     mtl.amb.a = mtl.amb.r = mtl.amb.g = mtl.amb.b = 1.0f;
 

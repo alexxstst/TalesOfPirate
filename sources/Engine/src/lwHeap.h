@@ -10,7 +10,6 @@
 LW_BEGIN
 
 // this is a min-heap class
-// if you want to get max-heap, pls wrap operator<() of T
 
 template<typename T>
 class lwHeapT
@@ -191,7 +190,6 @@ DWORD lwHeapT<T>::_FilterDown(DWORD i)
             break;
 
         _Place(index, _buf[c]);
-        //_buf[index] = _buf[c];
 
         index = c;
         l = _Left(index);
@@ -201,7 +199,6 @@ DWORD lwHeapT<T>::_FilterDown(DWORD i)
     if(index != i)
     {
         _Place(index, t);
-        //_buf[index] = t;
     }
 
     return index;
@@ -217,7 +214,6 @@ DWORD lwHeapT<T>::_FilterUp(DWORD i)
     while((index > 0) && _Comp(t, _Ref(p)))
     {
         _Place(index, _buf[p]);
-        //_buf[index] = _buf[p];
 
         index = p;
         p = _Parent(p);
@@ -226,7 +222,6 @@ DWORD lwHeapT<T>::_FilterUp(DWORD i)
     if(index != i)
     {
         _Place(index, t);
-        //_buf[index] = t;
     }
 
     return index;
@@ -368,7 +363,6 @@ LW_RESULT lwHeapT<T>::Copy(lwHeapT* src)
     return LW_RET_OK;
 }
 
-//
 class lwHeap : public lwIHeap
 {
     LW_STD_DECLARATION();

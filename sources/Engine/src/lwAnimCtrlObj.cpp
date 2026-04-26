@@ -207,7 +207,6 @@ lwAnimCtrlObjBone::~lwAnimCtrlObjBone()
 
     LW_SAFE_DELETE_A(_dummy_rtm_seq);
     LW_SAFE_DELETE_A(_bone_rtm_seq);
-	//LW_SAFE_DELETE_A(mComputedBoneList);
 }
 LW_RESULT lwAnimCtrlObjBone::Clone(lwIAnimCtrlObjBone** ret_obj)
 {
@@ -400,7 +399,6 @@ LW_RESULT lwAnimCtrlObjBone::UpdateHelperObject(lwIHelperObject* helper_obj)
 
     // IsPlaying()lwAnimCtrlObjBone
     // PlayingHelperObject
-    //if(!IsPlaying() || helper_obj == 0)
     if(_dummy_rtm_num == 0 || helper_obj == 0)
         goto __addr_ret_ok;
 
@@ -441,9 +439,6 @@ LW_RESULT lwAnimCtrlObjBone::UpdateHelperObject(lwIHelperObject* helper_obj)
                     lwMatrix44* mat = GetDummyRTM(di->parent_id);
                     if (mat)
                     {
-                        //lwMatrix44 inv_mat;
-                        //lwMatrix44Inverse(&inv_mat, NULL, &di->mat_local);
-                        //lwMatrix44Multiply(&di->mat, &inv_mat, mat);
                         lwMatrix44Multiply(&di->mat, &di->mat_local, mat);
                     }
                 }

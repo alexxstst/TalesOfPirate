@@ -222,14 +222,6 @@ LW_BEGIN
 		PPI_MASK_ABSOLUTE = (PPI_MASK_DEFAULT | PPI_MASK_PROC),
 	};
 
-	//enum
-	//{
-	//    POSEBLEND_STATE_INVALID =       0x0000,
-	//    POSEBLEND_STATE_BLEND =         0x0001,
-	//    POSEBLEND_STATE_SRCFRAMENUM =   0x0002,
-	//    POSEBLEND_STATE_DSTFRAMENUM =   0x0004,
-	//    POSEBLEND_STATE_PARTIALBONE =   0x0008,
-	//};
 
 	struct lwPoseBlendInfo {
 		DWORD op_state;
@@ -239,7 +231,6 @@ LW_BEGIN
 		float src_frame_num;
 		float dst_frame_num;
 		BYTE* bone_data;
-		//
 		DWORD blend_pose;
 		DWORD blend_type;
 		float blend_frame;
@@ -260,14 +251,6 @@ LW_BEGIN
 		lwPoseBlendInfo blend_info;
 	};
 
-	//struct lwPoseKeyFrameInfo
-	//{
-	//    DWORD type;
-	//    DWORD pose_id;
-	//    DWORD key_id;
-	//    DWORD key_frame;
-	//    DWORD param;
-	//};
 
 
 	inline void lwPlayPoseInfo_Construct(lwPlayPoseInfo* info) {
@@ -401,7 +384,6 @@ LW_BEGIN
 	typedef LW_RESULT (*lwOutputResetDeviceProc)();
 
 	// -------------------
-	// for lwAnimKeySetPRS2
 	struct lwKeyFloat {
 		typedef float DATA_TYPE;
 
@@ -580,7 +562,6 @@ LW_BEGIN
 
 	enum lwThreadPoolType {
 		THREAD_POOL_LOADRES = 0,
-		//THREAD_POOL_LOADPHY = 1,
 		THREAD_POOL_SIZE,
 	};
 
@@ -724,7 +705,6 @@ LW_BEGIN
 		LOADINGRES_TYPE_RUNTIME_MT = 2,
 
 		LOADINGRES_MASK_RT0 = 0x0001,
-		//
 		LOADINGRES_MASK_RTMT0 = 0x0001,
 		LOADINGRES_MASK_RTMT1 = 0x0002,
 		LOADINGRES_MASK_LOADSM_FAILED = 0x0010,

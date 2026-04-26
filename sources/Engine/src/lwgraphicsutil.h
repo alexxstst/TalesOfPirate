@@ -12,7 +12,6 @@
 LW_BEGIN
 
 
-//
 #define LW_RGB555_R(rgb) (BYTE)( ( rgb & 0x7c00) >> 7 )
 #define LW_RGB555_G(rgb) (BYTE)( ( rgb & 0x3e0) >> 2 )
 #define LW_RGB555_B(rgb) (BYTE)( ( rgb & 0x1f) << 3 )
@@ -69,7 +68,6 @@ inline void lwMeshDataInfo_Destruct(lwMeshDataInfo* obj)
     LW_IF_DELETE_A(obj->ib_data);
 }
 
-/////////////////
 #ifndef USE_MINDPOWER
 void lwMessageBox( const char* fmt, ... );
 #define LG_MSGBOX lwMessageBox
@@ -125,5 +123,4 @@ LW_RESULT lwClearRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD st
 LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num, D3DFORMAT vb_fvf, D3DFORMAT ib_fvf);
 DWORD lwGetSurfaceSize(UINT width, UINT height, D3DFORMAT format);
 LW_RESULT lwGetDirectXVersion(char* o_buf, DWORD version);
-//
 LW_END

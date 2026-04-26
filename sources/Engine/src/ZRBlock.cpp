@@ -69,7 +69,6 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 
 	m_bEdit = bEdit;
 
-	//
 	m_pOffsetIdx = std::make_unique<DWORD[]>(m_nSectionCnt);
 	m_fs->read(reinterpret_cast<char*>(m_pOffsetIdx.get()), sizeof(DWORD) * m_nSectionCnt);
 

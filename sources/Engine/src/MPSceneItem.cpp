@@ -251,22 +251,7 @@ DWORD MPSceneItem::GetObjState( DWORD state ) const
 {
     return _obj->GetObjState( state );
 }
-//LW_RESULT MPSceneItem::ResetItemTexture( const char* file )
-//{
-//    lwIPrimitive* p = _obj->GetPrimitive();
-//    lwIMtlTexAgent* mtltex_agent = p->GetMtlTexAgent(0);
-//    mtltex_agent->DestroyTextureStage(0);
-//
-//    lwTexInfo info;
-//    lwTexInfo_Construct(&info);
-//
-//    info.stage = 0;
-//    info.colorkey_type = COLORKEY_TYPE_NONE;
-//    strcpy( info.file_name, file );
-//    
 //    return mtltex_agent->LoadTextureStage(&info, NULL);
-//
-//}
 
 LW_RESULT MPSceneItem::ResetItemTexture(DWORD subset, lwITex* tex, lwITex** old_tex)
 {

@@ -1,5 +1,4 @@
 ﻿#pragma once
-//#include "i_effect.h"
 
 class   MPRender;
 
@@ -107,9 +106,6 @@ protected:
 	bool				_UpSea;
 };
 
-///////////////////////////////////////////////////////////
-//class CMPShadeEX
-///////////////////////////////////////////////////////////
 class CMPShadeEX :	public CMPShadeMap
 {
 public:
@@ -122,7 +118,6 @@ public:
 	bool				IsPlaying()					{ return _bShow;}
 	void				Play(int iTime = 0)/*iTime: 0 == loop, */
 	{
-		//if(IsPlaying())
 		//	return;
 		Reset();
 		_bShow = true;
@@ -158,7 +153,6 @@ protected:
 	bool				_bLoop;
 	int					_iFrameCount;
 	int					_iCurFrame;
-	//float				_fLife;
 	float				_fFrameTime;
 	std::vector<D3DXCOLOR>		_vecFrameColor;
 	float				_fCurTime;
@@ -174,9 +168,6 @@ protected:
 	int					_iCol;
 };
 
-///////////////////////////////////////////////////////////
-//class CMPShadeCtrl
-///////////////////////////////////////////////////////////
 class CMPShadeCtrl
 {
 public:

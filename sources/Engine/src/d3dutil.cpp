@@ -1,9 +1,6 @@
 ﻿//-----------------------------------------------------------------------------
 // File: D3DUtil.cpp
-//
 // Desc: Shortcut macros and functions for using DX objects
-//
-//
 // Copyright (c) 1997-2000 Microsoft Corporation. All rights reserved
 //-----------------------------------------------------------------------------
 #define STRICT
@@ -18,7 +15,6 @@
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_InitMaterial()
 // Desc: Initializes a D3DMATERIALX structure, setting the diffuse and ambient
 //       colors. It does not set emissive or specular colors.
 //-----------------------------------------------------------------------------
@@ -36,7 +32,6 @@ VOID D3DUtil_InitMaterial( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_InitLight()
 // Desc: Initializes a D3DLIGHT structure, setting the light position. The
 //       diffuse color is set to white; specular and ambient are left as black.
 //-----------------------------------------------------------------------------
@@ -60,7 +55,6 @@ VOID D3DUtil_InitLight( D3DLIGHTX& light, D3DLIGHTTYPE ltType,
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_CreateTexture()
 // Desc: Helper function to create a texture. It checks the root path first,
 //       then tries the DXSDK media path (as specified in the system registry).
 //-----------------------------------------------------------------------------
@@ -69,7 +63,6 @@ HRESULT D3DUtil_CreateTexture( IDirect3DDeviceX* pd3dDevice, TCHAR* strTexture,
 {
     // Get the path to the texture
     TCHAR strPath[MAX_PATH];
-    // DXUtil_FindMediaFile( strPath, strTexture );
 
     // Create the texture using D3DX
     return D3DXCreateTextureFromFileEx( pd3dDevice, strPath, 
@@ -82,7 +75,6 @@ HRESULT D3DUtil_CreateTexture( IDirect3DDeviceX* pd3dDevice, TCHAR* strTexture,
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_SetColorKey()
 // Desc: Changes all texels matching the colorkey to transparent, black.
 //-----------------------------------------------------------------------------
 HRESULT D3DUtil_SetColorKey( IDirect3DTextureX* pTexture, DWORD dwColorKey )
@@ -141,7 +133,6 @@ HRESULT D3DUtil_SetColorKey( IDirect3DTextureX* pTexture, DWORD dwColorKey )
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_CreateVertexShader()
 // Desc: Assembles and creates a file-based vertex shader
 //-----------------------------------------------------------------------------
 HRESULT D3DUtil_CreateVertexShader( IDirect3DDeviceX* pd3dDevice, 
@@ -153,7 +144,6 @@ HRESULT D3DUtil_CreateVertexShader( IDirect3DDeviceX* pd3dDevice,
     HRESULT      hr;
 
     // Get the path to the vertex shader file
-    //DXUtil_FindMediaFile( strPath, strFilename );
 
     // Assemble the vertex shader file
     if( FAILED( hr = D3DXAssembleShaderFromFile( strPath, NULL, NULL, 0, &pCode, NULL ) ) )
@@ -174,7 +164,6 @@ HRESULT D3DUtil_CreateVertexShader( IDirect3DDeviceX* pd3dDevice,
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_GetCubeMapViewMatrix()
 // Desc: Returns a view matrix for rendering to a face of a cubemap.
 //-----------------------------------------------------------------------------
 D3DXMATRIX D3DUtil_GetCubeMapViewMatrix( DWORD dwFace )
@@ -221,7 +210,6 @@ D3DXMATRIX D3DUtil_GetCubeMapViewMatrix( DWORD dwFace )
 
 
 //-----------------------------------------------------------------------------
-// Name: D3DUtil_GetRotationFromCursor()
 // Desc: Returns a quaternion for the rotation implied by the window's cursor
 //       position.
 //-----------------------------------------------------------------------------

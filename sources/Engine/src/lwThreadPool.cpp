@@ -7,7 +7,6 @@ using namespace std;
 LW_BEGIN
 
 
-//////////////
 // lwThreadPool
 LW_STD_IMPLEMENTATION(lwThreadPool)
 
@@ -36,7 +35,6 @@ unsigned int lwThreadPool::_ThreadProc()
 
     while(1)
     {
-        // 
         ::WaitForSingleObjectEx(_event_pool._handle, INFINITE, FALSE);
 
         int ret = ::WaitForSingleObjectEx(_event_signal, INFINITE, FALSE);

@@ -93,20 +93,8 @@ BOOL Get2DLineIntersection(float *pv1,float *pv2, float *pv3, float *pv4, float 
 {
     float t1, t2;
  
-    float a1, a2, b1, b2, c1, c2, d1, d2; 
- 
+    float a1, a2, b1, b2, c1, c2, d1, d2;
 
-    /*
-    if( (*pv1>*pv3 && *pv1>*pv4) && (*pv2>*pv3 && *pv2>*pv4) )
-        return FALSE;
-    else if( *pv1<*pv3 && *pv1<*pv4 && *pv2<*pv3 && *pv2<*pv4 )
-        return FALSE;
-    else if( *(pv1+1)>*(pv3+1) && *(pv1+1)>*(pv4+1) && *(pv2+1)>*(pv3+1) && *(pv2+1)>*(pv4+1) )
-        return FALSE;
-    else if( *(pv1+1)<*(pv3+1) && *(pv1+1)<*(pv4+1) && *(pv2+1)<*(pv3+1) && *(pv2+1)<*(pv4+1) )
-        return FALSE;
-    */
- 
     a1 = *(pv2)  - *(pv1);
     b1 = *(pv1);
     c1 = *(pv2+1)- *(pv1+1);
@@ -118,10 +106,6 @@ BOOL Get2DLineIntersection(float *pv1,float *pv2, float *pv3, float *pv4, float 
     d2 = *(pv3+1);
  
     // t1, t2 range [0,1]
-    // l1 :  x = a1 * t1 + b1;
-    //       y = c1 * t1 + d1;
-    // l2 :  x = a2 * t2 + b2;
-    //       y = c2 * t2 + d2;
  
     if(a1*c2 == a2*c1)          return FALSE;
  
@@ -181,7 +165,6 @@ int GetVectorRelativeDirection(float *fSrcDir , float *fDestDir , float *pfAngle
 	float x2 = fDestDir[0];
 	float y2 = fDestDir[1];
 
-	// Log("x1 = %.6f , y1 = %.2f ----- x2 = %.6f , y2 = %.2f\n" , x1 , y1 , x2 , y2);
     float a1 = (float)Radian2Angle( (float)(atan(fabs(y1 / x1))) );
 	float a2 = (float)Radian2Angle( (float)(atan(fabs(y2 / x2))) );
 	float p1 = Angle2Quadrant(a1 , x1 , y1);

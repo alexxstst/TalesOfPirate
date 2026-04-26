@@ -4,7 +4,6 @@ class   MPRender;
 #include "i_effect.h"
 #include "EffectFile.h"
 
-//#include "mpmodeleff.h"
 
 #include "mpshademap.h"
 
@@ -86,17 +85,27 @@ inline bool fEquat( float f1, float f2)
 #define  MAXMESH_COUNT		800
 
 
-//////////////////////////////////////////////////////////////////////////
 
 class  CMPResManger
 {
 public:
 	CMPResManger(void);
 	~CMPResManger(void);
-	
+
 	void Clear();
 
 public:
+	//  Управление прогревом массовых ресурсов при старте.
+	//  m_GeomobjMap (character meshes) и m_AnimDataMap (bones), чтобы
+	//  первые операции с персонажами не делали file IO.
+	//  Когда false — прогрев пропускается, ресурсы грузятся on-demand
+	//  через lwPhysique. Полезно для быстрого dev-loop'а / отладки
+	//  on-demand путей. Раньше управлялось define'ом _UNLOADRES.
+	//  Клиент устанавливает значение из [Resources] preload_at_start
+	//  в Client/user/system.ini до InitRes3.
+	static void SetResourcePreload(bool enabled) { s_resourcePreload = enabled; }
+	static bool IsResourcePreload() { return s_resourcePreload; }
+
 	bool					LoadTotalVShader(lwISysGraphics* sys_graphics);
 
 	bool					InitRes(MPRender*		pDev, D3DXMATRIX* pmat, D3DXMATRIX* pMatviewproj);
@@ -139,7 +148,6 @@ public:
 	std::vector<I_Effect>&	GetEffectByID( int iID);
 	I_Effect*				GetSubEffectByID(int iID, int iSubIdx);
 
-	//int						GetEffectTechByID(int iID);
 	EffParameter*			GetEffectParamByID(int iID); 
 
 	IDirect3DVertexShaderX*	GetVShaderByID(int iID);
@@ -182,7 +190,6 @@ public:
 	VEC_string& GetTotalMeshName(){ return _vecMeshName;}
 	VEC_string& GetTotalEffectName(){ return _vecEffectName;}
 
-	//void		UpdateTotalModel();
 
 	bool		IsCanFrame()	{ return m_bCanFrame; }
 	int 		GetCanFrame()	{ return m_iCurFrame; }
@@ -234,6 +241,8 @@ protected:
 
 	void					LoadTotalPartCtrl();
 protected:
+	static bool			s_resourcePreload;
+
 	char				_pszTexPath[MAX_PATH];
 	char				_pszMeshPath[MAX_PATH];
 	char				_pszEFFectPath[MAX_PATH];
@@ -272,7 +281,6 @@ protected:
 	bool									_bMagr;//
 
 	CMPEffectFile						_CEffectFile;
-	//VEC_int								_vecEffTech;
 
 	float								_fSaveTime;
 	float								_fCurTime;
@@ -288,24 +296,19 @@ protected:
 	int									_iFontBkWidth;
 	int									_iFontBkHeight;
 
-//////////////////////////////////////////////////////////
 
 	int									_iPathNum;
 	VEC_string							_vecPathName;
 	std::vector<CEffPath>				_vecPath;
-/////////////////////////////////////////////////////////
 	char								_psDefault[418];
-//////////////////////////////////////////////////////////////////////////
 	int									_iPartCtrlNum;
 	VEC_string							_vecPartName;
 	S_BVECTOR<CMPPartCtrl*>				_vecPartCtrl;
 
-//////////////////////////////////////////////////////////////////////////
 
 	int									_iTobMeshNum;
 	std::list<CEffectModel*>			_lstTobMeshs;
 
-//////////////////////////////////////////////////////////////////////////
 	std::vector<CMPPartCtrl*>			_vecPartArray;
 	S_FVector<WORD>						_vecValidID;
 

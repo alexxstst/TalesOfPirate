@@ -3,7 +3,6 @@
 #include "lwfileutil.h"
 #include <assert.h>
 #include <tchar.h>
-/////////////////////////////////////////////
 
 char* lwGetModuleBaseFileName( char* buf )
 {
@@ -121,13 +120,11 @@ char* lwGetIndexFileName( char* pri_name, const char* file, int id_len )
 	return pri_name;
 }
 
-// 
 int lwGetOpenFileName(HWND hwnd,char* buf,int num,const char* dir,const char* title,const char* filter,int flag)
 {
 	OPENFILENAME	ofn;				// common dialog box structure
     memset(&ofn,0,sizeof(ofn));
 
-	//char ret_buf[1024]={"\0"};
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
@@ -148,7 +145,6 @@ int lwGetOpenFileName(HWND hwnd,char* buf,int num,const char* dir,const char* ti
         *(ofn.lpstrFile + ofn.nFileOffset - 1 ) = '\0';
     }
 
-	//strcpy(buf,ofn.lpstrFile);
     return 1;
 }
 
@@ -176,7 +172,6 @@ int lwGetSaveFileName(HWND hwnd,char* buf,int num,const char* dir,const char* ti
     return 1;
 }
 
-// 
 // function not tested 
 int lwGetFolderName(char *folder, HWND hwnd,const char *title,LPITEMIDLIST pid_root)
 { 
@@ -262,4 +257,3 @@ OLE_HANDLE LoadImageFile(const char* file)
 
     return m_picHandle;
 }
-

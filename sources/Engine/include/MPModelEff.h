@@ -1,11 +1,9 @@
 ﻿#pragma once
-//#include "i_effect.h"
 #include "MindPowerAPI.h"
 
 
 
 #include "mpresmanger.h"
-//#include "EffectFile.h"
 class   MPRender;
 
 class CEffectCortrol
@@ -27,7 +25,6 @@ public:
 	void	FillDefaultUV(CEffectModel* pCModel, TEXCOORD& coord);
 	void	FillModelUVSoft(CEffectModel* pCModel);
 	void	FillTextureUVSoft(CEffectModel* pCModel);
-	//////////////////////////////////////////////////////////////////////////
 	//!
 	float				m_fCurTime;
 	//!
@@ -41,25 +38,21 @@ public:
 	//!	
 	D3DXVECTOR3			m_SCurPos;
 
-	/////////////////////////////////////////////////////////////////////////
 	//!
 	WORD					m_wCurCoordIndex;
 	//!
 	float					m_fCurCoordTime;
 	//!
 	S_BVECTOR<D3DXVECTOR2>	m_vecCurCoord;
-	////////////////////////////////////////////////////////////////////
 	//!
 	WORD					m_wCurTexIndex;
 	//!
 	float					m_fCurTexTime;
 	//!
 	S_BVECTOR<D3DXVECTOR2>	m_lpCurTex;
-	////////////////////////////////////////////////////////////
 	int						m_iCurTimes;
 
 	bool					m_bPlay;
-	//FVF_STRUCT              buf;
 
 	D3DXMATRIX				m_SMatResult;
 
@@ -104,9 +97,6 @@ public:
 	bool				IsEnd()				{ return m_bEnd; }
 
 public:
-	//D3DXVECTOR3*				m_vecPath;
-	//float*						m_vecDist;
-	//D3DXVECTOR3*			    m_vecDir;
 	bool					m_bEnd;
 
 	D3DXVECTOR3				m_vecPath[200];
@@ -143,7 +133,6 @@ public:
 			m_iNextFrame = m_iCurFrame + 1;
 		m_fLerp = m_fCurTime / m_fFrameTime;
 
-		//pPath->GetCurPos(&m_SCurPath,m_iCurFrame,m_iNextFrame,m_fLerp);
 	}
 public:
 	int			m_iCurFrame;
@@ -313,7 +302,6 @@ public:
 		m_SVerTrans.y = y;
 		m_SVerTrans.z = z;
 	}
-	//
 	//FrameMove,Render
 	void		SetAlpha(float fAlpha)
 	{
@@ -341,7 +329,6 @@ public:
 		m_bUseZ = bused;
 	}
 
-//////////////////////////////////////////////////////////////////////////
 	void		RotatingXZ(float fAngleX, float fAngleZ)
 	{
 		D3DXMATRIX mat;
@@ -370,7 +357,6 @@ public:
 		D3DXMatrixRotationYawPitchRoll(&m_SMatTempRota,
 			m_SVerPartRota.y,m_SVerPartRota.x,m_SVerPartRota.z);
 	}
-	//////////////////////////////////////////////////////////////////////////
 	
 	void	GetTransMatrix(D3DXMATRIX&	mat)
 	{
@@ -386,7 +372,6 @@ public:
 		D3DXMatrixMultiply(&mat, &m_SmatRota, &m_SMatTempRota);
 
 		D3DXMatrixMultiply(&mat, &m_SmatScale, &mat);
-		//D3DXMatrixMultiply(&mat, &mat, &m_SMatTempRota);
 		D3DXMatrixMultiply(&mat, &mat, &m_SmatTrans);
 	}
 
@@ -404,7 +389,6 @@ public:
 
 
 	float								m_fLerp;
-	//////////////////////////////////////////////////////////////////////////
 	bool								m_bLoop;
 
 	bool								m_bPlay;
@@ -413,7 +397,6 @@ public:
 
 	float*								m_pfDailTime;
 
-	/////////////////////////////////////////////////////////
 	D3DXMATRIX							m_SmatScale;
 	D3DXVECTOR3							m_SVerScale;
 
@@ -435,15 +418,12 @@ public:
 	CMPEffectFile*						m_pCEffectFile;
 
 	D3DXMATRIX*							m_pMatViewProj;
-	////////////////////////////////////////////////////////////////////////
 	bool								m_bUsePath;
 	s_string							m_strPathName;
 	CEffPath*							m_pPath;
 	CEffPathCtrl						m_CPathCtrl;
-	///////////////////////////////////////////////////////////////////////
 	bool								m_bUseSound;
 	s_string							m_strSoundName;
-	///////////////////////////////////////////////////////////////////////
 	bool								m_bRotating;
 	float								m_fRotaVel;
 	float								m_fCurRotat;
@@ -484,7 +464,6 @@ public:
 			_pTex = NULL;
 		}else
 		{
-			//pResMagr->GetTextureByID(id);
 			_pTex = pResMagr->GetTextureByIDlw(id);
 		}
 		_pfDailTime = pResMagr->GetDailTime();
@@ -504,7 +483,6 @@ public:
 				return;
 			}
 			dwColor.a = 1.0f + ((-1.0f)* (m_fCurTime/fLife));
-			//D3DXColorLerp(&dwColor,&D3DXCOLOR(1,1,1,1),&D3DXCOLOR(1,1,1,0),m_fCurTime/1.0f);
 			m_fCurTime += fDailTime;
 		}
 		float	m_fCurTime;
@@ -551,9 +529,6 @@ public:
 		}
 		if(count<=0 )
 		{
-			//_vecPath.clear();
-			//_vecCtrl.clear();
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy1->_41;
 			path.m_SPos.x = dummy1->_41;
 			path.m_SPos.y = dummy1->_42;
 			path.m_SPos.z = dummy1->_43;
@@ -563,7 +538,6 @@ public:
 			path.m_SUV.y = 1; 
 			_vecPath.push_back(path);
 
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy2->_41;
 			path.m_SPos.x = dummy2->_41;
 			path.m_SPos.y = dummy2->_42;
 			path.m_SPos.z = dummy2->_43;
@@ -575,33 +549,15 @@ public:
 			_vecCtrl.push_back(tul);
 
 
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy1->_41;
-			//path.m_dwDiffuse = 0xffffffff;
-			//path.m_SUV.x = (float)1/m_iMaxLen;
-			//path.m_SUV.y = 1; 
-			//_vecPath.push_back(path);
 
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy2->_41;
-			//path.m_dwDiffuse = 0xffffffff;
-			//path.m_SUV.x = (float)1/m_iMaxLen;
-			//path.m_SUV.y = 0; 
-			//_vecPath.push_back(path);
-			//_vecCtrl.push_back(tul);
 
 		}else
 		{
 
-			//path.m_sVer[0] = _vecPath.end()->m_sVer[2];
 
-			//path.m_sVer[1] = _vecPath.end()->m_sVer[3];
 
-			//path.m_sVer[0].m_SUV.x = 0;
-			//path.m_sVer[0].m_SUV.y = 1; 
 
-			//path.m_sVer[1].m_SUV.x = (float)1/count;
-			//path.m_sVer[1].m_SUV.y = 0; 
 
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy1->_41;
 			path.m_SPos.x = dummy1->_41;
 			path.m_SPos.y = dummy1->_42;
 			path.m_SPos.z = dummy1->_43;
@@ -611,7 +567,6 @@ public:
 			path.m_SUV.y =  1; 
 			_vecPath.push_back(path);
 
-			//path.m_SPos = *(D3DXVECTOR3*)&dummy2->_41;
 			path.m_SPos.x = dummy2->_41;
 			path.m_SPos.y = dummy2->_42;
 			path.m_SPos.z = dummy2->_43;
@@ -648,7 +603,6 @@ public:
 			_pTex = NULL;
 		else
 		{
-			//pResMagr->GetTextureByID(id);
 			_pTex = pResMagr->GetTextureByIDlw(id);
 		}
 	}
@@ -696,4 +650,3 @@ protected:
 	D3DBLEND			_eDestBlend;
 
 };
-

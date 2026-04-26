@@ -12,16 +12,12 @@
 #include "lwPoseCtrl.h"
 
 LW_BEGIN
-	//#define USE_ANIM_QUAT
 #define USE_ANIM_MAT43
-	//#define USE_ANIM_MAT44
 
-	//#define USE_ANIMKEY_PRS
 
 	// begin version define
 	// --------------------------------
 	const DWORD EXP_OBJ_VERSION_0_0_0_0 = 0x0000;
-	// new verson
 	const DWORD EXP_OBJ_VERSION_1_0_0_0 = 0x1000;
 	const DWORD EXP_OBJ_VERSION_1_0_0_1 = 0x1001;
 	const DWORD EXP_OBJ_VERSION_1_0_0_2 = 0x1002;
@@ -325,46 +321,6 @@ LW_BEGIN
 		DWORD pose_num;
 	};
 
-	/*
-	struct lwMtlTexInfo : public lwIMtlTexInfo
-	{
-
-	LW_STD_DECLARATION()
-
-		enum
-		{
-			VERSION_00 =     0x0000, // start version
-		};
-
-		const static DWORD VERSION = VERSION_00;
-		static DWORD version;
-		static DWORD GetVersionSize() { return sizeof(version); }
-		static void LoadVersionMask(FILE* fp) { fread(&version, sizeof(version), 1, fp); }
-		static void SaveVersionMask(FILE* fp) { fwrite(&VERSION, sizeof(version), 1, fp); }
-
-		lwMaterial mtl;
-		lwRenderStateSetMtl2 rs_set;
-
-		lwTexInfo tex_seq[LW_MAX_TEXTURESTAGE_NUM];
-
-	public:
-		lwMtlTexInfo()
-		{
-			lwRenderStateSetTemplate_Construct(&rs_set);
-
-			lwTexInfo_Construct(&tex_seq[0]);
-			lwTexInfo_Construct(&tex_seq[1]);
-			lwTexInfo_Construct(&tex_seq[2]);
-			lwTexInfo_Construct(&tex_seq[3]);
-		}
-
-		LW_RESULT Load(FILE* fp);
-		LW_RESULT Save(FILE* fp) const;
-		DWORD GetDataSize() const { return sizeof(mtl) + sizeof(rs_set) + sizeof(tex_seq); }
-
-	};
-	*/
-
 	struct lwHelperInfo : public lwIHelperInfo {
 		LW_STD_DECLARATION()
 
@@ -481,15 +437,11 @@ LW_BEGIN
 		lwBoneKeyInfo* _key_seq;
 		lwMatrix44* _invmat_seq;
 
-		//DWORD _subset_type;
 
 	public:
 		lwAnimDataBone();
 		virtual ~lwAnimDataBone();
 
-		//DWORD GetAnimDataType() const { return ANIM_CTRL_TYPE_BONE; }
-		//DWORD GetSubsetType() const { return _subset_type; }
-		//void SetSubsetType(DWORD subset_type) { _subset_type = subset_type; }
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
@@ -502,8 +454,6 @@ LW_BEGIN
 		DWORD GetDataSize() const;
 
 		// start_frame,end_frame frame
-		// start_frame == LW_INVALID_INDEXend_frame == LW_INVALID_INDEX
-		//
 		LW_RESULT GetValue(lwMatrix44* mat, DWORD bone_id, float frame, DWORD start_frame, DWORD end_frame);
 
 		inline void SetBoneNum(DWORD num) {
@@ -559,15 +509,11 @@ LW_BEGIN
 		lwMatrix43* _mat_seq;
 		DWORD _frame_num;
 
-		//DWORD _subset_type;
 
 	public:
 		lwAnimDataMatrix();
 		virtual ~lwAnimDataMatrix();
 
-		//DWORD GetAnimDataType() const { return ANIM_CTRL_TYPE_BONE; }
-		//DWORD GetSubsetType() const { return _subset_type; }
-		//void SetSubsetType(DWORD subset_type) { _subset_type = subset_type; }
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
@@ -636,7 +582,6 @@ LW_BEGIN
 		lwMatrix44* _mat_seq;
 		DWORD _frame_num;
 
-		//DWORD _subset_type;
 
 	public:
 		lwAnimDataTexUV() : _mat_seq(0), _frame_num(0)/*, _subset_type(LW_INVALID_INDEX)*/ {
@@ -646,9 +591,6 @@ LW_BEGIN
 			LW_SAFE_DELETE_A(_mat_seq);
 		}
 
-		//DWORD GetAnimDataType() const { return ANIM_CTRL_TYPE_BONE; }
-		//DWORD GetSubsetType() const { return _subset_type; }
-		//void SetSubsetType(DWORD subset_type) { _subset_type = subset_type; }
 
 		LW_RESULT Load(FILE* fp, DWORD version);
 		LW_RESULT Save(FILE* fp) const;
@@ -763,102 +705,6 @@ LW_BEGIN
 		LW_RESULT GetDataSize() const;
 	};
 
-
-	/*
-	struct lwMeshInfo : public lwIMeshInfo
-	{
-	LW_STD_DECLARATION()
-
-		enum
-		{
-			VERSION_00 =     0x0000, // start version
-		};
-
-		const static DWORD VERSION = VERSION_00;
-
-		struct lwMeshInfoHeader
-		{
-			DWORD fvf;
-			D3DPRIMITIVETYPE pt_type;
-
-			DWORD vertex_num;
-			DWORD index_num;
-			DWORD subset_num;
-			DWORD bone_index_num;
-
-			lwRenderStateSetMesh2 rs_set;
-		};
-
-		union
-		{
-			lwMeshInfoHeader header;
-
-			struct
-			{
-				DWORD fvf;
-				D3DPRIMITIVETYPE pt_type;
-
-				DWORD vertex_num;
-				DWORD index_num;
-				DWORD subset_num;
-				DWORD bone_index_num;
-
-				lwRenderStateSetMesh2 rs_set;
-			};
-		};
-
-		lwVector3* vertex_seq;
-		lwVector3* normal_seq;
-		union {
-			lwVector2* texcoord_seq[LW_MAX_TEXTURESTAGE_NUM];
-			struct {
-				lwVector2* texcoord0_seq;
-				lwVector2* texcoord1_seq;
-				lwVector2* texcoord2_seq;
-				lwVector2* texcoord3_seq;
-			};
-		};
-		DWORD* vercol_seq;
-		DWORD* index_seq;
-		lwBlendInfo* blend_seq;
-
-
-		lwSubsetInfo subset_seq[LW_MAX_SUBSET_NUM];
-		BYTE bone_index_seq[LW_MAX_BONE_NUM];
-
-
-	public:
-		lwMeshInfo()
-			: vertex_seq(0), normal_seq(0), vercol_seq(0), index_seq(0), blend_seq(0),
-			texcoord0_seq(0), texcoord1_seq(0), texcoord2_seq(0), texcoord3_seq(0),
-			vertex_num(0), index_num(0), subset_num(0), bone_index_num(0)
-		{
-			memset(subset_seq, 0, sizeof(lwSubsetInfo) * LW_MAX_SUBSET_NUM);
-			memset(bone_index_seq, 0, sizeof(BYTE) * LW_MAX_BONE_NUM);
-			lwRenderStateSetTemplate_Construct(&rs_set);
-		}
-
-		~lwMeshInfo()
-		{
-			LW_SAFE_DELETE_A(vertex_seq);
-			LW_SAFE_DELETE_A(normal_seq);
-			LW_SAFE_DELETE_A(vercol_seq);
-			LW_SAFE_DELETE_A(texcoord0_seq);
-			LW_SAFE_DELETE_A(texcoord1_seq);
-			LW_SAFE_DELETE_A(texcoord2_seq);
-			LW_SAFE_DELETE_A(texcoord3_seq);
-			LW_SAFE_DELETE_A(index_seq);
-			LW_SAFE_DELETE_A(blend_seq);
-		}
-
-		LW_RESULT Load(FILE* fp);
-		LW_RESULT Save(FILE* fp) const;
-		DWORD GetDataSize() const;
-
-	};
-
-	typedef lwMeshInfo::lwMeshInfoHeader lwMeshInfoHeader;
-	*/
 
 	LW_RESULT lwMeshInfo_Copy(lwMeshInfo* dst, const lwMeshInfo* src);
 	LW_RESULT lwMeshInfo_Load(lwMeshInfo* info, FILE* fp, DWORD version);
@@ -1015,7 +861,6 @@ LW_BEGIN
 		LW_RESULT Save(FILE* fp);
 	};
 
-	///
 	struct lwModelNodeHeadInfo {
 		DWORD handle;
 		DWORD type;

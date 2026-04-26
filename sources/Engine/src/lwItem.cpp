@@ -184,20 +184,9 @@ LW_RESULT lwItem::Clone( lwIItem** ret_obj )
     o->Copy( this );
 
     *ret_obj = o;
-    //_tcscpy( o->_file_name, _file_name );
-    //
 
-    //lwIPrimitive* p;
-    //_obj->Clone( &p );
 
-    //o->_obj = p;
 
-    //o->_id = _id;
-    //o->_item_type = _item_type;
-    //o->_mat_base = _mat_base;
-    //o->_link_ctrl = _link_ctrl;
-    //o->_link_item_id = _link_item_id;
-    //o->_link_parent_id = _link_parent_id;
 
 
     return LW_RET_OK;
@@ -209,7 +198,6 @@ LW_RESULT lwItem::Update()
 
     if( _obj )
     {
-        //_link_ctrl = 0;
         if( _link_ctrl )
         {
             lwMatrix44 mat_parent;
@@ -413,16 +401,7 @@ LW_RESULT lwItem::GetObjDummyRunTimeMatrix( lwMatrix44* mat, DWORD id )
         goto __ret;
     }
 
-    //lwMatrix44Multiply( mat, &mat_dummy, &_mat_base );
     lwMatrix44Multiply(mat, &mat_dummy, _obj->GetMatrixGlobal());
-    // 
-    //lwIHelperObject* ho = _obj->GetHelperObject();
-    //if(ho == 0)
-    //    goto __ret;
-    //lwIHelperDummy* hd = ho->GetHelperDummy();
-    //if(hd == 0)
-    //    goto __ret;
-    //lwMatrix44Multiply(mat, &mat_dummy, hd->GetMatrixParent());
 
     ret = LW_RET_OK;
 

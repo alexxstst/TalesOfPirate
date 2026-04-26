@@ -14,7 +14,6 @@
 
 LW_USING;
 
-// class
 typedef lwAnimCtrlObjTypeInfo MPAnimCtrlObjTypeInfo;
 typedef lwVector2 MPVector2;
 typedef lwVector3 MPVector3;

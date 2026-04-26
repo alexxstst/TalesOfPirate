@@ -59,7 +59,6 @@ public:
 	*/
 	void setAsABGR(const ABGR val);
 
-	// 
 	inline MPColorValue& operator += ( const MPColorValue& rkVector )
 	{
 		r += rkVector.r;
@@ -115,7 +114,6 @@ public:
 };
 
 //=============================================================================
-// 
 //=============================================================================
 inline const MPColorValue operator +(const MPColorValue& lhs, const MPColorValue& rhs)
 {

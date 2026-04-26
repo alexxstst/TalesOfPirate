@@ -32,7 +32,6 @@ namespace Corsairs::Engine::Render {
     //  накапливают пер-категорийные count/bytes (сравнение substring'ом
     //  даёт false-positive для коротких ключей вроде "ui" — это сознательный
     //  компромисс, исторически унаследованный от lwTexLogMgr).
-    //
     //  По умолчанию выключен. Включается из клиента после g_Config.Load()
     //  если в [TextureLog] enabled = 1. Когда выключен — Log() это no-op,
     //  так что 5 колсайтов в lwResourceMgr работают и в проде без накладных.
@@ -48,7 +47,6 @@ namespace Corsairs::Engine::Render {
         void SetEnabled(bool enabled);
         bool IsEnabled() const;
 
-        //  Зарегистрировать категорию (substring для матчинга против пути файла).
         //  Регистрировать стоит до начала загрузок, чтобы пер-категорийные
         //  счётчики начали накапливаться с первого события.
         void RegisterCategory(std::string_view substring);

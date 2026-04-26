@@ -73,7 +73,6 @@ MPEffectMath::~MPEffectMath()
 //-----------------------------------------------------------------------------
 void MPEffectMath::buildTrigTables(void)
 {
-	// 
 	float angle;
 	for (int i = 0; i < m_TrigTableSize; ++i)
 	{

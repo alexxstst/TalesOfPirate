@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-//#include "MPMap.h"
 /************************************************************************/
 /* class CMPEffectCtrl*/
 /************************************************************************/
@@ -75,12 +74,10 @@ public:
 public:
 	CMPPartCtrl*	GetPartCtrl(){ return &_CPartCtrl;}
 public:
-	//
 	CMPPartCtrl		_CPartCtrl;
 };
 
 
-//////////////////////////////////////////////////////////////////////////
 class  CMagicCtrl;
 inline  void	Part_trace(CMagicCtrl* pEffCtrl, void*	pParam);
 inline  void	Part_drop(CMagicCtrl* pEffCtrl, void*	pParam);
@@ -148,7 +145,6 @@ public:
 
 
 	void				Reset();
-	//
 	virtual		void	HitObj(){}
 
 
@@ -206,7 +202,6 @@ public:
 	int			m_iIdx;
 	CMPResManger*	m_pCResMagr;
 protected:
-	//
 	int				_iModelNum;
 	std::vector<CMPModelEff*>	_CpModel;
 	int				_iPartNum;
@@ -227,9 +222,7 @@ protected:
 	s_string					_strResult;
 protected:
 
-	//float*								_pDailTime;
 	int					_iTargetID;
-	/////////////////////////////////////////////////
 	D3DXVECTOR3							_vPos;
 	D3DXVECTOR3							_vDir;
 	float								_fVel;
@@ -246,7 +239,6 @@ protected:
 
 	float				_fDist;
 
-	//for arc
 	float				_fHalfHei;
 	D3DXVECTOR3			_vArcOrg;
 	D3DXVECTOR3			_vArcAxis;

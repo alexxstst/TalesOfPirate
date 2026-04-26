@@ -1,5 +1,4 @@
 ﻿#include "StdAfx.h"
-//#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
 
@@ -59,8 +58,6 @@ void	CMPEffectCtrl::SetFontEffect(char* pszText,CMPFont* pFont)
 /**/
 /************************************************************************/
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
 
 CMagicCtrl::CMagicCtrl(void)
 {
@@ -241,23 +238,17 @@ void	CMagicCtrl::CalculateEmission(D3DXVECTOR3* vStart,D3DXVECTOR3* vTarget)
 		return;
 	_vOldPos = *vStart;
 	_vOldTarget = *vTarget;
-	//_vOldTarget.z = _vOldPos.z;
 	_vPos = _vOldPos;
 
 	_vDir = _vOldTarget - _vOldPos;
 	_fDist = D3DXVec3LengthSq(&_vDir);
 
 	D3DXVec3Normalize(&_vDir,&_vDir);
-	//
-	//_vMapTarget = _vOldPos;
-	//_vMapTarget.z = GetScene()->GetGridHeight(_vMapTarget.x,_vMapTarget.y);
-	//
 	const auto v = _vOldTarget - _vOldPos;
 	_fHalfHei =  D3DXVec3Length(&v);
 	_vArcOrg = _vOldPos+ _vDir * (_fHalfHei/2);
 	_vArcOrg.z -= _fHalfHei/2;
 
-	//
 	const auto v2 = _vOldPos - _vArcOrg;
 	_fHalfHei = D3DXVec3Length(&v2);
 	D3DXVec3Normalize(&_vArcAxis, &v2);
@@ -356,7 +347,6 @@ void	CMagicCtrl::ResetDir(D3DXVECTOR3* vTarget)
 	for (int n = 0; n < _iModelNum; n++) 
 	{
 		_CpModel[n]->RotatingXZ(_fDirXZ[0], _fDirXZ[1]);
-		//_CpModel[n]->Play(0);
 	}
 }
 

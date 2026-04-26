@@ -12,7 +12,6 @@ LW_BEGIN
 
 // by lsh
 // PlayPoseCallBackPLAY_LOOP
-///////////////////////////
 
 class lwPoseCtrl : public lwIPoseCtrl
 {
@@ -57,7 +56,6 @@ public:
     LW_RESULT CallBack(const lwPlayPoseInfo* info);
 };
 
-///////////////////////////
 
 LW_RESULT lwPlayPoseSmooth(lwPlayPoseInfo* dst, const lwPlayPoseInfo* src, lwIPoseCtrl* ctrl);
 

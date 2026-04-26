@@ -61,9 +61,19 @@ bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
 		return false;
 	}
 	if (!fons || fonsFontId < 0) {
+		// Известный баг: системные шрифты Windows (Arial, Tahoma, Segoe UI и т.п.)
+		// в текущей FreeType+fontstash-инфраструктуре НЕ резолвятся автоматически.
+		// FontManager::InstallFontFile грузит файлы из ./font/<Family>/, и только
+		// эти семейства попадают в fontstash. Запрос на «Arial» (или любой другой
+		// шрифт, не лежащий в ./font/) даёт fonsFontId<0 и сюда. Workaround в lua
+		// (font_bootstrap.lua / console_bootstrap.lua): использовать семейства из
+		// ./font/ — Roboto, Inter, NotoSans, OpenSans, PTSans, SourceSans3.
+		// Долгосрочный fix: подружить fontstash с GDI/DirectWrite либо
+		// автоматически копировать %WINDIR%/Fonts/<Family>.ttf в FontManager.
 		ToLogService("errors", LogLevel::Error,
 					 "FontRender::CreateFont('{}', size={}): fontstash не передан — "
-					 "шрифт не зарегистрирован через FontManager::InstallFontFile?",
+					 "шрифт не зарегистрирован через FontManager::InstallFontFile? "
+					 "(семейство нет в ./font/<Family>/; см. комментарий выше)",
 					 szFontName, nSize);
 		return false;
 	}

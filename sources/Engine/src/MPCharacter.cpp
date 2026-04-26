@@ -40,7 +40,6 @@ MPCharacter::~MPCharacter()
 void MPCharacter::Destroy()
 {
     _physique->Destroy();
-    //LW_SAFE_DELETE( _weapon );
 
     for( DWORD i = 0; i < _link_item_num; i++ )
     {
@@ -302,9 +301,6 @@ BOOL MPCharacter::InitBone( const char* file )
 
 LW_RESULT MPCharacter::LoadBone( const char* file )
 {
-	//char szData[128];
-	//sprintf( szData, "%s\n", file );
-	//LG( "bone", szData );
     return _physique->LoadBone( file );
 }
 
@@ -541,12 +537,8 @@ LW_RESULT MPCharacter::AttachItem( const MPItemLinkInfo* info )
     else
     {
         assert(0);
-        // 
-        //lwIPrimitive* p = _physique->GetPrimitive( info->data );
-        //if( p == NULL )
         //    return LW_RET_FAILED;
 
-        //if( LW_FAILED( p->SetItemLink( &ili ) ) )
         //    return LW_RET_FAILED;
 
     }
@@ -587,7 +579,6 @@ LW_RESULT MPCharacter::UnwieldItem( const MPSceneItem* obj )
     {
         if( _link_item_seq[ i ].obj == obj )
         {
-            //_physique->ClearItemLink( _link_item_seq[ i ]->GetObject() );
             _link_item_seq[ i ].obj->GetObject()->ClearLinkCtrl();
 
             _link_item_num -= 1;
@@ -610,22 +601,11 @@ LW_RESULT MPCharacter::SetSubObjItemLink( DWORD obj_id, const lwSceneItemLinkInf
 
     assert(0);
 
-    //lwItemLinkInfo ili;
-    //ili.id = info->id;
-    //ili.obj = info->obj->GetObject();
-    //ili.link_item_id = info->link_item_id;
-    //ili.link_parent_id = info->link_parent_id;
 
-    //lwIPrimitive* p = _physique->GetPrimitive( obj_id );
-    //if( p == NULL )
     //    return LW_RET_FAILED;
 
-    //if( LW_FAILED( p->SetItemLink( &ili ) ) )
     //    return LW_RET_FAILED;
 
-    //_link_item_seq[ _link_item_num ].obj = info->obj;
-    //_link_item_seq[ _link_item_num ].data = info->data;
-    //_link_item_num++;
 
     return LW_RET_OK;
 
@@ -661,7 +641,6 @@ DWORD MPCharacter::CheckPosePlayingStatus()
 
     if( ctrl == 0 )
     {
-        // no bone pose ctrl, we return 0;
         return 0;
     }
 
@@ -739,7 +718,6 @@ LW_RESULT MPCharacter::GetObjDummyRunTimeMatrix( lwMatrix44* mat, DWORD dummy_id
             return LW_RET_FAILED;
 
         lwMatrix44Multiply(mat, m, _mat_ptr);
-        //*mat = *m;
 
         ret = LW_RET_OK;
     }

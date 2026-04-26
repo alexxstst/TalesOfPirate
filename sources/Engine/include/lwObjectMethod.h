@@ -13,7 +13,6 @@ protected:
     float _angle_yaw;
     float _angle_pitch;
     float _angle_roll;
-    //float _scale;
 	// modified by clp
 	lwVector3 _scale;
 

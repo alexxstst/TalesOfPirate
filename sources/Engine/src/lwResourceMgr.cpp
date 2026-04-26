@@ -23,6 +23,8 @@
 #include "lwDDS.h"
 #include "lwAnimCtrlObj.h"
 #include "lwFileEncode.h"
+
+#include <filesystem>
 #include "GlobalInc.h"
 
 #include <vector>
@@ -222,26 +224,7 @@ LW_BEGIN
 
 		dev_obj->SetTexture(_stage, _tex);
 
-		//if(_stage == 2)
-		//{
-		//    dev_obj->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255,255,255,255));
-		//}
-
 		// texture stage state
-
-		/*
-			_rsa_0.BeginTextureStageState(dev_obj, 0, LW_TEX_TSS_NUM, _stage);
-		*/
-
-		//for(i = 0; i < _tss_set.SEQUENCE_SIZE; i++)
-		//{
-		//    rsv = &_tss_set.rsv_seq[0][i];
-
-		//    if(rsv->state == LW_INVALID_INDEX)
-		//        break;
-
-		//    dev_obj->SetTextureStageState(_stage, (D3DTEXTURESTAGESTATETYPE)rsv->state, rsv->value);
-		//}
 
 		return LW_RET_OK;
 	}
@@ -253,15 +236,6 @@ LW_BEGIN
 
 		// texture stage state
 		_rsa_0.EndTextureStageState(dev_obj, 0, LW_TEX_TSS_NUM, _stage);
-		//for(i = 0; i < _tss_set.SEQUENCE_SIZE; i++)
-		//{
-		//    rsv = &_tss_set.rsv_seq[1][i];
-
-		//    if(rsv->state == LW_INVALID_INDEX)
-		//        break;
-
-		//    dev_obj->SetTextureStageState(_stage, (D3DTEXTURESTAGESTATETYPE)rsv->state, rsv->value);
-		//}
 		return LW_RET_OK;
 	}
 
@@ -290,7 +264,6 @@ LW_BEGIN
 		case TEX_TYPE_DATA:
 
 			// info->data удалено (было `void*` разного размера на x86/x64).
-			// Пользовательский указатель теперь получают через `lwITex::GetUserData()`.
 			if (_data_info.data) {
 				info->width = _data_info.width;
 				info->height = _data_info.height;
@@ -388,8 +361,6 @@ LW_BEGIN
 
 		switch (_tex_type) {
 		case TEX_TYPE_FILE:
-			//if(LW_FAILED(lwLoadTexDataInfo(&_data_info, _file_name, _format, _colorkey_type, &_colorkey, _byte_alignment_flag)))
-			//    goto __ret;
 			break;
 		case TEX_TYPE_DATA:
 			break;
@@ -482,14 +453,7 @@ LW_BEGIN
 				goto __addr_ret_ok;
 
 			lwIResBufMgr* resbuf_mgr = _res_mgr->GetResBufMgr();
-			//lwSysMemTexInfo info;
-			//info.colorkey = _colorkey.color;
-			//info.format = (D3DFORMAT)_format;
-			//info.level = _level;
-			//info.filter = D3DX_DEFAULT;
-			//info.mip_filter = D3DX_DEFAULT;
 
-			//_tcscpy(info.file_name, _file_name);
 			lwSysMemTexInfo* info;
 
 			// dds
@@ -507,25 +471,32 @@ LW_BEGIN
 			if (LW_SUCCEEDED(resbuf_mgr->QuerySysMemTex(&info, dds_file)))
 				goto __load_check_dds;
 
-			lwSysMemTexInfo smti;
-			smti.colorkey = _colorkey.color;
-			smti.format = (D3DFORMAT)_format;
-			smti.level = _level;
-			smti.filter = D3DX_DEFAULT;
-			smti.mip_filter = D3DX_DEFAULT;
-			_tcscpy(smti.file_name, dds_file);
-
 			LW_HANDLE handle;
-			if (LW_SUCCEEDED(resbuf_mgr->RegisterSysMemTex(&handle, &smti))) {
-				if (LW_RESULT r = resbuf_mgr->GetSysMemTex(&info, handle); LW_FAILED(r))
-				{
-					ToLogService("errors", LogLevel::Error,
-						"[{}] resbuf_mgr->GetSysMemTex(dds) failed: file={}, handle={}, ret={}",
-						__FUNCTION__, dds_file, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
-					goto __ret;
-				}
 
-				goto __load_check_dds;
+			// .dds-версия — оптимизированная заранее. Если её нет на диске,
+			// сразу падаем на оригинал (.bmp/.tga), не пытаясь Register
+			// (иначе LoadFileInMemory логировал бы это как Error, хотя
+			// fallback на оригинал штатный).
+			if (std::filesystem::exists(dds_file)) {
+				lwSysMemTexInfo smti;
+				smti.colorkey = _colorkey.color;
+				smti.format = (D3DFORMAT)_format;
+				smti.level = _level;
+				smti.filter = D3DX_DEFAULT;
+				smti.mip_filter = D3DX_DEFAULT;
+				_tcscpy(smti.file_name, dds_file);
+
+				if (LW_SUCCEEDED(resbuf_mgr->RegisterSysMemTex(&handle, &smti))) {
+					if (LW_RESULT r = resbuf_mgr->GetSysMemTex(&info, handle); LW_FAILED(r))
+					{
+						ToLogService("errors", LogLevel::Error,
+							"[{}] resbuf_mgr->GetSysMemTex(dds) failed: file={}, handle={}, ret={}",
+							__FUNCTION__, dds_file, static_cast<std::uint64_t>(handle), static_cast<long long>(r));
+						goto __ret;
+					}
+
+					goto __load_check_dds;
+				}
 			}
 
 			// here we check origin file existing
@@ -667,11 +638,6 @@ LW_BEGIN
 
 	__ret:
 		_state |= RES_STATE_LOADTEST;
-		/*if(LW_FAILED(ret))
-		{
-			lwMessageBox("load texture file error with: (%d) %s", ret, this->_file_name);
-
-		}*/
 
 		return ret;
 	}
@@ -699,7 +665,6 @@ LW_BEGIN
 			return LoadVideoMemoryMT();
 		}
 		//  Не-MT путь — lazy-load: реальная заливка в VRAM произойдёт в
-		//  lwTex::BeginPass() при первой встрече с этой текстурой во время
 		//  отрисовки. Здесь возвращаем OK, чтобы не блокировать main thread
 		//  на CreateTex.
 		return LW_RET_OK;
@@ -785,7 +750,6 @@ LW_BEGIN
 		switch (_tex_type) {
 		case TEX_TYPE_FILE:
 		case TEX_TYPE_DATA:
-			//LW_SAFE_DELETE_A(_data_info.data);
 			memset(&_data_info, 0, sizeof(_data_info));
 			break;
 		case TEX_TYPE_SIZE:
@@ -1013,8 +977,6 @@ LW_BEGIN
 		if (_state & RES_STATE_SYSTEMMEMORY)
 			goto __addr_ret_ok;
 
-		//if(LW_FAILED(lwMeshInfo_Copy(&_mesh_info, info)))
-		//    goto __ret;
 
 		_mesh_info_ptr = const_cast<lwMeshInfo*>(info);
 
@@ -1040,8 +1002,6 @@ LW_BEGIN
 
 		__debugbreak();
 
-		//if(LW_FAILED(lwLoadMeshInfoFromResFile(&_mesh_info, &_res_file)))
-		//    goto __ret;
 
 	__addr_ret_ok:
 		ret = LW_RET_OK;
@@ -1580,7 +1540,11 @@ LW_BEGIN
 	lwILockableStreamIB* lwMesh::GetLockableStreamIB() {
 		lwILockableStreamIB* s = 0;
 
-		if (_stream_type != STREAM_LOCKABLE || _vb_id == LW_INVALID_INDEX)
+		// Гард по _ib_id, а не по _vb_id (была опечатка copy-paste из
+		// GetLockableStreamVB). Меш мог зарегистрировать VB и не регистрировать
+		// IB — тогда _ib_id остаётся LW_INVALID_INDEX, и обращение к pool'у
+		// IB по 0xFFFFFFFF тонуло в ошибке `_pool_ib.GetObj failed: handle=4294967295`.
+		if (_stream_type != STREAM_LOCKABLE || _ib_id == LW_INVALID_INDEX)
 			goto __ret;
 		{
 			lwILockableStreamMgr* lsm = _res_mgr->GetLockableStreamMgr();
@@ -1681,7 +1645,6 @@ LW_BEGIN
 		_opacity = i->opacity;
 		_transp_type = i->transp_type;
 
-		//SetMtlRenderState(&info->rs_set);
 		_rsa_0.Load(info->rs_set, LW_MTL_RS_NUM);
 
 		for (DWORD j = 0; j < LW_MAX_MTL_TEX_NUM; j++) {
@@ -1817,13 +1780,6 @@ LW_BEGIN
 		if (_tex_seq[stage] == 0)
 			goto __addr_ok;
 
-		//if(_tex_seq[stage]->GetMTFlag() == 1)
-		//{
-		//    while(_tex_seq[stage]->IsLoadingOK() == 0)
-		//    {
-		//        ::Sleep(10);
-		//    }
-		//}
 
 		if (LW_RESULT r = _tex_seq[stage]->Release(); LW_FAILED(r))
 		{
@@ -1873,10 +1829,8 @@ LW_BEGIN
 
 		dev_obj->SetMaterial(&_mtl);
 
-		//dev_obj->SetTexture(0, NULL);
 
 		if (_transp_type != MTLTEX_TRANSP_FILTER) {
-			//lwRenderStateAtom* rsa;
 			// src, dest
 			DWORD id[2] = {LW_INVALID_INDEX, LW_INVALID_INDEX};
 
@@ -1955,11 +1909,6 @@ LW_BEGIN
 			}
 
 			// texture transform
-			//if(_uvmat[i])
-			//{
-			//    dev_obj->SetTransform((D3DTRANSFORMSTATETYPE)(D3DTS_TEXTURE0 + i), _uvmat[i]);
-			//    dev_obj->SetTextureStageState(i, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-			//}
 		}
 
 		{
@@ -2025,10 +1974,6 @@ LW_BEGIN
 			}
 
 			// texture transform
-			//if(_uvmat[i])
-			//{
-			//    dev_obj->SetTextureStageState(i, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
-			//}
 		}
 
 		_rsa_0.EndRenderState(dev_obj, 0, RSA_SET_SIZE);
@@ -2817,7 +2762,6 @@ LW_BEGIN
 				i->second->Release();
 			}
 		}
-		//
 	}
 
 	// attributes method
@@ -2950,11 +2894,8 @@ LW_BEGIN
 	LW_RESULT lwResourceMgr::CreateAnimCtrlObj(lwIAnimCtrlObj** ret_obj, DWORD type) {
 		LW_RESULT ret = LW_RET_FAILED;
 
-		//lwIAnimCtrl* c = NULL;
 		lwIAnimCtrlObj* o = NULL;
 
-		//if(LW_FAILED(CreateAnimCtrl(&c, type)))
-		//    goto __ret;
 
 		switch (type) {
 		case ANIM_CTRL_TYPE_MAT:
@@ -2977,7 +2918,6 @@ LW_BEGIN
 			goto __ret;
 		}
 
-		//o->SetAnimCtrl(c);
 		*ret_obj = o;
 
 		ret = LW_RET_OK;
@@ -3267,75 +3207,9 @@ LW_BEGIN
 		return ret;
 	}
 
-	//LW_RESULT lwResourceMgr::RegisterAnimData(DWORD* ret_id, const void* data, DWORD anim_type)
-	//{
-	//    LW_RESULT ret = LW_RET_FAILED;
-	//
-	//    lwAnimCtrl* ctrl;
-	//
-	//    switch(anim_type)
-	//    {
-	//    case ANIM_CTRL_TYPE_BONE:
-	//        ctrl = LW_NEW(lwAnimCtrlBone);
-	//        ((lwAnimCtrlBone*)ctrl)->Create((lwAnimDataBone*)data);
-	//        break;
-	//    case ANIM_CTRL_TYPE_MATRIX:
-	//        ctrl = LW_NEW(lwAnimCtrlMatrix);
-	//        ((lwAnimCtrlMatrix*)ctrl)->Create((lwAnimDataMatrix*)data);
-	//        break;
-	//    case ANIM_CTRL_TYPE_TEXTURE0:
-	//    case ANIM_CTRL_TYPE_TEXTURE1:
-	//    case ANIM_CTRL_TYPE_TEXTURE2:
-	//    case ANIM_CTRL_TYPE_TEXTURE3:
-	//        ctrl = LW_NEW(lwAnimCtrlTexUV);
-	//        ((lwAnimCtrlTexUV*)ctrl)->Create((lwAnimDataTexUV*)data);
-	//        break;
-	//    case ANIM_CTRL_TYPE_IMAGE0:
-	//        break;
-	//    default:
-	//        assert(0 && "invalid ctrl type in call RegisterAnimData");
-	//    }
-	//
-	//    ret = _pool_animctrl.Register(ret_id, (void*)ctrl);
-	//
 	//    return ret;
-	//
-	//}
-	//
-	//LW_RESULT lwResourceMgr::RegisterAnimData(DWORD* ret_id, const lwResFileAnimData* info)
-	//{
-	//    LW_RESULT ret = LW_RET_FAILED;
-	//
-	//    lwAnimCtrl* ctrl;
-	//
-	//    switch(info->anim_type)
-	//    {
-	//    case ANIM_CTRL_TYPE_BONE:
-	//        ctrl = LW_NEW(lwAnimCtrlBone);
-	//        break;
-	//    case ANIM_CTRL_TYPE_MATRIX:
-	//        ctrl = LW_NEW(lwAnimCtrlMatrix);
-	//        break;
-	//    case ANIM_CTRL_TYPE_TEXTURE0:
-	//        ctrl = LW_NEW(lwAnimCtrlTexUV);
-	//        break;
-	//    case ANIM_CTRL_TYPE_IMAGE0:
-	//        break;
-	//    default:
-	//        assert(0 && "invalid ctrl type in call RegisterAnimData");
-	//    }
-	//
-	//    ctrl->SetResFile(info);
-	//
-	//    if(LW_FAILED(ctrl->LoadResFileData()))
-	//        goto __ret;
-	//
-	//    ret = _pool_animctrl.Register(ret_id, (void*)ctrl);
-	//
 	//__ret:
 	//    return ret;
-	//}
-	//
 	LW_RESULT lwResourceMgr::QueryTex(DWORD* ret_id, const char* file_name) {
 		DWORD found = LW_INVALID_INDEX;
 		_pool_tex.ForEach([&](DWORD handle, void* raw) -> bool {
@@ -3416,11 +3290,6 @@ LW_BEGIN
 			obj->SetRegisterID(LW_INVALID_INDEX);
 		}
 
-		//if(ret == LW_RET_OK_1)
-		//{
-		//    obj->Unload();
-		//    obj->Release();
-		//}
 
 	__ret:
 		return ret;
@@ -3443,13 +3312,7 @@ LW_BEGIN
 			obj->SetRegisterID(LW_INVALID_INDEX);
 		}
 
-		//if(ret == LW_RET_OK_1)
-		//{
-		//    _tex_size_vm -= (obj->GetDataInfo()->size);
 
-		//    obj->Unload();
-		//    obj->Release();
-		//}
 
 	__ret:
 		return ret;
@@ -3472,10 +3335,6 @@ LW_BEGIN
 			obj->SetRegisterID(LW_INVALID_INDEX);
 		}
 
-		//if(ret == LW_RET_OK_1)
-		//{
-		//    obj->Release();
-		//}
 
 	__ret:
 		return ret;
@@ -3765,7 +3624,6 @@ LW_BEGIN
 			static_cast<lwITex*>(raw)->ResetDevice();
 		});
 
-		//
 		ret = LW_RET_OK;
 	__ret:
 		return ret;
@@ -3873,8 +3731,6 @@ LW_BEGIN
 					}
 					else {
 						writer[offset + x] |= 0xFF000000;
-						//writer[ offset + x ] = trasparent;
-						//writer[ offset + x ] = 0xFF000000;
 					}
 				}
 			}

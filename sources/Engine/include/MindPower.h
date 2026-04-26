@@ -24,9 +24,6 @@
 #include "MPInterface.h"
 LW_USING
 
-//#define  INCLUDEUI
-//
-//#include "Log.h"
 #include "GlobalInc.h"
 #include "MPRender.h"
 #include "MPTextureSet.h"
@@ -41,4 +38,3 @@ LW_USING
 #include "MPMath.h"
 
 typedef MPMap  MPTerrain;
-

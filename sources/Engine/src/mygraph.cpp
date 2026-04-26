@@ -9,7 +9,6 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	FILE *fp = fopen(strFileName , "rb");
 	if(fp==NULL)
 	{
-		//     
 		g_logManager.InternalLog(LogLevel::Error, "common", std::format("Open File {} Error!(LoadTextureFromRawFile())", strFileName));
 		return NULL;
 	}
@@ -31,7 +30,6 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	IDirect3DTextureX* pTexture;
 	if(D3DXCreateTexture(g_pd3dDevice , w , h , D3DX_DEFAULT , 0 , D3DFMT_A8R8G8B8 ,  D3DPOOL_MANAGED , &pTexture)!=D3D_OK)                              
 	{
-		//    
 		g_logManager.InternalLog(LogLevel::Error, "common", "CreateTexture Failed");
 		delete[] pbImageBuf;
 		return NULL;
@@ -64,7 +62,6 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	}
 	else
 	{
-		//    
 		g_logManager.InternalLog(LogLevel::Error, "common", "Lock Texture Failed!");
 		SAFE_RELEASE(pTexture);
 	}
@@ -72,5 +69,4 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	delete[] pbImageBuf;
 	return pTexture;
 }
-
 

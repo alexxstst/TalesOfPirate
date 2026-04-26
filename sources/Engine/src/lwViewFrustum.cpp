@@ -73,10 +73,8 @@ BOOL lwViewFrustum::IsPointInFrustum(const lwVector3* v)
 	// The distance the plane is from the origin.  The equation ends with "= 0" because
 	// that is true when the point (x, y, z) is ON the plane.  When the point is NOT on
 	// the plane, it is either a negative number (the point is behind the plane) or a
-	// positive number (the point is in front of the plane).  We want to check if the point
 	// is in front of the plane, so all we have to do is go through each point and make
 	// sure the plane equation goes out to a positive number on each side of the frustum.
-	// The result (be it positive or negative) is the distance the point is front the plane.
 
     for(int i = 0; i < 6; i++)
     {

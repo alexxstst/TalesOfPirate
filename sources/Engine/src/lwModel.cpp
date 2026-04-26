@@ -215,9 +215,7 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
     _res_mgr->RegisterObject(&_id, this, OBJ_TYPE_MODEL);
 
     RegisterSceneMgr(_res_mgr->GetSysGraphics()->GetSceneMgr());
-    //SortPrimitiveObj();
 
-    //this->ShowBoundingObject(1);
 
     return ret;
 
@@ -294,7 +292,6 @@ LW_RESULT lwModel::Update()
     {
         imp = _obj_seq[i];
 
-        // 
         lwMatrix44 mat(_mat_base);
         pp = imp;
         while(pp->GetParentID() != LW_INVALID_INDEX)
@@ -694,7 +691,6 @@ LW_RESULT lwModel::SortPrimitiveObj()
             p = _obj_seq[i];
             _obj_seq[i] = _obj_seq[j];
             _obj_seq[j] = p;
-            //if(_obj_seq[j]->_
         }
     }
 
