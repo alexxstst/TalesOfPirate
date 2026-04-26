@@ -1218,7 +1218,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		if (!pCha || !pMain) return;
 
 		if (pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 7) {
-			CS_Frnd_Invite(pCha->getHumanName());
+			CS_Frnd_Invite(pCha->getHumanName().c_str());
 		}
 		else {
 			// 7
@@ -1233,7 +1233,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 
 		if ((pMain->IsBoat() || pMain->getGameAttr()->get(ATTR_LV) >= 8) &&
 			(pCha->IsBoat() || pCha->getGameAttr()->get(ATTR_LV) >= 8)) {
-			CS_Team_Invite(pCha->getHumanName());
+			CS_Team_Invite(pCha->getHumanName().c_str());
 		}
 		else {
 			// 8
@@ -1295,8 +1295,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if (pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat()) {
-			const char* szName = pCha->getHumanName();
-			CS_MasterInvite(pCha->getHumanName(), mainMouseRight->nTag);
+			CS_MasterInvite(pCha->getHumanName().c_str(), mainMouseRight->nTag);
 		}
 		else {
 			// 
@@ -1308,8 +1307,7 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if (pCha && pMain && !pCha->IsBoat() && !pMain->IsBoat()) {
-			const char* szName = pCha->getHumanName();
-			CS_PrenticeInvite(pCha->getHumanName(), mainMouseRight->nTag);
+			CS_PrenticeInvite(pCha->getHumanName().c_str(), mainMouseRight->nTag);
 		}
 		else {
 			// 
@@ -1332,12 +1330,12 @@ void CStartMgr::_evtPopMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	else if (str == "Block") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CTeam* pTeam = g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked);
-		if (!pTeam->FindByName(pCha->getHumanName()))
-			pTeam->Add(-1, pCha->getHumanName(), "", 9);
+		if (!pTeam->FindByName(pCha->getHumanName().c_str()))
+			pTeam->Add(-1, pCha->getHumanName().c_str(), "", 9);
 	}
 	else if (str == "Unblock") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
-		g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->DelByName(pCha->getHumanName());
+		g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->DelByName(pCha->getHumanName().c_str());
 	}
 	else if (str == "Manage") {
 		CCharacter* pCha = (CCharacter*)mainMouseRight->GetPointer();
@@ -1512,7 +1510,7 @@ void CStartMgr::PopMenu(CCharacter* pCha) {
 				pItem->SetIsEnabled(pMain != pCha && pCha->IsPlayer());
 			}
 			else if (stricmp(pItem->GetString(), "Block") == 0) {
-				if ((!g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName())) && !pCha->
+				if ((!g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName().c_str())) && !pCha->
 					IsMonster()) {
 					pItem->SetIsHide(false);
 					pItem->SetIsEnabled(pMain != pCha);
@@ -1522,7 +1520,7 @@ void CStartMgr::PopMenu(CCharacter* pCha) {
 				}
 			}
 			else if (stricmp(pItem->GetString(), "Unblock") == 0) {
-				if (g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName()) && !pCha->
+				if (g_stUIChat.GetTeamMgr()->Find(enumTeamBlocked)->FindByName(pCha->getHumanName().c_str()) && !pCha->
 					IsMonster()) {
 					pItem->SetIsHide(false);
 					pItem->SetIsEnabled(pMain != pCha);

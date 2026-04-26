@@ -9,7 +9,7 @@ class CReadingState : public CActionState {
 public:
 	CReadingState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CReadingState";
 	}
 

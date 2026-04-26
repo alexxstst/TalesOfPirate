@@ -16,7 +16,6 @@ LW_BEGIN
 		// base
 		_type = MODELNODE_INVALID;
 		_id = LW_INVALID_INDEX;
-		_descriptor[0] = '\0';
 		lwMatrix44Identity(&_mat_local);
 		lwMatrix44Identity(&_mat_world);
 
@@ -41,7 +40,7 @@ LW_BEGIN
 		lwIResourceMgr* res_mgr = (lwIResourceMgr*)param;
 		lwModelNodeInfo* node_info = (lwModelNodeInfo*)node->GetData();
 
-		char* tex_path = res_mgr->GetTexturePath();
+		const char* tex_path = res_mgr->GetTexturePath().c_str();
 
 		lwINode* model_node = 0;
 		if (LW_RESULT r = res_mgr->CreateNode(&model_node, node_info->_type); LW_FAILED(r)) {
@@ -1919,7 +1918,7 @@ LW_BEGIN
 					goto __ret;
 			}
 			if (info->mask & MNQI_DESCRIPTOR) {
-				if (_tcscmp(obj->GetDescriptor(), info->descriptor))
+				if (obj->GetDescriptor() != info->descriptor)
 					goto __ret;
 			}
 			if (info->mask & MNQI_USERPROC) {
@@ -1953,8 +1952,6 @@ LW_BEGIN
 
 	lwNodeObject::lwNodeObject(lwIResourceMgr* res_mgr)
 		: _res_mgr(res_mgr), _obj_root(0) {
-		_name[0] = '\0';
-
 		_obj_root = LW_NEW(lwTreeNode);
 		lwINode* node = 0;
 		_res_mgr->CreateNode(&node, NODE_DUMMY);

@@ -87,7 +87,7 @@ LW_BEGIN
 						if (LW_RESULT r = tp->RemoveTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r)) {
 							ToLogService("errors", LogLevel::Error,
 										 "[{}] tp->RemoveTask failed: file={}, ret={}",
-										 __FUNCTION__, _file_name[0] ? _file_name : "(empty)",
+										 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}),
 										 static_cast<long long>(r));
 							LG_MSGBOX("fatal error when release texture, call jack");
 						}
@@ -105,7 +105,7 @@ LW_BEGIN
 		if (LW_FAILED(ret)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] _res_mgr->UnregisterTex failed: file={}, ret={}",
-						 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(ret));
+						 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(ret));
 			goto __ret;
 		}
 
@@ -141,8 +141,6 @@ LW_BEGIN
 
 		_data = 0;
 
-		_file_name[0] = '\0';
-
 		_rsa_0.Allocate(LW_TEX_TSS_NUM);
 
 		memset(&_data_info, 0, sizeof(_data_info));
@@ -170,7 +168,7 @@ LW_BEGIN
 				if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] LoadVideoMemory failed: file={}, ret={}",
-								 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+								 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 					SetLoadResMask(LOADINGRES_MASK_LOADVM_FAILED, 0);
 				}
 			}
@@ -185,7 +183,7 @@ LW_BEGIN
 				if (LW_RESULT r = tp->RegisterTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] tp->RegisterTask failed: file={}, ret={}",
-								 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+								 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 					SetLoadResMask(LOADINGRES_MASK_RTMTREG_FAILED, 0);
 				}
 
@@ -256,7 +254,7 @@ LW_BEGIN
 
 		switch (_tex_type) {
 		case TEX_TYPE_FILE:
-			_tcscpy(info->file_name, _file_name);
+			_tcscpy(info->file_name, _file_name.c_str());
 			info->width = _data_info.width;
 			info->height = _data_info.height;
 			break;
@@ -299,13 +297,10 @@ LW_BEGIN
 		switch (info->type) {
 		case TEX_TYPE_FILE:
 			if (tex_path) {
-				std::snprintf(_file_name, sizeof(_file_name), "%s%s", tex_path, info->file_name);
+				_file_name = std::format("{}{}", tex_path, info->file_name);
 			}
 			else {
-				const std::string_view src{info->file_name};
-				const std::size_t n = std::min<std::size_t>(src.size(), sizeof(_file_name) - 1);
-				std::memcpy(_file_name, src.data(), n);
-				_file_name[n] = '\0';
+				_file_name = info->file_name;
 			}
 			break;
 		case TEX_TYPE_DATA:
@@ -397,7 +392,7 @@ LW_BEGIN
 			if (LW_RESULT r = LoadSystemMemory(); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadSystemMemory failed: file={}, ret={}",
-							 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+							 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -449,7 +444,7 @@ LW_BEGIN
 				_data_info.size);
 		}
 		else if (_tex_type == TEX_TYPE_FILE) {
-			if (_tcslen(_file_name) == 0)
+			if (_file_name.empty())
 				goto __addr_ret_ok;
 
 			lwIResBufMgr* resbuf_mgr = _res_mgr->GetResBufMgr();
@@ -460,7 +455,7 @@ LW_BEGIN
 			lwDDSHeader* dds_header = 0;
 			BOOL dds_flag = 1;
 			char dds_file[LW_MAX_FILE];
-			_tcscpy(dds_file, _file_name);
+			_tcscpy(dds_file, _file_name.c_str());
 			char* p = _tcsrchr(dds_file, '.');
 			if (p && (_tcsicmp(&p[1], "bmp") == 0 || _tcsicmp(&p[1], "tga") == 0)) {
 				p[1] = 'd';
@@ -503,7 +498,7 @@ LW_BEGIN
 			{
 				dds_flag = 0;
 
-				if (LW_SUCCEEDED(resbuf_mgr->QuerySysMemTex(&info, _file_name)))
+				if (LW_SUCCEEDED(resbuf_mgr->QuerySysMemTex(&info, _file_name.c_str())))
 					goto __load_check_dds;
 
 				lwSysMemTexInfo smti;
@@ -512,7 +507,7 @@ LW_BEGIN
 				smti.level = _level;
 				smti.filter = D3DX_DEFAULT;
 				smti.mip_filter = D3DX_DEFAULT;
-				_tcscpy(smti.file_name, _file_name);
+				_tcscpy(smti.file_name, _file_name.c_str());
 
 				if (LW_RESULT r = resbuf_mgr->RegisterSysMemTex(&handle, &smti); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
@@ -647,7 +642,7 @@ LW_BEGIN
 		if (LW_RESULT r = tp->RegisterTask(__thread_proc_load_tex, (void*)this); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] tp->RegisterTask failed: file={}, ret={}",
-						 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+						 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 			return LW_RET_FAILED;
 		}
 
@@ -677,7 +672,7 @@ LW_BEGIN
 			if (LW_RESULT r = LoadSystemMemory(); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadSystemMemory failed: file={}, ret={}",
-							 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+							 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -689,7 +684,7 @@ LW_BEGIN
 			if (_tex_type != TEX_TYPE_FILE)
 				goto __ret;
 
-			if (LW_RESULT r = lwLoadTexDataInfo(&_data_info, _file_name, _format, _colorkey_type, &_colorkey,
+			if (LW_RESULT r = lwLoadTexDataInfo(&_data_info, _file_name.c_str(), _format, _colorkey_type, &_colorkey,
 												_byte_alignment_flag); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] lwLoadTexDataInfo failed: file={}, format={}, ret={}",
@@ -774,7 +769,7 @@ LW_BEGIN
 		if (LW_RESULT r = dev_obj->ReleaseTex(_tex); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] dev_obj->ReleaseTex failed: file={}, ret={}",
-						 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+						 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -795,14 +790,14 @@ LW_BEGIN
 		if (LW_RESULT r = UnloadVideoMemory(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] UnloadVideoMemory failed: file={}, ret={}",
-						 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+						 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 			goto __ret;
 		}
 
 		if (LW_RESULT r = UnloadSystemMemory(); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
 						 "[{}] UnloadSystemMemory failed: file={}, ret={}",
-						 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+						 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 			goto __ret;
 		}
 
@@ -830,7 +825,7 @@ LW_BEGIN
 			if (LW_RESULT r = UnloadVideoMemory(); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] UnloadVideoMemory failed: file={}, ret={}",
-							 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+							 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -847,7 +842,7 @@ LW_BEGIN
 			if (LW_RESULT r = LoadVideoMemory(); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] LoadVideoMemory failed: file={}, ret={}",
-							 __FUNCTION__, _file_name[0] ? _file_name : "(empty)", static_cast<long long>(r));
+							 __FUNCTION__, (_file_name.empty() ? std::string_view{"(empty)"} : std::string_view{_file_name}), static_cast<long long>(r));
 				goto __ret;
 			}
 		}
@@ -2662,7 +2657,6 @@ LW_BEGIN
 			lwInitInternalRenderCtrlVSProc(this);
 		}
 
-		_texture_path[0] = '\0';
 
 		{
 			// mutithread loading res option flag
@@ -3151,7 +3145,7 @@ LW_BEGIN
 		DWORD found = LW_INVALID_INDEX;
 		_pool_tex.ForEach([&](DWORD handle, void* raw) -> bool {
 			auto* obj_tex = static_cast<lwTex*>(raw);
-			if (_tcscmp(obj_tex->GetFileName(), file_name) == 0) {
+			if (obj_tex->GetFileName() == file_name) {
 				found = handle;
 				return false;
 			}
@@ -3417,7 +3411,7 @@ LW_BEGIN
 			lwModel* found = nullptr;
 			_pool_model.ForEach([&](DWORD, void* raw) -> bool {
 				auto* m = static_cast<lwModel*>(raw);
-				if (_tcscmp(m->GetFileName(), file_name) == 0) {
+				if (m->GetFileName() == file_name) {
 					found = m;
 					return false;
 				}
@@ -3657,7 +3651,7 @@ LW_BEGIN
 		}
 	}
 
-	const char* lwResourceMgr::getTextureOperationDescription(size_t operation) {
+	std::string_view lwResourceMgr::getTextureOperationDescription(size_t operation) {
 		switch (D3DTEXTUREOP(operation)) {
 		case D3DTOP_DISABLE:
 			return ("D3DTOP_DISABLE");

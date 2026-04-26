@@ -193,7 +193,7 @@ bool CIsSkillUse::IsAttack(CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* 
 	return true;
 }
 
-const char* CIsSkillUse::GetError() {
+std::string_view CIsSkillUse::GetError() {
 	static std::string buf = "CIsSkillUse ???";
 	switch (_eError) {
 	case enumInValid:
@@ -202,8 +202,12 @@ const char* CIsSkillUse::GetError() {
 	case enumNotEnergy:
 		buf = SafeVFormat(GetLanguageString(150), _pSkill->szName);
 		break;
-	case enumNotAttack: return GetLanguageString(151).c_str();
-	case enumNotUse: return GetLanguageString(152).c_str();
+	case enumNotAttack:
+		buf = GetLanguageString(151);
+		break;
+	case enumNotUse:
+		buf = GetLanguageString(152);
+		break;
 	case enumNotMP:
 		buf = SafeVFormat(GetLanguageString(153), _pSkill->szName);
 		break;
@@ -252,5 +256,5 @@ const char* CIsSkillUse::GetError() {
 		buf = SafeVFormat(GetLanguageString(167), _pSkill->szName);
 		break;
 	}
-	return buf.c_str();
+	return buf;
 }

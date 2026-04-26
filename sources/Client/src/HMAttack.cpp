@@ -422,7 +422,7 @@ void CAttribSynchro::_Exec() {
 		if (pTeam) {
 			CMember* pMember = pTeam->Find(pCha->getAttachID());
 			if (pMember) {
-				pMember->SetName(pCha->getHumanName());
+				pMember->SetName(pCha->getHumanName().c_str());
 				pMember->SetJobName(g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));
 			}
 		}

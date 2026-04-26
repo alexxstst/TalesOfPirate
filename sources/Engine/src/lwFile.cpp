@@ -78,7 +78,7 @@ LW_BEGIN
 		if (_handle == INVALID_HANDLE_VALUE)
 			goto __ret;
 
-		_tcscpy(_file, file);
+		_file = file;
 
 
 		ret = LW_RET_OK;

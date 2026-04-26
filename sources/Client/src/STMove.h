@@ -13,7 +13,7 @@ public:
 	virtual void FrameMove();
 	virtual void PushPoint(int x, int y);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CWaitMoveState";
 	}
 
@@ -89,7 +89,7 @@ public:
 	virtual void FrameMove();
 	virtual void Cancel();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CMoveState";
 	}
 
@@ -131,7 +131,7 @@ public:
 	CServerMoveState(CActor* p) : CMoveState(p), _IsClientMove(true) {
 	}
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CServerMoveState";
 	}
 
@@ -180,7 +180,7 @@ public:
 	virtual void PushPoint(int x, int y);
 	virtual void MoveEnd(int x, int y, int nState);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "COneMoveState";
 	}
 

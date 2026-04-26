@@ -232,7 +232,7 @@ namespace GUI {
 		if (!pScene) return;
 		CCharacter* pCha = pScene->SearchByID(dwOwnerId);
 		if (!pCha) return;
-		lblOwnerName->SetCaption(pCha->getHumanName());
+		lblOwnerName->SetCaption(pCha->getHumanName().c_str());
 		edtBoothName->SetCaption(szBoothName);
 		edtBoothName->SetIsEnabled(false);
 

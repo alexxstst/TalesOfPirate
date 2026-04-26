@@ -15,7 +15,7 @@ LW_BEGIN
 		// base
 		DWORD _type;
 		DWORD _id;
-		char _descriptor[64];
+		std::string _descriptor;
 		lwMatrix44 _mat_local;
 		lwMatrix44 _mat_world;
 		lwByteSet _state_set;
@@ -76,8 +76,8 @@ LW_BEGIN
 			_mat_local = *mat;
 		}
 
-		void SetDescriptor(const char* str64) {
-			_tcscpy(_descriptor, str64);
+		void SetDescriptor(std::string_view str64) {
+			_descriptor = str64;
 		}
 
 		DWORD GetType() const {
@@ -96,7 +96,7 @@ LW_BEGIN
 			return &_mat_world;
 		}
 
-		char* GetDescriptor() {
+		const std::string& GetDescriptor() {
 			return _descriptor;
 		}
 
@@ -225,8 +225,8 @@ LW_BEGIN
 			_mat_local = *mat;
 		}
 
-		void SetDescriptor(const char* str64) {
-			_tcscpy(_descriptor, str64);
+		void SetDescriptor(std::string_view str64) {
+			_descriptor = str64;
 		}
 
 		void SetAnimCtrlObj(lwIAnimCtrlObjBone* ctrl_obj) {
@@ -249,7 +249,7 @@ LW_BEGIN
 			return &_mat_world;
 		}
 
-		char* GetDescriptor() {
+		const std::string& GetDescriptor() {
 			return _descriptor;
 		}
 
@@ -321,8 +321,8 @@ LW_BEGIN
 			_mat_local = *mat;
 		}
 
-		void SetDescriptor(const char* str64) {
-			_tcscpy(_descriptor, str64);
+		void SetDescriptor(std::string_view str64) {
+			_descriptor = str64;
 		}
 
 		void SetAnimCtrlObj(lwIAnimCtrlObjMat* ctrl_obj) {
@@ -345,7 +345,7 @@ LW_BEGIN
 			return &_mat_world;
 		}
 
-		char* GetDescriptor() {
+		const std::string& GetDescriptor() {
 			return _descriptor;
 		}
 
@@ -418,8 +418,8 @@ LW_BEGIN
 			_mat_local = *mat;
 		}
 
-		void SetDescriptor(const char* str64) {
-			_tcscpy(_descriptor, str64);
+		void SetDescriptor(std::string_view str64) {
+			_descriptor = str64;
 		}
 
 		DWORD GetType() const {
@@ -438,7 +438,7 @@ LW_BEGIN
 			return &_mat_world;
 		}
 
-		char* GetDescriptor() {
+		const std::string& GetDescriptor() {
 			return _descriptor;
 		}
 
@@ -489,7 +489,7 @@ LW_BEGIN
 		lwIResourceMgr* _res_mgr;
 		lwITreeNode* _obj_root;
 
-		char _name[LW_MAX_NAME];
+		std::string _name;
 
 	public:
 		lwNodeObject(lwIResourceMgr* res_mgr);
@@ -502,13 +502,13 @@ LW_BEGIN
 		LW_RESULT Destroy();
 		LW_RESULT CullPrimitive();
 
-		void SetName(const char* name) {
-			_tcscpy(_name, name);
+		void SetName(std::string_view name) {
+			_name = name;
 		}
 
 		void SetMatrix(const lwMatrix44* mat);
 
-		char* GetName() {
+		const std::string& GetName() {
 			return _name;
 		}
 

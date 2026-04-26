@@ -38,7 +38,7 @@ public:
 
 	virtual CCharacter* GetHarmCha() = 0;
 
-	virtual const char* GetClassName() {
+	virtual std::string_view GetClassName() {
 		return "CStateSynchro";
 	}
 

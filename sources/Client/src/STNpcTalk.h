@@ -7,7 +7,7 @@ class CNpcState : public CActionState {
 public:
 	CNpcState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CNpcState";
 	}
 
@@ -26,7 +26,7 @@ class CShopState : public CActionState {
 public:
 	CShopState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CShopState";
 	}
 
@@ -49,7 +49,7 @@ public:
 	CPickState(CActor* p);
 	~CPickState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CPickState";
 	}
 
@@ -71,7 +71,7 @@ class CEventState : public CActionState {
 public:
 	CEventState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CEventState";
 	}
 
@@ -96,7 +96,7 @@ class CRepairState : public CActionState {
 public:
 	CRepairState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CRepairState";
 	}
 
@@ -119,7 +119,7 @@ class CFeedState : public CActionState {
 public:
 	CFeedState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CFeedState";
 	}
 
@@ -152,7 +152,7 @@ class CFeteState : public CActionState {
 public:
 	CFeteState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CFeteState";
 	}
 

@@ -137,71 +137,71 @@ inline int GetWeaponBackDummy(int nWeaponType, bool isLeftHand) {
 	return nBackDummy;
 }
 
-inline void SetPreName(int nItem, char* szName, DWORD& dwColor) {
+inline void SetPreName(int nItem, std::string& szName, DWORD& dwColor) {
 	DWORD COLOR_SKYBLUE = D3DCOLOR_ARGB(255, 168, 168, 255);
 
 	switch (nItem) {
-	case 3936: strncpy_s(szName, sizeof(szName), GetLanguageString(7).c_str(), _TRUNCATE);
+	case 3936: szName = GetLanguageString(7);
 		dwColor = D3DCOLOR_ARGB(255, 192, 192, 192);
 		return;
-	case 3937: strncpy_s(szName, sizeof(szName), GetLanguageString(8).c_str(), _TRUNCATE);
+	case 3937: szName = GetLanguageString(8);
 		dwColor = D3DCOLOR_ARGB(255, 000, 255, 012);
 		return;
-	case 3938: strncpy_s(szName, sizeof(szName), GetLanguageString(9).c_str(), _TRUNCATE);
+	case 3938: szName = GetLanguageString(9);
 		dwColor = D3DCOLOR_ARGB(255, 217, 255, 119);
 		return;
-	case 3939: strncpy_s(szName, sizeof(szName), GetLanguageString(10).c_str(), _TRUNCATE);
+	case 3939: szName = GetLanguageString(10);
 		dwColor = D3DCOLOR_ARGB(255, 070, 182, 240);
 		return;
-	case 3940: strncpy_s(szName, sizeof(szName), GetLanguageString(11).c_str(), _TRUNCATE);
+	case 3940: szName = GetLanguageString(11);
 		dwColor = D3DCOLOR_ARGB(255, 255, 207, 000);
 		return;
-	case 3941: strncpy_s(szName, sizeof(szName), GetLanguageString(12).c_str(), _TRUNCATE);
+	case 3941: szName = GetLanguageString(12);
 		dwColor = D3DCOLOR_ARGB(255, 255, 000, 000);
 		return;
-	case 3942: strncpy_s(szName, sizeof(szName), GetLanguageString(13).c_str(), _TRUNCATE);
+	case 3942: szName = GetLanguageString(13);
 		dwColor = D3DCOLOR_ARGB(255, 241, 014, 240);
 		return;
 
-	case 5331: strncpy_s(szName, sizeof(szName), GetLanguageString(922).c_str(), _TRUNCATE);
+	case 5331: szName = GetLanguageString(922);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,192,192,192); return;
-	case 5332: strncpy_s(szName, sizeof(szName), GetLanguageString(923).c_str(), _TRUNCATE);
+	case 5332: szName = GetLanguageString(923);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,135,135,135); return;
-	case 5333: strncpy_s(szName, sizeof(szName), GetLanguageString(924).c_str(), _TRUNCATE);
+	case 5333: szName = GetLanguageString(924);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,255,255,255); return;
-	case 5334: strncpy_s(szName, sizeof(szName), GetLanguageString(925).c_str(), _TRUNCATE);
+	case 5334: szName = GetLanguageString(925);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,070,182,240); return;
-	case 5335: strncpy_s(szName, sizeof(szName), GetLanguageString(926).c_str(), _TRUNCATE);
+	case 5335: szName = GetLanguageString(926);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,000,255,012); return;
-	case 5336: strncpy_s(szName, sizeof(szName), GetLanguageString(927).c_str(), _TRUNCATE);
+	case 5336: szName = GetLanguageString(927);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,217,255,119); return;
-	case 5337: strncpy_s(szName, sizeof(szName), GetLanguageString(928).c_str(), _TRUNCATE);
+	case 5337: szName = GetLanguageString(928);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,255,207,000); return;
-	case 5338: strncpy_s(szName, sizeof(szName), GetLanguageString(929).c_str(), _TRUNCATE);
+	case 5338: szName = GetLanguageString(929);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,255,127,000); return;
-	case 5339: strncpy_s(szName, sizeof(szName), GetLanguageString(930).c_str(), _TRUNCATE);
+	case 5339: szName = GetLanguageString(930);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,255,000,000); return;
-	case 5340: strncpy_s(szName, sizeof(szName), GetLanguageString(931).c_str(), _TRUNCATE);
+	case 5340: szName = GetLanguageString(931);
 		dwColor = COLOR_SKYBLUE;
 		return; //D3DCOLOR_ARGB(255,241,014,240); return;
 
 	// TOM
-	case 822: strncpy_s(szName, sizeof(szName), GetLanguageString(14).c_str(), _TRUNCATE);
+	case 822: szName = GetLanguageString(14);
 		dwColor = D3DCOLOR_ARGB(255, 255, 000, 000);
 		return; //
-	case 823: strncpy_s(szName, sizeof(szName), GetLanguageString(15).c_str(), _TRUNCATE);
+	case 823: szName = GetLanguageString(15);
 		dwColor = D3DCOLOR_ARGB(255, 241, 014, 240);
 		return; //
-	default: szName[0] = '\0';
+	default: szName.clear();
 	}
 }
 
@@ -289,23 +289,17 @@ CCharacter::CCharacter()
 	  chaMount(NULL),
 	  mountOwner(NULL) {
 	_szName.clear();
-	memset(_szHumanName, 0, sizeof(_szHumanName));
 	memset(&_vPos, 0, sizeof(_vPos));
-	memset(_szGuildName, 0, sizeof(_szGuildName));
-	memset(_szGuildMotto, 0, sizeof(_szGuildMotto));
-	memset(_szPreName, 0, sizeof(_szPreName));
-	memset(_szShopName, 0, sizeof(_szShopName));
 	memset(_ItemFace, 0, sizeof(_ItemFace));
 	memset(_pItemFaceEff, 0, sizeof(_pItemFaceEff));
 	memset(CLOAKGlow, 0, sizeof(CLOAKGlow));
 
 	_szName = "Player";
-	strcpy(_szSecondName, "");
 
 	_bUpdate = false;
 
 #ifdef _LOG_NAME_
-	strcpy(_szLogName, "LogName");
+	_logName = "LogName";
 #endif
 
 	_pActor = new CActor(this);
@@ -1154,7 +1148,7 @@ void CCharacter::InitState() {
 
 	_pSceneHeight->Reset();
 
-	_szShopName[0] = 0;
+	_shopName.clear();
 	_PK.AllFalse();
 	setSideID(0);
 }
@@ -1401,10 +1395,10 @@ void CCharacter::_FightSwitch(bool isFight) {
 void CCharacter::UpdataFace(const stNetChangeChaPart& stPart) {
 	//look = stPart;
 	if (IsPlayer() && !IsBoat()) {
-		SetPreName(stPart.SLink[enumEQUIP_NECK].sID, _szPreName, _szPreColor);
+		SetPreName(stPart.SLink[enumEQUIP_NECK].sID, _preName, _preColor);
 	}
 	else {
-		_szPreName[0] = '\0';
+		_preName.clear();
 	}
 	memcpy(&_stChaPart, &stPart, sizeof(_stChaPart));
 

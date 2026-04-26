@@ -55,7 +55,7 @@ public:
 		return _pTarget;
 	}
 
-	virtual const char* GetClassName() {
+	virtual std::string_view GetClassName() {
 		return "CAttackEffect";
 	}
 
@@ -166,7 +166,7 @@ public:
 		_RepState.SetValue(pState, nCount);
 	}
 
-	virtual const char* GetClassName() {
+	virtual std::string_view GetClassName() {
 		return "CAttackRepSynchro";
 	}
 
@@ -206,7 +206,7 @@ public:
 		return _pCha;
 	}
 
-	virtual const char* GetClassName() {
+	virtual std::string_view GetClassName() {
 		return "CAttribSynchro";
 	}
 
@@ -244,7 +244,7 @@ public:
 		return _pCha;
 	}
 
-	virtual const char* GetClassName() {
+	virtual std::string_view GetClassName() {
 		return "CSkillStateSynchro";
 	}
 

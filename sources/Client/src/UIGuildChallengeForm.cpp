@@ -207,13 +207,13 @@ namespace GUI {
 		}
 
 		if (m_lChargeMoney[iIndex] == -1) {
-			if (GetChallengeMasterIndex(pMainCha->getGuildName()) != -1) {
+			if (GetChallengeMasterIndex(pMainCha->getGuildName().c_str()) != -1) {
 				g_pGameApp->MsgBox(GetLanguageString(585));
 				return;
 			}
 		}
 		else {
-			int iMasterIndex = GetChallengeMasterIndex(pMainCha->getGuildName());
+			int iMasterIndex = GetChallengeMasterIndex(pMainCha->getGuildName().c_str());
 			if (iMasterIndex != -1) {
 				if (iIndex == iMasterIndex) {
 					g_pGameApp->MsgBox(GetLanguageString(586));

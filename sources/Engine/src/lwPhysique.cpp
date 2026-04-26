@@ -407,7 +407,7 @@ LW_BEGIN
 		lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
 		BYTE create_helper_primitive = opt_mgr->GetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE);
 
-		char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER);
+		const char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER).c_str();
 
 		lwGeomObjInfo* info = (lwGeomObjInfo*)geom_info;
 
@@ -526,7 +526,7 @@ LW_BEGIN
 		lwIOptionMgr* opt_mgr = sys->GetOptionMgr();
 		BYTE create_helper_primitive = opt_mgr->GetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE);
 
-		char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER);
+		const char* tex_path = path_info->GetPath(PATH_TYPE_TEXTURE_CHARACTER).c_str();
 
 		// query mesh pool
 		DWORD ret_id;

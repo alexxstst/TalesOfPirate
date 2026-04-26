@@ -360,17 +360,17 @@ private:
 	int _ulChaID;
 
 	std::string _szName{}; // 
-	char _szHumanName[33]; // 
-	char _szGuildName[33]; // 
-	char _szGuildMotto[101]; // 
+	std::string _humanName; //
+	std::string _guildName; //
+	std::string _guildMotto; //
 	int _nGuildID; // ID
 	int _nGuildPermission;
 	DWORD _dwGuildColor; // 
 	DWORD _dwNameColor; // 
-	char _szShopName[33]; // 
+	std::string _shopName; //
 
-	char _szPreName[16]; // 
-	DWORD _szPreColor;
+	std::string _preName; //
+	DWORD _preColor;
 
 	long _lSideID; // ,,,
 	CShadeEff* _pSideShade; // ,
@@ -416,12 +416,12 @@ public: //
 		_nGuildPermission = guildPermission;
 	}
 
-	void setGuildName(const char* pszName) {
-		strncpy(_szGuildName, pszName, sizeof(_szGuildName));
+	void setGuildName(std::string_view pszName) {
+		_guildName = pszName;
 	}
 
-	const char* getGuildName() {
-		return _szGuildName;
+	const std::string& getGuildName() {
+		return _guildName;
 	}
 
 	int getMobID() {
@@ -432,28 +432,28 @@ public: //
 		_ulChaID = ID;
 	}
 
-	void setGuildMotto(const char* pszName) {
-		strncpy(_szGuildMotto, pszName, sizeof(_szGuildMotto));
+	void setGuildMotto(std::string_view pszName) {
+		_guildMotto = pszName;
 	}
 
-	const char* getGuildMotto() {
-		return _szGuildMotto;
+	const std::string& getGuildMotto() {
+		return _guildMotto;
 	}
 
-	void setHumanName(const char* pszName) {
-		strncpy(_szHumanName, pszName, sizeof(_szHumanName));
+	void setHumanName(std::string_view pszName) {
+		_humanName = pszName;
 	}
 
-	const char* getHumanName() {
-		return _szHumanName;
+	const std::string& getHumanName() {
+		return _humanName;
 	}
 
-	void setShopName(const char* pszName) {
-		strncpy(_szShopName, pszName, sizeof(_szShopName));
+	void setShopName(std::string_view pszName) {
+		_shopName = pszName;
 	}
 
-	const char* getShopName() {
-		return _szShopName;
+	const std::string& getShopName() {
+		return _shopName;
 	}
 
 	void setNameColor(DWORD dwColor);
@@ -462,12 +462,12 @@ public: //
 		return _dwNameColor;
 	}
 
-	const char* GetPreName() {
-		return _szPreName;
+	const std::string& GetPreName() {
+		return _preName;
 	}
 
 	DWORD GetPreColor() {
-		return _szPreColor;
+		return _preColor;
 	}
 
 	// Game Attrib Shortcut
@@ -603,14 +603,14 @@ public:
 	int LoadCha(const LoadChaInfo* info);
 
 	void UpdateTileColor();
-	const char* getLogName();
+	const std::string& getLogName();
 
-	void setSecondName(const char* pszSecName) {
-		strcpy(_szSecondName, pszSecName);
+	void setSecondName(std::string_view pszSecName) {
+		_secondName = pszSecName;
 	}
 
-	const char* getSecondName() {
-		return _szSecondName;
+	const std::string& getSecondName() {
+		return _secondName;
 	}
 
 	void ShowSecondName(BOOL bShow) {
@@ -766,11 +766,11 @@ private: //
 	int _nHelixRadii;
 
 #ifdef _LOG_NAME_
-	char _szLogName[128];
+	std::string _logName;
 
 public:
-	void setLogName(const char* str) {
-		strncpy(_szLogName, str, sizeof(_szLogName));
+	void setLogName(std::string_view str) {
+		_logName = str;
 	}
 
 	static bool IsShowLogName;
@@ -798,7 +798,7 @@ private:
 	bool _IsForUI; // ?UI
 
 	long _nLeaderID; // ID
-	char _szSecondName[41]; // ,
+	std::string _secondName; //,
 	BOOL _bShowSecondName; // 
 	short _sPhotoID; // ID
 
@@ -896,11 +896,11 @@ inline bool CCharacter::IsDefaultSkill() {
 	return _pReadySkillInfo == NULL || _pReadySkillInfo == _pDefaultSkillInfo;
 }
 
-inline const char* CCharacter::getLogName() {
+inline const std::string& CCharacter::getLogName() {
 #ifdef _LOG_NAME_
-	return _szLogName;
+	return _logName;
 #else
-	return _szName.c_str();
+	return _szName;
 #endif
 }
 

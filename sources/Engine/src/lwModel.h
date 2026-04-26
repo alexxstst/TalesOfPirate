@@ -17,7 +17,7 @@ LW_BEGIN
 		lwISceneMgr* _scene_mgr;
 
 		lwStateCtrl _state_ctrl;
-		char _file_name[LW_MAX_NAME];
+		std::string _file_name;
 		lwIPrimitive* _obj_seq[LW_MAX_MODEL_GEOM_OBJ_NUM];
 		DWORD _obj_num;
 		lwMatrix44 _mat_base;
@@ -37,11 +37,11 @@ LW_BEGIN
 			return _model_id;
 		}
 
-		void SetFileName(const char* file) {
-			_tcscpy(_file_name, file);
+		void SetFileName(std::string_view file) {
+			_file_name = file;
 		}
 
-		char* GetFileName() {
+		const std::string& GetFileName() {
 			return _file_name;
 		}
 

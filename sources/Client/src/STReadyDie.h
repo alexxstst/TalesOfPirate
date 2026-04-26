@@ -12,7 +12,7 @@ public:
 	CReadyDieState(CActor* p);
 	~CReadyDieState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CReadyDieState";
 	}
 

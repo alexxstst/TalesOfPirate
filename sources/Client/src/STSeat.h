@@ -5,7 +5,7 @@ class CSeatState : public CActionState {
 public:
 	CSeatState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CSeatState";
 	}
 

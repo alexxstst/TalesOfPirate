@@ -43,13 +43,12 @@ char* lwGetPathFileNameBase(char* buf, const char* path) {
 	return buf;
 }
 
-char* lwGetPathFileNameExt(char* buf, const char* path) {
-	char* p = (char*)_tcsrchr(path, '.');
-	if (p == 0)
-		return 0;
-	p++;
-	_tcsncpy_s(buf, _tcslen(p) + 1, p, _TRUNCATE);
-	return buf;
+std::string lwGetPathFileNameExt(std::string_view path) {
+	const auto pos = path.rfind('.');
+	if (pos == std::string_view::npos) {
+		return {};
+	}
+	return std::string{path.substr(pos + 1)};
 }
 
 char* lwGetPathFilePath(char* buf, const char* path) {

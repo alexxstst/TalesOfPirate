@@ -14,14 +14,13 @@ LW_BEGIN
 
 	private:
 		HANDLE _handle;
-		char _file[LW_MAX_PATH];
+		std::string _file;
 
 	private:
 		LW_RESULT _CheckDirectory(const char* path);
 
 	public:
 		lwFile() : _handle(INVALID_HANDLE_VALUE) {
-			_file[0] = '\0';
 		}
 
 		~lwFile() {
@@ -45,7 +44,7 @@ LW_BEGIN
 			return _handle;
 		}
 
-		const char* GetFileName() {
+		const std::string& GetFileName() {
 			return _file;
 		}
 

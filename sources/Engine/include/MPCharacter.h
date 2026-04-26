@@ -142,7 +142,7 @@ LW_BEGIN
 			_physique->setTextureOperation(index, operation);
 		}
 
-		const char* getTextureOperationDescription(size_t operation) {
+		std::string_view getTextureOperationDescription(size_t operation) {
 			return _physique->getTextureOperationDescription(operation);
 		}
 

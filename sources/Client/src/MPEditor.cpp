@@ -657,7 +657,7 @@ void MPEditor::FrameMove(DWORD dwTimeParam) {
 				if (pCha->IsValid()) {
 					sMonsterStatus[pCha->getTypeID()]++;
 					auto _strRelive = SafeVFormat(GetLanguageString(205), pCha->getReliveTime());
-					pCha->setSecondName(_strRelive.c_str());
+					pCha->setSecondName(_strRelive);
 				}
 			}
 			int x = 600;

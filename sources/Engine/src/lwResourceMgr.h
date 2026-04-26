@@ -51,7 +51,7 @@ LW_BEGIN
 		DWORD _byte_alignment_flag;
 		DWORD _colorkey_type;
 		lwColorValue4b _colorkey;
-		char _file_name[LW_MAX_PATH];
+		std::string _file_name;
 
 		lwTexDataInfo _data_info;
 
@@ -94,7 +94,7 @@ LW_BEGIN
 			return _reg_id;
 		}
 
-		char* GetFileName() {
+		const std::string& GetFileName() {
 			return _file_name;
 		}
 
@@ -130,8 +130,8 @@ LW_BEGIN
 			return _data;
 		}
 
-		void SetFileName(const char* file) {
-			_tcscpy(_file_name, file);
+		void SetFileName(std::string_view file) {
+			_file_name = file;
 		}
 
 		void SetState(DWORD state) {
@@ -562,7 +562,7 @@ LW_BEGIN
 		lwSlotMapVoidPtr1024 _pool_item;
 
 
-		char _texture_path[LW_MAX_PATH];
+		std::string _texture_path;
 
 		// render ctrl proc sequence
 		lwRenderCtrlVSCreateProc _render_ctrl_proc_seq[LW_RENDER_CTRL_PROC_NUM];
@@ -686,18 +686,18 @@ LW_BEGIN
 		LW_RESULT LoseDevice();
 		LW_RESULT ResetDevice();
 
-		void SetTexturePath(const char* path) {
-			_tcscpy(_texture_path, path);
+		void SetTexturePath(std::string_view path) {
+			_texture_path = path;
 		}
 
-		char* GetTexturePath() {
+		const std::string& GetTexturePath() {
 			return _texture_path;
 		}
 
 	public:
 		IDirect3DTextureX* getMonochromaticTexture(D3DCOLOR colour, const std::string& filterTexture);
 
-		const char* getTextureOperationDescription(size_t operation);
+		std::string_view getTextureOperationDescription(size_t operation);
 
 	private:
 		IDirect3DTextureX* _createMonochromaticTexture(

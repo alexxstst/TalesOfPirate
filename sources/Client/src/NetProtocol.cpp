@@ -440,16 +440,16 @@ void stNetActorCreate::SetValue(CCharacter* pCha) {
 	pCha->setChaCtrlType(chCtrlType);
 	pCha->SetTeamLeaderID(ulTLeaderID);
 	pCha->setHumanID(ulCommID);
-	pCha->setHumanName(szCommName.c_str());
+	pCha->setHumanName(szCommName);
 	pCha->setGMLv(chGMLv);
 	if (chGMLv) pCha->setNpcState(0);
-	pCha->setSecondName(strMottoName.c_str());
+	pCha->setSecondName(strMottoName);
 	pCha->setPhotoID(sIcon);
-	pCha->setShopName(strStallName.c_str());
+	pCha->setShopName(strStallName);
 
 	pCha->setGuildID(lGuildID);
-	pCha->setGuildName(strGuildName.c_str());
-	pCha->setGuildMotto(strGuildMotto.c_str());
+	pCha->setGuildName(strGuildName);
+	pCha->setGuildMotto(strGuildMotto);
 	pCha->setGuildPermission(chGuildPermission);
 	pCha->setSideID(SSideInfo.chSideID);
 	pCha->setIsPlayerCha(chIsPlayer == 1);

@@ -6,7 +6,7 @@ class CPoseState : public CActionState {
 public:
 	CPoseState(CActor* p);
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CPoseState";
 	}
 
@@ -52,7 +52,7 @@ public:
 	CInsertState(CActor* p);
 	~CInsertState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CInsertState";
 	}
 
@@ -96,7 +96,7 @@ public:
 	CEquipState(CActor* p);
 	~CEquipState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CEquipState";
 	}
 

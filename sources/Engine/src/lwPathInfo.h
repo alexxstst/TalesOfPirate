@@ -8,15 +8,15 @@
 LW_BEGIN
 	class lwPathInfo : public lwIPathInfo {
 	public:
-		char _path_buf[PATH_TYPE_NUM][LW_MAX_PATH];
+		std::string _path_buf[PATH_TYPE_NUM];
 
 		LW_STD_DECLARATION()
 
 	public:
 		lwPathInfo();
 
-		char* SetPath(DWORD type, const char* path);
-		char* GetPath(DWORD type);
+		void SetPath(DWORD type, std::string_view path);
+		const std::string& GetPath(DWORD type);
 	};
 
 	class lwOptionMgr : public lwIOptionMgr {

@@ -2543,7 +2543,7 @@ void CLargerMap::Update(int x, int y) {
 							m_pScene->GetTerrainName(), _sx + n, _sy + m);
 
 					// If this texture not in video memory, load it.
-					if (!_pTex[idx] || strcmp(_pTex[idx]->GetFileName(), filename.c_str()) != 0) {
+					if (!_pTex[idx] || _pTex[idx]->GetFileName() != filename) {
 						if (_access(filename.c_str(), 0) == -1) {
 							if (_pTex[idx] != _pTexDefault) {
 								SAFE_RELEASE(_pTex[idx]);

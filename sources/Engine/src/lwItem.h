@@ -20,7 +20,7 @@ LW_BEGIN
 		DWORD _link_item_id;
 
 		lwStateCtrl _state_ctrl;
-		char _file_name[LW_MAX_NAME];
+		std::string _file_name;
 		lwIPrimitive* _obj;
 		lwMatrix44 _mat_base;
 		DWORD _id;
@@ -33,11 +33,11 @@ LW_BEGIN
 		lwItem(lwIResourceMgr* res_mgr);
 		~lwItem();
 
-		void SetFileName(const char* file) {
-			_tcscpy(_file_name, file);
+		void SetFileName(std::string_view file) {
+			_file_name = file;
 		}
 
-		char* GetFileName() {
+		const std::string& GetFileName() {
 			return _file_name;
 		}
 

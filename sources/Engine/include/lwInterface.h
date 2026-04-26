@@ -323,7 +323,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual void setComponentColour(size_t index, D3DCOLOR colour, const std::string& filterTextureName)
 		PURE_METHOD;
 		virtual void setTextureOperation(size_t index, D3DTEXTUREOP operation) PURE_METHOD;
-		virtual const char* getTextureOperationDescription(size_t operation) PURE_METHOD;
+		virtual std::string_view getTextureOperationDescription(size_t operation) PURE_METHOD;
 		virtual void setPixelShader(size_t index, const std::string& filename) PURE_METHOD;
 	};
 
@@ -447,8 +447,8 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIPathInfo : public lwInterface {
 	public:
-		virtual char* SetPath(DWORD type, const char* path) PURE_METHOD;
-		virtual char* GetPath(DWORD type) PURE_METHOD;
+		virtual void SetPath(DWORD type, std::string_view path) PURE_METHOD;
+		virtual const std::string& GetPath(DWORD type) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIOptionMgr : public lwInterface {
@@ -707,7 +707,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual lwTexDataInfo* GetDataInfo() PURE_METHOD;
 		virtual IDirect3DTextureX* GetTex() PURE_METHOD;
 		virtual lwColorValue4b GetColorKey() const PURE_METHOD;
-		virtual char* GetFileName() PURE_METHOD;
+		virtual const std::string& GetFileName() PURE_METHOD;
 		virtual DWORD GetStage() const PURE_METHOD;
 		virtual DWORD GetState() const PURE_METHOD;
 		virtual void GetTexInfo(lwTexInfo* info) PURE_METHOD;
@@ -1049,11 +1049,11 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT LoseDevice() PURE_METHOD;
 		virtual LW_RESULT ResetDevice() PURE_METHOD;
 
-		virtual void SetTexturePath(const char* path) PURE_METHOD;
-		virtual char* GetTexturePath() PURE_METHOD;
+		virtual void SetTexturePath(std::string_view path) PURE_METHOD;
+		virtual const std::string& GetTexturePath() PURE_METHOD;
 		virtual IDirect3DTextureX* getMonochromaticTexture(D3DCOLOR colour, const std::string& filterTexture)
 		PURE_METHOD;
-		virtual const char* getTextureOperationDescription(size_t operation) PURE_METHOD;
+		virtual std::string_view getTextureOperationDescription(size_t operation) PURE_METHOD;
 	};
 
 
@@ -1317,13 +1317,13 @@ LW_STD_GETINTERFACE( cls )
 		virtual void SetLinkID(DWORD id) PURE_METHOD;
 		virtual void SetParentLinkID(DWORD id) PURE_METHOD;
 		virtual void SetLocalMatrix(const lwMatrix44* mat) PURE_METHOD;
-		virtual void SetDescriptor(const char* str64) PURE_METHOD;
+		virtual void SetDescriptor(std::string_view str64) PURE_METHOD;
 		virtual LW_RESULT SetParent(lwINode* parent) PURE_METHOD;
 		virtual DWORD GetType() const PURE_METHOD;
 		virtual DWORD GetID() const PURE_METHOD;
 		virtual lwMatrix44* GetLocalMatrix() PURE_METHOD;
 		virtual lwMatrix44* GetWorldMatrix() PURE_METHOD;
-		virtual char* GetDescriptor() PURE_METHOD;
+		virtual const std::string& GetDescriptor() PURE_METHOD;
 		virtual lwINode* GetParent() const PURE_METHOD;
 		virtual DWORD GetLinkID() const PURE_METHOD;
 		virtual DWORD GetParentLinkID() const PURE_METHOD;
@@ -1408,9 +1408,9 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT IgnoreNodesRender(const IgnoreStruct* is) PURE_METHOD;
 		virtual LW_RESULT Destroy() PURE_METHOD;
 		virtual LW_RESULT CullPrimitive() PURE_METHOD;
-		virtual void SetName(const char* name) PURE_METHOD;
+		virtual void SetName(std::string_view name) PURE_METHOD;
 		virtual void SetMatrix(const lwMatrix44* mat) PURE_METHOD;
-		virtual char* GetName() PURE_METHOD;
+		virtual const std::string& GetName() PURE_METHOD;
 		virtual lwMatrix44* GetMatrix() PURE_METHOD;
 		virtual lwIByteSet* GetStateSet() PURE_METHOD;
 		virtual lwITreeNode* GetTreeNodeRoot() PURE_METHOD;
@@ -1512,7 +1512,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT Write(const void* buf, DWORD in_size, DWORD* out_size) PURE_METHOD;
 
 		virtual HANDLE GetHandle() const PURE_METHOD;
-		virtual const char* GetFileName() PURE_METHOD;
+		virtual const std::string& GetFileName() PURE_METHOD;
 		virtual LW_RESULT GetCreationTime(SYSTEMTIME* st) PURE_METHOD;
 		virtual LW_RESULT CheckExisting(const char* path, DWORD check_directory) PURE_METHOD;
 

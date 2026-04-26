@@ -171,7 +171,7 @@ LW_BEGIN
 			mIndexTextureOPList[index] = operation;
 		}
 
-		const char* getTextureOperationDescription(size_t operation) {
+		std::string_view getTextureOperationDescription(size_t operation) {
 			return _res_mgr->getTextureOperationDescription(operation);
 		}
 

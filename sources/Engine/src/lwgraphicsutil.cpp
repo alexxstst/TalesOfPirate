@@ -48,13 +48,12 @@ LW_BEGIN
 						 lwColorValue4b* colorkey) {
 		using namespace Corsairs::Engine::Render;
 
-		char ext[8];
-		lwGetPathFileNameExt(ext, file);
+		const std::string ext = lwGetPathFileNameExt(file);
 
 		// ext → lowercase для ImageLoader::CanHandle.
 		char extLower[8];
 		std::size_t extLen = 0;
-		for (; extLen < sizeof(extLower) - 1 && ext[extLen] != '\0'; ++extLen) {
+		for (; extLen < sizeof(extLower) - 1 && extLen < ext.size(); ++extLen) {
 			const char c = ext[extLen];
 			extLower[extLen] = (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
 		}

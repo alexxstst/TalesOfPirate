@@ -37,7 +37,7 @@ public:
 
 	int GetConnStat();
 
-	const char* GetPeerHost() const {
+	std::string_view GetPeerHost() const {
 		return m_hostname;
 	}
 

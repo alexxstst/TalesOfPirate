@@ -47,7 +47,7 @@ LW_BEGIN
 				lwIPrimitive* imp;
 				_res_mgr->CreatePrimitive(&imp);
 
-				imp->Load((lwIGeomObjInfo*)m_info->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE), NULL);
+				imp->Load((lwIGeomObjInfo*)m_info->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(), NULL);
 
 				_obj_seq[_obj_num] = imp;
 				_obj_num += 1;
@@ -162,7 +162,7 @@ LW_BEGIN
 				lwIPrimitive* imp;
 				_res_mgr->CreatePrimitive(&imp);
 
-				imp->Load((lwIGeomObjInfo*)model_info_ptr->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE),
+				imp->Load((lwIGeomObjInfo*)model_info_ptr->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(),
 						  &res);
 
 				_obj_seq[_obj_num] = imp;
@@ -219,7 +219,7 @@ LW_BEGIN
 	LW_RESULT lwModel::Copy(lwIModel* src_obj) {
 		lwModel* o = (lwModel*)src_obj;
 
-		_tcscpy(_file_name, o->_file_name);
+		_file_name = o->_file_name;
 		_id = o->_id;
 		_obj_num = o->_obj_num;
 		_mat_base = o->_mat_base;

@@ -24,7 +24,7 @@ public:
 	bool IsAttack(CSkillRecord* pSkill, CCharacter* pSelf, CCharacter* pTarget);
 
 	// ,
-	const char* GetError();
+	std::string_view GetError();
 
 private:
 	enum eError {

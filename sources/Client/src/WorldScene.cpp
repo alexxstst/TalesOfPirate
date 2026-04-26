@@ -1251,7 +1251,6 @@ void CWorldScene::SetMainCha(int nChaID) {
 		}
 	}
 
-	const char* szLogName = pCha->getLogName();
 	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(796), GetTickCount()));
 
 	_pMainCha = pCha;

@@ -6,15 +6,13 @@
 LW_BEGIN
 	LW_STD_IMPLEMENTATION(lwPathInfo)
 
-	lwPathInfo::lwPathInfo() {
-		memset(_path_buf, 0, sizeof(char) * PATH_TYPE_NUM * LW_MAX_PATH);
+	lwPathInfo::lwPathInfo() = default;
+
+	void lwPathInfo::SetPath(DWORD type, std::string_view path) {
+		_path_buf[type] = path;
 	}
 
-	char* lwPathInfo::SetPath(DWORD type, const char* path) {
-		return _tcscpy(_path_buf[type], path);
-	}
-
-	char* lwPathInfo::GetPath(DWORD type) {
+	const std::string& lwPathInfo::GetPath(DWORD type) {
 		return _path_buf[type];
 	}
 

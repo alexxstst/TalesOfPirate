@@ -380,22 +380,22 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 		}
 		else if (_IsShowName || g_IsShowNames || (_pOwn->GetIsPK() && _ShowEnemyNames) || (_ShowInfo && _pOwn->
 			IsPlayer())) {
-			// 
-			if (*(_pOwn->getGuildName())) {
+			//
+			if (!_pOwn->getGuildName().empty()) {
 				iNameHeightStep += LINE_HEIGHT_STEP; //
 				int iGuildNameHeightStep = LINE_HEIGHT_STEP;
 
 				//
-				if (*(_pOwn->getGuildName())) {
-					strncpy(s_szConsortiaNamePart[0], _pOwn->getGuildName(), NAME_LENGTH);
+				if (!_pOwn->getGuildName().empty()) {
+					strncpy(s_szConsortiaNamePart[0], _pOwn->getGuildName().c_str(), NAME_LENGTH);
 				}
 				else {
 					strncpy(s_szConsortiaNamePart[0], "", NAME_LENGTH);
 				}
 				//
-				if (*(_pOwn->getGuildMotto())) {
+				if (!_pOwn->getGuildMotto().empty()) {
 					strncpy(s_szConsortiaNamePart[1], "(", strlen("("));
-					strncpy(s_szConsortiaNamePart[2], _pOwn->getGuildMotto(), NAME_LENGTH);
+					strncpy(s_szConsortiaNamePart[2], _pOwn->getGuildMotto().c_str(), NAME_LENGTH);
 					strncpy(s_szConsortiaNamePart[3], ")", strlen(")"));
 				}
 				else {
@@ -426,10 +426,10 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 				}
 			}
 
-			// 
-			if (*(_pOwn->GetPreName())) {
+			//
+			if (!_pOwn->GetPreName().empty()) {
 				strncpy(s_sNamePart[PRENAME_SEP1_INDEX], "(", strlen("("));
-				strncpy(s_sNamePart[PRENAME_INDEX], _pOwn->GetPreName(), NAME_LENGTH);
+				strncpy(s_sNamePart[PRENAME_INDEX], _pOwn->GetPreName().c_str(), NAME_LENGTH);
 				strncpy(s_sNamePart[PRENAME_SEP2_INDEX], ")", strlen(")"));
 				s_dwNamePartsColors[PRENAME_INDEX][0] = _pOwn->GetPreColor();
 			}
@@ -441,9 +441,9 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 			}
 
 			//
-			if (*(_pOwn->getSecondName())) {
+			if (!_pOwn->getSecondName().empty()) {
 				strncpy(s_sNamePart[MOTTO_NAME_SEP1_INDEX], "(", strlen("("));
-				strncpy(s_sNamePart[MOTTO_NAME_INDEX], _pOwn->getSecondName(), NAME_LENGTH);
+				strncpy(s_sNamePart[MOTTO_NAME_INDEX], _pOwn->getSecondName().c_str(), NAME_LENGTH);
 				strncpy(s_sNamePart[MOTTO_NAME_SEP2_INDEX], ")", strlen(")"));
 			}
 			else {
@@ -485,7 +485,7 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 
 			// _dwNameColor;
 			if (_pOwn->IsBoat()) {
-				strncpy(s_sNamePart[NAME_INDEX], _pOwn->getHumanName(), NAME_LENGTH);
+				strncpy(s_sNamePart[NAME_INDEX], _pOwn->getHumanName().c_str(), NAME_LENGTH);
 				strncpy(s_sNamePart[BOAT_NAME_SEP1_INDEX], "[", strlen("["));
 				strncpy(s_sNamePart[BOAT_NAME_INDEX], _pOwn->getName().c_str(), NAME_LENGTH);
 				strncpy(s_sNamePart[BOAT_NAME_SEP2_INDEX], "]", strlen("]"));
@@ -571,7 +571,7 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 				int nNameLength = 0 - ui::GetWidth(sNameBuf.c_str()) / 2;
 				ui::BRender(sNameBuf.c_str(), x + nNameLength, y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK);
 				if (_pOwn->IsShowSecondName()) {
-					if (strlen(_pOwn->getSecondName()) > 0) {
+					if (!_pOwn->getSecondName().empty()) {
 						string strSec = "(";
 						strSec += _pOwn->getSecondName();
 						strSec += ")";
@@ -584,7 +584,7 @@ void CHeadSay::Render(D3DXVECTOR3& pos) {
 				int nNameLength = 0 - ui::GetWidth(_pOwn->getName()) / 2;
 				ui::BRender(_pOwn->getName().c_str(), x + nNameLength, y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK);
 				if (_pOwn->IsShowSecondName()) {
-					if (strlen(_pOwn->getSecondName()) > 0) {
+					if (!_pOwn->getSecondName().empty()) {
 						string strSec = "(";
 						strSec += _pOwn->getSecondName();
 						strSec += ")";
@@ -717,7 +717,7 @@ void CHeadSay::SetManaNum(int num, int max) {
 	}
 }
 
-void CHeadSay::_RenderShop(const char* szShopName, int x, int y) {
+void CHeadSay::_RenderShop(std::string_view szShopName, int x, int y) {
 	static int nImageHeight = _ImgShop[0].GetHeight();
 	static int nImageWidth = _ImgShop[0].GetWidth();
 	y -= nImageHeight;
@@ -769,7 +769,7 @@ void CHeadSay::_RenderShop(const char* szShopName, int x, int y) {
 	}
 }
 
-void CHeadSay::_RenderShop2(const char* szShopName, int x, int y) {
+void CHeadSay::_RenderShop2(std::string_view szShopName, int x, int y) {
 	static int nImageHeight = _ImgShop2[0].GetHeight();
 	static int nImageWidth = _ImgShop2[0].GetWidth();
 	y -= nImageHeight;

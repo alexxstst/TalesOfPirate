@@ -522,17 +522,17 @@ void CCozeForm::OnSightMsg(CCharacter* pChar, string strMsg, DWORD dwColour) {
 	ReplaceSpecialFace(strMsg, pcnsenderface, preplaceface); //
 	//End
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	OnSightMsg(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str(), strMsg, 0xFF56bdfc);
+	const std::string& displayName = pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName();
+	OnSightMsg(displayName, strMsg, 0xFF56bdfc);
 	//local chat color default //mothannakh player name color
 
-	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str()) + ": " + strMsg;
+	string str = displayName + ": " + strMsg;
 	// ? ning.yan 2008-11-07
 	CItemEx* item = new CItemEx(str.c_str(), CCharMsg::GetChannelColor(CCharMsg::CHANNEL_SIGHT));
 	if (str.size() > 32) //?32?
 	{
 		item->SetIsMultiLine(true);
-		//item->ProcessString((int)strlen(pChar->getHumanName())+1);
-		item->ProcessString((int)std::string_view{pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str()}.size() + 1);
+		item->ProcessString(static_cast<int>(displayName.size()) + 1);
 	}
 	if (str.find("#") != std::string::npos) {
 		item->SetIsParseText(true);

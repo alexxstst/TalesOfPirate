@@ -26,12 +26,6 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 		static_cast<int64_t>(pCNetIf->m_ulPacketCount),
 		static_cast<int64_t>(type));
 
-	char szLogName[1024] = {"BeginAction"};
-
-	if (pCha) {
-		strcpy(szLogName, pCha->getLogName());
-	}
-
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", pCNetIf->m_ulPacketCount));
 	switch (type) {
 		case enumACTION_MOVE: {

@@ -42,7 +42,7 @@ LW_BEGIN
 			lwPrimitive* imp = LW_NEW(lwPrimitive(_res_mgr));
 
 
-			if (LW_RESULT r = imp->Load(info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), NULL); LW_FAILED(r)) {
+			if (LW_RESULT r = imp->Load(info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str(), NULL); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->Load failed: tex_path={}, ret={}",
 							 __FUNCTION__, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), static_cast<long long>(r));
@@ -112,7 +112,7 @@ LW_BEGIN
 				return LW_RET_FAILED;
 			}
 
-			if (LW_RESULT r = imp->Load(&info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM), &res); LW_FAILED(r)) {
+			if (LW_RESULT r = imp->Load(&info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str(), &res); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->Load failed: path={}, file={}, ret={}",
 							 __FUNCTION__, path, file ? file : "(null)", static_cast<long long>(r));
@@ -148,7 +148,7 @@ LW_BEGIN
 	LW_RESULT lwItem::Copy(lwIItem* src_obj) {
 		lwItem* o = (lwItem*)src_obj;
 
-		_tcscpy(_file_name, o->_file_name);
+		_file_name = o->_file_name;
 
 		o->_obj->Clone(&_obj);
 

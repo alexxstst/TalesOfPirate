@@ -32,7 +32,7 @@ public:
 	virtual void MouseRightDown() {
 	}
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CActionState";
 	}
 
@@ -185,7 +185,7 @@ inline void CActionState::SetServerID(int n) {
 		_nServerID = n;
 	}
 	else {
-		std::string value = GetExplain();
+		std::string value{GetExplain()};
 		g_logManager.InternalLog(LogLevel::Debug, "common",
 								 SafeVFormat(GetLanguageString(409), value, n));
 	}

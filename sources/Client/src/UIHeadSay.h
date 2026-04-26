@@ -251,8 +251,8 @@ namespace GUI {
 		static CGuiPic _ImgShop2[3];
 		static int _nShopFrameWidth;
 		static int _nShopFontYOff;
-		void _RenderShop(const char* szShopName, int x, int y);
-		void _RenderShop2(const char* szShopName, int x, int y);
+		void _RenderShop(std::string_view szShopName, int x, int y);
+		void _RenderShop2(std::string_view szShopName, int x, int y);
 
 		int _nShopX0, _nShopY0, _nShopX1, _nShopY1;
 

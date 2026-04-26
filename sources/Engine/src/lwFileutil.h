@@ -11,7 +11,7 @@ char* lwGetModuleBaseFileName(char* buf); // exclude extension
 
 char* lwGetPathFileName(char* buf, const char* path);
 char* lwGetPathFileNameBase(char* buf, const char* path); // return name exclude ext name
-char* lwGetPathFileNameExt(char* buf, const char* path); // return extension name of file name
+std::string lwGetPathFileNameExt(std::string_view path); // return extension (without dot) or "" if none
 
 char* lwGetPathFilePath(char* buf, const char* path);
 char* lwGetPathSubPath(char* sub_path, const char* path, const char* compare_path);

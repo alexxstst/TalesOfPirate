@@ -17,7 +17,7 @@ public:
 
 	virtual void End();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CWaitAttackState";
 	}
 
@@ -136,7 +136,7 @@ public:
 	CAttackState(CActor* p);
 	~CAttackState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CAttackState";
 	}
 
@@ -203,7 +203,7 @@ public:
 		_IsTrace = false;
 	}
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CTraceAttackState";
 	}
 
@@ -224,7 +224,7 @@ public:
 	CHitAttackState(CActor* p);
 	~CHitAttackState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CHitAttackState";
 	}
 
@@ -261,7 +261,7 @@ public:
 	CAllPoseState(CActor* p);
 	~CAllPoseState();
 
-	virtual const char* GetExplain() {
+	virtual std::string_view GetExplain() {
 		return "CAllPoseState";
 	}
 

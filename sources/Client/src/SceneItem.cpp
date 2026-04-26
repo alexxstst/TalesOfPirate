@@ -150,7 +150,7 @@ HRESULT CSceneItem::LitResetTexture(DWORD item_id, DWORD lit_id) {
 
 	if (!lit_info->TexFile.empty()) {
 		lwIPathInfo* path_info = res_mgr->GetSysGraphics()->GetSystem()->GetPathInfo();
-		LW_FAILED_RET(pri->ResetTexture(1, 0, lit_info->TexFile.c_str(), path_info->GetPath(PATH_TYPE_TEXTURE_ITEM)));
+		LW_FAILED_RET(pri->ResetTexture(1, 0, lit_info->TexFile.c_str(), path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str()));
 	}
 	if (lit_info->AnimType > 0) {
 		anim_agent = pri->GetAnimAgent();

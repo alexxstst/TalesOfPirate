@@ -952,7 +952,7 @@ void CChat::_evtQQMainShow(CGuiData* pSender) {
 	if (pMain) {
 		CLabelEx* pMineName = dynamic_cast<CLabelEx*>(CFormMgr::s_Mgr.Find("frmQQ")->Find("labMineName"));
 		if (pMineName) {
-			pMineName->SetCaption(pMain->getHumanName());
+			pMineName->SetCaption(pMain->getHumanName().c_str());
 		}
 		else {
 			_Error(GetLanguageString(473).c_str(), _frmQQ->GetName(), "labMineName");
@@ -1224,7 +1224,7 @@ void CChat::_evtQQMainEditMotto(CGuiData* pSender, int x, int y, DWORD key) {
 	if (!g_pGameApp->GetCurScene()->GetMainCha()) return;
 
 	_pEditMotto->SetCaption(_strSelfMottoName.c_str());
-	_labNameOfMottoFrm->SetCaption(g_pGameApp->GetCurScene()->GetMainCha()->getHumanName());
+	_labNameOfMottoFrm->SetCaption(g_pGameApp->GetCurScene()->GetMainCha()->getHumanName().c_str());
 
 	CChatIconInfo* pIconInfo = GetChatIconInfo(_dwSelfIcon);
 	if (pIconInfo) {
