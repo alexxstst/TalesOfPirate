@@ -146,22 +146,6 @@ void	CEffPath::LoadPath(FILE* pf)
 	}
 }
 
-void	CEffPath::LoadPathFromMemory(CMemoryBuf*	pbuf)
-{
-	pbuf->mread( &m_iFrameCount,sizeof( int ),1 );
-	pbuf->mread( &m_fVel,sizeof( float ),1 );
-
-	for(int n = 0; n < m_iFrameCount; n++)
-	{
-		pbuf->mread( &m_vecPath[n],sizeof( D3DXVECTOR3 ),1 );
-	}
-	for(int  n=0;n < m_iFrameCount -1;n++ )
-	{
-		pbuf->mread( &m_vecDir[n],sizeof( D3DXVECTOR3 ),1 );
-		pbuf->mread( &m_vecDist[n],sizeof( D3DXVECTOR3 ),1 );
-	}
-}
-
 CMPModelEff::CMPModelEff(void)
 {
 	m_iEffNum = 0;
@@ -1321,37 +1305,6 @@ bool	CMPStrip::LoadFromFile(FILE* t_pFile, DWORD dwVersion)
 
 	return true;
 }
-
-bool	CMPStrip::LoadFromMemory(CMemoryBuf* pbuf, DWORD dwVersion)
-{
-	pbuf->mread(&m_iMaxLen,sizeof(int),1);
-	pbuf->mread(&_iDummy,sizeof(int),2);
-	pbuf->mread(&_dwColor,sizeof(D3DXCOLOR),1);
-	pbuf->mread(&_fLife,sizeof(float),1);
-	pbuf->mread(&_fStep,sizeof(float),1);
-	char pszName[32];
-	pbuf->mread(pszName,sizeof(char),32);
-
-	char psname[64];
-	memset(psname,0,64);
-
-	if((strstr(pszName,".dds")==NULL)&&strstr(pszName,".tga")==NULL)
-	{
-		_strTexName = pszName;
-	}else
-	{
-		int len = lstrlen(pszName);
-		memcpy(psname, pszName,len - 4); 
-		_strTexName = psname;
-	}
-	int te ;
-	pbuf->mread(&te,sizeof(int),1);
-	_eSrcBlend = (D3DBLEND)te;
-	pbuf->mread(&te,sizeof(int),1);
-	_eDestBlend = (D3DBLEND)te;
-	return true;
-}
-
 
 void	CMPStrip::CopyStrip(CMPStrip* pstrip)
 {

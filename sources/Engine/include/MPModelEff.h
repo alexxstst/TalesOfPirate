@@ -90,8 +90,6 @@ public:
 	void				SavePath(FILE* pf);
 	void				LoadPath(FILE* pf);
 
-	void				LoadPathFromMemory(CMemoryBuf* pbuf);
-
 	void				FrameMove(float fDailTime);
 
 	D3DXVECTOR3*		GetCurPos()			{ return &m_vCurPos; }
@@ -662,9 +660,6 @@ public:
 
 	bool		 SaveToFile(FILE* t_pFile);
 	bool		 LoadFromFile(FILE* t_pFile, DWORD dwVersion);
-
-	bool		 LoadFromMemory(CMemoryBuf* pbuf, DWORD dwVersion);
-
 
 	void		CopyStrip(CMPStrip* pstrip);
 

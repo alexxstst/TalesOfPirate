@@ -613,7 +613,6 @@ public:
 	//!
 	bool LoadFromFile(FILE* t_pFile, DWORD dwVersion);
 
-	bool LoadFromMemory(CMemoryBuf* pbuf, DWORD dwVersion);
 	bool IsPartArray();
 
 	void GetRes(int& idtex, int& idmodel, int& ideff);

@@ -246,7 +246,6 @@ public:
 
 	void	SaveToFile(FILE* file);
 	void	LoadFromFile(FILE* file);
-	void	LoadFromMemory(CMemoryBuf* pbuf);
 
 
 	void	Begin();
@@ -447,8 +446,6 @@ public:
 	bool		 SaveToFile(char* pszName);
 	//!
 	bool		 LoadFromFile(char* pszName);
-
-	bool		 LoadFromMemory(CMemoryBuf*	pbuf);
 
 public:
 	s_string					m_strName;

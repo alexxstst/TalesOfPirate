@@ -158,27 +158,6 @@ public:
 	}
 };
 
-class CMemoryBuf {
-public:
-	CMemoryBuf();
-	~CMemoryBuf();
-
-	bool LoadFile(char* pszName);
-	void mseek(long ioffset, int ipos);
-
-	long mtell()
-	{
-		return _lpos;
-	}
-
-	void mread(void* pmem, size_t psize, size_t pcount);
-
-protected:
-	long _size;
-	BYTE* _pData;
-	long _lpos;
-};
-
 //#include <mindpower.h>
 
 class MPRender;

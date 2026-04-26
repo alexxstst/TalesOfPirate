@@ -190,11 +190,7 @@ public:
 
 
 	int						GetPartCtrlID(const s_string& pszName);
-//#ifdef USE_GAME
-//	CMemoryBuf*				GetPartCtrlByID(int iID);
-//#else
 	CMPPartCtrl*			GetPartCtrlByID(int iID);
-//#endif
 	int						GetPartCtrlNum(){return _iPartCtrlNum;}
 
 	CEffectModel*			NewTobMesh();
@@ -302,11 +298,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 	int									_iPartCtrlNum;
 	VEC_string							_vecPartName;
-//#ifdef USE_GAME
-//	std::vector<CMemoryBuf>				_vecPartCtrl;
-//#else
 	S_BVECTOR<CMPPartCtrl*>				_vecPartCtrl;
-//#endif
 
 //////////////////////////////////////////////////////////////////////////
 

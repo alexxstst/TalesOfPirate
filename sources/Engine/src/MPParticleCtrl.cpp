@@ -690,68 +690,6 @@ bool CMPPartCtrl::LoadFromFile(char* pszName) {
 	return true;
 }
 
-bool CMPPartCtrl::LoadFromMemory(CMemoryBuf* pbuf) {
-	//!
-	DWORD t_dwVersion;
-	pbuf->mread(&t_dwVersion, sizeof(t_dwVersion), 1);
-	if (t_dwVersion > CMPPartCtrl::ParVersion) {
-		ToLogService("errors", LogLevel::Error, "[{}][{}] (CMPPartCtrl::LoadFromFile)", t_dwVersion,
-					 CMPPartCtrl::ParVersion);
-		return false;
-	}
-	if (t_dwVersion < 2) {
-		ToLogService("errors", LogLevel::Error, "[{}][{}] (CMPPartCtrl::LoadFromFile)", t_dwVersion, 2);
-		return false;
-	}
-
-	char pszPartName[32];
-	pbuf->mread(pszPartName, sizeof(char), 32);
-	m_strName = pszPartName;
-
-	pbuf->mread(&m_iPartNum, sizeof(int), 1);
-#ifdef USE_GAME
-	m_vecPartSys.resize(m_iPartNum);
-#endif
-	m_vecPartSys.setsize(m_iPartNum);
-
-	if (t_dwVersion >= 3) {
-		pbuf->mread(&m_fLength, sizeof(float), 1);
-	}
-	else {
-		m_fLength = 0;
-	}
-	for (int n = 0; n < m_iPartNum; ++n) {
-		m_vecPartSys[n]->LoadFromMemory(pbuf, t_dwVersion);
-		if (t_dwVersion < 6) {
-			m_vecPartSys[n]->SetPlayTime(m_fLength);
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////
-	if (t_dwVersion >= 7) {
-		SAFE_DELETE_ARRAY(m_pcStrip);
-
-		pbuf->mread(&m_iStripNum, sizeof(int), 1);
-
-		if (m_iStripNum > 0) {
-			m_pcStrip = new CMPStrip[m_iStripNum];
-
-			for (int n = 0; n < m_iStripNum; ++n) {
-				m_pcStrip[n].LoadFromMemory(pbuf, t_dwVersion);
-			}
-		}
-	}
-
-	if (t_dwVersion >= 8) {
-		pbuf->mread(&m_iModelNum, sizeof(int), 1);
-		m_vecModel.resize(m_iModelNum);
-		for (int n = 0; n < m_iModelNum; ++n) {
-			m_vecModel[n] = new CChaModel;
-			m_vecModel[n]->LoadFromMemory(pbuf);
-		}
-	}
-	return true;
-}
-
 void CMPPartCtrl::GetRes(CMPResManger* pResMagr, std::vector<INT>& vecTex, std::vector<INT>& vecModel,
 						 std::vector<INT>& vecEff) {
 	char pszPath[MAX_PATH];
@@ -982,28 +920,6 @@ void CChaModel::LoadFromFile(FILE* file) {
 	fread(&eblend, sizeof(int), 1, file);
 	_eDestBlend = (D3DBLEND)eblend;
 	fread(&_dwCurColor, sizeof(D3DXCOLOR), 1, file);
-
-	char psID[32];
-	sprintf(psID, "%d", _iID);
-	LoadScript(psID);
-	SetVel((int)(_fVel * 1000));
-	SetPlayType(_iPlayType);
-	SetCurPose(_iCurPose);
-	PlayPose(_iCurPose, PLAY_PAUSE);
-}
-
-void CChaModel::LoadFromMemory(CMemoryBuf* pbuf) {
-	pbuf->mread(&_iID, sizeof(int), 1);
-	pbuf->mread(&_fVel, sizeof(float), 1);
-	pbuf->mread(&_iPlayType, sizeof(int), 1);
-	pbuf->mread(&_iCurPose, sizeof(int), 1);
-
-	int eblend;
-	pbuf->mread(&eblend, sizeof(int), 1);
-	_eSrcBlend = (D3DBLEND)eblend;
-	pbuf->mread(&eblend, sizeof(int), 1);
-	_eDestBlend = (D3DBLEND)eblend;
-	pbuf->mread(&_dwCurColor, sizeof(D3DXCOLOR), 1);
 
 	char psID[32];
 	sprintf(psID, "%d", _iID);

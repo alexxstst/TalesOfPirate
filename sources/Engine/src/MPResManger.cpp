@@ -1697,23 +1697,6 @@ int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 	return -1;
 }
 
-//#ifdef USE_GAME
-//CMemoryBuf*		CMPResManger::GetPartCtrlByID(int iID)
-//{
-//	if(iID > MAXPART_COUNT)
-//	{
-//		LG("error", "msglemon");
-//		return NULL;
-//	}
-//	if(iID < 0)
-//	{
-//		LG("error","msgID[%d]",iID);
-//		return NULL;
-//	}
-//	_vecPartCtrl[iID].mseek(0,SEEK_SET);
-//	return &_vecPartCtrl[iID];
-//}
-//#else
 CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 {
 	//if((*_vecPartCtrl[iID])->m_iPartNum<=0 && (*_vecPartCtrl[iID])->m_iStripNum <=0 &&  
@@ -1748,7 +1731,6 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 	}
 	return (*_vecPartCtrl[iID]);
 }
-//#endif
 
 void	CMPResManger::LoadTotalPartCtrl()
 {
