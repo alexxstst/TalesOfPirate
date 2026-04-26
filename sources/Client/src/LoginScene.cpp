@@ -185,7 +185,7 @@ bool CLoginScene::_Init() {
 		}
 	}
 
-	g_Render.SetClip(g_Config.fnear, g_Config.ffar);
+	g_Render.SetClip(GlobalAppConfig.GetNearClip(), GlobalAppConfig.GetFarClip());
 
 	CCameraCtrl* pCam = g_pGameApp->GetMainCam();
 	if (pCam) {
@@ -837,7 +837,7 @@ void CLoginScene::_Connect() {
 		g_logManager.InternalLog(LogLevel::Debug, "connections", SafeVFormat(GetLanguageString(180), 0, 0));
 	}
 	else {
-		CS_Connect(selectGateIP.c_str(), 1973, g_Config.m_nConnectTimeOut);
+		CS_Connect(selectGateIP.c_str(), 1973, GlobalAppConfig.GetConnectTimeOut());
 	}
 	//#endif
 }
@@ -904,12 +904,12 @@ void CLoginScene::_evtVerErrorFrm(CCompent* pSender, int nMsgType, int x, int y,
 
 	if (nMsgType != CForm::mrYes) {
 		// Open a web page
-		if (strlen(g_Config.m_szVerErrorHTTP) == 0)
+		if (GlobalAppConfig.GetVerErrorHttp().empty())
 			return;
 
 		/*	2008-10-15	close!
 		::ShellExecute( NULL, "open",
-			g_Config.m_szVerErrorHTTP,
+			GlobalAppConfig.GetVerErrorHttp().c_str(),
 			NULL, NULL, SW_SHOW);
 		*/
 		return;

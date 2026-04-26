@@ -115,7 +115,7 @@ void CGameScene::_Render()
     rsm->BeginScene();
 
 
-    if(g_Config.m_bEditor)
+    if(GlobalAppConfig.IsEditor())
 	{
 		if(_vMousePos.x > 0)
 		{
@@ -154,7 +154,7 @@ void CGameScene::_Render()
 //////	
 	//MPIDeviceObject* dev_obj = g_Render.GetInterfaceMgr()->dev_obj;
 #ifdef TESTDEMO
-	SetupVertexFog(dev_obj, 50, 60, D3DCOLOR_XRGB(g_Config.m_iFogR, g_Config.m_iFogG, g_Config.m_iFogB), D3DFOG_EXP2, 1, g_Config.m_fExp2);
+	SetupVertexFog(dev_obj, 50, 60, D3DCOLOR_XRGB(GlobalAppConfig.GetFogR(), GlobalAppConfig.GetFogG(), GlobalAppConfig.GetFogB()), D3DFOG_EXP2, 1, GlobalAppConfig.GetFogExp2());
 #endif
 
 	//g_Render.SetBackgroundColor(D3DCOLOR_XRGB(64, 64, 64));
@@ -478,7 +478,7 @@ void CGameScene::_Render()
         env_light.Type = D3DLIGHT_DIRECTIONAL;
         g_Render.GetLight(0, &env_light_old);
 
-        env_color = g_Config.m_dwLgtBkColor;
+        env_color = GlobalAppConfig.GetLgtBkColor();
         g_Render.GetRenderState(D3DRS_AMBIENT, &env_color_old );
         g_Render.SetRenderState(D3DRS_AMBIENT, env_color );
 
@@ -540,7 +540,7 @@ void CGameScene::_Render()
 						{
 
 							c = tile->dwColor;
-							fLgt = g_Config.m_fLgtFactor;
+							fLgt = GlobalAppConfig.GetLgtFactor();
 
 							env_light.Diffuse.r = (1 - fLgt) * env_light.Diffuse.r + fLgt * c.r;
 							env_light.Diffuse.g = (1 - fLgt) * env_light.Diffuse.g + fLgt * c.g;
@@ -688,7 +688,7 @@ void CGameScene::_Render()
 						{
 
 							c = tile->dwColor;
-							fLgt = g_Config.m_fLgtFactor;
+							fLgt = GlobalAppConfig.GetLgtFactor();
 
 							env_light.Diffuse.r = (1 - fLgt) * env_light.Diffuse.r + fLgt * c.r;
 							env_light.Diffuse.g = (1 - fLgt) * env_light.Diffuse.g + fLgt * c.g;

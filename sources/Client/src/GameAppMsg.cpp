@@ -79,7 +79,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 	int				nSectionNO;
 	long			returnValue = 1;
 
-	if(g_Config.m_bNoObj) return 0;
+	if(GlobalAppConfig.IsNoObj()) return 0;
 
 	nSectionNO = nSectionY * pThis->GetSectionCntX() + nSectionX;
 
@@ -111,7 +111,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 						pObj->setPos(infoex[i].nX, infoex[i].nY);
 						pObj->setYaw(infoex[i].sYawAngle);
 					}
-					else if( g_Config.m_bEnableLGMsg )// Creation failed, prompt to delete from .obj file
+					else if( GlobalAppConfig.IsLgMsgEnabled() )// Creation failed, prompt to delete from .obj file
 					{
 						_stprintf(tcsPrint,
 							GetLanguageString(101).c_str(),
@@ -137,7 +137,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 					    pEffObj->setPos(infoex[i].nX, infoex[i].nY);
 					    pEffObj->setYaw(infoex[i].sYawAngle);
 				    }
-					else if( g_Config.m_bEnableLGMsg )// Creation failed, prompt to delete from .obj file
+					else if( GlobalAppConfig.IsLgMsgEnabled() )// Creation failed, prompt to delete from .obj file
 					{
 						_stprintf(tcsPrint,
 							_TEXT(" ID %d .obj"),
@@ -330,7 +330,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
     // For debug-only hotkeys, write them in HandleSuperKey()
     if(IsKeyDown(DIK_F1) && IsCtrlPress() ) // Toggle SuperKey mode on/off
     {
-		if( g_Config.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) ) 
+		if( GlobalAppConfig.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) )
 		{
 			EnableSuperKey(1 - _bEnableSuperKey);
 			if(_bEnableSuperKey) { g_pGameApp->AddTipText("%s", GetLanguageString(102).c_str()); } else { g_pGameApp->AddTipText("%s", GetLanguageString(103).c_str()); }
@@ -371,7 +371,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
         HandleSuperKey();
     }
 	
-	if(g_Config.m_bEditor && IsKeyDown(DIK_TAB)) // Toggle editor on/off
+	if(GlobalAppConfig.IsEditor() && IsKeyDown(DIK_TAB)) // Toggle editor on/off
 	{
 		extern CEditor g_stUIEditor;
         g_stUIEditor.SetEnabled( !g_stUIEditor.frmEditor->GetIsShow() );
@@ -566,7 +566,7 @@ void CGameApp::MouseMove(int nOffsetX, int nOffsetY)
 #endif
 		if( _IsSceneOk() )
 		{
-			if(g_Config.m_bEditor && IsCtrlPress())
+			if(GlobalAppConfig.IsEditor() && IsCtrlPress())
 			{
 				CCharacter *pMain = GetCurScene()->GetMainCha();
 				if(pMain && pMain->getPatrolX() > 0)
@@ -579,7 +579,7 @@ void CGameApp::MouseMove(int nOffsetX, int nOffsetY)
 			{
 				if(!IsCameraFollow())
 				{
-					if(g_Config.m_bEditor && GetCurScene()->IsEnableCamDrag())
+					if(GlobalAppConfig.IsEditor() && GetCurScene()->IsEnableCamDrag())
 					{
 						float fSpeed = 0.1f;
 						GetMainCam()->MoveRight(fSpeed * (float)nOffsetX, TRUE);
@@ -636,7 +636,7 @@ void CGameApp::MouseButtonDB(int nButton)
 		GetCurScene()->_MouseButtonDB( nButton );
 
 		// In gameplay mode, right-double-click resets camera to default view
-		if( (nButton==1) && (!g_Config.m_bEditor) && (!_pMainCam->IsDefaultView()) )
+		if( (nButton==1) && (!GlobalAppConfig.IsEditor()) && (!_pMainCam->IsDefaultView()) )
         {
             //_pMainCam->ResetCamera();
             ResetCamera();
@@ -756,7 +756,7 @@ void CGameApp::HandleSuperKey()
     {
         g_Render.EnableCaptureAVI(1 - g_Render.IsEnableCaptureAVI());
     }
-    else if( g_pGameApp->IsKeyDown(DIK_F3) && g_Config.m_bEditor && g_pGameApp->IsCtrlPress() )
+    else if( g_pGameApp->IsKeyDown(DIK_F3) && GlobalAppConfig.IsEditor() && g_pGameApp->IsCtrlPress() )
 	{
 		// Switch scene type  by lh test
 		static int type = 0;
@@ -766,7 +766,7 @@ void CGameApp::HandleSuperKey()
 
 		g_pGameApp->LoadScriptScene( (eSceneType) type );
 	}
-	else if(g_Config.m_bEditor && g_pGameApp->IsCtrlPress() && g_pGameApp->IsKeyDown(DIK_P))
+	else if(GlobalAppConfig.IsEditor() && g_pGameApp->IsCtrlPress() && g_pGameApp->IsKeyDown(DIK_P))
 	{
 		CCharacter *pMain = GetCurScene()->GetMainCha();
 		if(pMain)
@@ -1055,7 +1055,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 //-----------------
 const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 {
-	if(g_Config.m_bEditor==FALSE) return "";
+	if(!GlobalAppConfig.IsEditor()) return "";
 	
 	
 	CGameScene *pScene = g_pGameApp->GetCurScene();
@@ -1488,7 +1488,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(125), pScene->m_dwValidEffCnt, pScene->m_dwValidChaCnt, pScene->m_dwValidSceneObjCnt).c_str() );
 		}
 	}
-	else if( g_Config.m_bEditor && strCmd=="refine" )
+	else if( GlobalAppConfig.IsEditor() && strCmd=="refine" )
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if( pMain )
@@ -1608,7 +1608,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			}			
 		}
 	}
-	else if( g_Config.m_bEditor && strCmd=="take" )
+	else if( GlobalAppConfig.IsEditor() && strCmd=="take" )
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		int nItemID = Str2Int( p2 );
@@ -1625,7 +1625,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			pMain->RefreshItem( true );
 		}
 	}
-	else if (g_Config.m_bEditor && strCmd == "ShowAllObjects")
+	else if (GlobalAppConfig.IsEditor() && strCmd == "ShowAllObjects")
 	{
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		if (pScene)
@@ -2176,7 +2176,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="client_move" )
 	{
-		g_Config.m_IsMoveClient = Str2Int( p1 ) != 0;
+		GlobalAppConfig.SetMoveClient(Str2Int( p1 ) != 0);
 	}
 	else if( strCmd=="createcha" )
 	{

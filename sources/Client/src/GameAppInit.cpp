@@ -196,7 +196,7 @@ BOOL CGameApp::_Init() {
 		return 0;
 	}
 
-	if (g_Config.m_bEditor) {
+	if (GlobalAppConfig.IsEditor()) {
 		if (!LoadRes3())
 			return 0;
 	}
@@ -206,8 +206,8 @@ BOOL CGameApp::_Init() {
 	{
 		// init loading res mt flag
 		lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
-		res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, g_Config.m_bMThreadRes);
-		res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, 0); //g_Config.m_bMThreadRes);
+		res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, GlobalAppConfig.IsMultiThreadRes());
+		res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, 0); //GlobalAppConfig.IsMultiThreadRes());
 
 		// tex encoder
 		res_bs->SetValue(OPT_RESMGR_TEXENCODE, 1);
@@ -216,7 +216,7 @@ BOOL CGameApp::_Init() {
 	{
 		// init loading helper object instance flag
 		lwIOptionMgr* opt_mgr = g_Render.GetInterfaceMgr()->sys->GetOptionMgr();
-		opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, g_Config.m_bEditor);
+		opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, GlobalAppConfig.IsEditor());
 	}
 
 #ifdef USE_DSOUND
@@ -227,7 +227,7 @@ BOOL CGameApp::_Init() {
 
 	//  Звук включён глобально — поднимаем AudioSDL. Иначе ни музыка, ни SFX не играют
 	//  (все колсайты защищены проверкой IsMusicSystemValid()).
-	if (g_Config.MusicEnabled) {
+	if (GlobalAppConfig.IsMusicEnabled()) {
 		_IsMusicSystemValid = Corsairs::Client::Audio::AudioSDL::Instance().Init();
 	} else {
 		_IsMusicSystemValid = false;
@@ -306,7 +306,7 @@ BOOL CGameApp::_Init() {
 	g_Editor.Init(1);
 
 	// Load initial scene
-	LoadScriptScene((eSceneType)g_Config.m_nCreateScene);
+	LoadScriptScene((eSceneType)GlobalAppConfig.GetCreateScene());
 
 	//LoadRes4();
 
@@ -320,7 +320,7 @@ BOOL CGameApp::_Init() {
 
 	SetFocus(GetHWND());
 
-	if (g_Config.m_bEditor) SetIsRenderTipText(true);
+	if (GlobalAppConfig.IsEditor()) SetIsRenderTipText(true);
 
 	_rsm = new RenderStateMgr;
 	_rsm->Init(g_Render.GetInterfaceMgr()->dev_obj);

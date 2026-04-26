@@ -124,7 +124,7 @@ int CSystemProperties::ApplyAudio()
 //-----------------------------------------------------------------------------
 int CSystemProperties::ApplyGameOption()
 {
-	g_Config.SetMoveClient(m_gameOption.bRunMode);
+	GlobalAppConfig.SetMoveClient(m_gameOption.bRunMode);
 	g_pGameApp->SysInfo("Game settings have been updated");
 	// Success
 	return 0;
@@ -628,13 +628,13 @@ void CSystemMgr::_evtVideoFormMouseEvent(CCompent * pSender, int nMsgType, int x
         //g_pGameApp->GetMainCam()->EnableUpdown( bViewFar ) ;//(Michael Chen 2005-04-22
         g_pGameApp->GetCurScene()->SetTextureLOD(nTextureHigh);
 
-        g_Config.m_bFullScreen = FALSE;
+        GlobalAppConfig.SetFullScreen(false);
         if (!bWindowed)
 		{
             width = GetSystemMetrics(SM_CXSCREEN);
             height = GetSystemMetrics(SM_CYSCREEN);
             bWindowed = TRUE;
-            g_Config.m_bFullScreen = TRUE;
+            GlobalAppConfig.SetFullScreen(true);
         }
 
         GetRender().SetIsChangeResolution(true);

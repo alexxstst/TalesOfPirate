@@ -36,7 +36,7 @@ CEditor::CEditor()
 
 bool CEditor::Init()
 {
-    if( !g_Config.m_bEditor ) return true;
+    if( !GlobalAppConfig.IsEditor() ) return true;
 
     CFormMgr &mgr = CFormMgr::s_Mgr;
     frmEditor = mgr.Find("frmEditor");

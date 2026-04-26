@@ -127,18 +127,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_logManager.EnableGlobalConsole(true);
 
 	g_SystemIni = dbc::IniFile("./user/system.ini");
-	g_Config.Load();
+	GlobalAppConfig.Load();
 
 	//  Передаём в Engine флаг прогрева массовых ресурсов (см. GameConfig.h
-	//  m_bResourcePreload + [Resources] preload_at_start). Должно быть до
+	//  _resourcePreload + [Resources] preload_at_start). Должно быть до
 	//  любого вызова InitRes/InitRes3 у MPResManger.
-	CMPResManger::SetResourcePreload(g_Config.m_bResourcePreload != FALSE);
+	CMPResManger::SetResourcePreload(GlobalAppConfig.IsResourcePreload());
 
 	//  TextureLog (диагностический канал "textures") — runtime-тогл из
 	//  [TextureLog] enabled. По умолчанию выключен; при включении регистрируем
 	//  стандартные категории (substring-фильтры по пути файла), чтобы пер-
 	//  категорийные счётчики накапливались с самого первого Load.
-	if (g_Config.m_bTextureLogEnabled) {
+	if (GlobalAppConfig.IsTextureLogEnabled()) {
 		auto& texLog = Corsairs::Engine::Render::TextureLog::Instance();
 		texLog.SetEnabled(true);
 		texLog.RegisterCategory("scene");
@@ -162,18 +162,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	if (strParam.find("editor") != std::string::npos) // Launch game editor
 	{
-		g_Config.m_bEditor = TRUE;
+		GlobalAppConfig.SetEditor(true);
 		//g_Config.m_IsShowConsole = true;
 	}
 	else {
-		g_Config.m_bEditor = FALSE;
-		g_Config.m_nCreateScene = 0;
+		GlobalAppConfig.SetEditor(false);
+		GlobalAppConfig.SetCreateScene(0);
 	}
 
 	g_hInstance = hInstance;
 
 	GameLoading loading;
-	if (!g_Config.m_bEditor) {
+	if (!GlobalAppConfig.IsEditor()) {
 		loading.Create(strParam);
 	}
 
@@ -309,7 +309,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		g_stUISystem.LoadCustomProp();
 	}
 
-	g_Config.m_bFullScreen = g_stUISystem.m_sysProp.m_videoProp.bFullScreen;
+	GlobalAppConfig.SetFullScreen(g_stUISystem.m_sysProp.m_videoProp.bFullScreen != FALSE);
 	int nWidth(0), nHeight(0), nDepth(0);
 
 	switch (g_stUISystem.m_sysProp.m_videoProp.bResolution) {
@@ -345,14 +345,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	nDepth = g_stUISystem.m_sysProp.m_videoProp.bDepth32 ? 32 : 16;
 
 	MPD3DCreateParamAdjustInfo cpai;
-	cpai.multi_sample_type = (D3DMULTISAMPLE_TYPE)g_Config.m_dwFullScreenAntialias;
+	cpai.multi_sample_type = (D3DMULTISAMPLE_TYPE)GlobalAppConfig.GetFullScreenAntialias();
 
 	g_Render.SetD3DCreateParamAdjustInfo(&cpai);
 
 	// g_Render.EnableClearTarget(FALSE);
 	g_Render.SetBackgroundColor(D3DCOLOR_XRGB(10, 10, 125));
 
-	if (g_Config.m_bFullScreen) {
+	if (GlobalAppConfig.IsFullScreen()) {
 		nWidth = GetSystemMetrics(SM_CXSCREEN);
 		nHeight = GetSystemMetrics(SM_CYSCREEN);
 	}
@@ -368,13 +368,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		}
 	}
 
-	if (!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth, FALSE /*g_Config.m_bFullScreen*/)) {
+	if (!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth, FALSE /*GlobalAppConfig.IsFullScreen()*/)) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(191));
 		g_pGameApp->End();
 		return 0;
 	}
 
-	if (g_Config.m_bFullScreen) {
+	if (GlobalAppConfig.IsFullScreen()) {
 		g_pGameApp->ChangeVideoStyle(nWidth, nHeight, D3DFMT_D16,TRUE);
 	}
 
@@ -385,7 +385,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	//g_pGameApp->LoadRes2();
 
-	if (!g_Config.m_bEditor) {
+	if (!GlobalAppConfig.IsEditor()) {
 		loading.Close();
 	}
 

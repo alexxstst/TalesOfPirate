@@ -203,7 +203,7 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 	}
 	fread((void *)m_SSectionIndex, sizeof(SSectionIndex), m_SFileHead.iSectionCntX * m_SFileHead.iSectionCntY, fFile);
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		m_fRdWr = _tfopen(ptcsFileName, "r+b");
 	else
 		m_fRdWr = _tfopen(ptcsFileName, "rb");
@@ -219,7 +219,7 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 		goto end;
 	}
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		m_fAppend = _tfopen(ptcsFileName, "a+b");
 	else
 		m_fAppend = _tfopen(ptcsFileName, "rb");
@@ -289,7 +289,7 @@ long CSceneObjFile::CreateFile(const char* ptcsFileName,
 	SFileHead			SHead;
 	SSectionIndex		*lFileSectionIndex = NULL;
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		fFile = _tfopen(ptcsFileName, "wb");
 	else
 		fFile = _tfopen(ptcsFileName, "rb");
@@ -367,7 +367,7 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 		goto end;
 	}
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		fFileNew = _tfopen(ptcsFileName, "wb");
 	else
 		fFileNew = _tfopen(ptcsFileName, "rb");
@@ -613,7 +613,7 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 		goto end;
 	}
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		fFileNew = _tfopen(ptcsFileName, _TEXT("wb"));
 	else
 		fFileNew = _tfopen(ptcsFileName, _TEXT("rb"));
@@ -717,7 +717,7 @@ long CSceneObjFile::TrimDirectory(const char *ptcsDirectory, bool bBackUp)
 	}
 
 	_stprintf(tcsFileName, "%s%s", tcsPath, ptcsRecordFile);
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		fRecord = _tfopen(tcsFileName, "w");
 	else
 		fRecord = _tfopen(tcsFileName, "rb");

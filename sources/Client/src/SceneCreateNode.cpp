@@ -217,7 +217,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
         return NULL;
     }
 
-	if(g_Config.m_bCheckOvermax)
+	if(GlobalAppConfig.IsCheckOvermax())
 	{
 		if(m_dwValidSceneObjCnt>=290)
 		{

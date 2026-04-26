@@ -61,7 +61,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam)
 		_nMouseY = (int)(_vMousePos.y * 100.0f);
 
 		// , 
-		if( g_Config.m_bEditor && !g_pGameApp->IsCameraFollow() )
+		if( GlobalAppConfig.IsEditor() && !g_pGameApp->IsCameraFollow() )
 		{
 			static D3DXVECTOR3 vecPos; 
 			static int nScrFocus;

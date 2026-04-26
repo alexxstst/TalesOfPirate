@@ -275,7 +275,7 @@ bool CMouseDown::ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bo
 
 	if( !pCha ) return false;
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 	{
 		pCha->SetServerPos( pCha->GetCurX(), pCha->GetCurY() );
 	}
@@ -306,7 +306,7 @@ bool CMouseDown::ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bo
 	isLastAdd = isAdd;
 	isLastLine = isLine;
 
-	if( !g_Config.m_IsMoveClient )
+	if( !GlobalAppConfig.IsMoveClient() )
 	{
 		CServerMoveState * move = new CServerMoveState(pCha->GetActor());
 		move->SetWalkLine( isLine );

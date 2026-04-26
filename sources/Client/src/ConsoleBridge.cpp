@@ -238,13 +238,13 @@ std::string ConsoleBridge::Dispatch(std::string_view cmd) {
 }
 
 bool ConsoleBridge::CanOpen() {
-    if (!g_Config.m_bConsoleEnabled) {
+    if (!GlobalAppConfig.IsConsoleEnabled()) {
         return false;
     }
-    if (g_Config.m_bConsoleRequireSuperKey) {
+    if (GlobalAppConfig.IsConsoleRequireSuperKey()) {
         // IsPower() сейчас отражает legacy-флаг [Log].console. После логина
         // здесь будет проверяться настоящий атрибут PowerUser/GM.
-        if (!g_Config.IsPower()) {
+        if (!GlobalAppConfig.IsPower()) {
             return false;
         }
     }

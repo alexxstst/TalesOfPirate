@@ -1337,7 +1337,7 @@ bool CFormMgr::Init(HWND hWnd)
 
 		LoadLuaScript(g_LuaState, "scripts/lua/gui.lua");
 
-		if( g_Config.m_bEditor ) LoadLuaScript(g_LuaState, "scripts/lua/forms/editor.lua"); 
+		if( GlobalAppConfig.IsEditor() ) LoadLuaScript(g_LuaState, "scripts/lua/forms/editor.lua");
 
 		CImeInput::s_Ime.Init();
 		CCursor::I()->Init();

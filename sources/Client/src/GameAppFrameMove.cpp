@@ -236,7 +236,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	HandleKeyContinue();
 
-	if(g_Config.m_bEditor)
+	if(GlobalAppConfig.IsEditor())
 	{
 		g_Editor.FrameMove(dwTimeParam);
 

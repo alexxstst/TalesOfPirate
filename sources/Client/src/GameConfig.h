@@ -1,154 +1,190 @@
-﻿#pragma once
+#pragma once
 
+#include <array>
+#include <cstdint>
 #include <string>
 
-struct SPlaceCha 
+struct SPlaceCha
 {
 	int nTypeID;
 	int nX;
 	int nY;
 };
 
-class CGameConfig
+class GameConfig
 {
-public:	
-	CGameConfig();
-	
-	void	Load(); // Загрузить конфиг из g_SystemIni
-	void	SetDefault();  //
-	void	SetMoveClient( bool v ); //
-	
 public:
+	GameConfig();
 
-	// , , string,
-	// 
-	BOOL		m_bAutoLogin;
-	BOOL		m_bFullScreen;
-	SPlaceCha	m_ChaList[20];
-	int			m_nChaCnt;
-	float		m_LightDir[3];
-	float		m_LightColor[3];
-    BOOL        m_bNoObj;
-    BOOL        m_bEditor;
-    BYTE        m_btScreenMode;
+	void Load();
+	void SetDefault();
 
-	int			m_iFogR;
-	int			m_iFogG;
-	int			m_iFogB;
-	float		m_fExp2;
+	void SetMoveClient(bool v);
+	void SetEditor(bool v)        { _editor = v; }
+	void SetFullScreen(bool v)    { _fullScreen = v; }
+	void SetCreateScene(int v)    { _createScene = v; }
+	void SetDoublePwd(bool v)     { _doublePwd = v; }
 
+	bool IsAutoLogin()              const { return _autoLogin; }
+	bool IsFullScreen()             const { return _fullScreen; }
+	bool IsNoObj()                  const { return _noObj; }
+	bool IsEditor()                 const { return _editor; }
+	bool IsMusicEnabled()           const { return _musicEnabled; }
+	bool IsCheckOvermax()           const { return _checkOvermax; }
+	bool IsLgEnabled()              const { return _enableLg; }
+	bool IsLgMsgEnabled()           const { return _enableLgMsg; }
+	bool IsMultiThreadRes()         const { return _mThreadRes; }
+	bool IsRenderSceneObj()         const { return _renderSceneObj; }
+	bool IsRenderCha()              const { return _renderCha; }
+	bool IsRenderEffect()           const { return _renderEffect; }
+	bool IsRenderTerrain()          const { return _renderTerrain; }
+	bool IsRenderUi()               const { return _renderUi; }
+	bool IsRenderMinimap()          const { return _renderMinimap; }
+	bool IsRender()                 const { return _render; }
+	bool IsResourcePreload()        const { return _resourcePreload; }
+	bool IsDiscordEnabled()         const { return _discordEnabled; }
+	bool IsPower()                  const { return _showConsole; }
+	bool IsConsoleEnabled()         const { return _consoleEnabled; }
+	bool IsConsoleRequireSuperKey() const { return _consoleRequireSuperKey; }
+	bool IsTextureLogEnabled()      const { return _textureLogEnabled; }
+	bool IsMoveClient()             const { return _moveClient; }
+	bool IsDoublePwd()              const { return _doublePwd; }
 
-    int         m_nMaxChaType;
-    int         m_nMaxSceneObjType;
-    int         m_nMaxEffectType;
-	int			m_nMaxResourceNum;
-    int         m_nMaxItemType;
-	//  Глобальный выключатель звука: музыка + эффекты. 0 — AudioSDL не инициализируется.
-	//  Читается из [audio] musicEnabled в user/system.ini (default 1).
-	bool        MusicEnabled;
-	BOOL		m_bCheckOvermax;
+	int             GetChaCnt()             const { return _chaCnt; }
+	const SPlaceCha& GetChaAt(int i)        const { return _chaList[i]; }
+	const float*    GetLightDir()           const { return _lightDir.data(); }
+	const float*    GetLightColor()         const { return _lightColor.data(); }
+	std::uint8_t    GetScreenMode()         const { return _screenMode; }
+	int             GetFogR()               const { return _fogR; }
+	int             GetFogG()               const { return _fogG; }
+	int             GetFogB()               const { return _fogB; }
+	float           GetFogExp2()            const { return _fogExp2; }
+	int             GetMaxChaType()         const { return _maxChaType; }
+	int             GetMaxSceneObjType()    const { return _maxSceneObjType; }
+	int             GetMaxEffectType()      const { return _maxEffectType; }
+	int             GetMaxResourceNum()     const { return _maxResourceNum; }
+	int             GetMaxItemType()        const { return _maxItemType; }
+	int             GetSendHeartbeat()      const { return _sendHeartbeat; }
+	std::uint32_t   GetConnectTimeOut()     const { return _connectTimeOut; }
+	int             GetCreateScene()        const { return _createScene; }
+	float           GetCameraVel()          const { return _cameraVel; }
+	float           GetCameraAccl()         const { return _cameraAccl; }
+	float           GetEyeX()               const { return _eyeX; }
+	float           GetEyeY()               const { return _eyeY; }
+	float           GetEyeZ()               const { return _eyeZ; }
+	float           GetRefX()               const { return _refX; }
+	float           GetRefY()               const { return _refY; }
+	float           GetRefZ()               const { return _refZ; }
+	float           GetFov()                const { return _fov; }
+	float           GetAspect()             const { return _aspect; }
+	float           GetNearClip()           const { return _nearClip; }
+	float           GetFarClip()            const { return _farClip; }
+	float           GetLgtFactor()          const { return _lgtFactor; }
+	std::uint32_t   GetLgtBkColor()         const { return _lgtBkColor; }
+	int             GetLeftHand()           const { return _leftHand; }
+	int             GetRightHand()          const { return _rightHand; }
+	std::uint32_t   GetFullScreenAntialias() const { return _fullScreenAntialias; }
+	std::uint32_t   GetMaxCha()             const { return _maxCha; }
+	std::uint32_t   GetMaxEff()             const { return _maxEff; }
+	std::uint32_t   GetMaxItem()            const { return _maxItem; }
+	std::uint32_t   GetMaxObj()             const { return _maxObj; }
+	int             GetMovieW()             const { return _movieW; }
+	int             GetMovieH()             const { return _movieH; }
 
-	// 
-    BOOL        m_nSendHeartbeat;       // ,:s,10s,0
-	DWORD		m_nConnectTimeOut;		// 
+	const std::string& GetMd5Pass()      const { return _md5Pass; }
+	const std::string& GetVerErrorHttp() const { return _verErrorHttp; }
+	const std::string& GetLocale()       const { return _locale; }
+	const std::string& GetResPath()      const { return _resPath; }
+	const std::string& GetFontName1()    const { return _fontName1; }
+	const std::string& GetFontName2()    const { return _fontName2; }
 
-    BOOL        m_bEnableLG;            // LG
-    BOOL        m_bEnableLGMsg;         // LG-Box
-	BOOL		m_bMThreadRes;			// 
+private:
+	bool          _autoLogin;
+	bool          _fullScreen;
+	SPlaceCha     _chaList[20];
+	int           _chaCnt;
+	std::array<float, 3> _lightDir;
+	std::array<float, 3> _lightColor;
+	bool          _noObj;
+	bool          _editor;
+	std::uint8_t  _screenMode;
 
+	int           _fogR;
+	int           _fogG;
+	int           _fogB;
+	float         _fogExp2;
 
-	int		m_nCreateScene;
+	int           _maxChaType;
+	int           _maxSceneObjType;
+	int           _maxEffectType;
+	int           _maxResourceNum;
+	int           _maxItemType;
+	bool          _musicEnabled;
+	bool          _checkOvermax;
 
-	//{lemon add@2004.9.16
-	float	m_fCameraVel;
-	float	m_fCameraAccl;
+	int           _sendHeartbeat;
+	std::uint32_t _connectTimeOut;
 
-	//lemon add@2004.11.26, 
-	float	eyeX;
-	float   eyeY;      
-	float	eyeZ;      
-	float   refX;      
-	float   refY;      
-	float   refZ;
-	float   fov;
-	//lemon add@2005.1.24
-	float   fAspect;
+	bool          _enableLg;
+	bool          _enableLgMsg;
+	bool          _mThreadRes;
 
-	float	fnear;
-	float	ffar;
-	
-    float   m_fLgtFactor;
-    DWORD   m_dwLgtBkColor;
+	int           _createScene;
 
-    // lh add@2004.12.8
-    int     nLeftHand;
-    int     nRightHand;
+	float         _cameraVel;
+	float         _cameraAccl;
 
+	float         _eyeX, _eyeY, _eyeZ;
+	float         _refX, _refY, _refZ;
+	float         _fov;
+	float         _aspect;
+	float         _nearClip;
+	float         _farClip;
 
-	BOOL	m_bRenderSceneObj;
-	BOOL    m_bRenderCha;
-	BOOL    m_bRenderEffect;
-	BOOL    m_bRenderTerrain;
-	BOOL	m_bRenderUI;
-	BOOL    m_bRenderMinimap;
-	BOOL	m_bRender;
+	float         _lgtFactor;
+	std::uint32_t _lgtBkColor;
 
-    DWORD   m_dwFullScreenAntialias;
+	int           _leftHand;
+	int           _rightHand;
 
-	//
-	DWORD	m_dwMaxCha;
-	DWORD	m_dwMaxEff;
-	DWORD	m_dwMaxItem;
-	DWORD	m_dwMaxObj;
+	bool          _renderSceneObj;
+	bool          _renderCha;
+	bool          _renderEffect;
+	bool          _renderTerrain;
+	bool          _renderUi;
+	bool          _renderMinimap;
+	bool          _render;
 
-	// [Resources] preload_at_start (default 1).
-	// Прогревает g_GeomManager (character meshes + bones) при старте,
-	// чтобы первый спавн персонажа не делал file IO. Можно выключить
-	// для ускорения dev-loop'а — ресурсы будут грузиться on-demand.
-	// Раньше управлялось define'ом _UNLOADRES в Engine vcxproj.
-	BOOL	m_bResourcePreload;
+	std::uint32_t _fullScreenAntialias;
 
-	char	m_szMD5Pass[48];	// MD5
+	std::uint32_t _maxCha;
+	std::uint32_t _maxEff;
+	std::uint32_t _maxItem;
+	std::uint32_t _maxObj;
 
-	bool	m_IsShowConsole;	//
+	bool          _resourcePreload;
+	bool          _discordEnabled;
 
-	// [Console] — гейт игровой консоли (ранее `#ifdef DEBUG`).
-	// enabled          — консоль разрешена (доступна через backtick)
-	// requireSuperKey  — дополнительно требуется permission PowerUser/GM
-	// Визуальные настройки [Console Debug] (font/ширина/прозрачность/строки)
-	// читаются напрямую из Lua-скрипта console_bootstrap.lua через
-	// LuaBridge-тип IniFile (SystemIni:Section("Console Debug"):GetInt64(...)).
-	BOOL	m_bConsoleEnabled;
-	BOOL	m_bConsoleRequireSuperKey;
+	std::string   _md5Pass;
 
-	// [TextureLog] — runtime-тогл диагностического лога загрузок текстур
-	// (канал "textures" через ToLogService). По умолчанию выключен.
-	BOOL	m_bTextureLogEnabled;
+	bool          _showConsole;
+	bool          _consoleEnabled;
+	bool          _consoleRequireSuperKey;
+	bool          _textureLogEnabled;
 
-	bool	m_IsMoveClient;		//
+	bool          _moveClient;
 
-	char	m_szVerErrorHTTP[256];	// 
+	std::string   _verErrorHttp;
 
-	bool	m_IsBill;
+	bool          _doublePwd;
 
-	bool	IsPower()		{ return m_IsShowConsole;	}		// ,
+	std::string   _locale;
+	std::string   _resPath;
+	std::string   _fontName1;
+	std::string   _fontName2;
 
-	bool	m_IsDoublePwd;	// 
-
-	// Add by lark.li 20080429 for res
-	char   m_szLocale[256];
-	char   m_szResPath[256];
-
-	char   m_szFontName1[50];
-	char   m_szFontName2[50];
-	// End
-
-	// Add by lark.li 20080825 begin
-	int		m_nMovieW;
-	int		m_nMovieH;
-	// End
+	int           _movieW;
+	int           _movieH;
 };
 
-
-extern CGameConfig g_Config;
-
+extern GameConfig GlobalAppConfig;

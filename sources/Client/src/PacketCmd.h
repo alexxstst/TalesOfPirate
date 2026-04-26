@@ -6,6 +6,7 @@
 
 #include <time.h>
 #include "discord_rpc.h"
+#include "GameConfig.h"
 
 static const char* APPLICATION_ID = "1441442327930470523";
 static int SendPresence = 1;
@@ -13,6 +14,9 @@ static int64_t StartTime = time(0);
 
 static void updateDiscordPresence(const char *details, const char *state)
 {
+    if (!GlobalAppConfig.IsDiscordEnabled()) {
+        return;
+    }
     if (SendPresence) {
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
@@ -47,6 +51,9 @@ static void handleDiscordError(int errcode, const char* message)
 
 static void discordInit()
 {
+    if (!GlobalAppConfig.IsDiscordEnabled()) {
+        return;
+    }
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
     handlers.ready = handleDiscordReady;

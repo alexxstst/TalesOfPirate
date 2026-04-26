@@ -114,7 +114,7 @@ void NetLoginSuccess(char byPassword, uint8_t maxCharacters, std::span<const Net
 #endif
 
 	// Record whether secondary password exists
-	g_Config.m_IsDoublePwd = byPassword ? true : false;
+	GlobalAppConfig.SetDoublePwd(byPassword ? true : false);
 
 	ToLogService("ui", "NetLoginSuccess - CharNum:{}", characters.size());
 
@@ -314,7 +314,7 @@ void NetCreatePassword2(unsigned short Errno) {
 
 	if (Errno == ERR_SUCCESS) {
 		// Secondary password created successfully
-		g_Config.m_IsDoublePwd = true;
+		GlobalAppConfig.SetDoublePwd(true);
 
 		CSelectChaScene* pSelChaScene = dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
 		if (pSelChaScene) {
@@ -348,7 +348,7 @@ void NetUpdatePassword2(unsigned short Errno) {
 
 	if (Errno == ERR_SUCCESS) {
 		// Secondary password updated successfully
-		g_Config.m_IsDoublePwd = true;
+		GlobalAppConfig.SetDoublePwd(true);
 		g_stUIDoublePwd.CloseAllForm();
 	}
 	else if (Errno == ERR_PT_SERVERBUSY) {
@@ -1115,10 +1115,10 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 		stSceneInitParam init;
 		init.strMapFile = pInfo->DataName.c_str();
 
-		init.nMaxCha = g_Config.m_dwMaxCha;
-		init.nMaxEff = g_Config.m_dwMaxEff;
-		init.nMaxItem = g_Config.m_dwMaxItem;
-		init.nMaxObj = g_Config.m_dwMaxObj;
+		init.nMaxCha = GlobalAppConfig.GetMaxCha();
+		init.nMaxEff = GlobalAppConfig.GetMaxEff();
+		init.nMaxItem = GlobalAppConfig.GetMaxItem();
+		init.nMaxObj = GlobalAppConfig.GetMaxObj();
 		init.nUITemplete = enumMainForm;
 		init.strName = pInfo->szName;
 		init.nTypeID = enumWorldScene;
@@ -1138,7 +1138,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 		g_cFindPath.SetShortPathFinding(128, 38);
 
 		if (switchmap.chEnterType == enumENTER_MAP_CARRY) {
-			if (!g_Config.IsPower()) {
+			if (!GlobalAppConfig.IsPower()) {
 				g_logManager.Shutdown();
 			}
 		}
@@ -1150,7 +1150,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 		if (switchmap.chEnterType == enumENTER_MAP_CARRY) {
 			g_pGameApp->Loading();
 
-			if (!g_Config.IsPower()) {
+			if (!GlobalAppConfig.IsPower()) {
 				g_logManager.Shutdown();
 			}
 		}

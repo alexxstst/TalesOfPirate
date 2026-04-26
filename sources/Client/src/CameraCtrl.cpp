@@ -149,8 +149,8 @@ void CCameraCtrl::InitModel(const int iType, D3DXVECTOR3* pInitPos)
 	D3DXVec3Normalize(&m_vDir, &val);
 	m_vDir.z = 0;
 
-	m_fResetRotatVel = g_Config.m_fCameraVel;
-	m_fResetRotatAccl = g_Config.m_fCameraAccl;
+	m_fResetRotatVel = GlobalAppConfig.GetCameraVel();
+	m_fResetRotatAccl = GlobalAppConfig.GetCameraAccl();
 
 	SetModel(iType, pInitPos);
 
@@ -185,8 +185,8 @@ void		CCameraCtrl::SetModel(int iType, D3DXVECTOR3* pInitPos)
 		m_flerp = 0;
 		m_fstep1 = 1.0f;
 
-		m_fResetRotatVel = g_Config.m_fCameraVel;
-		m_fResetRotatAccl = g_Config.m_fCameraAccl;
+		m_fResetRotatVel = GlobalAppConfig.GetCameraVel();
+		m_fResetRotatAccl = GlobalAppConfig.GetCameraAccl();
 
 		//if(pInitPos)
 		//{

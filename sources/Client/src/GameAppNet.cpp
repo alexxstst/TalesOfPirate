@@ -87,17 +87,8 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 							char szBuf[256] = { 0 };
 							if( g_NetIF )
 							{
-								// modify by Philip.Wu  2006-06-09  
-								if(g_Config.m_IsBill)
-								{
-									{ auto _str = SafeVFormat(GetLanguageString(136), GetLanguageString(137), dwParam1); strncpy_s(szBuf, sizeof(szBuf), _str.c_str(), _TRUNCATE); }
-								}
-								else
-								{
-
-									const auto reason = g_NetIF->GetDisconnectErrText(dwParam1);
-									sprintf(szBuf, reason.c_str());
-								}
+								const auto reason = g_NetIF->GetDisconnectErrText(dwParam1);
+								sprintf(szBuf, reason.c_str());
 							}
 							else
 							{

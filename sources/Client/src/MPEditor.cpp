@@ -104,7 +104,7 @@ CGameScene *MPEditor::GetCurScene()
 
 void MPEditor::Enable(BOOL bEnable)
 {
-    if(bEnable && g_Config.m_bEditor==FALSE) return;
+    if(bEnable && !GlobalAppConfig.IsEditor()) return;
 
     _bEnable = bEnable;
 
@@ -700,7 +700,7 @@ void MPEditor::FrameMove(DWORD dwTimeParam)
 	
 	// 
 
-	if(g_Config.m_bEditor)
+	if(GlobalAppConfig.IsEditor())
 	{
 		//g_Render.EnablePrint(INFO_DEBUG, TRUE);
 		short sMonsterStatus[1000]; // 1000

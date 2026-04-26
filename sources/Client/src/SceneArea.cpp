@@ -26,7 +26,7 @@ long CSceneArea::Init(_TCHAR *ptcsAreaFile, bool bSilence)
 	if (m_bInitSuccess)
 		Free();
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		m_fRdWr = _tfopen(ptcsAreaFile, _TEXT("r+b"));
 	else
 		m_fRdWr = _tfopen(ptcsAreaFile, _TEXT("rb"));
@@ -85,7 +85,7 @@ long CSceneArea::CreateFile(_TCHAR *ptcsAreaFile, int iSceneWidth, int iSceneHei
 	SFileHead			SHead;
 	SAreaUnit			*pSAreaUnit = NULL;
 
-	if( g_Config.m_bEditor )
+	if( GlobalAppConfig.IsEditor() )
 		fFile = _tfopen(ptcsAreaFile, _TEXT("wb"));
 	else
 		fFile = _tfopen(ptcsAreaFile, _TEXT("rb"));

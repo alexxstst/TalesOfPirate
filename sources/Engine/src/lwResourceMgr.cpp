@@ -2737,7 +2737,7 @@ LW_BEGIN
 		}
 
 		//  TextureLog (заменивший lwTexLogMgr) — синглтон в Corsairs::Engine::Render.
-		//  По умолчанию выключен; включается из клиента после g_Config.Load(),
+		//  По умолчанию выключен; включается из клиента после GlobalAppConfig.Load(),
 		//  если в [TextureLog] enabled = 1.
 	}
 

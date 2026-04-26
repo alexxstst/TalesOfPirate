@@ -172,16 +172,16 @@ bool CWorldScene::_Init()
 	_InitUI() ;
 	 
     // 
-	if(g_Config.m_bEditor)
-	{		
-		//     
+	if(GlobalAppConfig.IsEditor())
+	{
+		//
         CCharacter *pCha = NULL;
-		for(int i = 0; i < g_Config.m_nChaCnt; i++)
+		for(int i = 0; i < GlobalAppConfig.GetChaCnt(); i++)
 		{
-			pCha = AddCharacter(g_Config.m_ChaList[i].nTypeID);
+			pCha = AddCharacter(GlobalAppConfig.GetChaAt(i).nTypeID);
 			if( pCha )
 			{
-				pCha->setPos(g_Config.m_ChaList[i].nX * 100, g_Config.m_ChaList[i].nY * 100); 		
+				pCha->setPos(GlobalAppConfig.GetChaAt(i).nX * 100, GlobalAppConfig.GetChaAt(i).nY * 100);
 				pCha->EnableAI(FALSE);
 
 				pCha->setYaw( 45 - rand()%90);
@@ -192,9 +192,9 @@ bool CWorldScene::_Init()
 			}
 		}
 		pCha = GetMainCha();
-		if( pCha ) 
+		if( pCha )
 		{
-			//CCameraCtrl *pCam = g_pGameApp->GetMainCam();	
+			//CCameraCtrl *pCam = g_pGameApp->GetMainCam();
 
 			//pCam->SetFollowObj(pCha->GetPos());
 			//g_pGameApp->ResetGameCamera();
@@ -202,14 +202,14 @@ bool CWorldScene::_Init()
 
             if( pCha->getTypeID()<5 )
             {
-                if( g_Config.nLeftHand>0 )
+                if( GlobalAppConfig.GetLeftHand()>0 )
                 {
-                    pCha->UpdataItem( g_Config.nLeftHand, LINK_ID_LEFTHAND );
+                    pCha->UpdataItem( GlobalAppConfig.GetLeftHand(), LINK_ID_LEFTHAND );
                 }
 
-                if( g_Config.nRightHand>0 )
+                if( GlobalAppConfig.GetRightHand()>0 )
                 {
-                    pCha->UpdataItem( g_Config.nRightHand, LINK_ID_RIGHTHAND );
+                    pCha->UpdataItem( GlobalAppConfig.GetRightHand(), LINK_ID_RIGHTHAND );
                 }
 				pCha->LoadingCall();
             }
@@ -1281,7 +1281,7 @@ void CWorldScene::_KeyDownEvent( int key )
 
 		if( g_pGameApp->IsAltPress() && (key=='m' || key=='M') )
 		{
-			g_Config.SetMoveClient( !g_Config.m_IsMoveClient );
+			GlobalAppConfig.SetMoveClient( !GlobalAppConfig.IsMoveClient() );
 		}
 
 #ifdef _DEBUG	// 
@@ -2010,7 +2010,7 @@ void CWorldScene::LoadingCall()
 	// 
 	//::CS_KitbagCheck();
 
-	if(g_Config.m_bEditor)	//  
+	if(GlobalAppConfig.IsEditor())	//
 	{
 		static bool firstTime = true;
 		if( firstTime )

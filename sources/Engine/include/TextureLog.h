@@ -32,7 +32,7 @@ namespace Corsairs::Engine::Render {
     //  накапливают пер-категорийные count/bytes (сравнение substring'ом
     //  даёт false-positive для коротких ключей вроде "ui" — это сознательный
     //  компромисс, исторически унаследованный от lwTexLogMgr).
-    //  По умолчанию выключен. Включается из клиента после g_Config.Load()
+    //  По умолчанию выключен. Включается из клиента после GlobalAppConfig.Load()
     //  если в [TextureLog] enabled = 1. Когда выключен — Log() это no-op,
     //  так что 5 колсайтов в lwResourceMgr работают и в проде без накладных.
     class TextureLog

@@ -1247,7 +1247,7 @@ void CGameApp::Loading(int nFrame) {
 	int width = (GetRender().GetScreenWidth() == LARGE_RES_X) ? (LARGE_RES_X / 4) : (TINY_RES_X / 4);
 	int height = (GetRender().GetScreenHeight() == LARGE_RES_Y) ? (LARGE_RES_Y / 3) : (TINY_RES_Y / 3);
 
-	if (g_Config.m_bFullScreen) {
+	if (GlobalAppConfig.IsFullScreen()) {
 		width = GetSystemMetrics(SM_CXSCREEN) / 4;
 		height = GetSystemMetrics(SM_CYSCREEN) / 3;
 		height += 32;

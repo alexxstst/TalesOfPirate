@@ -214,7 +214,7 @@ void CImeInput::SetShowPos(int x, int y)
 
 void CImeInput::SetScreen(bool isFull, int w, int h)
 {
-    _bIsFull = (TRUE == g_Config.m_bFullScreen);
+    _bIsFull = GlobalAppConfig.IsFullScreen();
 
     if (_bIsFull)
     {

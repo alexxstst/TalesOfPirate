@@ -223,7 +223,7 @@ bool CSelectChaScene::_Init()
 	}
 
 
-	g_Render.SetClip(g_Config.fnear, g_Config.ffar);
+	g_Render.SetClip(GlobalAppConfig.GetNearClip(), GlobalAppConfig.GetFarClip());
 
 	CCameraCtrl* pCam = g_pGameApp->GetMainCam();
 	if (pCam)
@@ -574,7 +574,7 @@ void CSelectChaScene::LoadingCall()          // Called during loading, refresh
 		//g_pGameApp->LoadRes4();
 	}
 
-	if (!g_Config.m_IsDoublePwd)
+	if (!GlobalAppConfig.IsDoublePwd())
 	{
 		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
@@ -745,7 +745,7 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 	}
 	else if (strName == "btnDel")
 	{
-		if (g_Config.m_IsDoublePwd)
+		if (GlobalAppConfig.IsDoublePwd())
 		{
 			// Deleting character requires password  modify by Philip.Wu  2006-07-19
 			g_stUIDoublePwd.SetType(CDoublePwdMgr::DELETE_CHARACTOR);
@@ -1123,7 +1123,7 @@ void CSelectChaScene::UpdateButton()
 		btnYes->SetIsEnabled(v);
 	}
 
-	if (!g_Config.m_IsDoublePwd)
+	if (!GlobalAppConfig.IsDoublePwd())
 	{
 		btnCreate->SetIsEnabled(false);
 		btnAlter->SetIsEnabled(false);

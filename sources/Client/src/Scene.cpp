@@ -1629,7 +1629,7 @@ bool CGameScene::LoadMap(const char* file) {
 	string map = strMapFile + ".map";
 	map = "map/" + map;
 
-	_pTerrain->Load(map.c_str(), g_Config.m_bEditor);
+	_pTerrain->Load(map.c_str(), GlobalAppConfig.IsEditor());
 
 	map = strMapFile + ".obj";
 	map = "map/" + map;
@@ -1762,8 +1762,8 @@ bool CGameScene::_Init() {
 	g_pGameApp->GetCursor()->SceneInit(this);
 	ToLogService("common", "3d cursor init");
 
-	g_Render.SetDirectLightDir(g_Config.m_LightDir[0], g_Config.m_LightDir[1], g_Config.m_LightDir[2]);
-	g_Render.SetDirectLightColor(g_Config.m_LightColor[0], g_Config.m_LightColor[1], g_Config.m_LightColor[2], 1.0f);
+	g_Render.SetDirectLightDir(GlobalAppConfig.GetLightDir()[0], GlobalAppConfig.GetLightDir()[1], GlobalAppConfig.GetLightDir()[2]);
+	g_Render.SetDirectLightColor(GlobalAppConfig.GetLightColor()[0], GlobalAppConfig.GetLightColor()[1], GlobalAppConfig.GetLightColor()[2], 1.0f);
 
 
 	_IsShowItemName = false;

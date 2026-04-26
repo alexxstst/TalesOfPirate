@@ -157,7 +157,7 @@ void CGameApp::MouseButtonDB(int nButton)
 			GetCurScene()->_MouseButtonDB( nButton );
 
 			//
-			if( (nButton==1) && (!g_Config.m_bEditor) && (!_pMainCam->IsDefaultView()) )
+			if( (nButton==1) && (!GlobalAppConfig.IsEditor()) && (!_pMainCam->IsDefaultView()) )
 			{
 				//_pMainCam->ResetCamera();
 				ResetCamera();
@@ -238,7 +238,7 @@ void CGameApp::HandleSuperKey()
 	{
 #endif
 
-		if(IsKeyDown(DIK_TAB)&& !g_Config.m_bEditor)
+		if(IsKeyDown(DIK_TAB)&& !GlobalAppConfig.IsEditor())
 		{
 			if(CGameScene::_pLargerMap)
 				CGameScene::_pLargerMap->Show( !CGameScene::_pLargerMap->IsShow() );
@@ -276,7 +276,7 @@ void CGameApp::HandleSuperKey()
 		{
 			g_Render.EnableCaptureAVI(1 - g_Render.IsEnableCaptureAVI());
 		}
-		else if( g_pGameApp->IsKeyDown(DIK_F3) && g_Config.m_bEditor && g_pGameApp->IsCtrlPress() )
+		else if( g_pGameApp->IsKeyDown(DIK_F3) && GlobalAppConfig.IsEditor() && g_pGameApp->IsCtrlPress() )
 		{
 			//  by lh test
 			static int type = 0;
