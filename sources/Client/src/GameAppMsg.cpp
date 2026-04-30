@@ -147,8 +147,6 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 			}
 			if (bObjChange)
 				g_ObjFile.WriteSectionObjInfo(nSectionNO, infoex, nSectionObjCnt);
-
-			ToLogService("common", "Total: {}, Scene: {}", nSectionObjCnt, nSceneObj);
 		}
 
 		MPTile* SMPTile;

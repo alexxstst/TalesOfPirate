@@ -428,8 +428,6 @@ long CSceneObjFile::ReadSectionObjInfo(int nSectionNO, SSceneObjInfo* SSceneObj,
 
 	if ((*lSectionObjNum = m_SSectionIndex[nSectionNO].iObjNum) > 0) {
 		fseek(m_fRdWr, m_SSectionIndex[nSectionNO].lObjInfoPos, SEEK_SET);
-		ToLogService("common", "Seek Offset [{} {}] = {}", nSectionNO % m_SFileHead.iSectionCntX,
-					 nSectionNO / m_SFileHead.iSectionCntX, m_SSectionIndex[nSectionNO].lObjInfoPos);
 		fread(SSceneObj, sizeof(SSceneObjInfo), m_SSectionIndex[nSectionNO].iObjNum, m_fRdWr);
 		// 
 		int nSectionX, nSectionY;

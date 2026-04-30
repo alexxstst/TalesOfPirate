@@ -348,15 +348,9 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 // C->S : 
 void CProCirculateCS::EndAction(CActionState* pState) {
-	//   
+	//
 	auto pk = net::msg::serializeCmEndActionCmd();
 	pCNetIf->SendPacketMessage(pk);
-
-	CCharacter* pMainCha = CGameApp::GetCurScene()->GetMainCha();
-	if (pMainCha) {
-		g_logManager.InternalLog(LogLevel::Debug, "common",
-								 std::format("###Send(EndAction):\tTick:[{}]", GetTickCount()));
-	}
 }
 
 bool CProCirculate::Connect(const char* hostname, unsigned short port, unsigned long timeout) {

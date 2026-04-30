@@ -791,7 +791,6 @@ bool COneMoveState::_Start() {
 }
 
 void COneMoveState::_End() {
-	ToLogService("common", "COneMoveState::_End");
 }
 
 void COneMoveState::SynchroPos(int x, int y) {

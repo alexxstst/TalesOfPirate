@@ -233,14 +233,12 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID) {
 		return NULL;
 	}
 
-	if (GlobalAppConfig.IsCheckOvermax()) {
-		if (m_dwValidSceneObjCnt >= 290) {
-			g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(344), 299));
-		}
-		if (m_dwSceneObjPolyCnt >= 9000) {
-			g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(345), 9000));
-		}
-	}
+	//  Раньше тут был блок IsCheckOvermax с двумя предупреждениями:
+	//  «sceneobj count >= 290» и «sceneobj poly count >= 9000» в канал "ui"
+	//  на каждый AddSceneObj. Это legacy-предупреждения 2004 года для
+	//  слабых DX9 GPU; на современном железе пороги бессмысленны (миллионы
+	//  полигонов в кадре — норма), а на богатой карте предупреждение
+	//  срабатывало десятки раз в кадр и засоряло "ui"_*.log. Удалено.
 
 	BOOL bCreate = FALSE;
 	CSceneObj* pObj = _GetFirstInvalidSceneObj(nScriptID, bCreate);
