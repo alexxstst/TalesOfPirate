@@ -43,6 +43,10 @@ namespace Corsairs::Engine::Input {
 		int mouseY = 0;
 		int mousePrevX = 0;
 		int mousePrevY = 0;
+		//  Дельта (current - previous) на старт кадра. Кэшируется в Update()
+		//  ДО сдвига mousePrev = mouse, иначе GetMouseDelta вернул бы 0.
+		int mouseDeltaX = 0;
+		int mouseDeltaY = 0;
 		int mouseWheelAcc = 0; //  Накоплено за кадр из WM_MOUSEWHEEL.
 		int mouseWheelLast = 0; //  Значение, видимое после Update.
 		bool mouseDown[3] = {false, false, false};
@@ -54,6 +58,8 @@ namespace Corsairs::Engine::Input {
 			asciiPhase.fill(KeyFree);
 			asciiCurrent.fill(false);
 			asciiPrevious.fill(false);
+			mouseDeltaX = 0;
+			mouseDeltaY = 0;
 			mouseWheelAcc = 0;
 			mouseWheelLast = 0;
 			for (auto& v : mouseDown) {
@@ -138,7 +144,11 @@ namespace Corsairs::Engine::Input {
 		//  ASCII — одноразовые события из WM_CHAR. После кадра сбрасываем.
 		s.asciiCurrent.fill(false);
 
-		//  Мышь: дельта — разница снапшотов, колесо — накопленное.
+		//  Мышь: дельта — разница снапшотов на момент Update (current - previous);
+		//  СНАЧАЛА считаем дельту, ПОТОМ сдвигаем mousePrev = mouse, иначе
+		//  GetMouseDelta* возвращали бы 0 на весь кадр (current == previous).
+		s.mouseDeltaX = s.mouseX - s.mousePrevX;
+		s.mouseDeltaY = s.mouseY - s.mousePrevY;
 		s.mousePrevX = s.mouseX;
 		s.mousePrevY = s.mouseY;
 		s.mouseWheelLast = s.mouseWheelAcc;
@@ -220,11 +230,11 @@ namespace Corsairs::Engine::Input {
 	}
 
 	int InputSystem::GetMouseDeltaX() const {
-		return _impl->mouseX - _impl->mousePrevX;
+		return _impl->mouseDeltaX;
 	}
 
 	int InputSystem::GetMouseDeltaY() const {
-		return _impl->mouseY - _impl->mousePrevY;
+		return _impl->mouseDeltaY;
 	}
 
 	int InputSystem::GetMouseWheelDelta() const {
