@@ -11,7 +11,7 @@ using namespace GUI;
 
 MPTexRect CEdit::_CursorImage;
 
-int CEdit::_nCursorFlashCount = 0;
+std::chrono::steady_clock::time_point CEdit::_lastCursorBlink = {};
 bool CEdit::_bCursorIsShow = false;
 int CEdit::_nCursorX = 0;
 int CEdit::_nCursorY = 0;

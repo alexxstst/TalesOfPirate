@@ -981,10 +981,14 @@ void CEdit::ShowFocus() {
 	RefreshText(); // Refresh text display
 	RefreshCursor(); // Refresh cursor display
 
-	// Show blinking cursor
-	++_nCursorFlashCount;
-	if (_nCursorFlashCount >= 10) {
-		_nCursorFlashCount = 0;
+	//  Caret blink — стандартный Windows-rate (≈530 мс по умолчанию, настраивается
+	//  в Control Panel через GetCaretBlinkTime). Time-based, не зависит от FPS:
+	//  раньше переключали каждые 10 кадров → ~333 мс на 30 FPS, ~69 мс на 144 FPS.
+	using namespace std::chrono;
+	const auto now = steady_clock::now();
+	const auto blinkInterval = milliseconds(GetCaretBlinkTime() != 0 ? GetCaretBlinkTime() : 530);
+	if (_lastCursorBlink == steady_clock::time_point{} || (now - _lastCursorBlink) >= blinkInterval) {
+		_lastCursorBlink = now;
 		_bCursorIsShow = !_bCursorIsShow;
 	}
 	if (_bCursorIsShow) {

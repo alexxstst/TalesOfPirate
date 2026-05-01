@@ -5,6 +5,7 @@
 // :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
+#include <chrono>
 #include "uiCompent.h"
 #include "uiForm.h"
 
@@ -177,7 +178,11 @@ namespace GUI {
 	private:
 		static MPTexRect _CursorImage; // 
 
-		static int _nCursorFlashCount;
+		//  Caret blink: момент последнего переключения видимости (steady_clock).
+		//  Раньше тут был frame counter (`++count; if count >= 10`) — на 30 FPS
+		//  blink был ~333 мс, на 144 FPS уходил в ~69 мс (≈14 Гц, мерцание).
+		//  Теперь по абсолютному времени, независимо от FPS.
+		static std::chrono::steady_clock::time_point _lastCursorBlink;
 		static bool _bCursorIsShow;
 		static int _nCursorX, _nCursorY; // 
 
