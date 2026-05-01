@@ -387,7 +387,7 @@ size_t MPFileHandleDataStream::readLine(char* buf, size_t maxCount, const String
 		trimCR = true;
 	}
 
-	size_t chunkSize = min(maxCount, (size_t)MP_STREAM_TEMP_SIZE-1);
+	size_t chunkSize = std::min(maxCount, static_cast<size_t>(MP_STREAM_TEMP_SIZE - 1));
 	size_t totalCount = 0;
 	size_t readCount;
 	while (chunkSize && (readCount = fread(m_TmpArea, chunkSize, 1, m_FileHandle))) {
@@ -414,7 +414,7 @@ size_t MPFileHandleDataStream::readLine(char* buf, size_t maxCount, const String
 		if (pos < readCount) {
 			break;
 		}
-		chunkSize = min(maxCount-totalCount, (size_t)MP_STREAM_TEMP_SIZE-1);
+		chunkSize = std::min(maxCount - totalCount, static_cast<size_t>(MP_STREAM_TEMP_SIZE - 1));
 	}
 	return totalCount;
 }

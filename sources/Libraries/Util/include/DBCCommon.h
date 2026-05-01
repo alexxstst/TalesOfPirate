@@ -18,6 +18,7 @@
 
 #ifndef USING_TAO							//Win32Platform SDK
 #include <winsock2.h>						//WinSock2.2
+#define NOMINMAX
 #include <windows.h>
 #else
 #include "TAOSpecial.h"

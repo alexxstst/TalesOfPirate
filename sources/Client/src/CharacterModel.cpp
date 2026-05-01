@@ -1,4 +1,5 @@
 ﻿#include "Stdafx.h"
+#include "SteadyFrameSync.h"
 //#include "CharacterSet.h"
 #include "CharacterAction.h"
 #include "CharacterPoseSet.h"
@@ -689,13 +690,10 @@ void CCharacterModel::PlayPose(DWORD pose, DWORD type, int time, int fps, DWORD 
 	}
 
 	MPPoseInfo* pi = c->GetPoseInfo(_SmallPoseID);
-	// Character trees fix by Mdr - May 2020 FPO beta
-	// This is a truly, exceptionally bad coding practice, 
-	// but I'm fucking tired of those trees and I just want them gone
+	//  Character trees fix by Mdr — May 2020 FPO beta. На fps != 30 эти 83-кадровые
+	//  pose'ы глитчат с нормализованной velocity, поэтому форсируем full-speed.
+	//  "What if there's something else with 83 frames?" — That seems like your problem mate, not mine :)
 	if (c->GetPoseFrameNum(0) == 83) IsGlitched = true;
-	if (!g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = false;
-	// "What if there's something else with 83 frames?"
-	// That seems like your problem mate, not mine :)
 
 	if (pi == 0) {
 		//LG("error", "msgCCharacterModel::PlayPose GetPoseInfo() error with:\n type: %d, pose:%d, SmallPoseID:%d", _TypeID, pose, _SmallPoseID);
@@ -715,7 +713,11 @@ void CCharacterModel::PlayPose(DWORD pose, DWORD type, int time, int fps, DWORD 
 		float v = 30.0f / (float)fps;
 		velocity = v;
 	}
-	if (IsGlitched) velocity = 2 * velocity;
+	//  IsGlitched отменяет нормализацию velocity по FPS — анимация играет с
+	//  «30-FPS-видимой» скоростью на любом FPS. Множитель fps/30 компенсирует
+	//  предыдущее деление velocity на (fps/30) (или эквивалент 30/fps), давая 1.0.
+	//  На 30 FPS: mult=1, no-op. На 60 FPS: mult=2 (было *= 2). На 120 FPS: mult=4.
+	if (IsGlitched) velocity *= Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier();
 
 	switch (_ModelType) {
 	case MODEL_CHARACTER:

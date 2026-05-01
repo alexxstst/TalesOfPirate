@@ -7,6 +7,7 @@
 
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define NOMINMAX					// Disable min/max macros — иначе ломают std::min / std::numeric_limits::min etc.
 // Windows Header Files:
 #include <windows.h>
 // C RunTime Header Files
@@ -90,6 +91,7 @@ inline VOID D3DUtil_InitMaterialI(D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
 #include "uicompent.h"
 #include "uiformmgr.h"
 #include "UIGlobalVar.h"
+#include "UISystemForm.h"
 #include "uilabel.h"
 
 //    

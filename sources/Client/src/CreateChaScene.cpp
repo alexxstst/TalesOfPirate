@@ -2,6 +2,8 @@
 
 #include "createchascene.h"
 #include "EncodingUtil.h"
+#include "UISystemForm.h"
+#include "SteadyFrameSync.h"
 
 #include "CameraCtrl.h"
 #include "GameApp.h"
@@ -100,7 +102,7 @@ int LoginScene_CreateCha::_CreateArrowItem(std::string_view file) {
 		return 0;
 
 	_arrow->GetPrimitive()->SetState(STATE_VISIBLE, 0);
-	_arrow->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+	_arrow->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 	return 1;
 }
@@ -118,7 +120,7 @@ bool LoginScene_CreateCha::LoadArrowMark(const char* Filename, const lwVector3* 
 			return false;
 
 		_ArrowMarks[Index]->GetPrimitive()->SetState(STATE_VISIBLE, TRUE);
-		_ArrowMarks[Index]->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+		_ArrowMarks[Index]->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 		lwMatrix44 matWorld = *(_cha_obj[Index]->GetWorldMatrix());
 		lwMatrix44 matTranslate = lwMatrix44Translate(_ArrowMarksOffset[Index]);
@@ -423,7 +425,7 @@ int LoginScene_CreateCha::LoadModelLMO(std::string_view file) {
 	}
 
 	{
-		_model_lmo->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+		_model_lmo->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 		int pose_enable = 1;
 		if (pose_enable) {

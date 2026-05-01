@@ -1,5 +1,7 @@
 ﻿#include "StdAfx.h"
+#include <limits>
 #include "uisystemform.h"
+#include "SteadyFrameSync.h"
 #include "uiform.h"
 #include "uicheckbox.h"
 #include "Gameapp.h"
@@ -149,15 +151,52 @@ int CSystemProperties::Apply() {
 	return -4;
 }
 
+namespace {
+	//  Допустимый диапазон целевого FPS — нижняя граница 30 (исторический минимум,
+	//  под который настроены анимации и физика), верхняя 240 (физический потолок
+	//  для современных high-refresh мониторов).
+	constexpr int kMinFps = 30;
+	constexpr int kMaxFps = 240;
+
+	//  Парсер ini-ключа [gameOption] framerate с backward-compat:
+	//    0    → 30 (legacy «30 FPS режим»)
+	//    1    → 60 (legacy «60 FPS режим»)
+	//    N≥30 → N (clamp в [kMinFps, kMaxFps])
+	//    иначе → 60 (разумный дефолт для современных машин)
+	int ParseFramerate(std::int64_t raw) {
+		if (raw == 0) return 30;
+		if (raw == 1) return 60;
+		if (raw < kMinFps) return 60;
+		if (raw > kMaxFps) return kMaxFps;
+		return static_cast<int>(raw);
+	}
+
+	//  Записывает значение только если оно отличается от текущего в секции
+	//  (или ключа ещё нет). Возвращает true, если что-то реально изменилось —
+	//  вызывающая сторона по этому флагу решает, нужно ли сохранять файл на диск.
+	//  Sentinel заведомо отличен от value, чтобы отличить "ключа нет" от
+	//  "ключ есть и равен value" одним вызовом GetInt64.
+	bool SetInt64IfChanged(dbc::IniSection& sec, std::string_view key, std::int64_t value) {
+		//  Sentinel — заведомо отличный от value: используется как маркер "ключа нет".
+		constexpr auto kMin = std::numeric_limits<std::int64_t>::min();
+		constexpr auto kMax = std::numeric_limits<std::int64_t>::max();
+		const std::int64_t sentinel = (value == kMin) ? kMax : kMin;
+		if (sec.GetInt64(key, sentinel) == value) {
+			return false;
+		}
+		sec.SetInt64(key, value);
+		return true;
+	}
+} // namespace
+
 /**
-* The help function of reading the propties from the file(*.ini).
-* @param: szIniFileName The name of ini file
+* Чтение настроек из глобального g_SystemIni (загружен из system.ini в Main.cpp).
 * @return: 0 Success.
 *          -1 File is not exist.
 *          -2 File is destroyed.
 *			-3 Filename is null or its length is zero.
 */
-int CSystemProperties::readFromFile(const char* szIniFileName) {
+int CSystemProperties::readFromFile() {
 	auto& video = g_SystemIni["video"];
 	m_videoProp.nTexture = static_cast<int>(video.GetInt64("texture", 0));
 	m_videoProp.bAnimation = video.GetInt64("animation", 0) != 0;
@@ -183,7 +222,8 @@ int CSystemProperties::readFromFile(const char* szIniFileName) {
 	m_gameOption.bShowBars = game.GetInt64("showbars", 0) != 0;
 	m_gameOption.bShowPercentages = game.GetInt64("showpercentages", 0) != 0;
 	m_gameOption.bShowInfo = game.GetInt64("showinfo", 0) != 0;
-	m_gameOption.bFramerate = game.GetInt64("framerate", 0) != 0;
+	m_gameOption.nFramerate = ParseFramerate(game.GetInt64("framerate", 0));
+	m_gameOption.bVsync = game.GetInt64("vsync", 0) != 0;
 	m_gameOption.bShowMounts = game.GetInt64("showmounts", 0) != 0;
 
 	auto& start = g_SystemIni["startOption"];
@@ -193,45 +233,50 @@ int CSystemProperties::readFromFile(const char* szIniFileName) {
 }
 
 /**
-* The help function of write the propties to the file(*.ini).
-* @param: szIniFileName The name of ini file.
+* Запись настроек в глобальный g_SystemIni; если хотя бы одно значение
+* отличается от текущего в ini — синхронизируется на диск, иначе нет.
 * @return: 0 Success.
 *          -1 Error.
 *			-2 File can not be created.
 *			-3 Filename is null or its length is zero.
 */
-int CSystemProperties::writeToFile(const char* szIniFileName) {
+int CSystemProperties::writeToFile() {
+	bool changed = false;
+
 	auto& video = g_SystemIni["video"];
-	video.SetInt64("texture", m_videoProp.nTexture);
-	video.SetInt64("animation", m_videoProp.bAnimation ? 1 : 0);
-	video.SetInt64("cameraRotate", m_videoProp.bCameraRotate ? 1 : 0);
-	video.SetInt64("groundMark", m_videoProp.bGroundMark ? 1 : 0);
-	video.SetInt64("depth32", m_videoProp.bDepth32 ? 1 : 0);
-	video.SetInt64("quality", m_videoProp.nQuality);
-	video.SetInt64("fullScreen", m_videoProp.bFullScreen ? 1 : 0);
-	video.SetInt64("resolution", m_videoProp.bResolution);
+	changed |= SetInt64IfChanged(video, "texture", m_videoProp.nTexture);
+	changed |= SetInt64IfChanged(video, "animation", m_videoProp.bAnimation ? 1 : 0);
+	changed |= SetInt64IfChanged(video, "cameraRotate", m_videoProp.bCameraRotate ? 1 : 0);
+	changed |= SetInt64IfChanged(video, "groundMark", m_videoProp.bGroundMark ? 1 : 0);
+	changed |= SetInt64IfChanged(video, "depth32", m_videoProp.bDepth32 ? 1 : 0);
+	changed |= SetInt64IfChanged(video, "quality", m_videoProp.nQuality);
+	changed |= SetInt64IfChanged(video, "fullScreen", m_videoProp.bFullScreen ? 1 : 0);
+	changed |= SetInt64IfChanged(video, "resolution", m_videoProp.bResolution);
 
 	auto& audio = g_SystemIni["audio"];
-	audio.SetInt64("musicSound", m_audioProp.nMusicSound);
-	audio.SetInt64("musicEffect", m_audioProp.nMusicEffect);
+	changed |= SetInt64IfChanged(audio, "musicSound", m_audioProp.nMusicSound);
+	changed |= SetInt64IfChanged(audio, "musicEffect", m_audioProp.nMusicEffect);
 
 	auto& game = g_SystemIni["gameOption"];
-	game.SetInt64("runMode", 1); // всегда true (как в оригинале)
-	game.SetInt64("helpMode", m_gameOption.bHelpMode ? 1 : 0);
-	game.SetInt64("cameraMode", m_gameOption.bCameraMode ? 1 : 0);
-	game.SetInt64("apparel", m_gameOption.bAppMode ? 1 : 0);
-	game.SetInt64("effect", m_gameOption.bEffMode ? 1 : 0);
-	game.SetInt64("state", m_gameOption.bStateMode ? 1 : 0);
-	game.SetInt64("enemynames", m_gameOption.bEnemyNames ? 1 : 0);
-	game.SetInt64("showbars", m_gameOption.bShowBars ? 1 : 0);
-	game.SetInt64("showpercentages", m_gameOption.bShowPercentages ? 1 : 0);
-	game.SetInt64("showinfo", m_gameOption.bShowInfo ? 1 : 0);
-	game.SetInt64("framerate", m_gameOption.bFramerate ? 1 : 0);
-	game.SetInt64("showmounts", m_gameOption.bShowMounts ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "runMode", 1); // всегда true (как в оригинале)
+	changed |= SetInt64IfChanged(game, "helpMode", m_gameOption.bHelpMode ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "cameraMode", m_gameOption.bCameraMode ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "apparel", m_gameOption.bAppMode ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "effect", m_gameOption.bEffMode ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "state", m_gameOption.bStateMode ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "enemynames", m_gameOption.bEnemyNames ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "showbars", m_gameOption.bShowBars ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "showpercentages", m_gameOption.bShowPercentages ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "showinfo", m_gameOption.bShowInfo ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "framerate", m_gameOption.nFramerate);
+	changed |= SetInt64IfChanged(game, "vsync", m_gameOption.bVsync ? 1 : 0);
+	changed |= SetInt64IfChanged(game, "showmounts", m_gameOption.bShowMounts ? 1 : 0);
 
-	g_SystemIni["startOption"].SetInt64("first", m_startOption.bFirst ? 1 : 0);
+	changed |= SetInt64IfChanged(g_SystemIni["startOption"], "first", m_startOption.bFirst ? 1 : 0);
 
-	g_SystemIni.Save();
+	if (changed) {
+		g_SystemIni.Save();
+	}
 	return 0;
 }
 
@@ -266,7 +311,7 @@ void CSystemMgr::LoadCustomProp() {
 	//(Michael Chen 2005-04-27)
 
 	if (!m_isLoad) {
-		if (m_sysProp.Load("user\\system.ini")) {
+		if (m_sysProp.Load()) {
 			//,
 			m_sysProp.m_videoProp.nTexture = 0;
 			m_sysProp.m_videoProp.bAnimation = true;
@@ -291,7 +336,8 @@ void CSystemMgr::LoadCustomProp() {
 			m_sysProp.m_gameOption.bShowBars = false;
 			m_sysProp.m_gameOption.bShowPercentages = false;
 			m_sysProp.m_gameOption.bShowInfo = false;
-			m_sysProp.m_gameOption.bFramerate = true;
+			m_sysProp.m_gameOption.nFramerate = 60;
+			m_sysProp.m_gameOption.bVsync = false;
 			m_sysProp.m_gameOption.bShowMounts = true;
 		}
 		//	m_sysProp.m_gameOption.bRunMode = true;	//true
@@ -307,8 +353,7 @@ void CSystemMgr::LoadCustomProp() {
 	CHeadSay::SetIsShowBars(m_sysProp.m_gameOption.bShowBars);
 	CHeadSay::SetIsShowPercentages(m_sysProp.m_gameOption.bShowPercentages);
 	CHeadSay::SetIsShowInfo(m_sysProp.m_gameOption.bShowInfo);
-	CSteadyFrame::SetFramerate60(m_sysProp.m_gameOption.bFramerate);
-	//CSteadyFrame::SetFramerate60(m_sysProp.m_gameOption.bFramerate);
+	Corsairs::Client::Frame::SteadyFrameSync::Instance().SetFps(static_cast<std::uint32_t>(m_sysProp.m_gameOption.nFramerate));
 }
 
 bool CSystemMgr::Init() {
@@ -496,7 +541,7 @@ void CSystemMgr::End() {
 	//if (cbxAppMode)
 	//	m_sysProp.m_gameOption.bAppMode = cbxAppMode->GetActiveIndex() == 0 ? false : true;
 
-	if (m_sysProp.Save("user\\system.ini")) {
+	if (m_sysProp.Save()) {
 		// error when save the system properties.
 	}
 	//end of modifying by Michael Chen
@@ -946,10 +991,12 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 	}
 	pGroup = g_stUISystem.cbxFramerate;
 	if (pGroup) {
-		const bool bFramerate = pGroup->GetActiveIndex() == 1 ? true : false;
-		if (bFramerate != g_stUISystem.m_sysProp.m_gameOption.bFramerate) {
-			g_stUISystem.m_sysProp.m_gameOption.bFramerate = bFramerate;
-			g_pGameApp->SetFrame(bFramerate);
+		//  UI чекбокс — переключатель между 30 и 60. Произвольный FPS (90/120/144)
+		//  можно выставить только через ini, чекбокс этого не отображает.
+		const int nFramerate = pGroup->GetActiveIndex() == 1 ? 60 : 30;
+		if (nFramerate != g_stUISystem.m_sysProp.m_gameOption.nFramerate) {
+			g_stUISystem.m_sysProp.m_gameOption.nFramerate = nFramerate;
+			Corsairs::Client::Frame::SteadyFrameSync::Instance().SetFps(static_cast<std::uint32_t>(nFramerate));
 			g_pGameApp->MsgBox("Please switch character to update framerate");
 		}
 	}
@@ -1008,7 +1055,9 @@ void CSystemMgr::_evtGameOptionFormBeforeShow(CForm* pForm, bool& IsShow) {
 		pGroup->SetActiveIndex(g_stUISystem.m_sysProp.m_gameOption.bShowInfo ? 1 : 0);
 	pGroup = g_stUISystem.cbxFramerate;
 	if (pGroup)
-		pGroup->SetActiveIndex(g_stUISystem.m_sysProp.m_gameOption.bFramerate ? 1 : 0);
+		//  Чекбокс показывает «60 FPS включён» если nFramerate >= 60. Произвольное
+		//  значение из ini (например 144) тоже отображается как «вкл».
+		pGroup->SetActiveIndex(g_stUISystem.m_sysProp.m_gameOption.nFramerate >= 60 ? 1 : 0);
 
 	pGroup = g_stUISystem.cbxShowMounts;
 	if (pGroup)

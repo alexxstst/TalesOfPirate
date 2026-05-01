@@ -46,6 +46,14 @@ public:
 	BOOL Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOOL bFullScreen);
 	void End();
 	BOOL InitResource();
+
+	//  Управление V-Sync для D3D9 device. Влияет на PresentationInterval при
+	//  следующем Init/Reset. Когда true (по умолчанию false) — Present() блокирует
+	//  CPU-поток до VBLANK монитора, ограничивая FPS его частотой (60/120/144 Hz).
+	//  Когда false — Present возвращается немедленно, FPS ограничен только пейсером.
+	//  Менять до Init(); смена на лету требует Reset() device, не поддерживается.
+	static void SetVsyncEnabled(bool enabled) { _vsyncEnabled = enabled; }
+	static bool IsVsyncEnabled() { return _vsyncEnabled; }
 	BOOL InitRes2();
 	BOOL InitRes3();
 
@@ -358,9 +366,11 @@ protected:
 	D3DFORMAT _TexSetFmt[2];
 
 
-	//VIM 
+	//VIM
 	FLOAT m_fCamTranslation;
 	FLOAT m_fCamFixPoint;
+
+	static bool _vsyncEnabled;
 };
 
 inline void MPRender::SetTransformView(const D3DXMATRIX* mat) {

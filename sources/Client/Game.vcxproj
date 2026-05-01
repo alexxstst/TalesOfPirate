@@ -257,7 +257,7 @@
         <ClCompile Include="src\stdafx.cpp">
             <PrecompiledHeader>Create</PrecompiledHeader>
         </ClCompile>
-        <ClCompile Include="src\SteadyFrame.cpp"/>
+        <ClCompile Include="src\SteadyFrameSync.cpp"/>
         <ClCompile Include="src\STMove.cpp"/>
         <ClCompile Include="src\STNpcTalk.cpp"/>
         <ClCompile Include="src\STPose.cpp"/>
@@ -469,7 +469,7 @@
         <ClInclude Include="src\state_reading.h"/>
         <ClInclude Include="src\STAttack.h"/>
         <ClInclude Include="src\stdafx.h"/>
-        <ClInclude Include="src\SteadyFrame.h"/>
+        <ClInclude Include="src\SteadyFrameSync.h"/>
         <ClInclude Include="src\STMove.h"/>
         <ClInclude Include="src\STNpcTalk.h"/>
         <ClInclude Include="src\StoneSet.h"/>

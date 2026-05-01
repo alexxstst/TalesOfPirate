@@ -823,7 +823,7 @@ void CItemCommand::AddHint(int x, int y) {
 			fRate = 30.0f;
 		}
 		else {
-			fRate = max(0.0f, 30 - pow( fB320, 0.5f )) + pow(fB320, -0.5f);
+			fRate = std::max<double>(0.0, 30 - pow(fB320, 0.5f)) + pow(fB320, -0.5f);
 
 			if (fRate > 30.0f) fRate = 30.0f;
 			if (fRate < 0.0f) fRate = 0.0f;

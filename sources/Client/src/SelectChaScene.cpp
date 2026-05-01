@@ -2,6 +2,8 @@
 
 #include "UIText.h"
 #include "SelectChaScene.h"
+#include "SteadyFrameSync.h"
+#include "UISystemForm.h"
 
 #include "GameApp.h"
 #include "Character.h"
@@ -139,7 +141,7 @@ bool CSelectChaScene::_Init() {
 			}
 
 			{
-				pObj->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+				pObj->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 				const DWORD p_id_num = 6;
 				DWORD p_id[p_id_num][5] =
@@ -456,7 +458,7 @@ bool CSelectChaScene::_MouseButtonDown(int nButton) {
 
 	if (m_nCurChaIndex != index && m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1)) {
 		m_CharactorPtrs[m_nCurChaIndex].pCha->PlayPose(1, PLAY_LOOP, -1,
-													   CGameApp::GetFrameFPS(), true);
+													   Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(), true);
 		SetChaDark(m_CharactorPtrs[m_nCurChaIndex].pCha);
 	}
 
@@ -464,7 +466,7 @@ bool CSelectChaScene::_MouseButtonDown(int nButton) {
 
 
 	m_CharactorPtrs[m_nCurChaIndex].pCha->PlayPose(2, PLAY_LOOP, -1,
-												   CGameApp::GetFrameFPS(), true);
+												   Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(), true);
 	//m_CharactorPtrs[m_nCurChaIndex]->pCha->SetColor(m_ChaColors[m_nCurChaIndex][0],
 	//    m_ChaColors[m_nCurChaIndex][1], m_ChaColors[m_nCurChaIndex][2]);
 	m_CharactorPtrs[m_nCurChaIndex].pCha->SetColor(255, 255, 255);

@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 
+#include "SteadyFrameSync.h"
 #include "MPEditor.h"
 #include "GameApp.h"
 #include "GameConfig.h"
@@ -69,7 +70,7 @@ if(!_IsSceneOk()) return;
 }
 
 void CGameApp::MouseButtonUp(int nButton) {
-	_dwMouseDownTime[nButton] = 0;
+	_mouseDownStart[nButton] = {};
 
 	if (_IsSceneOk()) {
 		if (CFormMgr::IsMouseInGui()) return;
@@ -85,8 +86,8 @@ void CGameApp::MouseButtonUp(int nButton) {
 	}
 }
 
-void CGameApp::MouseContinue(int nButton) {
-	_dwMouseDownTime[nButton]++;
+void CGameApp::MouseContinue(int /*nButton*/) {
+	//  См. комментарий в GameAppMsg.cpp: long-press теперь по времени, а не по кадрам.
 }
 
 void CGameApp::MouseMove(int nOffsetX, int nOffsetY) {
@@ -478,7 +479,7 @@ BOOL CTestDemo::Init() {
 	_res_mgr->CreateModel(&_skybox);
 	if (FAILED(_skybox->Load("sky.lmo")))
 		return 0;
-	_skybox->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+	_skybox->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 	DWORD num = _skybox->GetPrimitiveNum();
 	for (DWORD i = 0; i < num; i++) {

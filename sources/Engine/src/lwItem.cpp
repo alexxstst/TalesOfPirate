@@ -427,8 +427,8 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwItem::PlayDefaultAnimation(bool IsGlitched) {
-		return lwPrimitivePlayDefaultAnimation(_obj, IsGlitched);
+	LW_RESULT lwItem::PlayDefaultAnimation(float velocity) {
+		return lwPrimitivePlayDefaultAnimation(_obj, velocity);
 	}
 
 	void lwItem::SetOpacity(float opacity) {

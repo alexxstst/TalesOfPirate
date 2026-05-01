@@ -202,11 +202,4 @@ void CGameScene::_FrameMove(DWORD dwTimeParam) {
 
 	_cSceenSign.FrameMove(dwTimeParam);
 
-	static DWORD dwFPSTime = 0;
-	if (dwTimeParam >= dwFPSTime) {
-		dwFPSTime = dwTimeParam + 2000;
-		if (!GetMainCha() || GetMainCha()->GetIsArrive()) {
-			CGameApp::GetFrame()->RefreshFPS();
-		}
-	}
 }

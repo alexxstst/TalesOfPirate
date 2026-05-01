@@ -2,6 +2,7 @@
 #include "MPEditor.h"
 #include "GameApp.h"
 #include "DebugStateSystem.h"
+#include "SteadyFrameSync.h"
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneItem.h"
@@ -18,7 +19,6 @@
 #include "CharacterRecord.h"
 #include "uiTextButton.h"
 #include "UIEditor.h"
-#include "SteadyFrame.h"
 #include "MPRender.h"
 
 extern CGameApp* g_pGameApp;
@@ -525,7 +525,7 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 		dbg.SetFmt(DebugStateSystem::Category::Performance, 10, 5,
 				   "FPS:{:2}-{:2} A:{:2} F:{:2} S:{:2} O:{:2} C:{:2} U:{:2} T:{:2} E:{:2} M:{:2} CH:{:2}",
 				   g_Render.GetFPS(),
-				   CGameApp::GetFrame()->GetFPS(),
+				   Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(),
 				   g_pGameApp->GetRenderUseTime(),
 				   g_pGameApp->GetFrameMoveUseTime(),
 				   g_pGameApp->m_dwRenderSceneTime,
@@ -546,7 +546,7 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 
 
 		g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(200), g_Render.GetFPS(),
-																	CGameApp::GetFrameFPS(),
+																	Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(),
 																	g_pGameApp->GetRenderUseTime(),
 																	g_pGameApp->GetFrameMoveUseTime(),
 																	g_NetIF->m_curdelay, g_NetIF->m_maxdelay,
@@ -601,7 +601,7 @@ void MPEditor::SystemReport(DWORD dwTimeParam) {
 		std::format(
 			"FPS:{:3}-{:3}, R:{:3} F:{:3}, S:{:3}, SO:{:3}, SC:{:3}, SE:{:3}, MM:{:3}, SX:{:3}, ST:{:3}, SS:{:3}, SU:{:3} L:{:3}, P:{:3}, M:{:3}\n",
 			g_Render.GetFPS(),
-			CGameApp::GetFrameFPS(),
+			Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(),
 			g_pGameApp->GetRenderUseTime(),
 			g_pGameApp->GetFrameMoveUseTime(),
 			g_pGameApp->m_dwRenderSceneTime,

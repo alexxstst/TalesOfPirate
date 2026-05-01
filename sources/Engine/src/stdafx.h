@@ -7,6 +7,7 @@
 #include "MindPowerAPI.h"
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define NOMINMAX					// Disable min/max macros — ломают std::min / std::numeric_limits::min etc.
 // Windows Header Files:
 #include <windows.h>
 #include <commdlg.h>

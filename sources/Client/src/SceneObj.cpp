@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "SceneObj.h"
+#include "SteadyFrameSync.h"
 #include "SceneObjRecordStore.h"
 #include "Scene.h"
 #include "LuaInterface.h"
@@ -48,22 +49,16 @@ BOOL CSceneObj::_Create(int nScriptID, int nType) {
 	//lemon add flag for minimap
 	setObjType(pInfo->_flag);
 
-	// Hardcoded glitched trees Mdr may 2020 FPO beta
-	bool IsGlitched = false;
-	/*
-	char buf[260];
-	ofstream myfile;
-	myfile.open ("myfile.txt", ios::out | ios::app);
-	sprintf(buf, "name: %s. id: %d. flag: %d. dataName: %s \n", pInfo->_name.c_str(), pInfo->_id, pInfo->_flag, pInfo->_dataName.c_str());
-	myfile << buf;
-	myfile.close();
-
-*/
-
-	if (pInfo->_id == 184 || pInfo->_id == 188 || pInfo->_id == 183 || pInfo->_id == 175 || pInfo->_id == 83 || pInfo->
-		_id == 187 || pInfo->_id == 126 || pInfo->_id == 269 || pInfo->_id == 215 || pInfo->_id == 461 || pInfo->_id ==
-		448 || !g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
-	PlayDefaultAnimation(IsGlitched);
+	//  Hardcoded glitched trees — Mdr may 2020 FPO beta. Эти ID на не-30 FPS
+	//  глитчат с нормализованной velocity, поэтому форсируем full-speed (1.0).
+	const bool isGlitchedTree =
+		pInfo->_id == 184 || pInfo->_id == 188 || pInfo->_id == 183 || pInfo->_id == 175 ||
+		pInfo->_id == 83 || pInfo->_id == 187 || pInfo->_id == 126 || pInfo->_id == 269 ||
+		pInfo->_id == 215 || pInfo->_id == 461 || pInfo->_id == 448;
+	const float vel = isGlitchedTree
+		? 1.0f
+		: 1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier();
+	PlayDefaultAnimation(vel);
 
 	_nMusicID = -1;
 

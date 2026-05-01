@@ -12,6 +12,7 @@
 #include <queue>
 #include <string>
 #include <tuple>
+#define NOMINMAX
 #include <windows.h>
 
 // P2905 (C++26): std::make_format_args требует lvalue-аргументы.

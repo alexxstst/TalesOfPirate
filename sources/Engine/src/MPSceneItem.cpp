@@ -201,8 +201,8 @@ LW_BEGIN
 		return c->GetPoseCtrl();
 	}
 
-	LW_RESULT MPSceneItem::PlayDefaultAnimation(bool IsGlitched) {
-		return _obj->PlayDefaultAnimation();
+	LW_RESULT MPSceneItem::PlayDefaultAnimation(float velocity) {
+		return _obj->PlayDefaultAnimation(velocity);
 	}
 
 	void MPSceneItem::ShowBoundingObject(int show) {

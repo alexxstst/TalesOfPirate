@@ -24,6 +24,7 @@
 #include "UIRender.h"
 
 #include <d3dx9math.h>
+#define NOMINMAX
 #include <windows.h>
 #include <string>
 #include <string_view>

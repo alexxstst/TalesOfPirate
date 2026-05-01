@@ -12,6 +12,11 @@ using namespace std;
 
 bool bUsePixelShader = true;
 
+//  По умолчанию V-Sync выключен — Present() возвращается немедленно, FPS
+//  ограничен только пейсером (SteadyFrameSync). Включается через SetVsyncEnabled
+//  до Init() (например, по ini-ключу [gameOption] vsync=1).
+bool MPRender::_vsyncEnabled = false;
+
 MPRender::MPRender()
 	: _hWnd(0),
 	  _pD3D(NULL),
@@ -94,8 +99,12 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
 
 	d3dcp.present_param.AutoDepthStencilFormat = D3DFMT_D16;
 
-	// Modified by clp 
-	d3dcp.present_param.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	//  V-Sync управляется флагом _vsyncEnabled (выставляется до Init через
+	//  SetVsyncEnabled из клиента). _ONE синхронизирует с VBLANK монитора (FPS
+	//  ограничен 60/120/144 Hz refresh), _IMMEDIATE снимает блокировку Present.
+	d3dcp.present_param.PresentationInterval = _vsyncEnabled
+		? D3DPRESENT_INTERVAL_ONE
+		: D3DPRESENT_INTERVAL_IMMEDIATE;
 	// vsd3d
 	if (_d3dCaps.VertexShaderVersion < D3DVS_VERSION(1, 0)) {
 		d3dcp.behavior_flag = D3DCREATE_SOFTWARE_VERTEXPROCESSING;

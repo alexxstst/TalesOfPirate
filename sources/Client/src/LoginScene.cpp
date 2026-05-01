@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "LoginScene.h"
+#include "SteadyFrameSync.h"
 
 
 #include "GlobalVar.h"
@@ -181,7 +182,7 @@ bool CLoginScene::_Init() {
 				pObj->GetPrimitive(i)->SetState(STATE_TRANSPARENT, 0);
 				pObj->GetPrimitive(i)->SetState(STATE_UPDATETRANSPSTATE, 0);
 			}
-			pObj->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+			pObj->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 		}
 	}
 

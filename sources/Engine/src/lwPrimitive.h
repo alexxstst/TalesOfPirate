@@ -145,7 +145,7 @@ LW_BEGIN
 		}
 
 		LW_RESULT SetTextureLOD(DWORD level);
-		LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
+		LW_RESULT PlayDefaultAnimation(float velocity = 1.0f);
 		LW_RESULT ResetTexture(DWORD subset, DWORD stage, std::string_view file, std::string_view tex_path);
 
 		void setPixelShader(const std::string& filename) {
@@ -153,6 +153,6 @@ LW_BEGIN
 		}
 	};
 
-	LW_RESULT lwPrimitivePlayDefaultAnimation(lwIPrimitive* obj, bool IsGlitched = false);
+	LW_RESULT lwPrimitivePlayDefaultAnimation(lwIPrimitive* obj, float velocity = 1.0f);
 
 LW_END

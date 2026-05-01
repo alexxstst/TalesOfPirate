@@ -73,7 +73,7 @@ LW_BEGIN
 		const lwMatrix44* GetObjDummyMatrix(DWORD id);
 		const lwMatrix44* GetObjBoneDummyMatrix(DWORD id);
 
-		LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
+		LW_RESULT PlayDefaultAnimation(float velocity = 1.0f);
 
 
 		// dummy

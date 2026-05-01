@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cstdint>
+#define NOMINMAX
 #include <windows.h>
 
 // Запись таблицы объектов сцены

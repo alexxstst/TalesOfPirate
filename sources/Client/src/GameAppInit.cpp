@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 
+#include "SteadyFrameSync.h"
 #include "DebugStateSystem.h"
 #include "UIText.h"
 #include "GameApp.h"
@@ -25,7 +26,6 @@
 #include "PacketCmd.h"
 #include "UIRender.h"
 #include "UIsystemform.h"
-#include "SteadyFrame.h"
 #include "UICozeForm.h"
 #include "GameMovie.h"
 #include "lwTimer.h"
@@ -44,7 +44,7 @@ extern CGameMovie g_GameMovie;
 #endif
 
 
-DWORD CGameApp::_dwMouseDownTime[2] = {0};
+std::chrono::steady_clock::time_point CGameApp::_mouseDownStart[2] = {};
 int CGameApp::_nMusicSize = 64;
 char CGameApp::_szOutBuf[256] = {0};
 bool CGameApp::_IsMusicSystemValid = false;
@@ -57,9 +57,6 @@ CAniClock* CGameApp::_AniClock = NULL;
 const BYTE verifyName[] = {0xf8, 0x05, 0x1a, 0xe4, 0x98, 0x5e, 0xb8, 0x9e};
 
 const BYTE verifyDialog[] = {0xf0, 0xdc, 0xea, 0x7b, 0x40, 0xeb, 0xc4, 0x47};
-
-static CSteadyFrame steady;
-CSteadyFrame* CGameApp::_pSteady = &steady;
 
 extern void LimitCurrentProc();
 
@@ -172,7 +169,7 @@ void CGameApp::End() {
 	SAFE_DELETE(_rsm);
 
 	// Add by lark.li 20080923 begin
-	_pSteady->Exit();
+	Corsairs::Client::Frame::SteadyFrameSync::Instance().Exit();
 	// End
 
 #ifdef TESTDEMO
@@ -384,21 +381,6 @@ BOOL CGameApp::_Init() {
 #ifdef TESTDEMO
 	InitTestDemo();
 #endif
-
-	//std::list<int> listtest;
-	//listtest.push_back(1);
-	//listtest.push_back(1);
-	//listtest.push_back(1);
-	//listtest.push_back(1);
-	//listtest.push_back(1);
-
-	//listtest.remove(NULL);
-
-	// Record main thread ID for future use
-	//DWORD id = GetCurrentThreadId();
-	//LG( "threadid", "%d:%s\n", id, "WinMain" );
-
-	//_pConsole->Show(TRUE);
 
 	return TRUE;
 }

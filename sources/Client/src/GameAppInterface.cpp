@@ -3,6 +3,7 @@
 #include "GameApp.h"
 #include "GameConfig.h"
 #include "EngineDiag.h"
+#include "SteadyFrameSync.h"
 
 using Corsairs::Engine::Diagnostic::EngineDiag;
 
@@ -91,7 +92,6 @@ using Corsairs::Engine::Diagnostic::EngineDiag;
 #include "EventRecord.h"
 #include "createchascene.h"
 #include "SelectChaScene.h"
-#include "SteadyFrame.h"
 #include "uistartform.h"
 #include "cameractrl.h"
 #include "shipset.h"
@@ -215,7 +215,8 @@ int CGameApp::Run() {
 
 	_isRun = true;
 
-	if (!_pSteady->Init()) return -1;
+	auto& steady = Corsairs::Client::Frame::SteadyFrameSync::Instance();
+	if (!steady.Init()) return -1;
 
 	FrameStats stats{};
 	{
@@ -242,11 +243,11 @@ int CGameApp::Run() {
 
 			g_NetIF->PollPackets(100); //
 
-			if (_pSteady->Run()) {
+			if (steady.Run()) {
 				//LG("frame", "time:%u\n", GetTickCount() - _dwCurTick);
 
 				g_Render.GetInterfaceMgr()->tp_loadres->SetPoolEvent(TRUE);
-				_dwCurTick = _pSteady->GetTick();
+				_dwCurTick = steady.GetTick();
 				//_FrameMoveOnce( _dwCurTick );
 				FrameMove(_dwCurTick);
 				Render();
@@ -254,7 +255,7 @@ int CGameApp::Run() {
 					_ShowLoading((int)((_nSwitchScene + 140) * 100 / _total));
 				}
 
-				_pSteady->End();
+				steady.End();
 				g_Render.GetInterfaceMgr()->tp_loadres->SetPoolEvent(FALSE);
 
 				//  Замер кадра. Делаем после Render, чтобы посчитать полное время цикла.
@@ -281,10 +282,13 @@ int CGameApp::Run() {
 					const double avgFrameMoveMs = static_cast<double>(stats.frameMoveSumMs) / std::max<std::uint32_t>(1u, stats.frameCount);
 					const double avgRenderMs = static_cast<double>(stats.renderSumMs) / std::max<std::uint32_t>(1u, stats.frameCount);
 
+					//  target — что выставил пользователь (ini/UI), current — реальный
+					//  FPS, на котором сейчас работает пейсер (адаптивно занижается
+					//  если рендер не успевает уложиться в 1000/target мс).
 					ToLogService("perf", LogLevel::Info,
-						"FPS={:.1f} | frame avg={:.2f}ms max={:.2f}ms | FrameMove avg={:.2f}ms | Render avg={:.2f}ms | target={}",
+						"FPS={:.1f} | frame avg={:.2f}ms max={:.2f}ms | FrameMove avg={:.2f}ms | Render avg={:.2f}ms | target={} current={}",
 						fps, avgFrameMs, maxFrameMs, avgFrameMoveMs, avgRenderMs,
-						CSteadyFrame::GetFPS());
+						steady.GetTargetFps(), steady.GetFps());
 
 					stats.Reset(now.QuadPart);
 				}
@@ -1401,10 +1405,6 @@ void LoadResModelBuf(MPIResourceMgr* res_mgr) {
 			ToLogService("common", "cannot find model file: {}", path);
 		}
 	});
-}
-
-void CGameApp::SetFPSInterval(DWORD v) {
-	if (v > 0) _pSteady->SetFPS(v);
 }
 
 void CGameApp::_SceneError(const char* info, CGameScene* p) {

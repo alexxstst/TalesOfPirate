@@ -1059,7 +1059,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::PlayDefaultAnimation(bool IsGlitched) {
+	LW_RESULT lwPrimitive::PlayDefaultAnimation(float velocity) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwPlayPoseInfo ppi;
@@ -1068,7 +1068,7 @@ LW_BEGIN
 		ppi.pose = 0;
 		ppi.frame = 0.0f;
 		ppi.type = PLAY_LOOP;
-		ppi.velocity = 1.0f; // Mdr.st, doesnt seem to change anything
+		ppi.velocity = velocity;
 
 		if (_anim_agent == NULL)
 			goto __ret_ok;
@@ -1090,15 +1090,17 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitivePlayDefaultAnimation(lwIPrimitive* obj, bool IsGlitched) {
+	LW_RESULT lwPrimitivePlayDefaultAnimation(lwIPrimitive* obj, float velocity) {
 		lwPlayPoseInfo ppi;
 		memset(&ppi, 0, sizeof(ppi));
 		ppi.bit_mask = PPI_MASK_DEFAULT;
 		ppi.pose = 0;
 		ppi.frame = 0.0f;
 		ppi.type = PLAY_LOOP;
-		ppi.velocity = 0.5f; // This changes ambient animations, but if set to 0.5f trees will glitch
-		if (IsGlitched) ppi.velocity = 1.0f; // IsGlitched used for 30 FPS
+		//  velocity передаётся колсайтом: 1.0f для full-speed (legacy IsGlitched-режим
+		//  на 30 FPS или для деревьев/моделей из hardcoded списка), либо 30.0f/fps
+		//  для нормализованной анимации, синхронной с 30-FPS-видом.
+		ppi.velocity = velocity;
 
 
 		lwIAnimCtrlAgent* anim_agent = obj->GetAnimAgent();

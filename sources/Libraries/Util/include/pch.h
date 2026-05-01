@@ -27,6 +27,7 @@
     #pragma warning(disable : 4251)
     #pragma warning(disable : 4786)
 
+	#define NOMINMAX
 	#include <windows.h>
 	#include <io.h>
 	#include <direct.h>

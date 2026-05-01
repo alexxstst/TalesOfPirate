@@ -54,7 +54,7 @@ void MkDir(const string& theDir) {
 }
 
 string GetFileDir(const string& thePath, bool withSlash) {
-	int aLastSlash = max((int) thePath.rfind('\\'), (int) thePath.rfind('/'));
+	int aLastSlash = std::max(static_cast<int>(thePath.rfind('\\')), static_cast<int>(thePath.rfind('/')));
 
 	if (aLastSlash == -1)
 		return "";

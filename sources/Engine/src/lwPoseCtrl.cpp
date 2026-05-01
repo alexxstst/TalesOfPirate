@@ -395,7 +395,7 @@ LW_BEGIN
 						dst_frame_num = src->blend_info.dst_frame_num;
 				}
 
-				float op_frame_len = min(src_frame_num, dst_frame_num);
+				float op_frame_len = std::min(src_frame_num, dst_frame_num);
 
 				if (op_frame_len > 0.0f) {
 					dst->blend_info.op_state = 1;

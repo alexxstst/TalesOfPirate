@@ -139,6 +139,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	//  любого вызова InitRes/InitRes3 у MPResManger.
 	CMPResManger::SetResourcePreload(GlobalAppConfig.IsResourcePreload());
 
+	//  V-Sync применяется при создании D3D9 device — выставляем до g_pGameApp->Init().
+	//  LoadCustomProp ещё не вызван (он в _InitScene), поэтому читаем напрямую из ini.
+	MPRender::SetVsyncEnabled(g_SystemIni["gameOption"].GetInt64("vsync", 0) != 0);
+
 	//  Диагностические тоглы Engine из секции [Logging] system.ini.
 	EngineDiag::Instance().SetStreamPoolEnabled(GlobalAppConfig.IsStreamPoolDiagEnabled());
 	EngineDiag::Instance().SetSceneLoadEnabled(GlobalAppConfig.IsSceneLoadDiagEnabled());

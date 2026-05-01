@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "ChaRecordStore.h"
 #include "STAttack.h"
+#include "SteadyFrameSync.h"
 #include "Actor.h"
 #include "NetProtocol.h"
 #include "STMove.h"
@@ -153,19 +154,21 @@ void CWaitAttackState::_UseSkill() {
 	if (_pSkillInfo->IsPlayCyc()) {
 		_pSelf->PlayPose(_nSkillPoseID,
 						 (_pSkillInfo->IsPlayCyc() && _pSkillInfo->GetPoseNum() > 1) ? PLAY_ONCE : PLAY_LOOP,
-						 _nSkillSpeed, CGameApp::GetFrameFPS());
+						 _nSkillSpeed, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 		if (!_pSkillInfo->IsPlayRand()) {
 			_pSelf->SetPoseVelocity(_pSelf->GetPoseVelocity() * _fSkillRate);
 		}
 	}
 	else {
 		if (_pSelf->IsBoat()) {
-			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, 100, CGameApp::GetFrameFPS());
+			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, 100, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 		}
 		else {
-			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, _nSkillSpeed, CGameApp::GetFrameFPS()); //  mdr.st
+			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, _nSkillSpeed, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps()); //  mdr.st
 
-			float per = g_stUISystem.m_sysProp.m_gameOption.bFramerate == 0 ? 1.0f : 0.5f;
+			//  Минимальная PoseVelocity для атаки: 1.0 на 30 FPS, 0.5 на 60 FPS,
+			//  0.25 на 120 FPS — нормализованная под текущий FPS относительно 30-FPS-референса.
+			const float per = 1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier();
 			if (_pSelf->GetPoseVelocity() < per); // 1.0f
 			{
 				_pSelf->SetPoseVelocity(per); // 1.0f
@@ -338,10 +341,10 @@ void CWaitAttackState::ActionEnd(DWORD pose_id) {
 		if (_pHarm->GetCount() >= 2) {
 			int nTime = (int)((float)_nSkillSpeed * (1.0f - (float)_pHarm->GetCount() / 16.0f));
 			if (nTime <= 0) nTime = 1;
-			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, nTime, CGameApp::GetFrameFPS());
+			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, nTime, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 		}
 		else {
-			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, _nSkillSpeed, CGameApp::GetFrameFPS());
+			_pSelf->PlayPose(_nSkillPoseID, PLAY_ONCE, _nSkillSpeed, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 		}
 
 		if (!_pSkillInfo->IsPlayRand()) {

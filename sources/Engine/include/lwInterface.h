@@ -272,7 +272,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual void SetState(DWORD state, BYTE value) PURE_METHOD;
 		virtual BYTE GetState(DWORD state) const PURE_METHOD;
 		virtual LW_RESULT SetTextureLOD(DWORD level) PURE_METHOD;
-		virtual LW_RESULT PlayDefaultAnimation(bool IsGlitched = false) PURE_METHOD;
+		virtual LW_RESULT PlayDefaultAnimation(float velocity = 1.0f) PURE_METHOD;
 		virtual LW_RESULT ResetTexture(DWORD subset, DWORD stage, std::string_view file, std::string_view tex_path) PURE_METHOD;
 
 		virtual void setPixelShader(const std::string& filename) PURE_METHOD;
@@ -353,7 +353,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT HitTestPrimitiveHelperMesh(lwPickInfo* info, const lwVector3* org, const lwVector3* ray,
 													 std::string_view type_name) PURE_METHOD;
 
-		virtual LW_RESULT PlayDefaultAnimation(bool IsGlitched = false) PURE_METHOD;
+		virtual LW_RESULT PlayDefaultAnimation(float velocity = 1.0f) PURE_METHOD;
 
 		virtual void ShowHelperObject(int show) PURE_METHOD;
 		virtual void ShowHelperMesh(int show);
@@ -402,7 +402,7 @@ LW_STD_GETINTERFACE( cls )
 
 		virtual void ShowBoundingObject(int show) PURE_METHOD;
 
-		virtual LW_RESULT PlayDefaultAnimation(bool IsGlitched = false) PURE_METHOD;
+		virtual LW_RESULT PlayDefaultAnimation(float velocity = 1.0f) PURE_METHOD;
 
 		virtual LW_RESULT GetDummyMatrix(lwMatrix44* mat, DWORD id) PURE_METHOD;
 		virtual const lwMatrix44* GetObjDummyMatrix(DWORD id) PURE_METHOD;

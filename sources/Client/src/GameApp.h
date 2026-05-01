@@ -2,11 +2,12 @@
 
 #define USE_DSOUND
 
+#include <chrono>
+
 #include "MPGameApp.h"
 #include "script.h"
 #include "CRCursorObj.h"
 #include "RenderStateMgr.h"
-#include "steadyframe.h"
 #include "CameraCtrl.h"
 
 #ifdef USE_DSOUND
@@ -60,7 +61,6 @@ struct STipText {
 	BYTE btAlpha;
 };
 
-class CSteadyFrame;
 class CGameScene;
 class CMPShadeMap;
 class CPointTrack;
@@ -163,8 +163,15 @@ public:
 
 	void Loading(int nFrame = 40); //
 	static void Waiting(bool isWaiting = true); // ,UI
+	//  Long-press кнопки мыши. Раньше — счётчик кадров (`> 12`), что на 30 FPS
+	//  означало ≈400 мс, но на 144 FPS срабатывало уже за ≈83 мс — обычный клик
+	//  ошибочно засчитывался как «удержание». Теперь по абсолютному времени
+	//  через std::chrono::steady_clock — независимо от FPS.
+	static constexpr std::chrono::milliseconds kMouseLongPressDuration{400};
 	static bool IsMouseContinue(int nButton) {
-		return _dwMouseDownTime[nButton] > 12;
+		const auto start = _mouseDownStart[nButton];
+		if (start == std::chrono::steady_clock::time_point{}) return false;
+		return (std::chrono::steady_clock::now() - start) > kMouseLongPressDuration;
 	}
 
 	void AddTipText(std::string_view text);
@@ -214,17 +221,6 @@ public:
 
 	void SetTickCount(DWORD dwTick) {
 		_dwCurTick = dwTick;
-	}
-
-	void SetFPSInterval(DWORD v);
-	static DWORD GetFrameFPS();
-
-	static CSteadyFrame* GetFrame() {
-		return _pSteady;
-	}
-
-	static void SetFrame(bool v) {
-		_pSteady->SetFramerate60(v);
 	}
 
 	// xuedong 2004.09.06
@@ -375,7 +371,10 @@ private: //
 	bool _IsInit;
 	DWORD _dwGameThreadID;
 
-	static DWORD _dwMouseDownTime[2];
+	//  Момент нажатия WM_LBUTTONDOWN/RBUTTONDOWN. Дефолт-конструированный
+	//  time_point{} (= epoch) означает «мышка не зажата». Используется
+	//  IsMouseContinue для time-based long-press detection.
+	static std::chrono::steady_clock::time_point _mouseDownStart[2];
 
 	static int _nMusicSize; //
 	bool _IsUserEnabled; //
@@ -401,7 +400,6 @@ private: // ,:1.,2.,,3.
 	int _nCurMusicSize; //
 	char _szBkgMusic[256]; //
 
-	static CSteadyFrame* _pSteady;
 	static bool _MouseInScene;
 
 	CTextHint* _pNotify;
@@ -489,10 +487,6 @@ private:
 
 	D3DXVECTOR4 _vSave[10];
 };
-
-inline DWORD CGameApp::GetFrameFPS() {
-	return CSteadyFrame::GetFPS();
-}
 
 inline void CGameApp::ClearAllSkillClocks() {
 	m_mapSkillClock.clear();

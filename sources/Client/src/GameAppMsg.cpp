@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 #include "DebugStateSystem.h"
+#include "SteadyFrameSync.h"
 #include "ChaRecordStore.h"
 #include "SkillRecordStore.h"
 #include "Character.h"
@@ -458,6 +459,10 @@ void CGameApp::HandleKeyContinue() {
 }
 
 void CGameApp::MouseButtonDown(int nButton) {
+	//  Запоминаем момент нажатия для time-based long-press detection
+	//  (см. IsMouseContinue в GameApp.h).
+	_mouseDownStart[nButton] = std::chrono::steady_clock::now();
+
 #ifdef _LUA_GAME
 	lua_platform_mousedown(nButton);
 #endif
@@ -482,7 +487,7 @@ void CGameApp::MouseButtonDown(int nButton) {
 }
 
 void CGameApp::MouseButtonUp(int nButton) {
-	_dwMouseDownTime[nButton] = 0;
+	_mouseDownStart[nButton] = {};
 
 	if (_IsSceneOk()) {
 		if (CFormMgr::IsMouseInGui()) return;
@@ -498,8 +503,10 @@ void CGameApp::MouseButtonUp(int nButton) {
 	}
 }
 
-void CGameApp::MouseContinue(int nButton) {
-	_dwMouseDownTime[nButton]++;
+void CGameApp::MouseContinue(int /*nButton*/) {
+	//  Раньше тут был инкремент frame-counter'а для long-press detection.
+	//  Теперь IsMouseContinue работает по абсолютному времени от MouseButtonDown,
+	//  per-frame инкремент не нужен.
 }
 
 void CGameApp::MouseMove(int nOffsetX, int nOffsetY) {
@@ -1131,9 +1138,9 @@ const char* ConsoleCallback(const char* pszCmd) {
 		g_Render.SetDirectLightColor(r, g, b, 1.0f);
 	}
 	else if (strCmd == "freefps") {
-		int nFree = Str2Int(p1);
-		if (nFree) g_pGameApp->SetFPSInterval(nFree);
-		else g_pGameApp->SetFPSInterval(40);
+		auto& steady = Corsairs::Client::Frame::SteadyFrameSync::Instance();
+		const int nFree = Str2Int(p1);
+		steady.SetFps(nFree > 0 ? static_cast<std::uint32_t>(nFree) : 40u);
 	}
 	else if (strCmd == "perf") {
 		const bool bPerf = Str2Int(p1) != 0;

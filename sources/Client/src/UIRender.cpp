@@ -1285,10 +1285,10 @@ inline void UIRender::RenderSprite(LPTEXTURE tex, RECT* rc, VECTOR2* vscale, VEC
 		if (vdest->y + h > prc->bottom) {
 			y2 = prc->bottom - ((int)vdest->y + h);
 		}
-		rc->left = max(rc->left - x1, 0);
-		rc->right = max(rc->right + x2, rc->left);
-		rc->top = max(rc->top - y1, 0);
-		rc->bottom = max(rc->bottom + y2, rc->top);
+		rc->left = std::max<LONG>(rc->left - x1, 0);
+		rc->right = std::max<LONG>(rc->right + x2, rc->left);
+		rc->top = std::max<LONG>(rc->top - y1, 0);
+		rc->bottom = std::max<LONG>(rc->bottom + y2, rc->top);
 	}
 	if (_p2DSprite) {
 		_p2DSprite->Begin(D3DXSPRITE_ALPHABLEND);

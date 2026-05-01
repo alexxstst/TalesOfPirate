@@ -613,7 +613,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwModel::PlayDefaultAnimation(bool IsGlitched) {
+	LW_RESULT lwModel::PlayDefaultAnimation(float velocity) {
 		lwPlayPoseInfo ppi;
 		memset(&ppi, 0, sizeof(ppi));
 		ppi.bit_mask = PPI_MASK_DEFAULT;
@@ -623,7 +623,7 @@ LW_BEGIN
 		ppi.velocity = 1.0f; //Mdr.st : doesnt seem to change anything
 
 		for (DWORD i = 0; i < _obj_num; i++) {
-			lwPrimitivePlayDefaultAnimation(_obj_seq[i], IsGlitched);
+			lwPrimitivePlayDefaultAnimation(_obj_seq[i], velocity);
 		}
 
 		return LW_RET_OK;

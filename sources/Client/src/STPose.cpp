@@ -1,5 +1,6 @@
 ﻿#include "StdAfx.h"
 #include "stpose.h"
+#include "SteadyFrameSync.h"
 #include "actor.h"
 #include "Character.h"
 #include "PacketCmd.h"
@@ -21,7 +22,7 @@ bool CPoseState::_Start() {
 	// if( GetActor()->GetCha()->IsShop() ) return false;
 
 	CCharacter* pCha = GetActor()->GetCha();
-	pCha->PlayPose(_nPose, PLAY_ONCE, -1, CGameApp::GetFrameFPS(), true);
+	pCha->PlayPose(_nPose, PLAY_ONCE, -1, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(), true);
 
 	if (_IsSend) {
 		stNetFace face;
@@ -76,7 +77,7 @@ bool CInsertState::_Start() {
 	if (!_IsPlayPose) {
 		GetActor()->GetCha()->DespawnMount();
 		_IsPlayPose = true;
-		pCha->PlayPose(POSE_SEAT, PLAY_ONCE, -1, CGameApp::GetFrameFPS(), true);
+		pCha->PlayPose(POSE_SEAT, PLAY_ONCE, -1, Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps(), true);
 	}
 
 	switch (_eAngle) {

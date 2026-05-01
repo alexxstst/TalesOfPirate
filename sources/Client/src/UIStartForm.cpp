@@ -158,13 +158,13 @@ void CStartMgr::SetMonsterInfo() {
 	double b = 1;
 
 	if (levelDif >= 4) {
-		b = min(10, 1 + (0.4 * abs(levelDif - 4)));
+		b = std::min<double>(10, 1 + (0.4 * abs(levelDif - 4)));
 	}
 	else if (levelDif <= -10) {
-		b = min(4, 1 + abs(levelDif - 10) * 0.1);
+		b = std::min<double>(4, 1 + abs(levelDif - 10) * 0.1);
 	}
 
-	double ExpAdd = floor(max(1, charInfo->lCExp / b)) * g_ExpBonus;
+	double ExpAdd = floor(std::max<double>(1, charInfo->lCExp / b)) * g_ExpBonus;
 	LabMobLevel->SetCaption(std::format("{}", charInfo->lLv).c_str());
 	LabMobexp->SetCaption(std::format("{:.0f}", ExpAdd).c_str());
 	LabMobHP->SetCaption(std::format("{}", charInfo->lMxHp).c_str());

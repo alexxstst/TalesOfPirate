@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "stmove.h"
+#include "SteadyFrameSync.h"
 #include "actor.h"
 #include "GameApp.h"
 #include "FontManager.h"
@@ -121,10 +122,12 @@ void CWaitMoveState::ChaRun() {
 	_pCha->CheckIsFightArea();
 
 	_pCha->PlayPose(_pCha->GetPose(POSE_RUN), PLAY_LOOP_SMOOTH);
-	float vel = g_stUISystem.m_sysProp.m_gameOption.bFramerate ? 960.0f : 480.0f;
+	//  Базовая скорость 480 настроена под 30 FPS. На fps != 30 умножаем на (fps/30),
+	//  чтобы за тот же game-time персонаж проходил то же расстояние:
+	//  60 FPS → vel=960 (было хардкодом), 120 FPS → vel=1920 (новое поведение).
+	const float vel = 480.0f * Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier();
 
 	_pCha->SetPoseVelocity((float)_pCha->getMoveSpeed() / vel);
-	//480.0f, doubled it to match increased framerate mdrst@pkodev.net
 	_pCha->RefreshItem();
 }
 

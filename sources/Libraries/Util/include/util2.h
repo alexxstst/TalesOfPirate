@@ -64,6 +64,7 @@ namespace GAME {
 
 #ifndef _MFC
 #ifndef _WINDOWS_
+#define NOMINMAX
 #include <windows.h>
 #endif
 #endif

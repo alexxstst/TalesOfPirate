@@ -51,7 +51,7 @@ LW_BEGIN
 		void ShowHelperBox(int show);
 		void ShowBoundingObject(int show);
 
-		LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
+		LW_RESULT PlayDefaultAnimation(float velocity = 1.0f);
 
 		void SetObjState(DWORD state, BYTE value);
 		DWORD GetObjState(DWORD state) const;

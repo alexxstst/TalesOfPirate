@@ -85,6 +85,16 @@ Tales of Pirate — MMORPG with two codebases:
 
 **Обработка исключений:** `try { ... } catch (...) { ... }` — **только по явному согласованию с пользователем**. Самостоятельно оборачивать вызов в `try/catch` не нужно; пусть исключение пробрасывается и процесс падает. Подавление исключений прячет битые данные/ресурсы и приводит к тихим регрессиям. Исключение — если catch реально нужен для отката ресурса или перевода одного типа ошибки в другой, и это согласовано.
 
+**Замер времени и таймауты:** в новом коде и при рефакторинге — `std::chrono` вместо `GetTickCount`/`timeGetTime`/`QueryPerformanceCounter` напрямую и вместо `DWORD`-таймстампов.
+- Моменты времени — `std::chrono::steady_clock::time_point` (`steady_clock::now()`); для wall-clock — `system_clock`.
+- Длительности — `std::chrono::milliseconds` / `std::chrono::seconds` / `std::chrono::microseconds`. Никаких `DWORD timeoutMs = 400;`.
+- Сравнение/арифметика через chrono-операторы: `(now - start) > 400ms`, `start + 1s` и т.п.
+- Sleep — `std::this_thread::sleep_for(...)` вместо `Sleep(N)`.
+- Sentinel «не задано» — `time_point{}` (default-constructed = epoch); проверка `if (tp == steady_clock::time_point{})`.
+- Исключение: callbacks WinAPI и legacy-API, требующие `DWORD` напрямую, — там оставляем как есть.
+
+**Тайминги бизнес-логики — по времени, а не по кадрам.** Любой long-press, blink, cooldown, debounce, animation timing, ttl и т.п. должен считаться от `std::chrono`-таймстампов, не от инкремента счётчика каждый кадр. Frame-counter таймауты на 30 FPS превращаются в 2.4× более быстрые на 144 FPS — поведение ломается с переключением FPS. Если встречаешь паттерн `++counter; if (counter > N)` для timeout/blink — это **bug**, переписывай на `(now - start) > Nms`. Исключение — счётчики, которые семантически про **кадры**, а не про **время** (например, индекс анимационного кадра в спрайте), — там FPS-нормализация делается через `SteadyFrameSync::GetAnimMultiplier()`.
+
 **Форматирование:** Однострочные `if` без фигурных скобок запрещены. Всегда использовать скобки и переносы:
 ```cpp
 // Неправильно:

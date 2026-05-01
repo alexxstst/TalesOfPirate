@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "streadydie.h"
+#include "SteadyFrameSync.h"
 #include "Actor.h"
 #include "Character.h"
 #include "CharacterRecord.h"
@@ -64,7 +65,7 @@ void CReadyDieState::_Died() {
 
 	_pCha->GetActor()->ExecDied();
 
-	_nDelayTime = CGameApp::GetFrameFPS() * 2;
+	_nDelayTime = Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps() * 2;
 
 	_pCha->DieTime();
 	_pCha->PlayPose(POSE_DIE, PLAY_ONCE);

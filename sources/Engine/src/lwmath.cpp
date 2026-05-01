@@ -1283,9 +1283,9 @@ LW_BEGIN
 		lwVector3 d1 = b2->c - b2->r;
 		lwVector3 d2 = b2->c + b2->r;
 
-		return (max(s1.x, d1.x) <= min(s2.x, d2.x)
-			&& max(s1.y, d1.y) <= min(s2.y, d2.y)
-			&& max(s1.z, d1.z) <= min(s2.z, d2.z));
+		return (std::max(s1.x, d1.x) <= std::min(s2.x, d2.x)
+			&& std::max(s1.y, d1.y) <= std::min(s2.y, d2.y)
+			&& std::max(s1.z, d1.z) <= std::min(s2.z, d2.z));
 	}
 
 	int lwIntersectBoxBoxOBB(const lwBox* b1, const lwBox* b2, const lwMatrix44* mat) {

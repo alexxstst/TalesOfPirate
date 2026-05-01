@@ -20,7 +20,7 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout) 
 	if (m_status == CNST_CONNECTING || m_status == CNST_CONNECTED || m_status == CNST_HANDSHAKE)
 		return false;
 
-	m_timeout = max(timeout, (uint32_t)1000);
+	m_timeout = std::max(timeout, static_cast<uint32_t>(1000));
 	m_tick = GetTickCount();
 	m_status = CNST_CONNECTING;
 

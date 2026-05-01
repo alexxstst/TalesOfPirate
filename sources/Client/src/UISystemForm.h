@@ -45,7 +45,12 @@ namespace GUI {
 			bool bShowBars;
 			bool bShowPercentages;
 			bool bShowInfo;
-			bool bFramerate;
+			//  Целевой FPS клиента (8..240). Backward-compat в ini: 0→30, 1→60.
+			int nFramerate;
+			//  V-Sync для D3D9 Present. true — синхронизация с монитором (frame cap
+			//  на refresh rate, ~60 Hz обычно). false — пейсер ограничивает FPS,
+			//  Present возвращается мгновенно. Применяется при старте, не на лету.
+			bool bVsync;
 			bool bShowMounts;
 		} m_gameOption;
 
@@ -67,21 +72,19 @@ namespace GUI {
 		}
 
 		/**
-		 * Загрузить настройки из INI-файла.
-		 * @param: szIniFileName Путь к INI-файлу.
+		 * Загрузить настройки из глобального g_SystemIni (загруженного в Main.cpp).
 		 * @return: 0 — успех, иначе — ошибка.
 		 */
-		int Load(const char* szIniFileName) {
-			return readFromFile(szIniFileName);
+		int Load() {
+			return readFromFile();
 		}
 
 		/**
-		 * Сохранить настройки в INI-файл.
-		 * @param: szIniFileName Путь к INI-файлу.
+		 * Сохранить настройки в глобальный g_SystemIni и записать его на диск.
 		 * @return: 0 — успех, иначе — ошибка.
 		 */
-		int Save(const char* szIniFileName) {
-			return writeToFile(szIniFileName);
+		int Save() {
+			return writeToFile();
 		}
 
 		/**
@@ -112,17 +115,15 @@ namespace GUI {
 
 	private:
 		/**
-		 * The help function of reading the propties from the file(*.ini).
-		 * @param: szIniFileName The name of ini file
+		 * Чтение настроек из глобального g_SystemIni.
 		 * @return: success Return 0.
 		 */
-		int readFromFile(const char* szIniFileName);
+		int readFromFile();
 		/**
-		 * The help function of write the propties to the file(*.ini).
-		 * @param: szIniFileName The name of ini file.
+		 * Запись настроек в глобальный g_SystemIni и сохранение на диск.
 		 * @return: success Return 0.
 		 */
-		int writeToFile(const char* szIniFileName);
+		int writeToFile();
 	};
 
 	class CChaExitOnTime {

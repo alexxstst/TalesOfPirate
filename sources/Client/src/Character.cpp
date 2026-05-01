@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Point.h"
 #include "GameDiagnostic.h"
+#include "SteadyFrameSync.h"
 
 using Corsairs::Client::Diagnostic::GameDiagnostic;
 #include "MPShadeMap.h"
@@ -31,7 +32,6 @@ using Corsairs::Client::Diagnostic::GameDiagnostic;
 #include "uistartform.h"
 #include "netprotocol.h"
 #include "uiboatform.h"
-#include "steadyframe.h"
 #include "event.h"
 #include "chastate.h"
 #include "shipset.h"
@@ -368,7 +368,7 @@ int CCharacter::LoadCha(const LoadChaInfo* info) {
 			ToLogService("errors", LogLevel::Error, "msgLoad Ship Power System error!");
 			return FALSE;
 		}
-		p->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+		p->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 
 
 		lwSceneItemLinkInfo ili;
@@ -732,10 +732,10 @@ int CCharacter::FaceTo(int nAngle) {
 	nAngle = FixAngle(nAngle);
 
 	if (IsBoat()) {
-		_nAngleStep = (int)(300.0f / (float)CGameApp::GetFrameFPS());
+		_nAngleStep = (int)(300.0f / (float)Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 	}
 	else {
-		_nAngleStep = (int)(600.0f / (float)CGameApp::GetFrameFPS());
+		_nAngleStep = (int)(600.0f / (float)Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps());
 	}
 
 	if (!_isArrive && IsMainCha() && !IsBoat()) {
@@ -1258,9 +1258,14 @@ DWORD GetMountPose(DWORD pose) {
 }
 
 bool CCharacter::PlayPose(DWORD pose, DWORD type, int time, int fps, bool isBlend, bool IsGlitched) {
-	if (!g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
-
-	fps = CGameApp::GetFrameFPS();
+	fps = Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps();
+	//  Раньше тут было `if (bFramerate) IsGlitched = true;` (фикс под 60 FPS,
+	//  отменявший нормализацию velocity по FPS). Это давало ускоренные анимации
+	//  атак на 60 FPS «как фичу», но на 144 FPS оборачивалось в ускорение в 4.8×
+	//  и анимации становились нерабочими. Убрано: пусть CharacterModel::PlayPose
+	//  делает обычную нормализацию `velocity = 30/fps` — видимая скорость
+	//  одинакова на любом FPS. IsGlitched=true остаётся только для деревьев
+	//  (tree-fix в CharacterModel.cpp:695, по `GetPoseFrameNum(0) == 83`).
 	//LG( getLogName(), "Pose:%d, type:%d, time:%d\n", pose, type, time, fps );
 
 	bool rv = GetCurPoseType() == pose;
@@ -1858,7 +1863,7 @@ void CCharacter::setNpcState(DWORD dwState) {
 		_pNpcStateItem->setIsSystem(true);
 		_pNpcStateItem->setHeightOff((int)(GetDefaultChaInfo()->fHeight * 100.0f));
 		_pNpcStateItem->setPos(GetCurX(), GetCurY());
-		_pNpcStateItem->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
+		_pNpcStateItem->PlayDefaultAnimation(1.0f / Corsairs::Client::Frame::SteadyFrameSync::Instance().GetAnimMultiplier());
 		_pNpcStateItem->setYaw(0);
 	}
 }
@@ -2105,8 +2110,7 @@ void CCharacter::ForceMove(int nTargetX, int nTargetY) {
 	}
 	else {
 		float fDistance = (float)GetDistance(_nCurX, _nCurY, nTargetX, nTargetY);
-		CGameApp::GetFrame()->RefreshFPS();
-		_fStep = 1.0f / (fDistance / (float)getMoveSpeed() * (float)(CGameApp::GetFrameFPS() + 2));
+		_fStep = 1.0f / (fDistance / (float)getMoveSpeed() * (float)(Corsairs::Client::Frame::SteadyFrameSync::Instance().GetFps() + 2));
 
 		if (_fStep > 1.0) {
 			_isArrive = true;

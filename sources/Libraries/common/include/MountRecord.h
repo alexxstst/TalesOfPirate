@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TableData.h"
+#define NOMINMAX
 #include <windows.h>
 #include <array>
 

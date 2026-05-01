@@ -104,7 +104,7 @@ int BSplineCurveCV(int numCV, D3DXVECTOR3* vCtrl, D3DXVECTOR3* vertices, int* nu
 				   int nStrideInFloat = 3);
 
 inline float CalculateCircleRate(float fValue) {
-	fValue = max(0.0f, min( fValue, 1.0f ));
+	fValue = std::max(0.0f, std::min(fValue, 1.0f));
 	return (sinf((fValue - 0.5f) * D3DX_PI) + 1.0f) / 2;
 }
 
