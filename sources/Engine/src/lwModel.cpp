@@ -47,7 +47,7 @@ LW_BEGIN
 				lwIPrimitive* imp;
 				_res_mgr->CreatePrimitive(&imp);
 
-				imp->Load((lwIGeomObjInfo*)m_info->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(), NULL);
+				imp->Load((lwGeomObjInfo*)m_info->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(), NULL);
 
 				_obj_seq[_obj_num] = imp;
 				_obj_num += 1;
@@ -162,7 +162,7 @@ LW_BEGIN
 				lwIPrimitive* imp;
 				_res_mgr->CreatePrimitive(&imp);
 
-				imp->Load((lwIGeomObjInfo*)model_info_ptr->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(),
+				imp->Load((lwGeomObjInfo*)model_info_ptr->geom_obj_seq[i], path_info->GetPath(PATH_TYPE_TEXTURE_SCENE).c_str(),
 						  &res);
 
 				_obj_seq[_obj_num] = imp;

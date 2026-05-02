@@ -302,7 +302,7 @@ LW_BEGIN
 		virtual LW_RESULT UpdatePose(lwPlayPoseInfo* info);
 		virtual LW_RESULT UpdateAnimData(const lwPlayPoseInfo* info);
 
-		LW_RESULT ExtractAnimData(lwIAnimDataTexImg* out_data);
+		LW_RESULT ExtractAnimData(lwAnimDataTexImg* out_data);
 		LW_RESULT GetRunTimeTex(lwITex** tex);
 	};
 

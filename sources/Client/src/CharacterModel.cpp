@@ -91,17 +91,13 @@ const static wield_state __wield_state[__wield_state_num] =
 
 };
 
-//#define DYNAMIC_LOADING
-
-
 inline void _SetItemScale(CCharacterModel* model, CSceneItem* item) {
 	item->SetScale(model->GetScale());
 }
 
 // ==================================
 CCharacterModel::CCharacterModel()
-	: _ModelType(MODEL_INVALID), _PoseType(0), _TypeID(0),
-	  cha_type_id(-1) {
+	: _ModelType(MODEL_INVALID), _PoseType(0), _TypeID(0) {
 	_UIScaleDis = 20.0f;
 	_UIYaw = 0;
 	_UIPitch = 0;
@@ -133,11 +129,6 @@ CCharacterModel::CCharacterModel()
 }
 
 void CCharacterModel::FrameMove() {
-#ifdef DYNAMIC_LOADING
-	if (cha_type_id != -1 && IsLoaded()) {
-		LoadPose();
-	}
-#endif
 	MPCharacter::FrameMove();
 
 	if (_DrunkCtrl) {
@@ -163,7 +154,6 @@ void CCharacterModel::Destroy() {
 	_KeyFrameProc = 0;
 	_ProcParam = 0;
 	_TypeID = 0;
-	cha_type_id = -1;
 	memset(_PartID, 0, sizeof(_PartID));
 	memset(_PartFile, 0, sizeof(_PartFile));
 
@@ -545,16 +535,6 @@ int CCharacterModel::ChangePart(DWORD part_id, DWORD tab_id) {
 }
 
 int CCharacterModel::LoadPose(int cha_type) {
-#ifdef DYNAMIC_LOADING
-	cha_type_id = cha_type;
-	return 1;
-}
-
-	int CCharacterModel::LoadPose() {
-		int cha_type = cha_type_id;
-		cha_type_id = -1;
-#endif
-
 	MPPoseInfo* buf;
 	MPIPoseCtrl* pose_ctrl;
 	DWORD num;

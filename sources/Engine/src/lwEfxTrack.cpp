@@ -1,6 +1,7 @@
 ﻿//
 #include "stdafx.h"
 #include "lwEfxTrack.h"
+#include "AssetLoaders.h"
 
 LW_BEGIN
 	lwEfxTrack::lwEfxTrack() {
@@ -18,7 +19,7 @@ LW_BEGIN
 			return LW_RET_FAILED;
 
 		_data = LW_NEW(lwAnimDataMatrix());
-		_data->Load(fp, 0);
+		Corsairs::Engine::Render::LgoLoader::LoadAnimDataMatrix(*_data, fp, 0);
 
 		fclose(fp);
 
@@ -30,9 +31,10 @@ LW_BEGIN
 		if (fp == NULL)
 			return LW_RET_FAILED;
 
-		if (LW_RESULT r = _data->Save(fp); LW_FAILED(r)) {
+		if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::SaveAnimDataMatrix(*_data, fp);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-						 "[{}] _data->Save failed: file={}, ret={}",
+						 "[{}] LgoLoader::SaveAnimDataMatrix failed: file={}, ret={}",
 						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 		}
 

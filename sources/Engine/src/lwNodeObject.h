@@ -176,10 +176,10 @@ LW_BEGIN
 
 
 		LW_RESULT Destroy();
-		LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res);
+		LW_RESULT Load(lwGeomObjInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadMesh(lwMeshInfo* info);
 		LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path);
-		LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res);
+		LW_RESULT LoadAnimData(lwAnimDataInfo* info, std::string_view tex_path, const lwResFile* res);
 		LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci);
 		LW_RESULT Copy(lwINodePrimitive* src_obj);
 

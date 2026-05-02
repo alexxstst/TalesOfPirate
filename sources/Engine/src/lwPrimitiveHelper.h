@@ -349,7 +349,7 @@ LW_BEGIN
 			return _obj_boundingsphere;
 		}
 
-		LW_RESULT ExtractHelperInfo(lwIHelperInfo* out_info);
+		LW_RESULT ExtractHelperInfo(lwHelperInfo* out_info);
 	};
 
 LW_END

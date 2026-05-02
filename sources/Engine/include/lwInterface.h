@@ -101,9 +101,8 @@ LW_STD_GETINTERFACE( cls )
 	public:
 	};
 
-	class LW_DECLSPEC_NOVTABLE lwIHelperInfo : public lwInterface {
-	public:
-	};
+	// lwIHelperInfo удалён — конкретный data-класс lwHelperInfo больше не
+	// наследуется от интерфейса (вся I/O в Corsairs::Engine::Render::LgoLoader).
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimData : public lwInterface {
 	public:
@@ -111,8 +110,11 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataBone : public lwIAnimData {
 	public:
-		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
-		virtual LW_RESULT Save(std::string_view file) const PURE_METHOD;
+		// Load/Save(string_view) для .lab-файлов перенесены в
+		// Corsairs::Engine::Render::LgoLoader::{Load,Save}AnimDataBone(...).
+		// Интерфейс остаётся как тип-маркер — `lwAnimCtrlBone::GetInterface`
+		// делает `static_cast<lwIAnimDataBone*>(&_data)`, и `m_AnimDataMap` в
+		// `lwGeomManager` хранит указатели именно этого типа.
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataMatrix : public lwIAnimData {
@@ -126,9 +128,8 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT SetData(const lwMatrix44* mat_seq, DWORD mat_num) PURE_METHOD;
 	};
 
-	class LW_DECLSPEC_NOVTABLE lwIAnimDataTexImg : public lwIAnimData {
-	public:
-	};
+	// lwIAnimDataTexImg удалён — конкретный data-класс lwAnimDataTexImg
+	// больше не наследуется от интерфейса.
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimDataMtlOpacity : public lwIAnimData {
 	public:
@@ -137,9 +138,8 @@ LW_STD_GETINTERFACE( cls )
 		virtual void SetAnimKeySet(lwIAnimKeySetFloat* aks_ctrl) PURE_METHOD;
 	};
 
-	class LW_DECLSPEC_NOVTABLE lwIAnimDataInfo : public lwInterface {
-	public:
-	};
+	// lwIAnimDataInfo удалён — конкретный data-класс lwAnimDataInfo
+	// больше не наследуется от интерфейса.
 
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimCtrl : public lwInterface {
@@ -188,7 +188,7 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIAnimCtrlTexImg : public lwIAnimCtrl {
 	public:
-		virtual LW_RESULT ExtractAnimData(lwIAnimDataTexImg* out_data) PURE_METHOD;
+		virtual LW_RESULT ExtractAnimData(lwAnimDataTexImg* out_data) PURE_METHOD;
 		virtual LW_RESULT GetRunTimeTex(lwITex** tex) PURE_METHOD;
 	};
 
@@ -202,17 +202,11 @@ LW_STD_GETINTERFACE( cls )
 	public:
 	};
 
-	class LW_DECLSPEC_NOVTABLE lwIGeomObjInfo : public lwInterface {
-	public:
-		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
-		virtual LW_RESULT Save(std::string_view file) PURE_METHOD;
-		virtual lwMeshInfo* GetMeshInfo() PURE_METHOD;
-	};
-
 	class LW_DECLSPEC_NOVTABLE lwIModelObjInfo : public lwInterface {
 	public:
-		virtual LW_RESULT Load(std::string_view file) PURE_METHOD;
-		virtual LW_RESULT Save(std::string_view file) PURE_METHOD;
+		// Load/Save вынесены в Corsairs::Engine::Render::LgoLoader (см. AssetLoaders.h).
+		// Интерфейс остаётся как тип-маркер для передачи указателя через QueryModelObjInfo
+		// и т.п., I/O-методы тут больше не нужны.
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIHelperDummyObjInfo : public lwInterface {
@@ -221,14 +215,14 @@ LW_STD_GETINTERFACE( cls )
 
 	class LW_DECLSPEC_NOVTABLE lwIPrimitive : public lwInterface {
 	public:
-		virtual LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT Load(lwGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(lwMeshInfo* info) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(const lwResFileMesh* info) PURE_METHOD;
 		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) PURE_METHOD;
-		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT LoadAnimData(lwAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci) PURE_METHOD;
 
-		virtual LW_RESULT ExtractGeomObjInfo(lwIGeomObjInfo* info) PURE_METHOD;
+		virtual LW_RESULT ExtractGeomObjInfo(lwGeomObjInfo* info) PURE_METHOD;
 
 		virtual LW_RESULT DestroyRenderCtrlAgent() PURE_METHOD;
 		virtual LW_RESULT DestroyMeshAgent() PURE_METHOD;
@@ -287,7 +281,7 @@ LW_STD_GETINTERFACE( cls )
 
 		virtual LW_RESULT LoadBone(std::string_view file) PURE_METHOD;
 		virtual LW_RESULT LoadPrimitive(DWORD part_id, std::string_view file) PURE_METHOD;
-		virtual LW_RESULT LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info) PURE_METHOD;
+		virtual LW_RESULT LoadPrimitive(DWORD part_id, lwGeomObjInfo* geom_info) PURE_METHOD;
 		virtual LW_RESULT DestroyPrimitive(DWORD part_id) PURE_METHOD;
 		virtual LW_RESULT CheckPrimitive(DWORD part_id) PURE_METHOD;
 
@@ -384,7 +378,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual lwMatrix44* GetMatrix() PURE_METHOD;
 		virtual void SetMatrix(const lwMatrix44* mat) PURE_METHOD;
 
-		virtual LW_RESULT Load(lwIGeomObjInfo* info) PURE_METHOD;
+		virtual LW_RESULT Load(lwGeomObjInfo* info) PURE_METHOD;
 		virtual LW_RESULT Load(std::string_view file, int arbitrary_flag = 0) PURE_METHOD;
 		virtual LW_RESULT Update() PURE_METHOD;
 		virtual LW_RESULT Render() PURE_METHOD;
@@ -935,7 +929,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual DWORD GetAnimCtrlObjNum() PURE_METHOD;
 		virtual LW_RESULT Update() PURE_METHOD;
 		virtual LW_RESULT Clone(lwIAnimCtrlAgent** ret_obj) PURE_METHOD;
-		virtual LW_RESULT ExtractAnimData(lwIAnimDataInfo* data_info) PURE_METHOD;
+		virtual LW_RESULT ExtractAnimData(lwAnimDataInfo* data_info) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIShaderDeclMgr : public lwInterface {
@@ -1171,7 +1165,7 @@ LW_STD_GETINTERFACE( cls )
 		virtual lwIBoundingBox* GetBoundingBox() PURE_METHOD;
 		virtual lwIBoundingSphere* GetBoundingSphere() PURE_METHOD;
 
-		virtual LW_RESULT ExtractHelperInfo(lwIHelperInfo* out_info) PURE_METHOD;
+		virtual LW_RESULT ExtractHelperInfo(lwHelperInfo* out_info) PURE_METHOD;
 	};
 
 	class LW_DECLSPEC_NOVTABLE lwIActionBase : public lwInterface {
@@ -1355,10 +1349,10 @@ LW_STD_GETINTERFACE( cls )
 		virtual LW_RESULT GetSubsetNum(DWORD* subset_num) PURE_METHOD;
 
 		virtual LW_RESULT Destroy() PURE_METHOD;
-		virtual LW_RESULT Load(lwIGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT Load(lwGeomObjInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadMesh(lwMeshInfo* info) PURE_METHOD;
 		virtual LW_RESULT LoadMtlTex(DWORD mtl_id, lwMtlTexInfo* info, std::string_view tex_path) PURE_METHOD;
-		virtual LW_RESULT LoadAnimData(lwIAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
+		virtual LW_RESULT LoadAnimData(lwAnimDataInfo* info, std::string_view tex_path, const lwResFile* res) PURE_METHOD;
 		virtual LW_RESULT LoadRenderCtrl(const lwRenderCtrlCreateInfo* rcci) PURE_METHOD;
 		virtual LW_RESULT Copy(lwINodePrimitive* src_obj) PURE_METHOD;
 

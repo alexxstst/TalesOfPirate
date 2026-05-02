@@ -11,6 +11,8 @@
 #include "lwPathInfo.h"
 #include "lwD3D.h"
 #include "lwShaderMgr.h"
+#include "lwExpObj.h"
+#include "AssetLoaders.h"
 
 LW_BEGIN
 	//lwItem
@@ -26,7 +28,7 @@ LW_BEGIN
 		Destroy();
 	}
 
-	LW_RESULT lwItem::Load(lwIGeomObjInfo* info) {
+	LW_RESULT lwItem::Load(lwGeomObjInfo* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		if (_obj)
@@ -103,19 +105,19 @@ LW_BEGIN
 
 
 			// begin load mesh
-			lwGeomObjInfo info;
-
-			if (LW_RESULT r = info.Load(path.c_str()); LW_FAILED(r)) {
-				ToLogService("errors", LogLevel::Error,
-							 "[{}] info.Load failed: path={}, ret={}",
-							 __FUNCTION__, path, static_cast<long long>(r));
+			lwGeomObjInfo* info = Corsairs::Engine::Render::LgoLoader::Load(path);
+			if (info == nullptr) {
 				return LW_RET_FAILED;
 			}
+			Corsairs::Engine::Render::LgoLoader::ApplyRuntimeDefaults(info);
 
-			if (LW_RESULT r = imp->Load(&info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str(), &res); LW_FAILED(r)) {
+			LW_RESULT primLoadRet = imp->Load(info, path_info->GetPath(PATH_TYPE_TEXTURE_ITEM).c_str(), &res);
+			delete info;
+
+			if (LW_FAILED(primLoadRet)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] imp->Load failed: path={}, file={}, ret={}",
-							 __FUNCTION__, path, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
+							 __FUNCTION__, path, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(primLoadRet));
 				return LW_RET_FAILED;
 			}
 

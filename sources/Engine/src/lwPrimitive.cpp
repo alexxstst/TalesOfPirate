@@ -13,6 +13,8 @@
 #include "lwResourceMgr.h"
 #include "lwRenderImp.h"
 
+#include "AssetLoaders.h"
+
 #define USE_VS_INDEXED
 
 LW_BEGIN
@@ -125,7 +127,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::Load(lwIGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
+	LW_RESULT lwPrimitive::Load(lwGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD i;
@@ -288,7 +290,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::LoadAnimData(lwIAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
+	LW_RESULT lwPrimitive::LoadAnimData(lwAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwAnimDataInfo* info = (lwAnimDataInfo*)data_info;
@@ -979,7 +981,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwIGeomObjInfo* info) {
+	LW_RESULT lwPrimitive::ExtractGeomObjInfo(lwGeomObjInfo* info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwGeomObjInfo* a = (lwGeomObjInfo*)info;
@@ -1048,10 +1050,11 @@ LW_BEGIN
 					}
 				}
 
-				a->mtl_size = lwGetMtlTexInfoSize(&a->mtl_seq[0], a->mtl_num);
-				a->mesh_size = lwMeshInfo_GetDataSize(&a->mesh);
-				a->helper_size = a->helper_data.GetDataSize();
-				a->anim_size = a->anim_data.GetDataSize();
+				using LgoLoader = Corsairs::Engine::Render::LgoLoader;
+				a->mtl_size = LgoLoader::GetMtlTexInfoSize(a);
+				a->mesh_size = LgoLoader::GetMeshInfoSize(a);
+				a->helper_size = LgoLoader::GetHelperInfoSize(a->helper_data);
+				a->anim_size = LgoLoader::GetAnimDataInfoSize(a->anim_data);
 			}
 		}
 		ret = LW_RET_OK;

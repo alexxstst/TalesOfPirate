@@ -1070,7 +1070,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwAnimCtrlAgent::ExtractAnimData(lwIAnimDataInfo* data_info) {
+	LW_RESULT lwAnimCtrlAgent::ExtractAnimData(lwAnimDataInfo* data_info) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwAnimCtrlObjTypeInfo type_info;

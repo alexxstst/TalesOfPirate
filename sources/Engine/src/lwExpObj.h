@@ -11,6 +11,12 @@
 #include "lwInterfaceExt.h"
 #include "lwPoseCtrl.h"
 
+// Forward decl для friend-объявлений у data-классов: вся логика чтения/записи
+// бинарных форматов .lgo/.lmo живёт в LgoLoader, она же читает/пишет приватные
+// поля lwModelObjInfo и lwHelperDummyObjInfo. AssetLoaders.h инклюдить нельзя
+// (циклическая зависимость — он сам тянет lwExpObj.h).
+namespace Corsairs::Engine::Render { class LgoLoader; }
+
 LW_BEGIN
 #define USE_ANIM_MAT43
 
@@ -321,9 +327,7 @@ LW_BEGIN
 		DWORD pose_num;
 	};
 
-	struct lwHelperInfo : public lwIHelperInfo {
-		LW_STD_DECLARATION()
-
+	struct lwHelperInfo {
 		lwHelperInfo()
 			: type(HELPER_TYPE_INVALID), mesh_seq(0), box_seq(0), dummy_seq(0), bbox_seq(0), bsphere_seq(0),
 			  mesh_num(0), box_num(0), dummy_num(0), bbox_num(0), bsphere_num(0) {
@@ -352,25 +356,10 @@ LW_BEGIN
 		DWORD bbox_num;
 		DWORD bsphere_num;
 
-		// begin load item
-		LW_RESULT _LoadHelperDummyInfo(FILE* fp, DWORD version);
-		LW_RESULT _LoadHelperBoxInfo(FILE* fp, DWORD version);
-		LW_RESULT _LoadHelperMeshInfo(FILE* fp, DWORD version);
-		LW_RESULT _LoadBoundingBoxInfo(FILE* fp, DWORD version);
-		LW_RESULT _LoadBoundingSphereInfo(FILE* fp, DWORD version);
-
-		LW_RESULT _SaveHelperDummyInfo(FILE* fp) const;
-		LW_RESULT _SaveHelperBoxInfo(FILE* fp) const;
-		LW_RESULT _SaveHelperMeshInfo(FILE* fp) const;
-		LW_RESULT _SaveBoundingBoxInfo(FILE* fp) const;
-		LW_RESULT _SaveBoundingSphereInfo(FILE* fp) const;
-		// end
-
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp) const;
-
+		// Load/Save/GetDataSize и пять _Load*/_Save*-helpers перенесены в
+		// Corsairs::Engine::Render::LgoLoader (см. AssetLoaders.h). Здесь
+		// остаётся только копирование — это не I/O-операция.
 		LW_RESULT Copy(const lwHelperInfo* src);
-		DWORD GetDataSize() const;
 	};
 
 
@@ -442,10 +431,7 @@ LW_BEGIN
 		virtual ~lwAnimDataBone();
 
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file) const;
+		// FILE*- и path-сериализация перенесены в Corsairs::Engine::Render::LgoLoader.
 		LW_RESULT Destroy();
 
 		LW_RESULT Copy(const lwAnimDataBone* src);
@@ -513,10 +499,7 @@ LW_BEGIN
 		virtual ~lwAnimDataMatrix();
 
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file) const;
+		// FILE*-сериализация перенесена в Corsairs::Engine::Render::LgoLoader.
 		LW_RESULT Copy(const lwAnimDataMatrix* src);
 
 		DWORD GetDataSize() const;
@@ -589,11 +572,7 @@ LW_BEGIN
 		}
 
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file) const;
-
+		// FILE*-сериализация перенесена в Corsairs::Engine::Render::LgoLoader.
 		LW_RESULT Copy(const lwAnimDataTexUV* src);
 
 		DWORD GetDataSize() const;
@@ -609,9 +588,7 @@ LW_BEGIN
 		}
 	};
 
-	class lwAnimDataTexImg : public lwIAnimDataTexImg {
-		LW_STD_DECLARATION();
-
+	class lwAnimDataTexImg {
 	public:
 		lwTexInfo* _data_seq;
 		DWORD _data_num;
@@ -622,18 +599,14 @@ LW_BEGIN
 			: _data_seq(0), _data_num(0) {
 		}
 
-		virtual ~lwAnimDataTexImg() {
+		~lwAnimDataTexImg() {
 			LW_IF_DELETE_A(_data_seq);
 		}
 
 
 		LW_RESULT Copy(const lwAnimDataTexImg* src);
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp) const;
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file) const;
-
+		// FILE*-сериализация перенесена в Corsairs::Engine::Render::LgoLoader.
 		DWORD GetDataSize() const;
 	};
 
@@ -653,8 +626,7 @@ LW_BEGIN
 		}
 
 		LW_RESULT Clone(lwIAnimDataMtlOpacity** obj);
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp);
+		// FILE*-сериализация перенесена в Corsairs::Engine::Render::LgoLoader.
 		DWORD GetDataSize();
 
 		lwIAnimKeySetFloat* GetAnimKeySet() {
@@ -674,9 +646,7 @@ LW_BEGIN
 		ANIM_DATA_SUBMTL0_TEXIMG = 66,
 	};
 
-	class lwAnimDataInfo : public lwIAnimDataInfo {
-		LW_STD_DECLARATION()
-
+	class lwAnimDataInfo {
 		enum { ANIM_DATA_NUM = 2 + LW_MAX_SUBSET_NUM + LW_MAX_SUBSET_NUM * LW_MAX_TEXTURESTAGE_NUM * 2 };
 
 	public:
@@ -694,23 +664,16 @@ LW_BEGIN
 
 	public:
 		lwAnimDataInfo();
-		virtual ~lwAnimDataInfo();
-
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp);
-
-		LW_RESULT GetDataSize() const;
+		~lwAnimDataInfo();
 	};
 
 
 	LW_RESULT lwMeshInfo_Copy(lwMeshInfo* dst, const lwMeshInfo* src);
-	LW_RESULT lwMeshInfo_Load(lwMeshInfo* info, FILE* fp, DWORD version);
-	LW_RESULT lwMeshInfo_Save(lwMeshInfo* info, FILE* fp);
-	DWORD lwMeshInfo_GetDataSize(lwMeshInfo* info);
 
-	struct lwGeomObjInfo : public lwIGeomObjInfo {
-		LW_STD_DECLARATION()
+	// lwMeshInfo_{Load,Save,GetDataSize} и lw{Load,Save}MtlTexInfo перенесены
+	// в Corsairs::Engine::Render::LgoLoader (sources/Engine/include/AssetLoaders.h).
 
+	struct lwGeomObjInfo {
 		struct lwGeomObjInfoHeader {
 			DWORD id;
 			DWORD parent_id;
@@ -758,17 +721,14 @@ LW_BEGIN
 			lwRenderCtrlCreateInfo_Construct(&rcci);
 		}
 
-		virtual ~lwGeomObjInfo() {
-			LW_IF_DELETE_A(mtl_seq);
+		~lwGeomObjInfo() {
+			delete[] mtl_seq;
+			mtl_seq = nullptr;
 		}
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp);
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file);
 		DWORD GetDataSize() const;
 
-		virtual lwMeshInfo* GetMeshInfo() {
+		lwMeshInfo* GetMeshInfo() {
 			return &mesh;
 		}
 
@@ -780,6 +740,8 @@ LW_BEGIN
 	typedef lwGeomObjInfo::lwGeomObjInfoHeader lwGeomObjInfoHeader;
 
 	struct lwModelObjInfo : public lwIModelObjInfo {
+		friend class ::Corsairs::Engine::Render::LgoLoader;
+
 		LW_STD_DECLARATION()
 
 		struct lwModelObjInfoHeader {
@@ -806,20 +768,19 @@ LW_BEGIN
 			}
 		}
 
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file);
-
 		LW_RESULT SortGeomObjInfoWithID();
 
-		DWORD GetDataSize();
-
-		static LW_RESULT GetHeader(lwModelObjInfoHeader* header_seq, DWORD* header_num, std::string_view file);
+		// Load/Save/GetDataSize/GetHeader перенесены в
+		// Corsairs::Engine::Render::LgoLoader (см. AssetLoaders.h).
 	};
 
 	typedef lwModelObjInfo::lwModelObjInfoHeader lwModelObjInfoHeader;
 
 	class lwHelperDummyObjInfo : public lwIHelperDummyObjInfo {
 		LW_STD_DECLARATION()
+
+		friend class ::Corsairs::Engine::Render::LgoLoader;
+
 
 	private:
 		DWORD _id;
@@ -854,8 +815,7 @@ LW_BEGIN
 			return _anim_data;
 		}
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp);
+		// Load/Save перенесены в Corsairs::Engine::Render::LgoLoader.
 	};
 
 	struct lwModelNodeHeadInfo {
@@ -899,8 +859,7 @@ LW_BEGIN
 
 		virtual ~lwModelNodeInfo();
 
-		LW_RESULT Load(FILE* fp, DWORD version);
-		LW_RESULT Save(FILE* fp);
+		// Load/Save перенесены в Corsairs::Engine::Render::LgoLoader.
 	};
 
 	struct lwModelHeadInfo {
@@ -928,16 +887,22 @@ LW_BEGIN
 		virtual ~lwModelInfo();
 
 		LW_RESULT Destroy();
-		LW_RESULT Load(std::string_view file);
-		LW_RESULT Save(std::string_view file);
 		LW_RESULT SortChildWithID();
+
+		// Load/Save перенесены в Corsairs::Engine::Render::LgoLoader.
 	};
 
 	// =============================================
 
 
-	DWORD lwGetMtlTexInfoSize(const lwMtlTexInfo* info_seq, DWORD num);
 	DWORD lwGetAnimKeySetPRSSize(const lwAnimKeySetPRS* info);
+
+	// I/O для lwMtlTexInfo (Load/Save), а также lwLoadAnimKeySetPRS/lwSaveAnimKeySetPRS,
+	// перенесены в Corsairs::Engine::Render::LgoLoader (см. AssetLoaders.h).
+	DWORD lwMtlTexInfo_GetDataSize(lwMtlTexInfo* info);
+
+	DWORD lwGetHelperBoxInfoSize(const lwHelperBoxInfo* info);
+	DWORD lwGetHelperMeshInfoSize(const lwHelperMeshInfo* info);
 
 	LW_RESULT lwCreateHelperMeshInfo(lwHelperMeshInfo* info, const lwMeshInfo* mi);
 

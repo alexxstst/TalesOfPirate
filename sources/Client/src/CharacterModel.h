@@ -170,7 +170,6 @@ protected:
 private:
 	int GetBoatPart(int dummy);
 	DWORD _BigPose2SmallPose(DWORD pose_id);
-	int cha_type_id;
 
 public:
 	CCharacterModel();

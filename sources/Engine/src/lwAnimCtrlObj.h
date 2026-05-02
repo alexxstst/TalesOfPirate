@@ -277,7 +277,7 @@ LW_BEGIN
 		LW_RESULT Update();
 
 		LW_RESULT Clone(lwIAnimCtrlAgent** ret_obj);
-		LW_RESULT ExtractAnimData(lwIAnimDataInfo* data_info);
+		LW_RESULT ExtractAnimData(lwAnimDataInfo* data_info);
 	};
 
 LW_END

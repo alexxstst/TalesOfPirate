@@ -274,6 +274,9 @@
     <ClInclude Include="include\MPCharacter.h">
       <Filter>Source Files\Mesh\include</Filter>
     </ClInclude>
+    <ClInclude Include="include\AssetLoaders.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
     <ClInclude Include="include\MPInterface.h">
       <Filter>Source Files\Mesh\include</Filter>
     </ClInclude>
@@ -561,6 +564,9 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\lwxRenderCtrVS.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetLoaders.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\MPCharacter.cpp">

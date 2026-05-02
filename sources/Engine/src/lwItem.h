@@ -59,7 +59,7 @@ LW_BEGIN
 		void SetOpacity(float opacity);
 
 		LW_RESULT Load(std::string_view file, int arbitrary_flag = 0);
-		LW_RESULT Load(lwIGeomObjInfo* info);
+		LW_RESULT Load(lwGeomObjInfo* info);
 		LW_RESULT Update();
 		LW_RESULT Render();
 		LW_RESULT Destroy();

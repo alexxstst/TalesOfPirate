@@ -1095,7 +1095,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwAnimCtrlTexImg::ExtractAnimData(lwIAnimDataTexImg* out_data) {
+	LW_RESULT lwAnimCtrlTexImg::ExtractAnimData(lwAnimDataTexImg* out_data) {
 		lwAnimDataTexImg* a = (lwAnimDataTexImg*)out_data;
 		return a->Copy(&_data);
 	}

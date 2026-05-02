@@ -10,22 +10,6 @@
 #include "lwLinkCtrl.h"
 
 LW_BEGIN
-	struct lwPhysiqueBoneInfo {
-		lwPhysique* p;
-		std::string str;
-		lwIAnimCtrlObjBone* bc;
-		lwIAnimCtrlBone* cb;
-		lwIAnimDataBone* data;
-		lwAnimCtrlObjTypeInfo tp;
-		lwResFileAnimData res;
-	};
-
-	struct lwPhysiquePriInfo {
-		lwPhysique* p;
-		DWORD part_id;
-		std::string str;
-	};
-
 	class lwGeomManager {
 	public:
 		lwGeomManager();
@@ -59,7 +43,6 @@ LW_BEGIN
 		char _file_name[LW_MAX_NAME];
 		lwMatrix44 _mat_base;
 		float _opacity;
-		int volatile _count;
 		bool _start;
 		bool _end;
 
@@ -78,10 +61,8 @@ LW_BEGIN
 		}
 
 		LW_RESULT Destroy();
-		LW_RESULT LoadBoneCatch(lwPhysiqueBoneInfo& info);
 		LW_RESULT LoadBone(std::string_view file);
-		LW_RESULT LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info);
-		LW_RESULT LoadPriCatch(const lwPhysiquePriInfo& info);
+		LW_RESULT LoadPrimitive(DWORD part_id, lwGeomObjInfo* geom_info);
 		LW_RESULT LoadPrimitive(DWORD part_id, std::string_view file);
 		LW_RESULT DestroyPrimitive(DWORD part_id);
 
@@ -152,15 +133,7 @@ LW_BEGIN
 		}
 
 		virtual bool isLoaded() {
-			return _end && _count == 0;
-		}
-
-		void incCount() {
-			_count++;
-		}
-
-		void decCount() {
-			_count--;
+			return _end;
 		}
 
 		void setComponentColour(size_t index, D3DCOLOR colour, const std::string& filterTextureName) {

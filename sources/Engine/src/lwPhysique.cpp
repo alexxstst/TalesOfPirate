@@ -14,27 +14,12 @@
 #include "lwItem.h"
 #include "lwExpObj.h"
 
-#include <stacktrace>
+#include "AssetLoaders.h"
+
 #include <format>
 
 using namespace std;
 LW_BEGIN
-	unsigned int __stdcall __load_bone(void* param) {
-		lwPhysiqueBoneInfo* bone = (lwPhysiqueBoneInfo*)param;
-		bone->p->LoadBoneCatch(*bone);
-		bone->p->decCount();
-		delete bone;
-		return 0;
-	}
-
-	unsigned int __stdcall __load_pri(void* param) {
-		lwPhysiquePriInfo* pri = (lwPhysiquePriInfo*)param;
-		pri->p->LoadPriCatch(*pri);
-		pri->p->decCount();
-		delete pri;
-		return 0;
-	}
-
 	lwGeomManager g_GeomManager;
 
 	lwGeomManager::lwGeomManager() {
@@ -66,23 +51,11 @@ LW_BEGIN
 
 	bool lwGeomManager::LoadGeomobj(std::string_view file) {
 		const std::string path = std::format("model\\character\\{}", file);
-		lwGeomObjInfo* pInfo = new lwGeomObjInfo;
-		if (LW_RESULT r = pInfo->Load(path.c_str()); LW_FAILED(r)) {
-			// TEMP: ищем источник массовой пробы character .lgo. Стектрейс через
-			std::string trace;
-			try {
-				const auto st = std::stacktrace::current(/*skip*/1, /*max_depth*/16);
-				trace = std::to_string(st);
-			}
-			catch (...) {
-				trace = "<stacktrace unavailable>";
-			}
-			ToLogService("errors", LogLevel::Error,
-						 "[{}] lwGeomObjInfo::Load failed: file={}, path={}, ret={}\n  stack:\n{}",
-						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r), trace);
-			delete pInfo;
+		lwGeomObjInfo* pInfo = Corsairs::Engine::Render::LgoLoader::Load(path);
+		if (pInfo == nullptr) {
 			return false;
 		}
+		Corsairs::Engine::Render::LgoLoader::ApplyRuntimeDefaults(pInfo);
 		m_GeomobjMap[std::string{file}] = pInfo;
 		return true;
 	}
@@ -97,15 +70,16 @@ LW_BEGIN
 
 	bool lwGeomManager::LoadBoneData(std::string_view file) {
 		const std::string path = std::format("animation\\{}", file);
-		lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
-		if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
+		lwAnimDataBone* data = LW_NEW(lwAnimDataBone);
+		if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::LoadAnimDataBone(*data, path);
+			LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-						 "[{}] lwIAnimDataBone::Load failed: file={}, path={}, ret={}",
+						 "[{}] LgoLoader::LoadAnimDataBone failed: file={}, path={}, ret={}",
 						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
-			i_data->Release();
+			data->Release();
 			return false;
 		}
-		m_AnimDataMap[std::string{file}] = i_data;
+		m_AnimDataMap[std::string{file}] = data;  // upcast lwAnimDataBone* → lwIAnimDataBone*
 		return true;
 	}
 
@@ -121,7 +95,6 @@ LW_BEGIN
 		lwMatrix44Identity(&_mat_base);
 		memset(_obj_seq, 0, sizeof(lwIPrimitive*) * LW_MAX_SUBSKIN_NUM);
 		_opacity = 1.0f;
-		_count = 0;
 		_start = false;
 		_end = false;
 	}
@@ -193,12 +166,6 @@ LW_BEGIN
 	LW_RESULT lwPhysique::Destroy() {
 		LW_RESULT ret = LW_RET_FAILED;
 
-#ifdef DYNAMIC_LOADING
-		while (_count > 0 || (_start && !_end)) {
-			Sleep(1);
-		}
-#endif
-
 		for (DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++) {
 			if (LW_RESULT r = DestroyPrimitive(i); LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
@@ -209,32 +176,6 @@ LW_BEGIN
 		}
 
 		LW_SAFE_RELEASE(_anim_agent);
-
-		return LW_RET_OK;
-	}
-
-	LW_RESULT lwPhysique::LoadBoneCatch(lwPhysiqueBoneInfo& info) {
-		if (LW_RESULT r = info.data->Load(info.str.c_str()); LW_FAILED(r)) {
-			ToLogService("errors", LogLevel::Error,
-						 "[{}] info.data->Load failed: str={}, ret={}",
-						 __FUNCTION__, info.str.c_str(), static_cast<long long>(r));
-			goto __addr_1;
-		}
-
-		if (LW_RESULT r = info.cb->LoadData(info.data); LW_FAILED(r)) {
-			ToLogService("errors", LogLevel::Error,
-						 "[{}] info.cb->LoadData failed: str={}, ret={}",
-						 __FUNCTION__, info.str.c_str(), static_cast<long long>(r));
-			goto __addr_1;
-		}
-
-		info.cb->SetResFile(&info.res);
-
-		info.bc->AttachAnimCtrl(info.cb);
-		info.bc->SetTypeInfo(&info.tp);
-
-	__addr_1:
-		info.data->Release();
 
 		return LW_RET_OK;
 	}
@@ -310,64 +251,33 @@ LW_BEGIN
 				bone_ctrl->AttachAnimCtrl(anim_ctrl);
 			}
 			else {
-#ifdef DYNAMIC_LOADING
-				lwIAnimCtrlBone* ctrl_bone;
-				if (LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE);
-					LW_FAILED(r)) {
-					ToLogService("errors", LogLevel::Error,
-								 "[{}] CreateAnimCtrl(BONE) failed (DYNAMIC_LOADING): file={}, ret={}",
-								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
-					goto __ret;
-				}
-
-				lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
-
-				lwPhysiqueBoneInfo* bi = new lwPhysiqueBoneInfo;
-				bi->p = this;
-				bi->str = path;
-				bi->data = i_data;
-				bi->cb = ctrl_bone;
-				bi->tp = type_info;
-				bi->bc = bone_ctrl;
-				bi->res = res;
-
-				lwIThreadPoolMgr* tp_mgr = _res_mgr->GetThreadPoolMgr();
-				lwIThreadPool* tp = tp_mgr->GetThreadPool(THREAD_POOL_LOADPHY);
-
-				incCount();
-				if (LW_RESULT r = tp->RegisterTask(__load_bone, (void*)bi); LW_FAILED(r)) {
-					ToLogService("errors", LogLevel::Error,
-								 "[{}] tp->RegisterTask(__load_bone) failed: path={}, ret={}",
-								 __FUNCTION__, path, static_cast<long long>(r));
-					const std::string szData = std::format("Load bone file error!{}.", path);
-					MessageBox(NULL, szData.c_str(), "Error", MB_OK);
-					return LW_RET_FAILED;
-				}
-#else
 				lwIAnimCtrlBone* ctrl_bone;
 				lwIAnimDataBone* i_data = g_GeomManager.GetBoneData(file);
 				if (i_data == NULL) {
-					i_data = LW_NEW(lwAnimDataBone);
-					if (LW_RESULT r = i_data->Load(path.c_str()); LW_FAILED(r)) {
+					lwAnimDataBone* data = new lwAnimDataBone;
+					if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::LoadAnimDataBone(*data, path);
+						LW_FAILED(r)) {
 						ToLogService("errors", LogLevel::Error,
-									 "[{}] lwAnimDataBone::Load failed: file={}, path={}, ret={}",
+									 "[{}] LgoLoader::LoadAnimDataBone failed: file={}, path={}, ret={}",
 									 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
-						goto __addr_1;
+						data->Release();
+						goto __ret;
 					}
+					i_data = data;  // upcast
 				}
 				if (LW_RESULT r = _res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE);
 					LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] CreateAnimCtrl(BONE) failed: file={}, path={}, ret={}",
 								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
-					goto __addr_1;
+					goto __ret;
 				}
 
 				if (LW_RESULT r = ctrl_bone->LoadData(i_data); LW_FAILED(r)) {
 					ToLogService("errors", LogLevel::Error,
 								 "[{}] ctrl_bone->LoadData failed: file={}, path={}, ret={}",
 								 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), path, static_cast<long long>(r));
-					goto __addr_1;
+					goto __ret;
 				}
 
 				ctrl_bone->SetResFile(&res);
@@ -375,13 +285,6 @@ LW_BEGIN
 				bone_ctrl->AttachAnimCtrl(ctrl_bone);
 				bone_ctrl->SetTypeInfo(&type_info);
 			}
-			goto __addr_2;
-		__addr_1:
-			goto __ret;
-
-		__addr_2:
-			;
-#endif
 		}
 
 		RegisterSceneMgr(_res_mgr->GetSysGraphics()->GetSceneMgr());
@@ -396,7 +299,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info) {
+	LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwGeomObjInfo* geom_info) {
 		if (part_id < 0 || part_id >= LW_MAX_SUBSKIN_NUM)
 			return ERR_INVALID_PARAM;
 
@@ -508,10 +411,6 @@ LW_BEGIN
 
 		_res_mgr->RegisterObject(&_id, this, OBJ_TYPE_CHARACTER);
 
-		return LW_RET_OK;
-	}
-
-	LW_RESULT lwPhysique::LoadPriCatch(const lwPhysiquePriInfo& info) {
 		return LW_RET_OK;
 	}
 

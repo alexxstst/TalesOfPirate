@@ -1263,7 +1263,7 @@ LW_BEGIN
 		}
 	}
 
-	LW_RESULT lwHelperObject::ExtractHelperInfo(lwIHelperInfo* out_info) {
+	LW_RESULT lwHelperObject::ExtractHelperInfo(lwHelperInfo* out_info) {
 		lwHelperInfo* a = (lwHelperInfo*)out_info;
 
 		if (_obj_dummy) {

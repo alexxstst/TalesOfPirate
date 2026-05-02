@@ -10,6 +10,8 @@
 #include "lwHelperGeometry.h"
 #include "lwTreeNode.h"
 
+#include "AssetLoaders.h"
+
 LW_BEGIN
 	// lwNodeBase
 	lwNodeBase::lwNodeBase() {
@@ -61,7 +63,7 @@ LW_BEGIN
 
 		switch (node_info->_type) {
 		case NODE_PRIMITIVE:
-			if (LW_RESULT r = ((lwINodePrimitive*)model_node)->Load((lwIGeomObjInfo*)node_info->_data, tex_path, 0);
+			if (LW_RESULT r = ((lwINodePrimitive*)model_node)->Load((lwGeomObjInfo*)node_info->_data, tex_path, 0);
 				LW_FAILED(r)) {
 				ToLogService("errors", LogLevel::Error,
 							 "[{}] NodePrimitive::Load failed: id={}, tex_path={}, ret={}",
@@ -253,7 +255,7 @@ LW_BEGIN
 		return LW_RET_OK;
 	}
 
-	LW_RESULT lwNodePrimitive::Load(lwIGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
+	LW_RESULT lwNodePrimitive::Load(lwGeomObjInfo* geom_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		DWORD i;
@@ -387,7 +389,7 @@ LW_BEGIN
 		return ret;
 	}
 
-	LW_RESULT lwNodePrimitive::LoadAnimData(lwIAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
+	LW_RESULT lwNodePrimitive::LoadAnimData(lwAnimDataInfo* data_info, std::string_view tex_path, const lwResFile* res) {
 		LW_RESULT ret = LW_RET_FAILED;
 
 		lwAnimDataInfo* info = (lwAnimDataInfo*)data_info;
@@ -2146,9 +2148,9 @@ LW_BEGIN
 			goto __ret;
 		}
 
-		if (LW_RESULT r = info.Load(file); LW_FAILED(r)) {
+		if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::LoadModel(info, file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-						 "[{}] info.Load failed: file={}, flag={}, ret={}",
+						 "[{}] LgoLoader::LoadModel failed: file={}, flag={}, ret={}",
 						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), flag, static_cast<long long>(r));
 			goto __ret;
 		}

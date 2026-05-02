@@ -112,6 +112,7 @@
         <ClInclude Include="include\lwHeader.h"/>
         <ClInclude Include="include\lwIFunc.h"/>
         <ClInclude Include="include\lwInterface.h"/>
+        <ClInclude Include="include\AssetLoaders.h"/>
         <ClInclude Include="include\lwITypes.h"/>
         <ClInclude Include="include\lwITypes2.h"/>
         <ClInclude Include="include\lwIUtil.h"/>
@@ -237,6 +238,7 @@
         </ClCompile>
         <ClCompile Include="src\lwCamera.cpp"/>
         <ClCompile Include="src\lwCoordinateSys.cpp"/>
+        <ClCompile Include="src\AssetLoaders.cpp"/>
         <ClCompile Include="src\lwD3DSettings.cpp"/>
         <ClCompile Include="src\lwDDSFile.cpp"/>
         <ClCompile Include="src\lwDeviceObject.cpp"/>

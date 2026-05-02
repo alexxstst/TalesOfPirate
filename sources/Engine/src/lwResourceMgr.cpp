@@ -13,6 +13,8 @@
 #include "lwRenderCtrlEmb.h"
 #include "lwItem.h"
 #include "lwModel.h"
+
+#include "AssetLoaders.h"
 #include "lwPhysique.h"
 #include "lwAnimCtrl.h"
 #include "lwStreamObj.h"
@@ -2419,9 +2421,9 @@ LW_BEGIN
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
 
-		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r)) {
+		if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::LoadModelObj(moim->info, file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-						 "[{}] moim->info.Load failed (auto-handle): file={}, ret={}",
+						 "[{}] LgoLoader::LoadModelObj failed (auto-handle): file={}, ret={}",
 						 __FUNCTION__, (file.empty() ? std::string_view{"(null)"} : file), static_cast<long long>(r));
 			goto __ret;
 		}
@@ -2442,7 +2444,7 @@ LW_BEGIN
 			_res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&tm, LW_GUID_TIMER);
 			moim->hit_time = tm->GetTickCount();
 
-			moim->size = moim->info.GetDataSize();
+			moim->size = Corsairs::Engine::Render::LgoLoader::GetModelObjSize(moim->info);
 			{const auto _f = std::string{file}; _tcscpy(moim->file, _f.c_str());}
 
 			_modelobj_data_size += moim->size;
@@ -2460,9 +2462,9 @@ LW_BEGIN
 
 		lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
 
-		if (LW_RESULT r = moim->info.Load(file); LW_FAILED(r)) {
+		if (LW_RESULT r = Corsairs::Engine::Render::LgoLoader::LoadModelObj(moim->info, file); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,
-						 "[{}] moim->info.Load failed (explicit-handle): handle={}, file={}, ret={}",
+						 "[{}] LgoLoader::LoadModelObj failed (explicit-handle): handle={}, file={}, ret={}",
 						 __FUNCTION__, static_cast<std::uint64_t>(handle), (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
@@ -2476,7 +2478,7 @@ LW_BEGIN
 			_res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&tm, LW_GUID_TIMER);
 			moim->hit_time = tm->GetTickCount();
 
-			moim->size = moim->info.GetDataSize();
+			moim->size = Corsairs::Engine::Render::LgoLoader::GetModelObjSize(moim->info);
 			{const auto _f = std::string{file}; _tcscpy(moim->file, _f.c_str());}
 
 			_modelobj_data_size += moim->size;

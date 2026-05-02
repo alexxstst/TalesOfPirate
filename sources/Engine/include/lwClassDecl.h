@@ -57,6 +57,9 @@ LW_BEGIN
 	struct lwHelperMeshInfo;
 	struct lwHelperInfo;
 
+	class lwAnimDataInfo;
+	class lwAnimDataTexImg;
+
 	struct lwActionInfo;
 	struct lwActImpInfo;
 
