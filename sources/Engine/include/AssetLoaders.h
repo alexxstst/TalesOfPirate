@@ -140,6 +140,13 @@ public:
                                        DWORD* out_num,
                                        std::string_view file);
 
+    // Расширенная диагностика для тулз и валидаторов: при неуспехе заполняет
+    // `diag.status`+`diag.detail`. По смыслу аналогична `LoadEx` для .lgo.
+    static LW_RESULT LoadModelObjEx(LW_NAMESPACE::lwModelObjInfo& info, std::string_view file,
+                                    LgoLoadDiagnostics& diag);
+    static LW_RESULT LoadAnimDataBoneEx(LW_NAMESPACE::lwAnimDataBone& info, std::string_view file,
+                                        LgoLoadDiagnostics& diag);
+
     // -----------------------------------------------------------------------
     // Tree-based .lmo (lwModelInfo с lwITreeNode-деревом lwModelNodeInfo)
     // -----------------------------------------------------------------------

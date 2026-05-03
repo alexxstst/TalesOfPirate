@@ -162,6 +162,17 @@ LW_RESULT LgoLoader::LoadFromStream(lwGeomObjInfo* info, std::FILE* fp, DWORD ve
 }
 
 LW_RESULT LgoLoader::SaveToStream(lwGeomObjInfo* info, std::FILE* fp) {
+    // Пересчитать размеры блоков ровно по фактическим данным в info, ДО записи
+    // header'а. Иначе при round-trip Load→Save для файла, у которого исходный
+    // header содержал «trailer» (header.*_size меньше реально записанных байт),
+    // после save в файле снова окажется trailing data — потому что header
+    // объявляет малый размер, а Save*Info пишут реальные блоки. Это и было
+    // причиной повторных Warning-OkWithTrailingData на тех же 434 файлах.
+    info->mtl_size    = GetMtlTexInfoSize(info);
+    info->mesh_size   = GetMeshInfoSize(info);
+    info->helper_size = GetHelperInfoSize(info->helper_data);
+    info->anim_size   = GetAnimDataInfoSize(info->anim_data);
+
     fwrite((lwGeomObjInfoHeader*)&info->id, sizeof(lwGeomObjInfoHeader), 1, fp);
 
     if (info->mtl_size > 0) {
@@ -2122,6 +2133,137 @@ LW_RESULT LgoLoader::SaveAnimKeySetPRS(const lwAnimKeySetPRS& info, std::FILE* f
         fwrite(&info.sca_seq[0], sizeof(lwKeyDataVector3), info.sca_num, fp);
     }
 
+    return LW_RET_OK;
+}
+
+// =============================================================================
+// Расширенная диагностика для .lmo и .lab (используется PkoTool / тулзами)
+// =============================================================================
+
+LW_RESULT LgoLoader::LoadModelObjEx(lwModelObjInfo& info, std::string_view file,
+                                    LgoLoadDiagnostics& diag) {
+    diag = {};
+
+    UniqueFile fp{std::fopen(std::string{file}.c_str(), "rb")};
+    if (!fp) {
+        diag.status = LgoLoadStatus::FileOpenFailed;
+        diag.detail = "fopen failed";
+        return LW_RET_FAILED;
+    }
+
+    DWORD version = 0;
+    if (std::fread(&version, sizeof(version), 1, fp.get()) != 1) {
+        diag.status = LgoLoadStatus::VersionTruncated;
+        diag.detail = "short read of version DWORD (file empty or truncated)";
+        return LW_RET_FAILED;
+    }
+    diag.version = version;
+
+    DWORD obj_num = 0;
+    if (std::fread(&obj_num, sizeof(obj_num), 1, fp.get()) != 1) {
+        diag.status = LgoLoadStatus::HeaderTruncated;
+        diag.detail = "short read of obj_num DWORD";
+        return LW_RET_FAILED;
+    }
+
+    if (obj_num == 0 || obj_num > LW_MAX_MODEL_OBJ_NUM) {
+        diag.status = LgoLoadStatus::BlockSizesInconsistent;
+        diag.detail = std::format("obj_num={} (expected 1..{})", obj_num, LW_MAX_MODEL_OBJ_NUM);
+        return LW_RET_FAILED;
+    }
+
+    lwModelObjInfo::lwModelObjInfoHeader header[LW_MAX_MODEL_OBJ_NUM];
+    if (std::fread(&header[0], sizeof(lwModelObjInfo::lwModelObjInfoHeader), obj_num, fp.get())
+        != obj_num) {
+        diag.status = LgoLoadStatus::HeaderTruncated;
+        diag.detail = std::format("short read of {} headers", obj_num);
+        return LW_RET_FAILED;
+    }
+
+    info.geom_obj_num = 0;
+
+    for (DWORD i = 0; i < obj_num; i++) {
+        if (std::fseek(fp.get(), header[i].addr, SEEK_SET) != 0) {
+            diag.status = LgoLoadStatus::BlockSizesInconsistent;
+            diag.detail = std::format("fseek to addr=0x{:08X} failed (i={})",
+                                      header[i].addr, i);
+            return LW_RET_FAILED;
+        }
+
+        switch (header[i].type) {
+        case MODEL_OBJ_TYPE_GEOMETRY: {
+            info.geom_obj_seq[info.geom_obj_num] = new lwGeomObjInfo();
+            if (version == EXP_OBJ_VERSION_0_0_0_0) {
+                DWORD old_version = 0;
+                if (std::fread(&old_version, sizeof(old_version), 1, fp.get()) != 1) {
+                    diag.status = LgoLoadStatus::VersionTruncated;
+                    diag.detail = std::format("short read of legacy old_version (i={})", i);
+                    return LW_RET_FAILED;
+                }
+            }
+            if (LW_RESULT r = LoadFromStream(info.geom_obj_seq[info.geom_obj_num], fp.get(),
+                                             version);
+                LW_FAILED(r)) {
+                diag.status = LgoLoadStatus::ParseFailed;
+                diag.detail = std::format("LoadFromStream(geom={}) failed: ret={}",
+                                          i, static_cast<long long>(r));
+                return LW_RET_FAILED;
+            }
+            ApplyRuntimeDefaults(info.geom_obj_seq[info.geom_obj_num]);
+            info.geom_obj_num += 1;
+            break;
+        }
+        case MODEL_OBJ_TYPE_HELPER:
+            if (LW_RESULT r = LoadHelperInfo(info.helper_data, fp.get(), version); LW_FAILED(r)) {
+                diag.status = LgoLoadStatus::ParseFailed;
+                diag.detail = std::format("LoadHelperInfo(i={}) failed: ret={}",
+                                          i, static_cast<long long>(r));
+                return LW_RET_FAILED;
+            }
+            break;
+        default:
+            diag.status = LgoLoadStatus::BlockSizesInconsistent;
+            diag.detail = std::format("unknown obj type=0x{:08X} (i={})", header[i].type, i);
+            return LW_RET_FAILED;
+        }
+    }
+
+    diag.status = LgoLoadStatus::Ok;
+    return LW_RET_OK;
+}
+
+LW_RESULT LgoLoader::LoadAnimDataBoneEx(lwAnimDataBone& info, std::string_view file,
+                                        LgoLoadDiagnostics& diag) {
+    diag = {};
+
+    UniqueFile fp{std::fopen(std::string{file}.c_str(), "rb")};
+    if (!fp) {
+        diag.status = LgoLoadStatus::FileOpenFailed;
+        diag.detail = "fopen failed";
+        return LW_RET_FAILED;
+    }
+
+    DWORD version = 0;
+    if (std::fread(&version, sizeof(version), 1, fp.get()) != 1) {
+        diag.status = LgoLoadStatus::VersionTruncated;
+        diag.detail = "short read of version DWORD";
+        return LW_RET_FAILED;
+    }
+    diag.version = version;
+
+    if (version < EXP_OBJ_VERSION_1_0_0_0) {
+        diag.status = LgoLoadStatus::VersionUnknown;
+        diag.detail = std::format("version=0x{:08X} (expected >= 0x1000)", version);
+        return LW_RET_FAILED;
+    }
+
+    if (LW_RESULT r = LoadAnimDataBone(info, fp.get(), version); LW_FAILED(r)) {
+        diag.status = LgoLoadStatus::ParseFailed;
+        diag.detail = std::format("LoadAnimDataBone(fp) failed: ret={}", static_cast<long long>(r));
+        return LW_RET_FAILED;
+    }
+
+    diag.status = LgoLoadStatus::Ok;
     return LW_RET_OK;
 }
 
