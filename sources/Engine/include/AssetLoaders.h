@@ -148,11 +148,17 @@ public:
                                         LgoLoadDiagnostics& diag);
 
     // -----------------------------------------------------------------------
-    // Tree-based .lmo (lwModelInfo с lwITreeNode-деревом lwModelNodeInfo)
+    // Tree-based .lmo / .lxo (lwModelInfo с lwITreeNode-деревом lwModelNodeInfo)
     // -----------------------------------------------------------------------
 
     static LW_RESULT LoadModel(LW_NAMESPACE::lwModelInfo& info, std::string_view file);
     static LW_RESULT SaveModel(LW_NAMESPACE::lwModelInfo& info, std::string_view file);
+
+    // Расширенная диагностика для tree-based .lxo (используется PkoTool/тулзами).
+    // На успех — `diag.status=Ok`, `diag.version=info._head.version`. На неуспех —
+    // конкретный `LgoLoadStatus` + текстовый detail.
+    static LW_RESULT LoadModelEx(LW_NAMESPACE::lwModelInfo& info, std::string_view file,
+                                 LgoLoadDiagnostics& diag);
 
     // -----------------------------------------------------------------------
     // Прочее

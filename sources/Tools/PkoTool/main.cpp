@@ -1,5 +1,5 @@
 // PkoTool — утилита для проверки и починки ассетов MindPower3D-движка
-// (.lgo / .lmo / .lab), а также текстур (.bmp / .png / .jpg / .tga).
+// (.lgo / .lmo / .lxo / .lab), а также текстур (.bmp / .png / .jpg / .tga).
 //
 // Поддерживаемые режимы:
 //   --mode=validate       — обходит файлы по --scope, пишет markdown-отчёт.

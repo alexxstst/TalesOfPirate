@@ -84,6 +84,19 @@ ResaveResult ResaveLmo(const fs::path& path) {
     return ResaveViaBak(path, load, save);
 }
 
+ResaveResult ResaveLxo(const fs::path& path) {
+    using LgoLoader = Corsairs::Engine::Render::LgoLoader;
+    MindPower::lwModelInfo info;
+
+    auto load = [&](const std::string& f) {
+        return !LW_FAILED(LgoLoader::LoadModel(info, f));
+    };
+    auto save = [&](const std::string& f) {
+        return !LW_FAILED(LgoLoader::SaveModel(info, f));
+    };
+    return ResaveViaBak(path, load, save);
+}
+
 ResaveResult ResaveLab(const fs::path& path) {
     using LgoLoader = Corsairs::Engine::Render::LgoLoader;
     MindPower::lwAnimDataBone info;
@@ -130,7 +143,7 @@ FixSummary ApplyFix(const std::vector<ValidationRecord>& records) {
         case ValidationStatus::Warning: {
             // Re-save поддержан только для бинарных Mindpower-форматов.
             const bool supported = (r.extension == "lgo" || r.extension == "lmo"
-                                    || r.extension == "lab");
+                                    || r.extension == "lxo" || r.extension == "lab");
             if (!supported) {
                 ToLogService(kLogChannel, LogLevel::Info,
                              "skip (re-save for .{} is not implemented): {}",
@@ -140,9 +153,10 @@ FixSummary ApplyFix(const std::vector<ValidationRecord>& records) {
             }
 
             ResaveResult res;
-            if (r.extension == "lgo") res = ResaveLgo(r.file);
+            if (r.extension == "lgo")      res = ResaveLgo(r.file);
             else if (r.extension == "lmo") res = ResaveLmo(r.file);
-            else                            res = ResaveLab(r.file);
+            else if (r.extension == "lxo") res = ResaveLxo(r.file);
+            else                           res = ResaveLab(r.file);
 
             if (res.ok) {
                 ToLogService(kLogChannel, LogLevel::Warning,

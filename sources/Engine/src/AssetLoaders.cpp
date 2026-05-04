@@ -2271,4 +2271,92 @@ LW_RESULT LgoLoader::LoadAnimDataBoneEx(lwAnimDataBone& info, std::string_view f
     return LW_RET_OK;
 }
 
+LW_RESULT LgoLoader::LoadModelEx(lwModelInfo& info, std::string_view file,
+                                 LgoLoadDiagnostics& diag) {
+    diag = {};
+
+    UniqueFile fp{std::fopen(std::string{file}.c_str(), "rb")};
+    if (!fp) {
+        diag.status = LgoLoadStatus::FileOpenFailed;
+        diag.detail = "fopen failed";
+        return LW_RET_FAILED;
+    }
+
+    // .lxo заголовок — `lwModelHeadInfo { DWORD mask; DWORD version; char descriptor[64]; }`,
+    // т.е. 72 байта вместо одиночного version-DWORD у .lgo/.lmo.
+    if (std::fread(&info._head, sizeof(info._head), 1, fp.get()) != 1) {
+        diag.status = LgoLoadStatus::HeaderTruncated;
+        diag.detail = "short read of lwModelHeadInfo";
+        return LW_RET_FAILED;
+    }
+    diag.version = info._head.version;
+
+    DWORD obj_num = 0;
+    if (std::fread(&obj_num, sizeof(obj_num), 1, fp.get()) != 1) {
+        diag.status = LgoLoadStatus::HeaderTruncated;
+        diag.detail = "short read of obj_num";
+        return LW_RET_FAILED;
+    }
+
+    if (obj_num == 0) {
+        diag.status = LgoLoadStatus::Ok;
+        return LW_RET_OK;
+    }
+
+    // Tree-walker (тот же, что и в LoadModel) — ищем родителя по handle.
+    struct FindCtx {
+        lwITreeNode* node;
+        DWORD handle;
+    };
+    auto findProc = +[](lwITreeNode* node, void* param) -> DWORD {
+        auto* ctx = static_cast<FindCtx*>(param);
+        lwModelNodeInfo* data = (lwModelNodeInfo*)node->GetData();
+        if (data->_handle == ctx->handle) {
+            ctx->node = node;
+            return TREENODE_PROC_RET_ABORT;
+        }
+        return TREENODE_PROC_RET_CONTINUE;
+    };
+
+    for (DWORD i = 0; i < obj_num; i++) {
+        lwModelNodeInfo* node_info = LW_NEW(lwModelNodeInfo);
+        if (LW_RESULT r = LoadModelNode(*node_info, fp.get(), info._head.version); LW_FAILED(r)) {
+            diag.status = LgoLoadStatus::ParseFailed;
+            diag.detail = std::format("LoadModelNode(i={}) failed: ret={}",
+                                      i, static_cast<long long>(r));
+            LW_DELETE(node_info);
+            return LW_RET_FAILED;
+        }
+
+        lwITreeNode* tree_node = LW_NEW(lwTreeNode);
+        tree_node->SetData(node_info);
+
+        if (info._obj_tree == nullptr) {
+            info._obj_tree = tree_node;
+        }
+        else {
+            FindCtx ctx{nullptr, node_info->_parent_handle};
+            info._obj_tree->EnumTree(findProc, (void*)&ctx, TREENODE_PROC_PREORDER);
+
+            if (ctx.node == nullptr) {
+                diag.status = LgoLoadStatus::BlockSizesInconsistent;
+                diag.detail = std::format("parent handle=0x{:08X} not found (i={})",
+                                          node_info->_parent_handle, i);
+                return LW_RET_FAILED;
+            }
+
+            if (LW_RESULT r = ctx.node->InsertChild(0, tree_node); LW_FAILED(r)) {
+                diag.status = LgoLoadStatus::ParseFailed;
+                diag.detail = std::format("InsertChild(i={}, parent=0x{:08X}) failed: ret={}",
+                                          i, node_info->_parent_handle,
+                                          static_cast<long long>(r));
+                return LW_RET_FAILED;
+            }
+        }
+    }
+
+    diag.status = LgoLoadStatus::Ok;
+    return LW_RET_OK;
+}
+
 } // namespace Corsairs::Engine::Render

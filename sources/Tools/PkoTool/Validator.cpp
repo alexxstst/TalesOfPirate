@@ -107,6 +107,26 @@ ValidationRecord ValidateLmo(const fs::path& file) {
     return rec;
 }
 
+ValidationRecord ValidateLxo(const fs::path& file) {
+    ValidationRecord rec;
+    rec.file = file;
+    rec.extension = "lxo";
+
+    MindPower::lwModelInfo info;
+    Corsairs::Engine::Render::LgoLoadDiagnostics diag;
+    Corsairs::Engine::Render::LgoLoader::LoadModelEx(info, file.string(), diag);
+    rec.version = diag.version;
+
+    auto [status, recommendation] = ClassifyLgoStatus(diag.status);
+    rec.status = status;
+    rec.problem = (status == ValidationStatus::Ok)
+        ? std::string{}
+        : std::format("{}: {}", Corsairs::Engine::Render::ToString(diag.status), diag.detail);
+    rec.recommendation = std::move(recommendation);
+
+    return rec;
+}
+
 ValidationRecord ValidateLab(const fs::path& file) {
     ValidationRecord rec;
     rec.file = file;
@@ -211,6 +231,7 @@ ValidationRecord ValidateFile(const fs::path& file) {
 
     if (ext == "lgo") return ValidateLgo(file);
     if (ext == "lmo") return ValidateLmo(file);
+    if (ext == "lxo") return ValidateLxo(file);
     if (ext == "lab") return ValidateLab(file);
     if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "tga") {
         return ValidateTexture(file, ext);

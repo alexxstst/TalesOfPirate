@@ -1,18 +1,20 @@
-// Интеграционный тест round-trip загрузки .lmo через
+// Интеграционный тест round-trip загрузки .lmo и .lxo через
 // Corsairs::Engine::Render::LgoLoader.
 //
 // Алгоритм:
 //   1. Найти repo root (поиск вверх по дереву, маркер — Client/model/character/).
-//   2. Скопировать Client/model/scene/*.lmo (array lwModelObjInfo) в
-//      bin/runs/source/scene/.
-//   3. Загрузить каждую копию через LgoLoader::LoadModelObjEx — собрать список неудач.
-//   4. Удачно загруженные пересохранить через LgoLoader::SaveModelObj в
+//   2. Скопировать ассеты из Client/model/scene/ в bin/runs/source/scene/:
+//        .lmo  (array lwModelObjInfo)   — статичные постройки.
+//        .lxo  (tree-based lwModelInfo) — иерархические модели со скелетом.
+//   3. Загрузить каждую копию через соответствующий LgoLoader-метод
+//      (LoadModelObjEx для .lmo, LoadModel для .lxo) — собрать список неудач.
+//   4. Удачно загруженные пересохранить (SaveModelObj / SaveModel) в
 //      bin/runs/saved/scene/.
 //   5. Сравнить пары source vs saved побайтово — сообщить о расхождениях.
 //
 // Round-trip для .lgo (Client/model/{character,effect,item}/*.lgo) временно
 // выключен; пайплайн обобщён под `AssetKind`, так что включить .lgo обратно —
-// это вернуть `lgoKind` и второй вызов RunRoundTripPipeline.
+// это вернуть `lgoKind` и третий вызов RunRoundTripPipeline.
 //
 // CLI:
 //   AssetLoaderTests.exe [repo_root] [--limit N] [--console|--no-console]
@@ -84,17 +86,21 @@ struct AssetKindStats {
 };
 
 // Описание одного вида ассета, прогоняемого через round-trip.
-//   label       — короткий идентификатор для логов и summary ("lgo" / "lmo").
-//   extensions  — расширения, по которым EnumerateAssets фильтрует файлы
-//                 (lower- и UPPER-варианты, как в исходных директориях).
-//   categories  — поддиректории Client/model/<cat>/, где лежит этот вид.
-//   processOne  — load+save одного файла. Возвращает nullopt, если Load*Ex
-//                 провалился (diag заполнен), иначе LW_RESULT от Save*. Лямбда
-//                 сама владеет in-memory структурой и освобождает её до return.
+//   label         — короткий идентификатор для логов и summary ("lgo" / "lmo").
+//   extensions    — расширения, по которым EnumerateAssets фильтрует файлы
+//                   (lower- и UPPER-варианты, как в исходных директориях).
+//   categories    — поддиректории Client/model/<cat>/, где лежит этот вид.
+//   versionOffset — смещение DWORD-поля version от начала файла. У .lgo/.lmo
+//                   первый DWORD сразу = version (offset 0). У .lxo впереди
+//                   идёт `lwModelHeadInfo.mask`, поэтому version на offset 4.
+//   processOne    — load+save одного файла. Возвращает nullopt, если Load*Ex
+//                   провалился (diag заполнен), иначе LW_RESULT от Save*.
+//                   Лямбда сама владеет in-memory структурой и освобождает её.
 struct AssetKind {
     std::string_view label;
     std::vector<std::string_view> extensions;
     std::vector<std::string_view> categories;
+    std::size_t versionOffset = 0;
     std::function<std::optional<LW_RESULT>(const std::string&,
                                             const std::string&,
                                             Corsairs::Engine::Render::LgoLoadDiagnostics&)>
@@ -115,10 +121,17 @@ struct AssetKind {
     return {};
 }
 
-[[nodiscard]] std::optional<std::uint32_t> ReadAssetVersion(const fs::path& p) {
+[[nodiscard]] std::optional<std::uint32_t> ReadAssetVersion(const fs::path& p,
+                                                            std::size_t offset = 0) {
     std::ifstream f{p, std::ios::binary};
     if (!f) {
         return std::nullopt;
+    }
+    if (offset > 0) {
+        f.seekg(static_cast<std::streamoff>(offset), std::ios::beg);
+        if (!f) {
+            return std::nullopt;
+        }
     }
     std::uint32_t v = 0;
     f.read(reinterpret_cast<char*>(&v), sizeof(v));
@@ -245,7 +258,7 @@ void RunRoundTripPipeline(const AssetKind& kind,
             }
             ++stats.copied;
 
-            const auto versionOpt = ReadAssetVersion(copyPath);
+            const auto versionOpt = ReadAssetVersion(copyPath, kind.versionOffset);
             const std::string versionStr = versionOpt
                 ? std::format("version=0x{:04X}", *versionOpt)
                 : std::string{"version=?????"};
@@ -484,17 +497,45 @@ int main(int argc, char** argv) {
             return LgoLoader::SaveModelObj(info, savePath);
         }};
 
+    // .lxo: tree-based lwModelInfo (LoadModel + SaveModel). Ex-вариант для
+    // tree-формата ещё не сделан, потому diag остаётся в дефолте — legacy/
+    // trailer-логика для .lxo не сработает (но и неприменима: единственный файл
+    // login03.lxo — версии 0x1005 без trailer'а).
+    const AssetKind lxoKind{
+        .label = "lxo",
+        .extensions = {".lxo", ".LXO"},
+        .categories = {"scene"},
+        .versionOffset = 4,  // lwModelHeadInfo: [DWORD mask][DWORD version][char[64] descriptor]
+        .processOne = [](const std::string& srcPath,
+                          const std::string& savePath,
+                          Corsairs::Engine::Render::LgoLoadDiagnostics& /*diag*/)
+                          -> std::optional<LW_RESULT> {
+            MindPower::lwModelInfo info;
+            const LW_RESULT loadRet = LgoLoader::LoadModel(info, srcPath);
+            if (LW_FAILED(loadRet)) {
+                return std::nullopt;
+            }
+            return LgoLoader::SaveModel(info, savePath);
+        }};
+
     AssetKindStats lmoStats;
     RunRoundTripPipeline(lmoKind, repoRoot, sourceRoot, savedRoot,
                          limit, noCopy, removeOk, lmoStats);
 
+    AssetKindStats lxoStats;
+    RunRoundTripPipeline(lxoKind, repoRoot, sourceRoot, savedRoot,
+                         limit, noCopy, removeOk, lxoStats);
+
     PrintSummary("lmo", lmoStats);
+    PrintSummary("lxo", lxoStats);
 
     const bool allOk = lmoStats.loadFailures.empty()
                        && lmoStats.compareFailures.empty()
-                       && lmoStats.copied > 0;
-    
+                       && lxoStats.loadFailures.empty()
+                       && lxoStats.compareFailures.empty()
+                       && (lmoStats.copied + lxoStats.copied) > 0;
+
     Sleep(1000 * 5);
-	g_logManager.Shutdown();
+    g_logManager.Shutdown();
     return allOk ? 0 : 1;
 }

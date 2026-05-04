@@ -20,7 +20,7 @@ struct Scope {
     // Один из двух режимов:
     //  - extensions != пусто, paths == пусто: рекурсивный обход root + фильтр по расширениям;
     //  - paths != пусто, extensions == пусто: только перечисленные файлы (root игнорируется).
-    std::vector<std::string>             extensions;  // lowercase, без точки: "lgo", "lmo", "bmp", "png"
+    std::vector<std::string>             extensions;  // lowercase, без точки: "lgo", "lmo", "lxo", "lab", "bmp", "png"
     std::vector<std::filesystem::path>   paths;       // абсолютные пути, явно указанные в --scope
 };
 
