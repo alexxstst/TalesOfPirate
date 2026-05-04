@@ -1,20 +1,21 @@
-// Интеграционный тест round-trip загрузки .lmo и .lxo через
+// Интеграционный тест round-trip загрузки .lmo, .lxo и .lab через
 // Corsairs::Engine::Render::LgoLoader.
 //
 // Алгоритм:
 //   1. Найти repo root (поиск вверх по дереву, маркер — Client/model/character/).
-//   2. Скопировать ассеты из Client/model/scene/ в bin/runs/source/scene/:
-//        .lmo  (array lwModelObjInfo)   — статичные постройки.
-//        .lxo  (tree-based lwModelInfo) — иерархические модели со скелетом.
+//   2. Скопировать ассеты в bin/runs/source/<category>/:
+//        Client/model/scene/*.lmo  (array lwModelObjInfo)   — статичные постройки.
+//        Client/model/scene/*.lxo  (tree-based lwModelInfo) — иерархические модели со скелетом.
+//        Client/animation/*.lab    (lwAnimDataBone)         — анимация костей.
 //   3. Загрузить каждую копию через соответствующий LgoLoader-метод
-//      (LoadModelObjEx для .lmo, LoadModel для .lxo) — собрать список неудач.
-//   4. Удачно загруженные пересохранить (SaveModelObj / SaveModel) в
-//      bin/runs/saved/scene/.
+//      (LoadModelObjEx / LoadModel / LoadAnimDataBoneEx) — собрать список неудач.
+//   4. Удачно загруженные пересохранить (SaveModelObj / SaveModel /
+//      SaveAnimDataBone) в bin/runs/saved/<category>/.
 //   5. Сравнить пары source vs saved побайтово — сообщить о расхождениях.
 //
 // Round-trip для .lgo (Client/model/{character,effect,item}/*.lgo) временно
 // выключен; пайплайн обобщён под `AssetKind`, так что включить .lgo обратно —
-// это вернуть `lgoKind` и третий вызов RunRoundTripPipeline.
+// это вернуть `lgoKind` и четвёртый вызов RunRoundTripPipeline.
 //
 // CLI:
 //   AssetLoaderTests.exe [repo_root] [--limit N] [--console|--no-console]
@@ -89,7 +90,11 @@ struct AssetKindStats {
 //   label         — короткий идентификатор для логов и summary ("lgo" / "lmo").
 //   extensions    — расширения, по которым EnumerateAssets фильтрует файлы
 //                   (lower- и UPPER-варианты, как в исходных директориях).
-//   categories    — поддиректории Client/model/<cat>/, где лежит этот вид.
+//   subRoot       — путь от repoRoot до родителя категорий. По умолчанию
+//                   "Client/model" (там лежат .lgo/.lmo/.lxo). Анимации .lab
+//                   живут в "Client/animation".
+//   categories    — поддиректории subRoot, где лежит этот вид. Один токен =
+//                   одна папка под subRoot.
 //   versionOffset — смещение DWORD-поля version от начала файла. У .lgo/.lmo
 //                   первый DWORD сразу = version (offset 0). У .lxo впереди
 //                   идёт `lwModelHeadInfo.mask`, поэтому version на offset 4.
@@ -99,6 +104,7 @@ struct AssetKindStats {
 struct AssetKind {
     std::string_view label;
     std::vector<std::string_view> extensions;
+    std::string_view subRoot = "Client/model";
     std::vector<std::string_view> categories;
     std::size_t versionOffset = 0;
     std::function<std::optional<LW_RESULT>(const std::string&,
@@ -215,7 +221,7 @@ void RunRoundTripPipeline(const AssetKind& kind,
                           AssetKindStats& stats) {
     std::error_code ec;
     for (const auto category : kind.categories) {
-        const fs::path src = repoRoot / "Client" / "model" / category;
+        const fs::path src = repoRoot / kind.subRoot / category;
         const fs::path catSource = sourceRoot / category;
         const fs::path catSaved = savedRoot / category;
         fs::create_directories(catSource, ec);
@@ -518,6 +524,26 @@ int main(int argc, char** argv) {
             return LgoLoader::SaveModel(info, savePath);
         }};
 
+    // .lab: lwAnimDataBone (LoadAnimDataBoneEx + SaveAnimDataBone). Файлы лежат
+    // в Client/animation/ — отдельный subRoot. Format: [DWORD version][payload],
+    // первый DWORD — version, как у .lgo/.lmo (versionOffset=0).
+    const AssetKind labKind{
+        .label = "lab",
+        .extensions = {".lab", ".LAB"},
+        .subRoot = "Client",
+        .categories = {"animation"},
+        .processOne = [](const std::string& srcPath,
+                          const std::string& savePath,
+                          Corsairs::Engine::Render::LgoLoadDiagnostics& diag)
+                          -> std::optional<LW_RESULT> {
+            MindPower::lwAnimDataBone info;
+            const LW_RESULT loadRet = LgoLoader::LoadAnimDataBoneEx(info, srcPath, diag);
+            if (LW_FAILED(loadRet)) {
+                return std::nullopt;
+            }
+            return LgoLoader::SaveAnimDataBone(info, savePath);
+        }};
+
     AssetKindStats lmoStats;
     RunRoundTripPipeline(lmoKind, repoRoot, sourceRoot, savedRoot,
                          limit, noCopy, removeOk, lmoStats);
@@ -526,14 +552,21 @@ int main(int argc, char** argv) {
     RunRoundTripPipeline(lxoKind, repoRoot, sourceRoot, savedRoot,
                          limit, noCopy, removeOk, lxoStats);
 
+    AssetKindStats labStats;
+    RunRoundTripPipeline(labKind, repoRoot, sourceRoot, savedRoot,
+                         limit, noCopy, removeOk, labStats);
+
     PrintSummary("lmo", lmoStats);
     PrintSummary("lxo", lxoStats);
+    PrintSummary("lab", labStats);
 
     const bool allOk = lmoStats.loadFailures.empty()
                        && lmoStats.compareFailures.empty()
                        && lxoStats.loadFailures.empty()
                        && lxoStats.compareFailures.empty()
-                       && (lmoStats.copied + lxoStats.copied) > 0;
+                       && labStats.loadFailures.empty()
+                       && labStats.compareFailures.empty()
+                       && (lmoStats.copied + lxoStats.copied + labStats.copied) > 0;
 
     Sleep(1000 * 5);
     g_logManager.Shutdown();
