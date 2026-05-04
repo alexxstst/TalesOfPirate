@@ -2155,6 +2155,20 @@ LW_BEGIN
 			goto __ret;
 		}
 
+		// Применяем runtime-инварианты ко всем NODE_PRIMITIVE-узлам.
+		// LgoLoader::LoadModel сам этого не делает, чтобы не ломать round-trip
+		// Load→Save в тулзах; тут — рантайм-callsite, defaults обязательны.
+		if (info._obj_tree != nullptr) {
+			auto applyDefaultsProc = +[](lwITreeNode* node, void* /*param*/) -> DWORD {
+				auto* data = static_cast<lwModelNodeInfo*>(node->GetData());
+				if (data && data->_type == NODE_PRIMITIVE) {
+					Corsairs::Engine::Render::LgoLoader::ApplyRuntimeDefaults(
+						static_cast<lwGeomObjInfo*>(data->_data));
+				}
+				return TREENODE_PROC_RET_CONTINUE;
+			};
+			info._obj_tree->EnumTree(applyDefaultsProc, nullptr, TREENODE_PROC_PREORDER);
+		}
 
 		if (LW_RESULT r = lwLoadModelInfo(&tree_node, &info, _res_mgr); LW_FAILED(r)) {
 			ToLogService("errors", LogLevel::Error,

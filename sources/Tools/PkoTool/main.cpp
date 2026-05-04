@@ -27,6 +27,8 @@
 namespace {
 
 constexpr const char* kLogChannel = "pkotool";
+constexpr const char* kBanner =
+    "PkoTool 1.2 created by alexxst.st (alexxst.st@gmail.com)";
 
 namespace fs = std::filesystem;
 
@@ -137,6 +139,8 @@ int RunNotImplemented(const pkotool::Options& opt) {
 
 int main(int argc, char** argv) {
     SetConsoleOutputCP(CP_UTF8);
+
+    std::puts(kBanner);
 
     auto optMaybe = pkotool::ParseCli(argc, argv);
     if (!optMaybe) {

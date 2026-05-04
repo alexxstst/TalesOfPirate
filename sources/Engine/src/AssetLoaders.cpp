@@ -1304,7 +1304,9 @@ LW_RESULT LgoLoader::LoadModelObj(lwModelObjInfo& info, std::string_view file) {
                 LGO_FREAD_OR_RET(fp.get(), &old_version, sizeof(old_version), 1, "old_version");
             }
             LoadFromStream(info.geom_obj_seq[info.geom_obj_num], fp.get(), version);
-            ApplyRuntimeDefaults(info.geom_obj_seq[info.geom_obj_num]);
+            // ApplyRuntimeDefaults НЕ вызываем здесь — иначе ломается round-trip
+            // Load→Save (тулзы сохраняли бы рантайм-мутации). Рантайм-callers
+            // (lwResBufMgr::RegisterModelObjInfo) применяют его сами.
             info.geom_obj_num += 1;
             break;
         case MODEL_OBJ_TYPE_HELPER:
@@ -1464,7 +1466,9 @@ LW_RESULT LgoLoader::LoadModelNode(lwModelNodeInfo& info, std::FILE* fp, DWORD v
                          static_cast<long long>(r));
             return LW_RET_FAILED;
         }
-        ApplyRuntimeDefaults((lwGeomObjInfo*)info._data);
+        // ApplyRuntimeDefaults НЕ вызываем здесь — ломает round-trip
+        // Load→Save в тулзах. Рантайм-callers (lwNodeObject::Load) применяют
+        // его, обходя дерево после LoadModel.
     }
     else if (info._type == NODE_BONECTRL) {
         info._data = LW_NEW(lwAnimDataBone);
@@ -2209,7 +2213,7 @@ LW_RESULT LgoLoader::LoadModelObjEx(lwModelObjInfo& info, std::string_view file,
                                           i, static_cast<long long>(r));
                 return LW_RET_FAILED;
             }
-            ApplyRuntimeDefaults(info.geom_obj_seq[info.geom_obj_num]);
+            // ApplyRuntimeDefaults — задача рантайм-каллера; см. LoadModelObj.
             info.geom_obj_num += 1;
             break;
         }

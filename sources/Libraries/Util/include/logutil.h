@@ -5,6 +5,7 @@
 
 #define  WIN32_LEAN_AND_MEAN
 
+#include <atomic>
 #include <format>
 #include <fstream>
 #include <map>
@@ -70,12 +71,17 @@ namespace TalesOfPirate::Utils::Logs {
 		std::mutex _queueMutex{};
 		std::queue<LogUtilEntry> _logsQueue{};
 		std::thread _logThread{};
-		bool _stopped{};
+		std::atomic<bool> _stopped{false};
 		std::string _filePath{};
 		bool _enabledGlobalConsole;
 
-		//         
+		//
 		static void PrintConsoleMessage(const LogUtilEntry& logEntry);
+
+		// Достать все записи из очереди и записать в каналы. Если flushAfter=true,
+		// дополнительно сбросить буферы ofstream на диск. Дёргается из логгер-
+		// потока (worker-loop + финальный drain после _stopped=true).
+		void DrainQueue(bool flushAfter);
 
 	public:
 		LogManager();

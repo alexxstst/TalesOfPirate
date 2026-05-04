@@ -2428,6 +2428,13 @@ LW_BEGIN
 			goto __ret;
 		}
 
+		// Применяем runtime-инварианты (STATE_FRAMECULLING/STATE_UPDATETRANSPSTATE,
+		// pool/level первой текстуры) — внутри Load*Obj этого делать нельзя, иначе
+		// ломается round-trip Load→Save в тулзах.
+		for (DWORD i = 0; i < moim->info.geom_obj_num; ++i) {
+			Corsairs::Engine::Render::LgoLoader::ApplyRuntimeDefaults(moim->info.geom_obj_seq[i]);
+		}
+
 		// Берём свободный auto-handle в пространстве 0x80000000+ (не пересекается
 		// с внешними model_id, которые приходят ниже).
 		while (_pool_modelobj.count(_next_modelobj_auto_handle) != 0) {
@@ -2468,6 +2475,11 @@ LW_BEGIN
 						 __FUNCTION__, static_cast<std::uint64_t>(handle), (file.empty() ? std::string_view{"(null)"} : file),
 						 static_cast<long long>(r));
 			goto __ret;
+		}
+
+		// См. auto-handle вариант выше — runtime-инварианты применяет caller.
+		for (DWORD i = 0; i < moim->info.geom_obj_num; ++i) {
+			Corsairs::Engine::Render::LgoLoader::ApplyRuntimeDefaults(moim->info.geom_obj_seq[i]);
 		}
 
 		if (!_pool_modelobj.emplace(handle, moim).second)

@@ -183,58 +183,68 @@ namespace TalesOfPirate::Utils::Logs {
 			::SetThreadName("logger");
 
 			std::int32_t _dumpCounter{};
-			while (!_stopped) {
-				LogUtilEntry lg{};
-				SYSTEMTIME lt{};
-				GetSystemTime(&lt);
-
-				{
-					std::scoped_lock lock(_queueMutex);
-					while (!_logsQueue.empty()) {
-						lg = _logsQueue.front();
-
-						//
-						std::erase_if(lg.LogSystem,
-									  [](auto const& c) -> bool {
-										  return !std::isalnum(c) && c != '_' && c != '-';
-									  });
-
-						auto it = _channels.find(lg.LogSystem);
-						if (it == _channels.cend()) {
-							AddLogger(lg.LogSystem);
-							continue;
-						}
-
-						//   ,
-						if (_enabledGlobalConsole) {
-							PrintConsoleMessage(lg);
-						}
-
-						//      "common"
-						if (lg.LogSystem != "common") {
-							_channels["common"]->Write(lg, lt);
-						}
-
-						it->second->Write(lg, lt);
-						_logsQueue.pop();
-					}
-				}
+			while (!_stopped.load(std::memory_order_acquire)) {
+				// Каждые 100 итераций (~10 секунд при sleep=100мс) принудительно
+				// сбрасываем буферы ofstream на диск, чтобы при крашe в логе уже
+				// были записи последних секунд.
+				++_dumpCounter;
+				const bool flush = (_dumpCounter % 100 == 0);
+				DrainQueue(flush);
 
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
-				++_dumpCounter;
-				if (_dumpCounter % 100) {
-					for (auto& pair : _channels) {
-						pair.second->Flush();
-					}
-				}
 			}
+
+			// Финальный drain после _stopped=true: ловим записи, прилетевшие за
+			// время последнего sleep и до Shutdown(). Без этого PrintSummary в
+			// конце main-потока теряется.
+			DrainQueue(/*flushAfter=*/true);
 
 			std::cout << "Exit logger thread..." << '\n';
 		});
 	}
 
+	void LogManager::DrainQueue(bool flushAfter) {
+		SYSTEMTIME lt{};
+		GetSystemTime(&lt);
+
+		{
+			std::scoped_lock lock(_queueMutex);
+			while (!_logsQueue.empty()) {
+				LogUtilEntry lg = _logsQueue.front();
+
+				std::erase_if(lg.LogSystem,
+							  [](auto const& c) -> bool {
+								  return !std::isalnum(c) && c != '_' && c != '-';
+							  });
+
+				auto it = _channels.find(lg.LogSystem);
+				if (it == _channels.cend()) {
+					AddLogger(lg.LogSystem);
+					continue;
+				}
+
+				if (_enabledGlobalConsole) {
+					PrintConsoleMessage(lg);
+				}
+
+				if (lg.LogSystem != "common") {
+					_channels["common"]->Write(lg, lt);
+				}
+
+				it->second->Write(lg, lt);
+				_logsQueue.pop();
+			}
+		}
+
+		if (flushAfter) {
+			for (auto& pair : _channels) {
+				pair.second->Flush();
+			}
+		}
+	}
+
 	void LogManager::Shutdown() {
-		_stopped = true;
+		_stopped.store(true, std::memory_order_release);
 		if (_logThread.joinable()) {
 			_logThread.join();
 		}
