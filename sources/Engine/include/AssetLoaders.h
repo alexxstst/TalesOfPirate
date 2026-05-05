@@ -248,4 +248,134 @@ private:
 // stringify-имени типа в логе.
 #define LGO_NEW_ARRAY(type, count) (::Corsairs::Engine::Render::LgoLoader::CheckedNewArray<type>(static_cast<std::size_t>(count), #type))
 
+// =============================================================================
+// .eff — Effect-файл MindPower3D (header + массив I_Effect-элементов)
+// =============================================================================
+
+} // namespace Corsairs::Engine::Render
+
+// Forward-decl в глобальном пространстве (полные определения в MPModelEff.h /
+// I_Effect.h). EffectLoader работает по ссылке; клиенты, конструирующие
+// EffectFileInfo или передающие I_Effect&, должны включить эти заголовки.
+struct EffectFileInfo;
+class  I_Effect;
+
+namespace Corsairs::Engine::Render {
+
+enum class EffectLoadStatus : std::uint32_t {
+    Ok = 0,
+    FileOpenFailed,        // fopen(file) не удался
+    VersionTruncated,      // < 4 байт в файле — version DWORD не прочитан
+    VersionUnknown,        // version вне поддерживаемого диапазона (1..7 на момент написания)
+    HeaderTruncated,       // не дочитан header (idxTech / paths / rotation block)
+    ParseFailed            // I_Effect::LoadFromFile вернул false
+};
+
+struct EffectLoadDiagnostics {
+    EffectLoadStatus status{EffectLoadStatus::Ok};
+    std::string detail;
+    std::uint32_t version{0};
+};
+
+// Все алгоритмы сериализации .eff живут здесь. По смыслу — параллель LgoLoader,
+// но для другого формата данных. Само сохранение использует существующие
+// `I_Effect::Save/LoadFromFile`-методы поэлементно (миграция этих методов
+// внутрь EffectLoader — отдельная задача; см. план в issue tracker).
+class EffectLoader {
+public:
+    // Текущая on-disk version, которую пишет Save (latest format).
+    static constexpr std::uint32_t kCurrentVersion = 7;
+
+    [[nodiscard]] static LW_RESULT Load(::EffectFileInfo& info, std::string_view file);
+    [[nodiscard]] static LW_RESULT LoadEx(::EffectFileInfo& info, std::string_view file,
+                                          EffectLoadDiagnostics& diag);
+    static LW_RESULT Save(::EffectFileInfo& info, std::string_view file);
+
+    // Сериализация одного элемента .eff. Раньше жили как методы I_Effect
+    // (`SaveToFile`/`LoadFromFile`); по правилу проекта I/O в data-классах
+    // запрещён, поэтому перенесены сюда и вызываются из:
+    //  • EffectLoader::Save/LoadEx (целый .eff = header + N элементов);
+    //  • CMPModelEff::SaveToFile (тот же формат с собственными полями);
+    //  • CMPResManger::LoadEffectFromFile (legacy-loader, постепенно
+    //    мигрируется на EffectLoader::Load).
+    [[nodiscard]] static bool LoadElement(::I_Effect& effect, std::FILE* fp, DWORD version);
+    static bool SaveElement(::I_Effect& effect, std::FILE* fp);
+};
+
+[[nodiscard]] constexpr std::string_view ToString(EffectLoadStatus s) noexcept {
+    switch (s) {
+        case EffectLoadStatus::Ok:                return "Ok";
+        case EffectLoadStatus::FileOpenFailed:    return "FileOpenFailed";
+        case EffectLoadStatus::VersionTruncated:  return "VersionTruncated";
+        case EffectLoadStatus::VersionUnknown:    return "VersionUnknown";
+        case EffectLoadStatus::HeaderTruncated:   return "HeaderTruncated";
+        case EffectLoadStatus::ParseFailed:       return "ParseFailed";
+    }
+    return "?";
+}
+
+// =============================================================================
+// .par — Particle-controller файл (CMPPartCtrl: name, particle systems, strips, models)
+// =============================================================================
+
+} // namespace Corsairs::Engine::Render
+
+class CMPPartCtrl;
+class CMPPartSys;
+class CMPStrip;
+class CChaModel;
+
+namespace Corsairs::Engine::Render {
+
+enum class PartCtrlLoadStatus : std::uint32_t {
+    Ok = 0,
+    FileOpenFailed,        // fopen(file) не удался
+    VersionTruncated,      // < 4 байт в файле — version DWORD не прочитан
+    VersionUnknown,        // version вне поддерживаемого диапазона (2..ParVersion=15)
+    ParseFailed            // CMPPartCtrl::LoadFromFile вернул false
+};
+
+struct PartCtrlLoadDiagnostics {
+    PartCtrlLoadStatus status{PartCtrlLoadStatus::Ok};
+    std::string detail;
+    std::uint32_t version{0};
+};
+
+// Чтение и запись .par-файла (CMPPartCtrl + per-element CMPPartSys/CMPStrip/
+// CChaModel). Все методы Load/Save data-классов перенесены сюда; loader имеет
+// доступ к их полям через friend-объявление в каждом из них.
+class PartCtrlLoader {
+public:
+    [[nodiscard]] static LW_RESULT Load(::CMPPartCtrl& ctrl, std::string_view file);
+    [[nodiscard]] static LW_RESULT LoadEx(::CMPPartCtrl& ctrl, std::string_view file,
+                                          PartCtrlLoadDiagnostics& diag);
+    static LW_RESULT Save(::CMPPartCtrl& ctrl, std::string_view file);
+
+    // Per-element сериализация — приватная (вызывается только из Load/Save
+    // выше). public-API остаётся минимальным.
+private:
+    static bool LoadCtrl(::CMPPartCtrl& ctrl, std::string_view file);
+    static bool SaveCtrl(::CMPPartCtrl& ctrl, std::string_view file);
+
+    static bool LoadPartSys(::CMPPartSys& ps, std::FILE* fp, DWORD version);
+    static bool SavePartSys(::CMPPartSys& ps, std::FILE* fp);
+
+    static bool LoadStrip(::CMPStrip& s, std::FILE* fp, DWORD version);
+    static bool SaveStrip(::CMPStrip& s, std::FILE* fp);
+
+    static void LoadCharModel(::CChaModel& m, std::FILE* fp);
+    static void SaveCharModel(::CChaModel& m, std::FILE* fp);
+};
+
+[[nodiscard]] constexpr std::string_view ToString(PartCtrlLoadStatus s) noexcept {
+    switch (s) {
+        case PartCtrlLoadStatus::Ok:                return "Ok";
+        case PartCtrlLoadStatus::FileOpenFailed:    return "FileOpenFailed";
+        case PartCtrlLoadStatus::VersionTruncated:  return "VersionTruncated";
+        case PartCtrlLoadStatus::VersionUnknown:    return "VersionUnknown";
+        case PartCtrlLoadStatus::ParseFailed:       return "ParseFailed";
+    }
+    return "?";
+}
+
 } // namespace Corsairs::Engine::Render

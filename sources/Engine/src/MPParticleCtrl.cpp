@@ -294,6 +294,9 @@ void CMPPartCtrl::Render() {
 	}
 }
 
+// CMPPartCtrl::SaveToFile / LoadFromFile перенесены в
+// Corsairs::Engine::Render::PartCtrlLoader::{Save,Load} (см. EffectLoaders.cpp).
+#if 0
 bool CMPPartCtrl::SaveToFile(std::string_view pszName) {
 	const std::string nameStr{pszName};
 	FILE* t_pFile;
@@ -405,6 +408,7 @@ bool CMPPartCtrl::LoadFromFile(std::string_view pszName) {
 	fclose(t_pFile);
 	return true;
 }
+#endif
 
 void CMPPartCtrl::GetRes(CMPResManger* pResMagr, std::vector<INT>& vecTex, std::vector<INT>& vecModel,
 						 std::vector<INT>& vecEff) {
@@ -606,6 +610,9 @@ void CChaModel::End() {
 	m_pDev->GetDevice()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 }
 
+// CChaModel::SaveToFile / LoadFromFile перенесены в
+// Corsairs::Engine::Render::PartCtrlLoader::{Save,Load}CharModel.
+#if 0
 void CChaModel::SaveToFile(FILE* file) {
 	fwrite(&_iID, sizeof(int), 1, file);
 	fwrite(&_fVel, sizeof(float), 1, file);
@@ -639,6 +646,7 @@ void CChaModel::LoadFromFile(FILE* file) {
 	SetCurPose(_iCurPose);
 	PlayPose(_iCurPose, PLAY_PAUSE);
 }
+#endif
 
 
 bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, int iDummy2,

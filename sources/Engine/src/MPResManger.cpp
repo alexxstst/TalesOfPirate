@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "GlobalInc.h"
 #include "MPModelEff.h"
+#include "AssetLoaders.h"
 
 #include "mpresmanger.h"
 #include "lwSysGraphics.h"
@@ -738,7 +739,8 @@ bool CMPResManger::LoadEffectFromFile(int idx, std::string_view pszFileName) {
 	_vecEffectList[idx].resize(t_temp);
 
 	for (int n = 0; n < t_temp; n++) {
-		_vecEffectList[idx][n].LoadFromFile(t_pFile, t_dwVersion);
+		Corsairs::Engine::Render::EffectLoader::LoadElement(
+			_vecEffectList[idx][n], t_pFile, t_dwVersion);
 		_vecEffectList[idx][n].Reset();
 		_vecEffectList[idx][n].m_pDev = m_pDev;
 	}
@@ -1076,7 +1078,8 @@ CMPPartCtrl* CMPResManger::GetPartCtrlByID(int iID) {
 		const std::string t_Path = std::format("{}\\{}", _pszEFFectPath, _vecPartName[iID]);
 
 		(*_vecPartCtrl[iID]) = new CMPPartCtrl;
-		if (!(*_vecPartCtrl[iID])->LoadFromFile(t_Path)) {
+		if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::Load(
+				**_vecPartCtrl[iID], t_Path))) {
 			ToLogService("errors", LogLevel::Error, "Load {} error", _vecPartName[iID]);
 			return NULL;
 		}
@@ -1116,7 +1119,8 @@ void CMPResManger::LoadTotalPartCtrl() {
 				const std::string t_FilePath = std::format("{}\\{}", _pszEFFectPath, _vecPartName[_iPartCtrlNum - 1]);
 
 				(*_vecPartCtrl[_iPartCtrlNum - 1]) = new CMPPartCtrl;
-				if (!(*_vecPartCtrl[_iPartCtrlNum - 1])->LoadFromFile(t_FilePath)) {
+				if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::Load(
+						**_vecPartCtrl[_iPartCtrlNum - 1], t_FilePath))) {
 					SAFE_DELETE((*_vecPartCtrl[_iPartCtrlNum - 1]));
 					ToLogService("errors", LogLevel::Error, "Load {} error", sFileName);
 				}

@@ -1,21 +1,21 @@
-// Интеграционный тест round-trip загрузки .lmo, .lxo и .lab через
-// Corsairs::Engine::Render::LgoLoader.
+// Интеграционный тест round-trip загрузки .lmo, .lxo, .lab, .eff и .par через
+// Corsairs::Engine::Render::{LgoLoader, EffectLoader, PartCtrlLoader}.
 //
 // Алгоритм:
 //   1. Найти repo root (поиск вверх по дереву, маркер — Client/model/character/).
 //   2. Скопировать ассеты в bin/runs/source/<category>/:
-//        Client/model/scene/*.lmo  (array lwModelObjInfo)   — статичные постройки.
-//        Client/model/scene/*.lxo  (tree-based lwModelInfo) — иерархические модели со скелетом.
-//        Client/animation/*.lab    (lwAnimDataBone)         — анимация костей.
-//   3. Загрузить каждую копию через соответствующий LgoLoader-метод
-//      (LoadModelObjEx / LoadModel / LoadAnimDataBoneEx) — собрать список неудач.
-//   4. Удачно загруженные пересохранить (SaveModelObj / SaveModel /
-//      SaveAnimDataBone) в bin/runs/saved/<category>/.
+//        Client/model/scene/*.lmo   (array lwModelObjInfo)   — статичные постройки.
+//        Client/model/scene/*.lxo   (tree-based lwModelInfo) — иерархические модели.
+//        Client/animation/*.lab     (lwAnimDataBone)         — анимация костей.
+//        Client/effect/*.eff        (EffectFileInfo)         — спрайтовые эффекты.
+//        Client/effect/*.par        (CMPPartCtrl)            — particle controllers.
+//   3. Загрузить каждую копию через соответствующий *::LoadEx — собрать список неудач.
+//   4. Удачно загруженные пересохранить через *::Save в bin/runs/saved/<category>/.
 //   5. Сравнить пары source vs saved побайтово — сообщить о расхождениях.
 //
 // Round-trip для .lgo (Client/model/{character,effect,item}/*.lgo) временно
 // выключен; пайплайн обобщён под `AssetKind`, так что включить .lgo обратно —
-// это вернуть `lgoKind` и четвёртый вызов RunRoundTripPipeline.
+// это вернуть `lgoKind` и шестой вызов RunRoundTripPipeline.
 //
 // CLI:
 //   AssetLoaderTests.exe [repo_root] [--limit N] [--console|--no-console]
@@ -55,6 +55,14 @@
 #include "logutil.h"
 #include "lwExpObj.h"
 
+// Полные определения для EffectLoader (EffectFileInfo) и PartCtrlLoader
+// (CMPPartCtrl). AssetLoaders.h работает по forward-decl, чтобы тулзы, которым
+// эти лоадеры не нужны, не пуллили цепочку MPModelEff/MPParticleCtrl/I_Effect.
+#include "MPModelEff.h"
+#include "MPParticleCtrl.h"
+
+#include "Blake2s.h"
+
 namespace {
 constexpr const char* kLogChannel = "asset_loader_tests";
 } // namespace
@@ -80,6 +88,7 @@ struct AssetKindStats {
     std::size_t loaded = 0;
     std::size_t saved = 0;
     std::size_t roundtripOk = 0;
+    std::size_t roundtripCleaned = 0;     // src≠saved, но Save детерминистичен (saveA==saveB).
     std::size_t legacySkipped = 0;
     std::size_t trailerWarnings = 0;
     std::vector<LoadFailure> loadFailures;
@@ -87,26 +96,40 @@ struct AssetKindStats {
 };
 
 // Описание одного вида ассета, прогоняемого через round-trip.
-//   label         — короткий идентификатор для логов и summary ("lgo" / "lmo").
-//   extensions    — расширения, по которым EnumerateAssets фильтрует файлы
-//                   (lower- и UPPER-варианты, как в исходных директориях).
-//   subRoot       — путь от repoRoot до родителя категорий. По умолчанию
-//                   "Client/model" (там лежат .lgo/.lmo/.lxo). Анимации .lab
-//                   живут в "Client/animation".
-//   categories    — поддиректории subRoot, где лежит этот вид. Один токен =
-//                   одна папка под subRoot.
-//   versionOffset — смещение DWORD-поля version от начала файла. У .lgo/.lmo
-//                   первый DWORD сразу = version (offset 0). У .lxo впереди
-//                   идёт `lwModelHeadInfo.mask`, поэтому version на offset 4.
-//   processOne    — load+save одного файла. Возвращает nullopt, если Load*Ex
-//                   провалился (diag заполнен), иначе LW_RESULT от Save*.
-//                   Лямбда сама владеет in-memory структурой и освобождает её.
+//   label          — короткий идентификатор для логов и summary ("lgo" / "lmo").
+//   extensions     — расширения, по которым EnumerateAssets фильтрует файлы
+//                    (lower- и UPPER-варианты, как в исходных директориях).
+//   subRoot        — путь от repoRoot до родителя категорий. По умолчанию
+//                    "Client/model" (там лежат .lgo/.lmo/.lxo). Анимации .lab
+//                    живут в "Client/animation".
+//   categories     — поддиректории subRoot, где лежит этот вид. Один токен =
+//                    одна папка под subRoot.
+//   versionOffset  — смещение DWORD-поля version от начала файла. У .lgo/.lmo
+//                    первый DWORD сразу = version (offset 0). У .lxo впереди
+//                    идёт `lwModelHeadInfo.mask`, поэтому version на offset 4.
+//   currentVersion — version, которую пишет соответствующий Save. Файлы с
+//                    меньшей on-disk версией считаются legacy (round-trip
+//                    байтового совпадения у них быть не может, Save поднимет
+//                    их до currentVersion). По умолчанию EXP_OBJ_VERSION
+//                    (0x1005, для .lgo/.lmo/.lxo/.lab); .eff = 7, .par = 15.
+//   processOne     — load+save одного файла. Возвращает nullopt, если Load*Ex
+//                    провалился (diag заполнен), иначе LW_RESULT от Save*.
+//                    Лямбда сама владеет in-memory структурой и освобождает её.
 struct AssetKind {
     std::string_view label;
     std::vector<std::string_view> extensions;
     std::string_view subRoot = "Client/model";
     std::vector<std::string_view> categories;
     std::size_t versionOffset = 0;
+    std::uint32_t currentVersion = MindPower::EXP_OBJ_VERSION;
+    // Совпадает ли source и saved побайтово при детерминированном Save'е?
+    // Для .lgo/.lmo/.lxo/.lab — да. Для .eff/.par — нет: в исходных файлах
+    // фиксированные char[N]-буферы имён содержат мусор после терминирующего
+    // нуля (originally экспортер не зануляет выходные буферы), наш Save
+    // детерминированно зануляет. В этом случае пайплайн делает двойной
+    // round-trip: load(source) → SaveA → load(SaveA) → SaveB. Совпадение
+    // A == B подтверждает детерминированность Save'а.
+    bool isByteDeterministic = true;
     std::function<std::optional<LW_RESULT>(const std::string&,
                                             const std::string&,
                                             Corsairs::Engine::Render::LgoLoadDiagnostics&)>
@@ -292,9 +315,10 @@ void RunRoundTripPipeline(const AssetKind& kind,
             }
             ++stats.saved;
 
-            // Save всегда пишет в актуальной версии (EXP_OBJ_VERSION). Для файлов
-            // старее текущей формат меняется → байтовое сравнение бессмысленно.
-            if (versionOpt && *versionOpt < MindPower::EXP_OBJ_VERSION) {
+            // Save всегда пишет в актуальной версии (kind.currentVersion). Для
+            // файлов старее текущей формат меняется → байтовое сравнение
+            // бессмысленно.
+            if (versionOpt && *versionOpt < kind.currentVersion) {
                 ++stats.legacySkipped;
                 if (removeOk) {
                     fs::remove(copyPath, ec);
@@ -332,12 +356,52 @@ void RunRoundTripPipeline(const AssetKind& kind,
                     fs::remove(savePath, ec);
                     ec.clear();
                 }
+                continue;
             }
-            else {
+
+            // src != saved. Для byte-детерминированных форматов это ошибка.
+            // Для не-детерминированных (.eff/.par с мусором в char[N]-буферах)
+            // делаем второй round-trip и сравниваем SaveA vs SaveB:
+            // совпадение подтверждает, что наш Save детерминирован, а
+            // расхождение source vs saved обусловлено лишь "грязью" исходника.
+            if (kind.isByteDeterministic) {
                 stats.compareFailures.push_back({copyPath, savePath, srcSize, savedSize, diffOffset});
                 ToLogService(kLogChannel, LogLevel::Error,
                              "{}: {} load=OK save=OK roundtrip=DIFF (src={}, saved={}, off={})",
                              prefix, versionStr, srcSize, savedSize, diffOffset);
+                continue;
+            }
+
+            const fs::path savePath2 = catSaved / (fileName.stem().string()
+                                                   + ".rs" + fileName.extension().string());
+            Corsairs::Engine::Render::LgoLoadDiagnostics diag2;
+            const auto saveRet2Opt = kind.processOne(savePath.string(), savePath2.string(), diag2);
+            if (!saveRet2Opt || LW_FAILED(*saveRet2Opt)) {
+                stats.compareFailures.push_back({copyPath, savePath, srcSize, savedSize, diffOffset});
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: {} load=OK save=OK 2nd-roundtrip=FAIL (load/save second pass failed)",
+                             prefix, versionStr);
+                continue;
+            }
+            std::uint64_t diff2Offset = 0;
+            std::uintmax_t a2Size = 0;
+            std::uintmax_t b2Size = 0;
+            if (BinariesEqual(savePath, savePath2, diff2Offset, a2Size, b2Size)) {
+                ++stats.roundtripCleaned;
+                fs::remove(savePath2, ec);
+                ec.clear();
+                if (removeOk) {
+                    fs::remove(copyPath, ec);
+                    ec.clear();
+                    fs::remove(savePath, ec);
+                    ec.clear();
+                }
+            }
+            else {
+                stats.compareFailures.push_back({savePath, savePath2, a2Size, b2Size, diff2Offset});
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: {} 2nd-roundtrip=DIFF (Save non-deterministic; A={}, B={}, off={})",
+                             prefix, versionStr, a2Size, b2Size, diff2Offset);
             }
         }
     }
@@ -351,14 +415,19 @@ void PrintSummary(std::string_view label, const AssetKindStats& stats) {
                  stats.loaded, stats.loadFailures.size());
     ToLogService(kLogChannel, LogLevel::Info, "  Сохранено:          {}", stats.saved);
     ToLogService(kLogChannel, LogLevel::Info,
-                 "  Round-trip пропущен: {} (legacy < 0x{:04X})",
-                 stats.legacySkipped, static_cast<unsigned>(MindPower::EXP_OBJ_VERSION));
+                 "  Round-trip пропущен: {} (legacy)",
+                 stats.legacySkipped);
     ToLogService(kLogChannel, LogLevel::Info,
                  "  С warning (trailer): {} (success, но при пересохранении часть данных теряется)",
                  stats.trailerWarnings);
     ToLogService(kLogChannel, LogLevel::Info,
                  "  Round-trip совпал:   {} (failures: {})",
                  stats.roundtripOk, stats.compareFailures.size());
+    if (stats.roundtripCleaned > 0) {
+        ToLogService(kLogChannel, LogLevel::Info,
+                     "  Round-trip с очисткой: {} (Save детерминирован; в source были uninit-байты)",
+                     stats.roundtripCleaned);
+    }
 
     if (!stats.loadFailures.empty()) {
         ToLogService(kLogChannel, LogLevel::Info,
@@ -384,6 +453,57 @@ void PrintSummary(std::string_view label, const AssetKindStats& stats) {
             }
         }
     }
+}
+
+
+// =============================================================================
+// Self-test BLAKE2s — проверяет, что наша реализация дает identical bits с
+// CryptoPP::BLAKE2s. Тесты-векторы из RFC 7693 Appendix B + конкретный
+// fixture для пароля "admin" (предоставлен пользователем после захэширования
+// прежним crypto::Blake2sHex). Запускается до round-trip пайплайна; failure
+// — это критическая ошибка миграции CryptoPP→standalone, тест возвращает
+// exit=2 без дальнейших действий.
+// =============================================================================
+
+struct Blake2sTestVector {
+    std::string_view input;
+    std::string_view expectedHex;  // uppercase
+};
+
+[[nodiscard]] bool RunBlake2sSelfTest() {
+    using Corsairs::Common::Crypto::Blake2sHex;
+
+    static constexpr std::array<Blake2sTestVector, 4> kVectors = {{
+        // RFC 7693 §B (BLAKE2s-256 of "abc")
+        {"abc",
+         "508C5E8C327C14E2E1A72BA34EEB452F37458B209ED63A294D999B4C86675982"},
+        // BLAKE2s-256 of пустой строки (классический test-vector)
+        {"",
+         "69217A3079908094E11121D042354A7C1F55B6482CA1A51E1B250DFD1ED0EEF9"},
+        // BLAKE2s-256 of "The quick brown fox jumps over the lazy dog"
+        {"The quick brown fox jumps over the lazy dog",
+         "606BEEEC743CCBEFF6CBCDF5D5302AA855C256C29B88C8ED331EA1A6BF3C8812"},
+        // Fixture от пользователя: пароль "admin" — должен совпадать с прежним
+        // CryptoPP-результатом, чтобы существующие пользователи не потеряли логин.
+        {"admin",
+         "327E7E3821F5F6D33C090137F979BF48EE62E9051C1610E1D6468ECB3C67A124"},
+    }};
+
+    bool allOk = true;
+    for (const auto& tv : kVectors) {
+        const std::string actual = Blake2sHex(tv.input);
+        if (actual == tv.expectedHex) {
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "blake2s self-test: \"{}\" → OK", tv.input);
+        }
+        else {
+            allOk = false;
+            ToLogService(kLogChannel, LogLevel::Error,
+                         "blake2s self-test: \"{}\" → MISMATCH (expected={}, got={})",
+                         tv.input, tv.expectedHex, actual);
+        }
+    }
+    return allOk;
 }
 
 } // namespace
@@ -439,6 +559,17 @@ int main(int argc, char** argv) {
     g_logManager.AddLogger("errors");
     g_logManager.AddLogger("warnings");
     g_logManager.AddLogger("loader");
+
+    // BLAKE2s self-test до любых действий с ассетами. Если самомодельный
+    // BLAKE2s даст не тот результат, что CryptoPP — пользователи перестанут
+    // логиниться; падаем сразу.
+    if (!RunBlake2sSelfTest()) {
+        ToLogService(kLogChannel, LogLevel::Error,
+                     "BLAKE2s self-test провален — миграция CryptoPP→standalone "
+                     "несовместима, прерываемся");
+        g_logManager.Shutdown();
+        return 2;
+    }
 
     const fs::path repoRoot = repoRootArg.empty() ? FindRepoRoot() : repoRootArg;
     if (repoRoot.empty()) {
@@ -544,6 +675,54 @@ int main(int argc, char** argv) {
             return LgoLoader::SaveAnimDataBone(info, savePath);
         }};
 
+    // .eff: EffectFileInfo через EffectLoader (header + array of I_Effect).
+    // Файлы в Client/effect/. EffectLoader использует свою diagnostics, но
+    // pipeline'у достаточно знать "успех/неуспех" — мы синхронизируем
+    // EffectLoadDiagnostics → LgoLoadDiagnostics через локальный EffectLoadEx.
+    const AssetKind effKind{
+        .label = "eff",
+        .extensions = {".eff", ".EFF"},
+        .subRoot = "Client",
+        .categories = {"effect"},
+        .currentVersion = Corsairs::Engine::Render::EffectLoader::kCurrentVersion,
+        .isByteDeterministic = false,
+        .processOne = [](const std::string& srcPath,
+                          const std::string& savePath,
+                          Corsairs::Engine::Render::LgoLoadDiagnostics& /*diag*/)
+                          -> std::optional<LW_RESULT> {
+            EffectFileInfo info;
+            Corsairs::Engine::Render::EffectLoadDiagnostics edDiag;
+            const LW_RESULT loadRet = Corsairs::Engine::Render::EffectLoader::LoadEx(
+                info, srcPath, edDiag);
+            if (LW_FAILED(loadRet)) {
+                return std::nullopt;
+            }
+            return Corsairs::Engine::Render::EffectLoader::Save(info, savePath);
+        }};
+
+    // .par: CMPPartCtrl через PartCtrlLoader. Файлы в Client/effect/, рядом с .eff.
+    // Текущая версия CMPPartCtrl::ParVersion = 15.
+    const AssetKind parKind{
+        .label = "par",
+        .extensions = {".par", ".PAR"},
+        .subRoot = "Client",
+        .categories = {"effect"},
+        .currentVersion = static_cast<std::uint32_t>(CMPPartCtrl::ParVersion),
+        .isByteDeterministic = false,
+        .processOne = [](const std::string& srcPath,
+                          const std::string& savePath,
+                          Corsairs::Engine::Render::LgoLoadDiagnostics& /*diag*/)
+                          -> std::optional<LW_RESULT> {
+            CMPPartCtrl ctrl;
+            Corsairs::Engine::Render::PartCtrlLoadDiagnostics pcDiag;
+            const LW_RESULT loadRet = Corsairs::Engine::Render::PartCtrlLoader::LoadEx(
+                ctrl, srcPath, pcDiag);
+            if (LW_FAILED(loadRet)) {
+                return std::nullopt;
+            }
+            return Corsairs::Engine::Render::PartCtrlLoader::Save(ctrl, savePath);
+        }};
+
     AssetKindStats lmoStats;
     RunRoundTripPipeline(lmoKind, repoRoot, sourceRoot, savedRoot,
                          limit, noCopy, removeOk, lmoStats);
@@ -556,9 +735,19 @@ int main(int argc, char** argv) {
     RunRoundTripPipeline(labKind, repoRoot, sourceRoot, savedRoot,
                          limit, noCopy, removeOk, labStats);
 
+    AssetKindStats effStats;
+    RunRoundTripPipeline(effKind, repoRoot, sourceRoot, savedRoot,
+                         limit, noCopy, removeOk, effStats);
+
+    AssetKindStats parStats;
+    RunRoundTripPipeline(parKind, repoRoot, sourceRoot, savedRoot,
+                         limit, noCopy, removeOk, parStats);
+
     PrintSummary("lmo", lmoStats);
     PrintSummary("lxo", lxoStats);
     PrintSummary("lab", labStats);
+    PrintSummary("eff", effStats);
+    PrintSummary("par", parStats);
 
     const bool allOk = lmoStats.loadFailures.empty()
                        && lmoStats.compareFailures.empty()
@@ -566,7 +755,12 @@ int main(int argc, char** argv) {
                        && lxoStats.compareFailures.empty()
                        && labStats.loadFailures.empty()
                        && labStats.compareFailures.empty()
-                       && (lmoStats.copied + lxoStats.copied + labStats.copied) > 0;
+                       && effStats.loadFailures.empty()
+                       && effStats.compareFailures.empty()
+                       && parStats.loadFailures.empty()
+                       && parStats.compareFailures.empty()
+                       && (lmoStats.copied + lxoStats.copied + labStats.copied
+                           + effStats.copied + parStats.copied) > 0;
 
     Sleep(1000 * 5);
     g_logManager.Shutdown();

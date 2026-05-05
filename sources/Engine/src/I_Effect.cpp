@@ -338,7 +338,10 @@ void I_Effect::ChangeModel(CEffectModel* pCModel, CMPResManger* pCResMagr) {
 	}
 }
 
-//!
+// I_Effect::SaveToFile / LoadFromFile перенесены в
+// Corsairs::Engine::Render::EffectLoader::{Save,Load}Element
+// (см. EffectLoaders.cpp).
+#if 0
 bool I_Effect::SaveToFile(FILE* pFile) {
 	// Имена в .eff-файле — фиксированный 32-байтный буфер.
 	auto writeFixedName = [&](std::string_view src) {
@@ -406,17 +409,21 @@ bool I_Effect::SaveToFile(FILE* pFile) {
 		fwrite(&m_CTextruelist.m_vecTexList[n].front(),
 			   sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
-	//!
-	writeFixedName(m_pCModel->m_strName);
+	// Имя модели и cylinder-параметры пишем из собственных полей I_Effect
+	// (LoadFromFile наполняет именно их). Раньше Save обращался через
+	// m_pCModel->m_strName / ->m_nSegments — что валится с nullptr-deref'ом
+	// на тулз-/тестовом round-trip'е, где engine-binding (Reset) пропущен.
+	// При нормальной работе клиента m_pCModel и I_Effect-поля синхронны.
+	writeFixedName(m_strModelName);
 
 	fwrite(&_bBillBoard, sizeof(bool), 1, pFile);
 	fwrite(&_iVSIndex, sizeof(int), 1, pFile);
 
 
-	fwrite(&m_pCModel->m_nSegments, sizeof(int), 1, pFile);
-	fwrite(&m_pCModel->m_rHeight, sizeof(float), 1, pFile);
-	fwrite(&m_pCModel->m_rRadius, sizeof(float), 1, pFile);
-	fwrite(&m_pCModel->m_rBotRadius, sizeof(float), 1, pFile);
+	fwrite(&m_nSegments, sizeof(int), 1, pFile);
+	fwrite(&m_rHeight, sizeof(float), 1, pFile);
+	fwrite(&m_rRadius, sizeof(float), 1, pFile);
+	fwrite(&m_rBotRadius, sizeof(float), 1, pFile);
 
 	fwrite(&m_CTexFrame.m_wTexCount, sizeof(WORD), 1, pFile);
 	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
@@ -611,6 +618,7 @@ bool I_Effect::LoadFromFile(FILE* pFile, DWORD dwVersion) {
 	IsSame();
 	return true;
 }
+#endif
 
 void I_Effect::CopyEffect(I_Effect* pEff) {
 	m_pDev = pEff->m_pDev;;

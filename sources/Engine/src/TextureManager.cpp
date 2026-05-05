@@ -4,8 +4,6 @@
 #include "lwSysGraphics.h"
 #include <logutil.h>
 
-#include "crypto_facade.h"
-
 #include <sys/stat.h>
 
 extern MPRender g_Render;
@@ -170,8 +168,16 @@ void TextureManager::ReleaseTexture(Entry& entry) {
 }
 
 // ============================================================================
-// ResolveTexturePath — дешифровка .wsd → .dec или fallback на оригинал
+// ResolveTexturePath — резолв `.wsd` на оригинальный `.tga`/`.png`/`.bmp`/`.dds`
 // ============================================================================
+//
+// Исторически UI-текстуры лежали как AES-GCM-`.wsd`, и engine при первой
+// загрузке расшифровывал их в `.dec`. Миграция (AssetLoaderTests --decrypt-wsd,
+// 2026-05-05) перенесла все 498 файлов обратно в исходные расширения; вызовы
+// crypto::AesGcmDecryptFile удалены, `.wsd` больше нет в Client/texture/.
+// Этот резолвер остаётся для совместимости с asset-references в коде, которые
+// продолжают именовать файлы как `*.wsd`: подменяем на первое существующее
+// `*.{tga,png,bmp,dds}`.
 
 std::string TextureManager::ResolveTexturePath(const char* filename) {
 	struct stat st;
@@ -184,23 +190,6 @@ std::string TextureManager::ResolveTexturePath(const char* filename) {
 			std::string origPath = path.substr(0, len - 3) + ext;
 			if (stat(origPath.c_str(), &st) == 0)
 				return origPath;
-		}
-
-		std::string decPath = path.substr(0, len - 3) + "dec";
-		if (stat(decPath.c_str(), &st) == 0)
-			return decPath;
-
-		if (stat(path.c_str(), &st) == 0) {
-			const unsigned char key[] = {
-				0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5
-			};
-			const unsigned char iv[] = {
-				0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72
-			};
-			if (crypto::AesGcmDecryptFile(path, decPath, key, iv)) {
-				remove(path.c_str());
-				return decPath;
-			}
 		}
 	}
 

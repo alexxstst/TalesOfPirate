@@ -64,7 +64,7 @@
     <ClCompile>
       <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\cryptopp\;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -86,7 +86,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;cryptlib.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration);$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -100,7 +100,7 @@
     <ClCompile>
       <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\cryptopp\;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -116,7 +116,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;cryptlib.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration);$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>

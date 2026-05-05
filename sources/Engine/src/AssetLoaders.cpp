@@ -2359,4 +2359,8 @@ LW_RESULT LgoLoader::LoadModelEx(lwModelInfo& info, std::string_view file,
     return LW_RET_OK;
 }
 
+// EffectLoader / PartCtrlLoader реализации находятся в EffectLoaders.cpp
+// (вынесены отдельно, чтобы линкер не тянул MPParticleCtrl/MPModelEff/I_Effect-
+// зависимости в тулзы, использующие только LgoLoader).
+
 } // namespace Corsairs::Engine::Render

@@ -5,6 +5,7 @@
 #include "mpmodeleff.h"
 #include "MPRender.h"
 #include "lwEfxTrack.h"
+#include "AssetLoaders.h"
 
 void CEffectCortrol::FillModelUV(CEffectModel* pCModel) {
 	for (WORD i = 0; i < pCModel->GetVerCount(); i++) {
@@ -179,7 +180,7 @@ bool CMPModelEff::SaveToFile(std::string_view pszFileName) {
 
 
 	for (int n = 0; n < m_iEffNum; n++) {
-		m_vecEffect[n]->SaveToFile(t_pFile);
+		Corsairs::Engine::Render::EffectLoader::SaveElement(*m_vecEffect[n], t_pFile);
 	}
 
 
@@ -1074,6 +1075,9 @@ void CMPStrip::Render() {
 	_pCEffFile->End();
 }
 
+// CMPStrip::SaveToFile / LoadFromFile перенесены в
+// Corsairs::Engine::Render::PartCtrlLoader::{Save,Load}Strip.
+#if 0
 bool CMPStrip::SaveToFile(FILE* t_pFile) {
 	fwrite(&m_iMaxLen, sizeof(int), 1, t_pFile);
 	fwrite(&_iDummy, sizeof(int), 2, t_pFile);
@@ -1117,6 +1121,7 @@ bool CMPStrip::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 
 	return true;
 }
+#endif
 
 void CMPStrip::CopyStrip(CMPStrip* pstrip) {
 	m_iMaxLen = pstrip->m_iMaxLen;

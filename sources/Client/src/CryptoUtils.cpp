@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "CryptoUtils.h"
 
-#include "crypto_facade.h"
+#include "Blake2s.h"
 
 std::string HashPassword(const std::string& password) {
-	return crypto::Blake2sHex(password);
+	return Corsairs::Common::Crypto::Blake2sHex(password);
 }

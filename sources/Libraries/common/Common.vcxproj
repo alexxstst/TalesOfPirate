@@ -97,6 +97,10 @@
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Blake2s.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ForcedIncludeFiles />
+    </ClCompile>
     <ClCompile Include="src\ChaAttr.cpp" />
     <ClCompile Include="src\ChaMask.cpp" />
     <ClCompile Include="src\CharacterRecord.cpp" />
@@ -177,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AreaRecord.h" />
+    <ClInclude Include="include\Blake2s.h" />
     <ClInclude Include="include\ChaAction.h" />
     <ClInclude Include="include\ChaAttr.h" />
     <ClInclude Include="include\ChaAttrType.h" />

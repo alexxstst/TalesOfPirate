@@ -598,7 +598,13 @@ enum EFFECT_TYPE {
 /************************************************************************/
 /* Effect base class */
 /************************************************************************/
+namespace Corsairs::Engine::Render { class EffectLoader; }
+
 class I_Effect {
+	// Loader имеет доступ к protected/private state'у — он сериализует все
+	// поля как раньше делал I_Effect::SaveToFile/LoadFromFile.
+	friend class ::Corsairs::Engine::Render::EffectLoader;
+
 public:
 	I_Effect(void);
 	~I_Effect(void);
@@ -877,10 +883,9 @@ public:
 		_eDestBlend = eDestBlend;
 	}
 
-	//!
-	bool SaveToFile(FILE* pFile);
-	//!
-	bool LoadFromFile(FILE* pFile, DWORD dwVersion);
+	// Сериализация перенесена в Corsairs::Engine::Render::EffectLoader::
+	// {LoadElement,SaveElement} — data-классы по соглашению проекта не
+	// должны содержать I/O.
 
 	void IsSame();
 

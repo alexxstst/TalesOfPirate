@@ -101,7 +101,12 @@ protected:
 };
 
 
+namespace Corsairs::Engine::Render { class PartCtrlLoader; }
+
 class CChaModel : public MPCharacter {
+	// .par-сериализация — в PartCtrlLoader::{Load,Save}CharModel.
+	friend class ::Corsairs::Engine::Render::PartCtrlLoader;
+
 public:
 	CChaModel() {
 		_iID = 0;
@@ -168,9 +173,7 @@ public:
 		PlayPose(_iCurPose, _iPlayType);
 	}
 
-	void SaveToFile(FILE* file);
-	void LoadFromFile(FILE* file);
-
+	// Save/Load перенесены в PartCtrlLoader.
 
 	void Begin();
 	void End();
@@ -246,6 +249,9 @@ private:
 /************************************************************************/
 class CMPPartCtrl //: public CEffectBase
 {
+	// .par-сериализация — в Corsairs::Engine::Render::PartCtrlLoader.
+	friend class ::Corsairs::Engine::Render::PartCtrlLoader;
+
 public:
 	static const int ParVersion = 15;
 
@@ -377,10 +383,8 @@ public:
 				std::vector<INT>& vecEff);
 	void GetHitRes(CMPResManger* pResMagr, std::vector<s_string>& vecPar);
 
-	//!
-	bool SaveToFile(std::string_view pszName);
-	//!
-	bool LoadFromFile(std::string_view pszName);
+	// Сериализация перенесена в Corsairs::Engine::Render::PartCtrlLoader::
+	// {Load,Save} — data-классы не должны содержать I/O.
 
 public:
 	s_string m_strName;

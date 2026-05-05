@@ -239,8 +239,14 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime);
 bool _CreateLineRound(CMPPartSys* pPart, CMPParticle* pCtrl);
 void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime);
 
+namespace Corsairs::Engine::Render { class PartCtrlLoader; }
+
 class CMPPartSys //: public CEffectBase
 {
+	// .par-сериализация перенесена в PartCtrlLoader::{Load,Save}PartSys;
+	// loader получает прямой доступ ко всем полям через friendship.
+	friend class ::Corsairs::Engine::Render::PartCtrlLoader;
+
 public:
 	CMPPartSys();
 	~CMPPartSys();
@@ -598,10 +604,7 @@ public:
 	}
 
 public:
-	//!
-	bool SaveToFile(FILE* t_pFile);
-	//!
-	bool LoadFromFile(FILE* t_pFile, DWORD dwVersion);
+	// Save/Load перенесены в PartCtrlLoader.
 
 	bool IsPartArray();
 

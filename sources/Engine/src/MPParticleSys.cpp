@@ -3260,6 +3260,9 @@ void _FrameMoveRipple(CMPPartSys* pPart, DWORD dwDailTime) {
 	}
 }
 
+// CMPPartSys::SaveToFile / LoadFromFile перенесены в
+// Corsairs::Engine::Render::PartCtrlLoader::{Save,Load}PartSys.
+#if 0
 bool CMPPartSys::SaveToFile(FILE* t_pFile) {
 	int tm;
 
@@ -3467,6 +3470,7 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 
 	return true;
 }
+#endif
 
 void CopyPartSys(CMPPartSys* part1, CMPPartSys* part2) {
 	part1->_iType = part2->_iType;

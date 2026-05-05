@@ -45,7 +45,6 @@
 #include "uiequipform.h"
 #include "uirichedit.h"
 
-#include "crypto_facade.h"
 #include <fstream>
 
 #include <Windows.h>  //Lark.li
@@ -206,53 +205,13 @@ int UI_SetFormTempleteMax(int max) {
 	return R_FAIL;
 }
 
-// Resolve image path: prefer unencrypted original, decrypt .wsd → .dec if needed
-// Returns the path to use for loading (original or .dec)
+// Резолв пути к UI-картинке. После миграции 2026-05-05 (AssetLoaderTests
+// --decrypt-wsd) все .wsd-файлы расшифрованы и переименованы в исходные
+// .tga/.png/.bmp/.dds. AES-GCM-расшифровка из этой функции удалена; теперь
+// просто возвращаем originalPath без модификаций (вызывающий код передаёт
+// уже корректный путь).
 static std::string ResolveImagePath(const std::string& originalPath) {
-	// If original file exists (.png/.tga/.bmp/.dds) — use it directly
-	struct stat st;
-	if (stat(originalPath.c_str(), &st) == 0) {
-		return originalPath;
-	}
-
-	// Check if encrypted .wsd version exists
-	std::string wsdPath = originalPath;
-	if (wsdPath.length() > 3) {
-		wsdPath.replace(wsdPath.length() - 3, 3, "wsd");
-	}
-
-	if (stat(wsdPath.c_str(), &st) != 0) {
-		// Neither original nor .wsd exists — return original path, let engine handle the error
-		return originalPath;
-	}
-
-	// Decrypt .wsd → .dec
-	std::string decPath = originalPath;
-	if (decPath.length() > 3) {
-		decPath.replace(decPath.length() - 3, 3, "dec");
-	}
-
-	// If .dec already exists from a previous run — use it
-	if (stat(decPath.c_str(), &st) == 0) {
-		return decPath;
-	}
-
-	// Decrypt
-	const unsigned char imgTableKey[] = {
-		0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5
-	};
-	const unsigned char imgTableIV[] = {
-		0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72
-	};
-
-	if (!crypto::AesGcmDecryptFile(wsdPath, decPath, imgTableKey, imgTableIV)) {
-		ToLogService("lua", LogLevel::Error, "Failed to decrypt '{}'", wsdPath);
-		return originalPath;
-	}
-
-	// Delete encrypted .wsd after successful decryption
-	remove(wsdPath.c_str());
-	return decPath;
+	return originalPath;
 }
 
 int UI_AddAllFormTemplete(int form_id) {

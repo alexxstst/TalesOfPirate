@@ -67,7 +67,7 @@
         <ClCompile>
             <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
             <Optimization>Disabled</Optimization>
-            <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\Cryptopp;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0601;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <ExceptionHandling>Async</ExceptionHandling>
             <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -88,7 +88,7 @@
             <MultiProcessorCompilation>true</MultiProcessorCompilation>
         </ClCompile>
         <Link>
-            <AdditionalDependencies>AudioSDL.lib;MindPower3D.lib;Ws2_32.lib;lua51.lib;CorsairsNet.lib;Utils.lib;Common.lib;dxguid.lib;ddraw.lib;d3d9.lib;d3dx9.lib;amstrmid.lib;winmm.lib;version.lib;Strmiids.lib;shell32.lib;Imm32.lib;Iphlpapi.lib;dbghelp.lib;SDL3.lib;SDL3_mixer.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>AudioSDL.lib;MindPower3D.lib;Ws2_32.lib;lua51.lib;CorsairsNet.lib;Utils.lib;Common.lib;dxguid.lib;ddraw.lib;d3d9.lib;d3dx9.lib;amstrmid.lib;winmm.lib;version.lib;Strmiids.lib;shell32.lib;Imm32.lib;Iphlpapi.lib;dbghelp.lib;SDL3.lib;SDL3_mixer.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
             <ShowProgress>NotSet</ShowProgress>
             <SuppressStartupBanner>true</SuppressStartupBanner>
             <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration);$(ProjectDir)..\Libraries\SDL3\lib\x64;$(ProjectDir)..\Libraries\LuaJIT\src\x64;$(ProjectDir)..\Libraries\DirectX\DX9\Lib\x64;$(ProjectDir)..\Libraries\Discord\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -112,7 +112,7 @@
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <OmitFramePointers>true</OmitFramePointers>
             <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-            <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\Cryptopp;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)..\Engine\include;$(ProjectDir)..\Engine\src;$(ProjectDir)..\Libraries\CorsairsNet\include;$(ProjectDir)..\Libraries\LuaJIT\src;$(ProjectDir)..\Libraries\LuaBridge\include;$(ProjectDir)..\Libraries\Common\include;$(ProjectDir)..\Libraries\Util\include;$(ProjectDir)..\Libraries\AudioSDL\include;$(ProjectDir)..\Libraries\SDL3\include;$(ProjectDir)..\Libraries\Discord\Include;$(ProjectDir)..\Libraries\DirectX\DX9\include;$(ProjectDir)..\Libraries\FreeType\include;$(ProjectDir)..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0601;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
             <MinimalRebuild>false</MinimalRebuild>
@@ -135,7 +135,7 @@
         </ClCompile>
         <Link>
             <RegisterOutput>false</RegisterOutput>
-            <AdditionalDependencies>AudioSDL.lib;MindPower3D.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;Utils.lib;Common.lib;dxguid.lib;d3d9.lib;d3dx9.lib;amstrmid.lib;winmm.lib;version.lib;Strmiids.lib;shell32.lib;Imm32.lib;Iphlpapi.lib;dbghelp.lib;SDL3.lib;SDL3_mixer.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>AudioSDL.lib;MindPower3D.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;Utils.lib;Common.lib;dxguid.lib;d3d9.lib;d3dx9.lib;amstrmid.lib;winmm.lib;version.lib;Strmiids.lib;shell32.lib;Imm32.lib;Iphlpapi.lib;dbghelp.lib;SDL3.lib;SDL3_mixer.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
             <ShowProgress>NotSet</ShowProgress>
             <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
             <SuppressStartupBanner>true</SuppressStartupBanner>

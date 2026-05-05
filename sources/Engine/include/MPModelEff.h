@@ -484,7 +484,12 @@ struct Strip_Vertex {
 
 #define		STRIP_FVF	(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
+namespace Corsairs::Engine::Render { class PartCtrlLoader; }
+
 class CMPStrip {
+	// .par-сериализация — в PartCtrlLoader::{Load,Save}Strip.
+	friend class ::Corsairs::Engine::Render::PartCtrlLoader;
+
 public:
 	CMPStrip();
 	~CMPStrip();
@@ -682,8 +687,7 @@ public:
 		_eDestBlend = destblend;
 	}
 
-	bool SaveToFile(FILE* t_pFile);
-	bool LoadFromFile(FILE* t_pFile, DWORD dwVersion);
+	// Save/Load перенесены в PartCtrlLoader.
 
 	void CopyStrip(CMPStrip* pstrip);
 
@@ -720,4 +724,23 @@ protected:
 
 	D3DBLEND _eSrcBlend;
 	D3DBLEND _eDestBlend;
+};
+
+// Чисто-данные обёртка одного .eff-файла. Используется
+// Corsairs::Engine::Render::EffectLoader для Load/Save/LoadEx; CMPResManger
+// поверх неё может делать engine-binding (Reset/m_pDev) уже в рантайм-callsite.
+//
+// Layout файла .eff:
+//   [DWORD       version]               — version из заголовка (на момент чтения).
+//   [int         m_iIdxTech]
+//   [bool        m_bUsePath][char[32]   m_szPathName]
+//   [bool        m_bUseSound][char[32]  m_szSoundName]
+//   [bool        m_bRotating]
+//   [D3DXVECTOR3 m_SVerRota][float      m_fRotaVel]
+//   [int         count]
+//   [count × I_Effect::Save/LoadFromFile сериализация]
+struct EffectFileInfo {
+	std::uint32_t          version{0};
+	EffParameter           param{};
+	std::vector<I_Effect>  effects{};
 };
