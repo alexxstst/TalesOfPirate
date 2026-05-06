@@ -240,6 +240,8 @@
         <ClCompile Include="src\lwCoordinateSys.cpp"/>
         <ClCompile Include="src\AssetLoaders.cpp"/>
         <ClCompile Include="src\EffectLoaders.cpp"/>
+        <ClCompile Include="src\EffectYaml.cpp"/>
+        <ClCompile Include="src\PartCtrlYaml.cpp"/>
         <ClCompile Include="src\lwD3DSettings.cpp"/>
         <ClCompile Include="src\lwDDSFile.cpp"/>
         <ClCompile Include="src\lwDeviceObject.cpp"/>

@@ -2,6 +2,8 @@
 
 #include "AssetLoaders.h"
 #include "lwExpObj.h"
+#include "MPModelEff.h"      // EffectFileInfo
+#include "MPParticleCtrl.h"  // CMPPartCtrl
 #include "logutil.h"
 
 #include <filesystem>
@@ -110,6 +112,32 @@ ResaveResult ResaveLab(const fs::path& path) {
     return ResaveViaBak(path, load, save);
 }
 
+ResaveResult ResaveEff(const fs::path& path) {
+    using EffectLoader = Corsairs::Engine::Render::EffectLoader;
+    EffectFileInfo info;
+
+    auto load = [&](const std::string& f) {
+        return !LW_FAILED(EffectLoader::Load(info, f));
+    };
+    auto save = [&](const std::string& f) {
+        return !LW_FAILED(EffectLoader::Save(info, f));
+    };
+    return ResaveViaBak(path, load, save);
+}
+
+ResaveResult ResavePar(const fs::path& path) {
+    using PartCtrlLoader = Corsairs::Engine::Render::PartCtrlLoader;
+    CMPPartCtrl ctrl;
+
+    auto load = [&](const std::string& f) {
+        return !LW_FAILED(PartCtrlLoader::Load(ctrl, f));
+    };
+    auto save = [&](const std::string& f) {
+        return !LW_FAILED(PartCtrlLoader::Save(ctrl, f));
+    };
+    return ResaveViaBak(path, load, save);
+}
+
 [[nodiscard]] bool DeleteFile(const fs::path& path) {
     std::error_code ec;
     fs::remove(path, ec);
@@ -141,9 +169,10 @@ FixSummary ApplyFix(const std::vector<ValidationRecord>& records) {
             break;
 
         case ValidationStatus::Warning: {
-            // Re-save поддержан только для бинарных Mindpower-форматов.
+            // Re-save поддержан для бинарных MindPower-форматов.
             const bool supported = (r.extension == "lgo" || r.extension == "lmo"
-                                    || r.extension == "lxo" || r.extension == "lab");
+                                    || r.extension == "lxo" || r.extension == "lab"
+                                    || r.extension == "eff" || r.extension == "par");
             if (!supported) {
                 ToLogService(kLogChannel, LogLevel::Info,
                              "skip (re-save for .{} is not implemented): {}",
@@ -156,7 +185,9 @@ FixSummary ApplyFix(const std::vector<ValidationRecord>& records) {
             if (r.extension == "lgo")      res = ResaveLgo(r.file);
             else if (r.extension == "lmo") res = ResaveLmo(r.file);
             else if (r.extension == "lxo") res = ResaveLxo(r.file);
-            else                           res = ResaveLab(r.file);
+            else if (r.extension == "lab") res = ResaveLab(r.file);
+            else if (r.extension == "eff") res = ResaveEff(r.file);
+            else                           res = ResavePar(r.file);
 
             if (res.ok) {
                 ToLogService(kLogChannel, LogLevel::Warning,

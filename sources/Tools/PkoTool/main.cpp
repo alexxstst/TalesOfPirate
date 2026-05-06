@@ -5,10 +5,17 @@
 //   --mode=validate       — обходит файлы по --scope, пишет markdown-отчёт.
 //   --mode=fix            — destructive: удаляет битые, пересохраняет warning'и.
 //                           Требует --confirm, иначе только dry-run.
-//   --mode=export-yml     — заглушка (TODO): экспорт в YAML.
+//   --mode=export-yml     — распаковывает .eff / .par в человекочитаемый YAML
+//                           рядом с оригиналом (`a.eff` → `a.eff.yaml`).
 //   --mode=export-glb     — заглушка (TODO): экспорт в glTF/GLB.
-//   --mode=pack-yml       — заглушка (TODO): обратная упаковка из YAML.
+//   --mode=pack-yml       — собирает .eff / .par обратно из *.eff.yaml /
+//                           *.par.yaml (overwrite — пишет `a.eff` рядом с
+//                           `a.eff.yaml`).
 //   --mode=pack-glb       — заглушка (TODO): конверсия GLB → бинарь.
+//
+// Точечная распаковка/упаковка одного файла: `--scope=path/to/file.eff`
+// (или `.par`/`.yaml`). Список через `;` или каталог + `--scope=eff,par`
+// тоже работают.
 //
 // См. Cli.h::Options и `--help` для полного списка опций.
 
@@ -18,9 +25,15 @@
 #include "Reporter.h"
 #include "Fixer.h"
 
+#include "AssetLoaders.h"
+#include "MPModelEff.h"      // EffectFileInfo
+#include "MPParticleCtrl.h"  // CMPPartCtrl
+
 #include "logutil.h"
 
 #include <Windows.h>
+#include <algorithm>
+#include <cctype>
 #include <cstdio>
 #include <filesystem>
 
@@ -135,6 +148,201 @@ int RunNotImplemented(const pkotool::Options& opt) {
     return 2;
 }
 
+// ----------------------------------------------------------------------------
+// YAML pack / unpack
+// ----------------------------------------------------------------------------
+
+[[nodiscard]] std::string ToLower(std::string s) {
+    for (auto& ch : s) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    }
+    return s;
+}
+
+// Двойное расширение `<name>.eff.yaml` / `<name>.par.yaml` → выводит ".eff"/".par".
+// Возвращает пустую строку, если `inner extension` не похож на наш.
+[[nodiscard]] std::string DetectInnerExt(const fs::path& yamlFile) {
+    const auto stem = yamlFile.stem();
+    return ToLower(stem.extension().string());
+}
+
+[[nodiscard]] bool IsYamlExt(std::string_view ext) {
+    return ext == ".yaml" || ext == ".yml";
+}
+
+int RunExportYml(const pkotool::Options& opt) {
+    auto files = pkotool::CollectFiles(opt.scope, opt.root, opt.limit);
+    ToLogService(kLogChannel, LogLevel::Info,
+                 "files found: {} (root={})",
+                 files.size(), opt.root.string());
+
+    if (files.empty()) {
+        ToLogService(kLogChannel, LogLevel::Warning, "scope produced no files");
+        return 0;
+    }
+
+    std::size_t okCount = 0, failCount = 0, skipCount = 0;
+    const std::size_t total = files.size();
+    const int width = total < 10 ? 1 : (total < 100 ? 2 : (total < 1000 ? 3 : 4));
+
+    for (std::size_t i = 0; i < total; ++i) {
+        const auto& src = files[i];
+        const std::string ext = ToLower(src.extension().string());
+        // Пишем рядом: a.eff → a.eff.yaml.  Так pack-yml ниже находит файл по
+        // двойному расширению без догадок.
+        const fs::path out = src.string() + ".yaml";
+
+        const std::string prefix =
+            std::format("[{:>{}}/{}] {}", i + 1, width, total, src.filename().string());
+
+        if (ext == ".eff") {
+            EffectFileInfo info;
+            Corsairs::Engine::Render::EffectLoadDiagnostics diag;
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::LoadEx(
+                    info, src.string(), diag))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: load FAIL ({}: {})",
+                             prefix, Corsairs::Engine::Render::ToString(diag.status),
+                             diag.detail);
+                ++failCount;
+                continue;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::ExportToYaml(
+                    info, out.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: export FAIL", prefix);
+                ++failCount;
+                continue;
+            }
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "{}: eff → {}", prefix, out.string());
+            ++okCount;
+        }
+        else if (ext == ".par") {
+            CMPPartCtrl ctrl;
+            Corsairs::Engine::Render::PartCtrlLoadDiagnostics diag;
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::LoadEx(
+                    ctrl, src.string(), diag))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: load FAIL ({}: {})",
+                             prefix, Corsairs::Engine::Render::ToString(diag.status),
+                             diag.detail);
+                ++failCount;
+                continue;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::ExportToYaml(
+                    ctrl, out.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: export FAIL", prefix);
+                ++failCount;
+                continue;
+            }
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "{}: par → {}", prefix, out.string());
+            ++okCount;
+        }
+        else {
+            ToLogService(kLogChannel, LogLevel::Warning,
+                         "{}: skip (unsupported ext for export-yml: {})", prefix, ext);
+            ++skipCount;
+        }
+    }
+
+    ToLogService(kLogChannel, LogLevel::Info,
+                 "=== Export-yml summary: ok={}, fail={}, skip={} ===",
+                 okCount, failCount, skipCount);
+    return failCount == 0 ? 0 : 1;
+}
+
+int RunPackYml(const pkotool::Options& opt) {
+    auto files = pkotool::CollectFiles(opt.scope, opt.root, opt.limit);
+    ToLogService(kLogChannel, LogLevel::Info,
+                 "files found: {} (root={})",
+                 files.size(), opt.root.string());
+
+    if (files.empty()) {
+        ToLogService(kLogChannel, LogLevel::Warning, "scope produced no files");
+        return 0;
+    }
+
+    std::size_t okCount = 0, failCount = 0, skipCount = 0;
+    const std::size_t total = files.size();
+    const int width = total < 10 ? 1 : (total < 100 ? 2 : (total < 1000 ? 3 : 4));
+
+    for (std::size_t i = 0; i < total; ++i) {
+        const auto& yamlPath = files[i];
+        const std::string outerExt = ToLower(yamlPath.extension().string());
+
+        const std::string prefix =
+            std::format("[{:>{}}/{}] {}", i + 1, width, total,
+                        yamlPath.filename().string());
+
+        if (!IsYamlExt(outerExt)) {
+            ToLogService(kLogChannel, LogLevel::Warning,
+                         "{}: skip (not a yaml file: {})", prefix, outerExt);
+            ++skipCount;
+            continue;
+        }
+
+        const std::string innerExt = DetectInnerExt(yamlPath);
+        // Вывод: убрать .yaml — `<name>.eff.yaml` → `<name>.eff`.
+        const fs::path outBin = yamlPath.parent_path() / yamlPath.stem();
+
+        if (innerExt == ".eff") {
+            EffectFileInfo info;
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::ImportFromYaml(
+                    info, yamlPath.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: yaml import FAIL", prefix);
+                ++failCount;
+                continue;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::Save(
+                    info, outBin.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: save FAIL ({})", prefix, outBin.string());
+                ++failCount;
+                continue;
+            }
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "{}: eff ← yaml → {}", prefix, outBin.string());
+            ++okCount;
+        }
+        else if (innerExt == ".par") {
+            CMPPartCtrl ctrl;
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::ImportFromYaml(
+                    ctrl, yamlPath.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: yaml import FAIL", prefix);
+                ++failCount;
+                continue;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::Save(
+                    ctrl, outBin.string()))) {
+                ToLogService(kLogChannel, LogLevel::Error,
+                             "{}: save FAIL ({})", prefix, outBin.string());
+                ++failCount;
+                continue;
+            }
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "{}: par ← yaml → {}", prefix, outBin.string());
+            ++okCount;
+        }
+        else {
+            ToLogService(kLogChannel, LogLevel::Error,
+                         "{}: cannot detect target format from name "
+                         "(expect *.eff.yaml or *.par.yaml, inner ext = '{}')",
+                         prefix, innerExt);
+            ++failCount;
+        }
+    }
+
+    ToLogService(kLogChannel, LogLevel::Info,
+                 "=== Pack-yml summary: ok={}, fail={}, skip={} ===",
+                 okCount, failCount, skipCount);
+    return failCount == 0 ? 0 : 1;
+}
+
 } // namespace
 
 int main(int argc, char** argv) {
@@ -166,9 +374,9 @@ int main(int argc, char** argv) {
     switch (opt.mode) {
     case pkotool::Mode::Validate:  rc = RunValidate(opt); break;
     case pkotool::Mode::Fix:       rc = RunFix(opt); break;
-    case pkotool::Mode::ExportYml: // fallthrough
+    case pkotool::Mode::ExportYml: rc = RunExportYml(opt); break;
+    case pkotool::Mode::PackYml:   rc = RunPackYml(opt); break;
     case pkotool::Mode::ExportGlb:
-    case pkotool::Mode::PackYml:
     case pkotool::Mode::PackGlb:
         rc = RunNotImplemented(opt);
         break;

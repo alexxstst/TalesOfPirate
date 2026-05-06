@@ -291,6 +291,17 @@ public:
                                           EffectLoadDiagnostics& diag);
     static LW_RESULT Save(::EffectFileInfo& info, std::string_view file);
 
+    // YAML-сериализация .eff для round-trip-тестов и человекочитаемого
+    // редактирования. Формат — индент-структурированный YAML с inline-массивами
+    // и hex-float'ами (`{:a}`), чтобы текстовое представление давало побайтно
+    // точный обратный binary при пересохранении. Парсер поддерживает только
+    // подмножество YAML, нужное для собственного эмиттера. На неуспех — пишет
+    // в errors-канал и возвращает LW_RET_FAILED. Реализация в EffectYaml.cpp.
+    [[nodiscard]] static LW_RESULT ExportToYaml(const ::EffectFileInfo& info,
+                                                std::string_view file);
+    [[nodiscard]] static LW_RESULT ImportFromYaml(::EffectFileInfo& info,
+                                                  std::string_view file);
+
     // Сериализация одного элемента .eff. Раньше жили как методы I_Effect
     // (`SaveToFile`/`LoadFromFile`); по правилу проекта I/O в data-классах
     // запрещён, поэтому перенесены сюда и вызываются из:
@@ -350,6 +361,14 @@ public:
     [[nodiscard]] static LW_RESULT LoadEx(::CMPPartCtrl& ctrl, std::string_view file,
                                           PartCtrlLoadDiagnostics& diag);
     static LW_RESULT Save(::CMPPartCtrl& ctrl, std::string_view file);
+
+    // YAML-сериализация .par для round-trip-тестов и человекочитаемого
+    // редактирования. Реализация — PartCtrlYaml.cpp; общий YAML-движок —
+    // YamlCommon.h. Round-trip побайтно точный после первого binary save'а.
+    [[nodiscard]] static LW_RESULT ExportToYaml(const ::CMPPartCtrl& ctrl,
+                                                std::string_view file);
+    [[nodiscard]] static LW_RESULT ImportFromYaml(::CMPPartCtrl& ctrl,
+                                                  std::string_view file);
 
     // Per-element сериализация — приватная (вызывается только из Load/Save
     // выше). public-API остаётся минимальным.

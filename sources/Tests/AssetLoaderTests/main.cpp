@@ -93,6 +93,13 @@ struct AssetKindStats {
     std::size_t trailerWarnings = 0;
     std::vector<LoadFailure> loadFailures;
     std::vector<CompareFailure> compareFailures;
+
+    // YAML round-trip: saved.bin → yaml → import → save2.bin, ожидается
+    // saved == save2 побайтно. Поднимается только для тех видов ассетов,
+    // у которых задан AssetKind::processYaml.
+    std::size_t yamlExported = 0;
+    std::size_t yamlMatched = 0;
+    std::vector<CompareFailure> yamlFailures;
 };
 
 // Описание одного вида ассета, прогоняемого через round-trip.
@@ -134,6 +141,16 @@ struct AssetKind {
                                             const std::string&,
                                             Corsairs::Engine::Render::LgoLoadDiagnostics&)>
         processOne;
+
+    // Опциональный YAML round-trip для саб-формата. Получает путь к binary-
+    // сохранённому файлу (input) и пары yaml/binary под выходные артефакты.
+    // Внутри: Load(input) → ExportToYaml(yamlOut) → ImportFromYaml(yamlOut)
+    // → Save(binOut). Возвращает true при успехе всех шагов; nullopt не нужен,
+    // но false означает «вид поддерживает yaml, но конкретный файл провалился».
+    std::function<bool(const std::string& srcBin,
+                       const std::string& yamlOut,
+                       const std::string& binOut)>
+        processYaml;
 };
 
 [[nodiscard]] fs::path FindRepoRoot() {
@@ -345,11 +362,52 @@ void RunRoundTripPipeline(const AssetKind& kind,
                 continue;
             }
 
+            // YAML round-trip: input — детерминированный binary (savePath),
+            // выход bin2Path сравнивается побайтно с input. Применяется только
+            // к видам ассетов, у которых задан processYaml.
+            auto runYamlRoundTrip = [&](const fs::path& binIn) {
+                if (!kind.processYaml) {
+                    return;
+                }
+                const fs::path yamlPath = catSaved / (fileName.stem().string() + ".yaml");
+                const fs::path bin2Path = catSaved / (fileName.stem().string()
+                                                      + ".rs2" + fileName.extension().string());
+                const bool ok = kind.processYaml(binIn.string(), yamlPath.string(),
+                                                  bin2Path.string());
+                if (!ok) {
+                    stats.yamlFailures.push_back({binIn, bin2Path, 0, 0, 0});
+                    ToLogService(kLogChannel, LogLevel::Error,
+                                 "{}: {} yaml=FAIL (export/import/save chain)",
+                                 prefix, versionStr);
+                    return;
+                }
+                ++stats.yamlExported;
+                std::uint64_t yDiff = 0;
+                std::uintmax_t yA = 0;
+                std::uintmax_t yB = 0;
+                if (BinariesEqual(binIn, bin2Path, yDiff, yA, yB)) {
+                    ++stats.yamlMatched;
+                    if (removeOk) {
+                        fs::remove(yamlPath, ec);
+                        ec.clear();
+                        fs::remove(bin2Path, ec);
+                        ec.clear();
+                    }
+                }
+                else {
+                    stats.yamlFailures.push_back({binIn, bin2Path, yA, yB, yDiff});
+                    ToLogService(kLogChannel, LogLevel::Error,
+                                 "{}: {} yaml roundtrip=DIFF (bin={}, bin2={}, off={})",
+                                 prefix, versionStr, yA, yB, yDiff);
+                }
+            };
+
             std::uint64_t diffOffset = 0;
             std::uintmax_t srcSize = 0;
             std::uintmax_t savedSize = 0;
             if (BinariesEqual(copyPath, savePath, diffOffset, srcSize, savedSize)) {
                 ++stats.roundtripOk;
+                runYamlRoundTrip(savePath);
                 if (removeOk) {
                     fs::remove(copyPath, ec);
                     ec.clear();
@@ -390,6 +448,7 @@ void RunRoundTripPipeline(const AssetKind& kind,
                 ++stats.roundtripCleaned;
                 fs::remove(savePath2, ec);
                 ec.clear();
+                runYamlRoundTrip(savePath);
                 if (removeOk) {
                     fs::remove(copyPath, ec);
                     ec.clear();
@@ -450,6 +509,28 @@ void PrintSummary(std::string_view label, const AssetKindStats& stats) {
                 ToLogService(kLogChannel, LogLevel::Info,
                              "    ... ещё {}", stats.compareFailures.size() - shown);
                 break;
+            }
+        }
+    }
+
+    if (stats.yamlExported > 0 || !stats.yamlFailures.empty()) {
+        ToLogService(kLogChannel, LogLevel::Info,
+                     "  YAML round-trip:    exported={} matched={} failures={}",
+                     stats.yamlExported, stats.yamlMatched, stats.yamlFailures.size());
+        if (!stats.yamlFailures.empty()) {
+            ToLogService(kLogChannel, LogLevel::Info,
+                         "  --- YAML mismatches ({}) ---", stats.yamlFailures.size());
+            std::size_t shown = 0;
+            for (const auto& f : stats.yamlFailures) {
+                ToLogService(kLogChannel, LogLevel::Info,
+                             "    {}: bin={} bytes, bin2={} bytes, first diff @ offset {}",
+                             f.source.filename().string(),
+                             f.sourceSize, f.savedSize, f.firstDiffOffset);
+                if (++shown >= 50 && stats.yamlFailures.size() > 50) {
+                    ToLogService(kLogChannel, LogLevel::Info,
+                                 "    ... ещё {}", stats.yamlFailures.size() - shown);
+                    break;
+                }
             }
         }
     }
@@ -698,6 +779,34 @@ int main(int argc, char** argv) {
                 return std::nullopt;
             }
             return Corsairs::Engine::Render::EffectLoader::Save(info, savePath);
+        },
+        .processYaml = [](const std::string& srcBin,
+                           const std::string& yamlOut,
+                           const std::string& binOut) -> bool {
+            // 1) Чтение детерминированного bin → info1.
+            EffectFileInfo info1;
+            Corsairs::Engine::Render::EffectLoadDiagnostics edDiag1;
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::LoadEx(
+                    info1, srcBin, edDiag1))) {
+                return false;
+            }
+            // 2) info1 → yaml.
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::ExportToYaml(
+                    info1, yamlOut))) {
+                return false;
+            }
+            // 3) yaml → info2.
+            EffectFileInfo info2;
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::ImportFromYaml(
+                    info2, yamlOut))) {
+                return false;
+            }
+            // 4) info2 → bin2 (для побайтового сравнения с srcBin).
+            if (LW_FAILED(Corsairs::Engine::Render::EffectLoader::Save(
+                    info2, binOut))) {
+                return false;
+            }
+            return true;
         }};
 
     // .par: CMPPartCtrl через PartCtrlLoader. Файлы в Client/effect/, рядом с .eff.
@@ -721,6 +830,30 @@ int main(int argc, char** argv) {
                 return std::nullopt;
             }
             return Corsairs::Engine::Render::PartCtrlLoader::Save(ctrl, savePath);
+        },
+        .processYaml = [](const std::string& srcBin,
+                           const std::string& yamlOut,
+                           const std::string& binOut) -> bool {
+            CMPPartCtrl ctrl1;
+            Corsairs::Engine::Render::PartCtrlLoadDiagnostics pcDiag;
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::LoadEx(
+                    ctrl1, srcBin, pcDiag))) {
+                return false;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::ExportToYaml(
+                    ctrl1, yamlOut))) {
+                return false;
+            }
+            CMPPartCtrl ctrl2;
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::ImportFromYaml(
+                    ctrl2, yamlOut))) {
+                return false;
+            }
+            if (LW_FAILED(Corsairs::Engine::Render::PartCtrlLoader::Save(
+                    ctrl2, binOut))) {
+                return false;
+            }
+            return true;
         }};
 
     AssetKindStats lmoStats;
@@ -757,8 +890,10 @@ int main(int argc, char** argv) {
                        && labStats.compareFailures.empty()
                        && effStats.loadFailures.empty()
                        && effStats.compareFailures.empty()
+                       && effStats.yamlFailures.empty()
                        && parStats.loadFailures.empty()
                        && parStats.compareFailures.empty()
+                       && parStats.yamlFailures.empty()
                        && (lmoStats.copied + lxoStats.copied + labStats.copied
                            + effStats.copied + parStats.copied) > 0;
 

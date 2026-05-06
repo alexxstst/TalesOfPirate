@@ -2,13 +2,16 @@
 
 #include "AssetLoaders.h"
 #include "lwExpObj.h"
+#include "MPModelEff.h"      // EffectFileInfo
+#include "MPParticleCtrl.h"  // CMPPartCtrl
 
 #include "stb_image.h"
 
 #include <algorithm>
 #include <cctype>
-#include <cstdio>
 #include <format>
+#include <fstream>
+#include <ios>
 #include <string>
 #include <vector>
 
@@ -147,31 +150,108 @@ ValidationRecord ValidateLab(const fs::path& file) {
     return rec;
 }
 
-// Считывает файл целиком в память. Для текстур (килобайты-мегабайты) это OK;
-// stb_image без STBI_NO_STDIO в нашей сборке не доступен, поэтому идём через
-// stbi_info_from_memory.
+[[nodiscard]] std::pair<ValidationStatus, std::string>
+ClassifyEffectStatus(Corsairs::Engine::Render::EffectLoadStatus s) {
+    using S = Corsairs::Engine::Render::EffectLoadStatus;
+    switch (s) {
+    case S::Ok:
+        return {ValidationStatus::Ok, ""};
+    case S::FileOpenFailed:
+        return {ValidationStatus::Error,
+                "Failed to open file (missing file or permissions)."};
+    case S::VersionTruncated:
+        return {ValidationStatus::Error,
+                "File too short: even the DWORD version is missing. Re-export from source."};
+    case S::VersionUnknown:
+        return {ValidationStatus::Error,
+                "Unknown effect format version. Re-export from source."};
+    case S::HeaderTruncated:
+        return {ValidationStatus::Error,
+                "Effect header truncated. Re-export from source."};
+    case S::ParseFailed:
+        return {ValidationStatus::Error,
+                "Effect parser failed (corrupt element). Re-export from source."};
+    }
+    return {ValidationStatus::Error, "Unknown EffectLoader status."};
+}
+
+ValidationRecord ValidateEff(const fs::path& file) {
+    ValidationRecord rec;
+    rec.file = file;
+    rec.extension = "eff";
+
+    EffectFileInfo info;
+    Corsairs::Engine::Render::EffectLoadDiagnostics diag;
+    Corsairs::Engine::Render::EffectLoader::LoadEx(info, file.string(), diag);
+    rec.version = diag.version;
+
+    auto [status, recommendation] = ClassifyEffectStatus(diag.status);
+    rec.status = status;
+    rec.problem = (status == ValidationStatus::Ok)
+        ? std::string{}
+        : std::format("{}: {}", Corsairs::Engine::Render::ToString(diag.status), diag.detail);
+    rec.recommendation = std::move(recommendation);
+    return rec;
+}
+
+[[nodiscard]] std::pair<ValidationStatus, std::string>
+ClassifyPartCtrlStatus(Corsairs::Engine::Render::PartCtrlLoadStatus s) {
+    using S = Corsairs::Engine::Render::PartCtrlLoadStatus;
+    switch (s) {
+    case S::Ok:
+        return {ValidationStatus::Ok, ""};
+    case S::FileOpenFailed:
+        return {ValidationStatus::Error,
+                "Failed to open file (missing file or permissions)."};
+    case S::VersionTruncated:
+        return {ValidationStatus::Error,
+                "File too short: even the DWORD version is missing. Re-export from source."};
+    case S::VersionUnknown:
+        return {ValidationStatus::Error,
+                "Unknown particle-ctrl format version. Re-export from source."};
+    case S::ParseFailed:
+        return {ValidationStatus::Error,
+                "PartCtrl parser failed (corrupt block). Re-export from source."};
+    }
+    return {ValidationStatus::Error, "Unknown PartCtrlLoader status."};
+}
+
+ValidationRecord ValidatePar(const fs::path& file) {
+    ValidationRecord rec;
+    rec.file = file;
+    rec.extension = "par";
+
+    CMPPartCtrl ctrl;
+    Corsairs::Engine::Render::PartCtrlLoadDiagnostics diag;
+    Corsairs::Engine::Render::PartCtrlLoader::LoadEx(ctrl, file.string(), diag);
+    rec.version = diag.version;
+
+    auto [status, recommendation] = ClassifyPartCtrlStatus(diag.status);
+    rec.status = status;
+    rec.problem = (status == ValidationStatus::Ok)
+        ? std::string{}
+        : std::format("{}: {}", Corsairs::Engine::Render::ToString(diag.status), diag.detail);
+    rec.recommendation = std::move(recommendation);
+    return rec;
+}
+
+// Считывает файл целиком в память. ifstream берёт fs::path напрямую (wide-путь под
+// Windows), без конверсии через ANSI codepage — иначе путь с не-ANSI символами
+// валит process через std::system_error из path::string().
 [[nodiscard]] bool ReadFileToBuffer(const fs::path& file, std::vector<unsigned char>& out) {
-    std::FILE* fp = std::fopen(file.string().c_str(), "rb");
-    if (fp == nullptr) {
+    std::ifstream fs(file, std::ios::binary);
+    if (!fs) {
         return false;
     }
-    if (std::fseek(fp, 0, SEEK_END) != 0) {
-        std::fclose(fp);
-        return false;
-    }
-    const long sz = std::ftell(fp);
+    fs.seekg(0, std::ios::end);
+    const auto sz = fs.tellg();
     if (sz < 0) {
-        std::fclose(fp);
         return false;
     }
-    if (std::fseek(fp, 0, SEEK_SET) != 0) {
-        std::fclose(fp);
-        return false;
-    }
+    fs.seekg(0, std::ios::beg);
     out.resize(static_cast<std::size_t>(sz));
-    const std::size_t read = std::fread(out.data(), 1, out.size(), fp);
-    std::fclose(fp);
-    return read == out.size();
+    fs.read(reinterpret_cast<char*>(out.data()), static_cast<std::streamsize>(out.size()));
+    return fs.good() || fs.eof();
 }
 
 // Базовая валидация текстур: stbi_info_from_memory читает только заголовок,
@@ -233,6 +313,8 @@ ValidationRecord ValidateFile(const fs::path& file) {
     if (ext == "lmo") return ValidateLmo(file);
     if (ext == "lxo") return ValidateLxo(file);
     if (ext == "lab") return ValidateLab(file);
+    if (ext == "eff") return ValidateEff(file);
+    if (ext == "par") return ValidatePar(file);
     if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "tga") {
         return ValidateTexture(file, ext);
     }
